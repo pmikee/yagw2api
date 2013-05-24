@@ -5,4 +5,5 @@ public interface IWVWDTOFactory {
 	IWVWMatchesDTO createMatchesDTOfromJSON(String json);
 	IWVWMatchDetailsDTO createMatchDetailsfromJSON(String json);
 	IWVWObjectiveNameDTO[] createObjectiveNamesFromJSON(String json);
+	IWorldNameDTO[] createWorldNamesFromJSON(String json);
 }

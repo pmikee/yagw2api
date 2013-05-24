@@ -36,6 +36,9 @@ public class ClientApplication {
 		System.out.println(Arrays.deepToString(this.wvwService.retrieveAllObjectiveNames(Locale.GERMAN)));
 		System.out.println(Arrays.deepToString(this.wvwService.retrieveAllObjectiveNames(Locale.FRENCH)));
 		System.out.println(Arrays.deepToString(this.wvwService.retrieveAllObjectiveNames(Locale.ENGLISH)));
+		System.out.println(Arrays.deepToString(this.wvwService.retrieveAllWorldNames(Locale.GERMAN)));
+		System.out.println(Arrays.deepToString(this.wvwService.retrieveAllWorldNames(Locale.FRENCH)));
+		System.out.println(Arrays.deepToString(this.wvwService.retrieveAllWorldNames(Locale.ENGLISH)));
 		IWVWMatchesDTO matches = this.wvwService.retrieveAllMatches();
 		for (IWVWMatchDTO match : matches.getMatches()){
 			System.out.println(match);

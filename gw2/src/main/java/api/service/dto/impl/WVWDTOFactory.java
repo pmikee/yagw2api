@@ -5,6 +5,7 @@ import api.service.dto.IWVWDTOFactory;
 import api.service.dto.IWVWMatchDetailsDTO;
 import api.service.dto.IWVWMatchesDTO;
 import api.service.dto.IWVWObjectiveNameDTO;
+import api.service.dto.IWorldNameDTO;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -22,5 +23,9 @@ public class WVWDTOFactory implements IWVWDTOFactory {
 
 	public IWVWObjectiveNameDTO[] createObjectiveNamesFromJSON(String json) {
 		return GSON.fromJson(checkNotNull(json), WVWObjectiveNameDTO[].class);
+	}
+
+	public IWorldNameDTO[] createWorldNamesFromJSON(String json) {
+		return GSON.fromJson(checkNotNull(json), WorldNameDTO[].class);
 	}
 }
