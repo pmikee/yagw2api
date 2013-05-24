@@ -55,14 +55,14 @@ public class WVWService extends AbstractService implements IWVWService{
 
 	public IWVWObjectiveNameDTO[] retrieveAllObjectiveNames(Locale locale) {
 		checkNotNull(locale);
-		final WebResource resource = CLIENT.resource(this.objectiveNamesBaseURL.toExternalForm()).queryParam("lang", locale.toLanguageTag());
+		final WebResource resource = CLIENT.resource(this.objectiveNamesBaseURL.toExternalForm()).queryParam("lang", locale.getLanguage());
 		final String response = resource.accept(MediaType.APPLICATION_JSON_TYPE, MediaType.APPLICATION_XML_TYPE).get(String.class);
 		return this.wvwDTOFactory.createObjectiveNamesFromJSON(response);
 	}
 
 	public IWorldNameDTO[] retrieveAllWorldNames(Locale locale) {
 		checkNotNull(locale);
-		final WebResource resource = CLIENT.resource(this.worldNamesBaseURL.toExternalForm()).queryParam("lang", locale.toLanguageTag());
+		final WebResource resource = CLIENT.resource(this.worldNamesBaseURL.toExternalForm()).queryParam("lang", locale.getLanguage());
 		final String response = resource.accept(MediaType.APPLICATION_JSON_TYPE, MediaType.APPLICATION_XML_TYPE).get(String.class);
 		return this.wvwDTOFactory.createWorldNamesFromJSON(response);
 	}
