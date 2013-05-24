@@ -1,4 +1,4 @@
-package api.model;
+package model;
 
 public interface IWVWSpawn extends IHasWVWLocation {
 

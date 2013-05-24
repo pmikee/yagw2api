@@ -1,8 +1,9 @@
-package api.model.impl;
+package model.impl;
+
+import model.IHasChannel;
 
 import com.google.common.eventbus.EventBus;
 
-import api.model.IHasChannel;
 
 public abstract class AbstractHasChannel implements IHasChannel {
 	private final EventBus channel = new EventBus(this.getChannelName());

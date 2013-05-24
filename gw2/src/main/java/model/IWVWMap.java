@@ -1,4 +1,4 @@
-package api.model;
+package model;
 
 import java.util.Map;
 import java.util.Set;

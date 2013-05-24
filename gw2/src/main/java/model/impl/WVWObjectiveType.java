@@ -1,4 +1,4 @@
-package api.model.impl;
+package model.impl;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -6,7 +6,8 @@ import static com.google.common.base.Preconditions.checkState;
 
 import java.util.concurrent.TimeUnit;
 
-import api.model.IWVWObjectiveType;
+import model.IWVWObjectiveType;
+
 
 import com.google.common.base.Objects;
 

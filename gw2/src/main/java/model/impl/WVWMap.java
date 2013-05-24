@@ -1,4 +1,4 @@
-package api.model.impl;
+package model.impl;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -6,11 +6,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.Map;
 import java.util.Set;
 
-import api.model.IHasWVWLocation;
-import api.model.IWVWLocationType;
-import api.model.IWVWMap;
-import api.model.IWVWMapType;
-import api.model.IWVWObjective;
+import model.IHasWVWLocation;
+import model.IWVWLocationType;
+import model.IWVWMap;
+import model.IWVWMapType;
+import model.IWVWObjective;
+
 
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;

@@ -1,6 +1,6 @@
-package api.model.impl;
+package model.impl;
 
-import api.model.IWVWMapType;
+import model.IWVWMapType;
 
 enum WVWMapType implements IWVWMapType {
 	CENTER,

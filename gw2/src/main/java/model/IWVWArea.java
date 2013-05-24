@@ -1,4 +1,4 @@
-package api.model;
+package model;
 
 public interface IWVWArea extends IHasChannel{
 	IWVWMap getCenterMap();

@@ -1,6 +1,6 @@
-package api.model.impl;
+package model.impl;
 
-import api.model.IWVWLocationType;
+import model.IWVWLocationType;
 
 enum WVWLocationType implements IWVWLocationType{
 	RED_HOMELANDS_RED_KEEP,

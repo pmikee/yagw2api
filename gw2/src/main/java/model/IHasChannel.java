@@ -1,4 +1,4 @@
-package api.model;
+package model;
 
 import com.google.common.eventbus.EventBus;
 

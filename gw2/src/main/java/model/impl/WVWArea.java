@@ -1,4 +1,4 @@
-package api.model.impl;
+package model.impl;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -6,9 +6,10 @@ import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Map;
 
-import api.model.IWVWArea;
-import api.model.IWVWMap;
-import api.model.IWVWMapType;
+import model.IWVWArea;
+import model.IWVWMap;
+import model.IWVWMapType;
+
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableMap;

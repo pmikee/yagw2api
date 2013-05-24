@@ -1,4 +1,4 @@
-package api.model;
+package model;
 
 import java.util.concurrent.TimeUnit;
 
