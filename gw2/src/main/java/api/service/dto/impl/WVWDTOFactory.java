@@ -1,6 +1,7 @@
 package api.service.dto.impl;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import api.service.IWVWService;
 import api.service.dto.IWVWDTOFactory;
 import api.service.dto.IWVWMatchDetailsDTO;
 import api.service.dto.IWVWMatchesDTO;
@@ -13,19 +14,23 @@ import com.google.gson.GsonBuilder;
 public class WVWDTOFactory implements IWVWDTOFactory {
 	private static final Gson GSON = new GsonBuilder().create();
 	
-	public IWVWMatchesDTO createMatchesDTOfromJSON(String json) {
+	public IWVWMatchesDTO createMatchesDTOfromJSON(String json, IWVWService service) {
+		checkNotNull(service);
 		return GSON.fromJson(checkNotNull(json), WVWMatchesDTO.class);
 	}
 	
-	public IWVWMatchDetailsDTO createMatchDetailsfromJSON(String json){
+	public IWVWMatchDetailsDTO createMatchDetailsfromJSON(String json, IWVWService service){
+		checkNotNull(service);
 		return GSON.fromJson(checkNotNull(json), WVWMatchDetailsDTO.class);
 	}
 
-	public IWVWObjectiveNameDTO[] createObjectiveNamesFromJSON(String json) {
+	public IWVWObjectiveNameDTO[] createObjectiveNamesFromJSON(String json, IWVWService service) {
+		checkNotNull(service);
 		return GSON.fromJson(checkNotNull(json), WVWObjectiveNameDTO[].class);
 	}
 
-	public IWorldNameDTO[] createWorldNamesFromJSON(String json) {
+	public IWorldNameDTO[] createWorldNamesFromJSON(String json, IWVWService service) {
+		checkNotNull(service);
 		return GSON.fromJson(checkNotNull(json), WorldNameDTO[].class);
 	}
 }

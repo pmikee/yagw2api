@@ -3,7 +3,6 @@ package client;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 import java.util.Locale;
 
 import api.APIModule;
@@ -33,23 +32,25 @@ public class ClientApplication {
 	private IWVWService wvwService;
 
 	public void start() {
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 1000; i++) {
+			this.wvwService.retrieveAllWorldNames(Locale.GERMAN);
+			this.wvwService.retrieveAllWorldNames(Locale.FRENCH);
+			this.wvwService.retrieveAllWorldNames(Locale.ENGLISH);
+
+		}
+		for (int i = 0; i < 1000; i++) {
 			this.wvwService.retrieveAllWorldNames(Locale.GERMAN);
 			this.wvwService.retrieveAllWorldNames(Locale.FRENCH);
 			this.wvwService.retrieveAllWorldNames(Locale.ENGLISH);
 		}
-		/*
-		 * System.out.println(Arrays.deepToString(this.wvwService.
-		 * retrieveAllWorldNames(Locale.GERMAN)));
-		 * System.out.println(Arrays.deepToString
-		 * (this.wvwService.retrieveAllWorldNames(Locale.FRENCH)));
-		 * System.out.println
-		 * (Arrays.deepToString(this.wvwService.retrieveAllWorldNames
-		 * (Locale.ENGLISH))); IWVWMatchesDTO matches =
-		 * this.wvwService.retrieveAllMatches(); for (IWVWMatchDTO match :
-		 * matches.getMatches()){ System.out.println(match);
-		 * System.out.println(this
-		 * .wvwService.retrieveMatchDetails(match.getId())); }
-		 */
+		for (int i = 0; i < 1000; i++) {
+			IWVWMatchesDTO matches = this.wvwService.retrieveAllMatches();
+			for (IWVWMatchDTO match : matches.getMatches()) {
+				for (int ii = 0; ii < 1000; ii++) {
+					this.wvwService.retrieveMatchDetails(match.getId());
+				}
+			}
+		}
+
 	}
 }
