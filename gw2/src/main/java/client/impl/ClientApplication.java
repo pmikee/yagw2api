@@ -4,6 +4,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import model.IModelFactory;
 import model.wvw.IWVWMap;
 import model.wvw.IWVWModelFactory;
+import api.dto.IWVWMatchDTO;
+import api.dto.IWVWMatchDetailsDTO;
 import api.service.IWVWService;
 import client.IClientApplication;
 
@@ -30,10 +32,15 @@ class ClientApplication implements IClientApplication {
 	}
 
 	public void start() {
-		this.centerMap = this.getWVWModelFactory().createMapBuilder().type(this.wvwModelFactory.getCenterMapType()).build();
-		this.redMap = this.getWVWModelFactory().createMapBuilder().type(this.wvwModelFactory.getRedMapType()).build();
-		this.greenMap = this.getWVWModelFactory().createMapBuilder().type(this.wvwModelFactory.getGreenMapType()).build();
-		this.blueMap = this.getWVWModelFactory().createMapBuilder().type(this.wvwModelFactory.getBlueMapType()).build();
+		final IWVWMatchDTO match = this.wvwService.retrieveAllMatches().getMatches()[0];
+		System.out.println(match);
+		final IWVWMatchDetailsDTO matchDetails = match.getDetails().get();
+		System.out.println(matchDetails);
+		
+		this.centerMap = this.getWVWModelFactory().createMapBuilder().fromDTO(matchDetails.getCenterMap()).build();
+		this.redMap = this.getWVWModelFactory().createMapBuilder().fromDTO(matchDetails.getRedMap()).build();
+		this.greenMap = this.getWVWModelFactory().createMapBuilder().fromDTO(matchDetails.getGreenMap()).build();
+		this.blueMap = this.getWVWModelFactory().createMapBuilder().fromDTO(matchDetails.getBlueMap()).build();
 		System.out.println();
 		System.out.println(this.centerMap);
 		System.out.println(this.redMap);

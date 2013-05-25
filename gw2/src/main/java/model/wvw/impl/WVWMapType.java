@@ -1,16 +1,27 @@
 package model.wvw.impl;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import model.wvw.IWVWMapType;
+import api.dto.IWVWMatchDetailsDTO;
 
 enum WVWMapType implements IWVWMapType {
 	CENTER,
 	RED,
 	GREEN,
 	BLUE;
-
+	
 	public static WVWMapType fromDTOString(String dtoString) {
-		return WVWMapType.valueOf(checkNotNull(dtoString).toUpperCase());
+		switch(dtoString.toUpperCase()) {
+			case IWVWMatchDetailsDTO.CENTER_MAP_TYPE_STRING:
+				return CENTER;
+			case IWVWMatchDetailsDTO.BLUE_MAP_TYPE_STRING:
+				return BLUE;
+			case IWVWMatchDetailsDTO.GREEN_MAP_TYPE_STRING:
+				return GREEN;
+			case IWVWMatchDetailsDTO.RED_MAP_TYPE_STRING:
+				return RED;
+			default:
+				throw new IllegalArgumentException("Unknown dtoString: "+dtoString);
+		}
 	}
 	
 	public String getLabel() {

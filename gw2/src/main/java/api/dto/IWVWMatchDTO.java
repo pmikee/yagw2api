@@ -13,4 +13,5 @@ public interface IWVWMatchDTO {
 	Optional<IWorldNameDTO> getRedWorldName(Locale locale);
 	Optional<IWorldNameDTO> getGreenWorldName(Locale locale);
 	Optional<IWorldNameDTO> getBlueWorldName(Locale locale);
+	Optional<IWVWMatchDetailsDTO> getDetails();
 }

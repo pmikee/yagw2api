@@ -6,6 +6,7 @@ import static com.google.common.base.Preconditions.checkState;
 import java.util.Locale;
 
 import api.dto.IWVWMatchDTO;
+import api.dto.IWVWMatchDetailsDTO;
 import api.dto.IWorldNameDTO;
 
 import com.google.common.base.Objects;
@@ -67,5 +68,11 @@ class WVWMatchDTO extends AbstractDTOWithService implements IWVWMatchDTO {
 		checkNotNull(locale);
 		checkState(this.getBlueWorldId() > 0);
 		return this.getService().retrieveWorldName(locale, this.getBlueWorldId());
+	}
+
+	@Override
+	public Optional<IWVWMatchDetailsDTO> getDetails() {
+		checkState(this.id != null);
+		return Optional.fromNullable(this.getService().retrieveMatchDetails(this.id));
 	}
 }
