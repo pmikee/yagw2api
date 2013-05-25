@@ -17,6 +17,9 @@
 				<configuration>
 					<source>1.7</source>
 					<target>1.7</target>
+					<compilerVersion>1.7</compilerVersion>
+					<showWarning>true</showWarning>
+					<showDeprecation>true</showDeprecation>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -55,19 +58,6 @@
 						</descriptorRefs>
 					</configuration>
 				</plugin>
-				<plugin>
-					<groupId>com.github.wvengen</groupId>
-					<artifactId>proguard-maven-plugin</artifactId>
-					<version>2.0.6</version>
-					<dependencies>
-						<dependency>
-							<groupId>net.sf.proguard</groupId>
-							<artifactId>proguard-base</artifactId>
-							<version>4.9</version>
-							<scope>runtime</scope>
-						</dependency>
-					</dependencies>
-				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
@@ -89,7 +79,10 @@
 			<groupId>com.google.inject</groupId>
 			<artifactId>guice</artifactId>
 		</dependency>
-
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
@@ -102,6 +95,12 @@
 
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-simple</artifactId>
+				<version>1.7.5</version>
+				<scope>compile</scope>
+			</dependency>
 			<dependency>
 				<groupId>com.sun.jersey</groupId>
 				<artifactId>jersey-client</artifactId>
