@@ -6,5 +6,6 @@ public interface IWVWLocationType {
 	String getLabel();
 	Optional<Integer> getObjectiveId();
 	Optional<IWVWObjectiveType> getObjectiveType();
+	boolean isObjectiveLocation();
 	IWVWMapType getMapType();
 }

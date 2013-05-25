@@ -151,6 +151,7 @@ enum WVWLocationType implements IWVWLocationType {
 		final ImmutableSet.Builder<IWVWLocationType> greenLocationSetBuilder = ImmutableSet.builder();
 		final ImmutableSet.Builder<IWVWLocationType> blueLocationSetBuilder = ImmutableSet.builder();
 		for (WVWLocationType location : WVWLocationType.values()) {
+			checkState(location.getObjectiveId().isPresent() == location.getObjectiveType().isPresent());
 			if (location.getObjectiveId().isPresent()) {
 				mapByObjectiveIdBuilder.put(location.getObjectiveId().get(), location);
 			}
@@ -221,5 +222,10 @@ enum WVWLocationType implements IWVWLocationType {
 
 	public IWVWMapType getMapType() {
 		return this.mapType;
+	}
+
+	@Override
+	public boolean isObjectiveLocation() {
+		return this.getObjectiveId().isPresent() || this.getObjectiveType().isPresent();
 	}
 }

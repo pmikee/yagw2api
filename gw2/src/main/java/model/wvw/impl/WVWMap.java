@@ -3,6 +3,7 @@ package model.wvw.impl;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
@@ -25,7 +26,7 @@ class WVWMap extends AbstractHasChannel implements IWVWMap {
 	private final IWVWMapType type;
 	private final Map<IWVWLocationType, IHasWVWLocation> content;
 
-	public WVWMap(IWVWMapType type, Set<IHasWVWLocation> contents) {
+	public WVWMap(IWVWMapType type, Collection<IHasWVWLocation> contents) {
 		checkNotNull(type);
 		this.type = type;
 		checkNotNull(contents);

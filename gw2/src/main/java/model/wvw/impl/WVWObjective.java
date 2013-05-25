@@ -1,5 +1,6 @@
 package model.wvw.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Calendar;
@@ -26,6 +27,8 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective{
 
 	public WVWObjective(IWVWLocationType location){
 		checkNotNull(location);
+		checkArgument(location.getObjectiveId().isPresent());
+		checkArgument(location.getObjectiveType().isPresent());
 		this.location = location;
 	}
 	
