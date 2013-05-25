@@ -10,6 +10,7 @@ import api.service.IWVWService;
 import api.service.dto.IWVWMatchDTO;
 import api.service.dto.IWVWMatchesDTO;
 
+import com.google.common.base.Objects;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -32,21 +33,21 @@ public class ClientApplication {
 	private IWVWService wvwService;
 
 	public void start() {
-		for (int i = 0; i < 1000; i++) {
+		for (int i = 0; i < 5; i++) {
 			this.wvwService.retrieveAllWorldNames(Locale.GERMAN);
 			this.wvwService.retrieveAllWorldNames(Locale.FRENCH);
 			this.wvwService.retrieveAllWorldNames(Locale.ENGLISH);
 
 		}
-		for (int i = 0; i < 1000; i++) {
+		for (int i = 0; i < 5; i++) {
 			this.wvwService.retrieveAllWorldNames(Locale.GERMAN);
 			this.wvwService.retrieveAllWorldNames(Locale.FRENCH);
 			this.wvwService.retrieveAllWorldNames(Locale.ENGLISH);
 		}
-		for (int i = 0; i < 1000; i++) {
+		for (int i = 0; i < 5; i++) {
 			IWVWMatchesDTO matches = this.wvwService.retrieveAllMatches();
 			for (IWVWMatchDTO match : matches.getMatches()) {
-				for (int ii = 0; ii < 1000; ii++) {
+				for (int ii = 0; ii < 5; ii++) {
 					this.wvwService.retrieveMatchDetails(match.getId());
 				}
 			}

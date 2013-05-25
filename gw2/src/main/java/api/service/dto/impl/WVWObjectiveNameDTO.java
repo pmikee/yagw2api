@@ -14,7 +14,7 @@ public class WVWObjectiveNameDTO implements IWVWObjectiveNameDTO {
 	@SerializedName("name")
 	private String name;
 	
-	
+
 	public int getId() {
 		return this.id;
 	}
@@ -22,8 +22,8 @@ public class WVWObjectiveNameDTO implements IWVWObjectiveNameDTO {
 	public String getName() {
 		return this.name;
 	}
-	
-	public String toString(){
+
+	public String toString() {
 		return Objects.toStringHelper(this).add("id", this.id).add("name", this.name).toString();
 	}
 

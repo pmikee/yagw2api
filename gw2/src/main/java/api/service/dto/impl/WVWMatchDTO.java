@@ -1,12 +1,22 @@
 package api.service.dto.impl;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
+
+import java.util.Locale;
+
+import api.service.IWVWService;
 import api.service.dto.IWVWMatchDTO;
+import api.service.dto.IWorldNameDTO;
 
 import com.google.common.base.Objects;
+import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 
-class WVWMatchDTO implements IWVWMatchDTO{
+class WVWMatchDTO extends AbstractDTOWithService implements IWVWMatchDTO {
+
+
 	@Since(1.0)
 	@SerializedName("wvw_match_id")
 	private String id;
@@ -19,9 +29,15 @@ class WVWMatchDTO implements IWVWMatchDTO{
 	@Since(1.0)
 	@SerializedName("green_world_id")
 	private int greenWorldId;
+
+	public WVWMatchDTO(IWVWService service) {
+		super(service);
+	}
 	
 	public String toString() {
-		return Objects.toStringHelper(this).add("id", this.id).add("redWorldId", this.redWorldId).add("blueWorldId", this.blueWorldId).add("greenWorldId", this.greenWorldId).toString();
+		return Objects.toStringHelper(this).add("id", this.id).add("redWorldId", this.redWorldId).add("redWorld", this.getRedWorldName(Locale.getDefault()))
+				.add("blueWorldId", this.blueWorldId).add("blueWorld", this.getBlueWorldName(Locale.getDefault())).add("greenWorldId", this.greenWorldId)
+				.add("greenWorld", this.getGreenWorldName(Locale.getDefault())).toString();
 	}
 
 	public int getRedWorldId() {
@@ -38,5 +54,23 @@ class WVWMatchDTO implements IWVWMatchDTO{
 
 	public String getId() {
 		return this.id;
-	}	
+	}
+
+	public Optional<IWorldNameDTO> getRedWorldName(Locale locale) {
+		checkNotNull(locale);
+		checkState(this.getRedWorldId() > 0);
+		return this.getService().retrieveWorldName(locale, this.getRedWorldId());
+	}
+
+	public Optional<IWorldNameDTO> getGreenWorldName(Locale locale) {
+		checkNotNull(locale);
+		checkState(this.getGreenWorldId() > 0);
+		return this.getService().retrieveWorldName(locale, this.getGreenWorldId());
+	}
+
+	public Optional<IWorldNameDTO> getBlueWorldName(Locale locale) {
+		checkNotNull(locale);
+		checkState(this.getBlueWorldId() > 0);
+		return this.getService().retrieveWorldName(locale, this.getBlueWorldId());
+	}
 }

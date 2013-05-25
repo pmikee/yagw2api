@@ -1,5 +1,6 @@
 package api.service.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.net.MalformedURLException;
@@ -16,11 +17,13 @@ import org.apache.log4j.Logger;
 
 import api.service.IWVWService;
 import api.service.dto.IWVWDTOFactory;
+import api.service.dto.IWVWMatchDTO;
 import api.service.dto.IWVWMatchDetailsDTO;
 import api.service.dto.IWVWMatchesDTO;
 import api.service.dto.IWVWObjectiveNameDTO;
 import api.service.dto.IWorldNameDTO;
 
+import com.google.common.base.Optional;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.inject.Inject;
@@ -131,6 +134,53 @@ public class WVWService extends AbstractService implements IWVWService {
 			LOGGER.error("Failed to retrieve all " + IWorldNameDTO.class.getSimpleName() + " from cache for lang=" + locale, e);
 			throw new IllegalStateException("Failed to retrieve all " + IWorldNameDTO.class.getSimpleName() + " from cache for lang=" + locale, e);
 		}
+	}
+
+	public Optional<IWorldNameDTO> retrieveWorldName(Locale locale, int worldId) {
+		checkNotNull(locale);
+		checkArgument(worldId > 0);
+		final IWorldNameDTO[] names = this.retrieveAllWorldNames(locale);
+		int index = 0;
+		IWorldNameDTO result = null;
+		while(index < names.length && result == null){
+			result = names[index].getId() == worldId ? names[index] : null;
+			index++;
+		}
+		if(LOGGER.isTraceEnabled()){
+			LOGGER.trace("Retrieved "+IWorldNameDTO.class.getSimpleName()+" for worldId="+worldId+" and lang="+locale+": "+result);
+		}
+		return Optional.fromNullable(result);
+	}
+
+	public Optional<IWVWObjectiveNameDTO> retrieveObjectiveName(Locale locale, int id) {
+		checkNotNull(locale);
+		checkArgument(id > 0);
+		final IWVWObjectiveNameDTO[] names = this.retrieveAllObjectiveNames(locale);
+		int index = 0;
+		IWVWObjectiveNameDTO result = null;
+		while(index < names.length && result == null){
+			result = names[index].getId() == id ? names[index] : null;
+			index++;
+		}
+		if(LOGGER.isTraceEnabled()){
+			LOGGER.trace("Retrieved "+IWVWObjectiveNameDTO.class.getSimpleName()+" for id="+id+" and lang="+locale+": "+result);
+		}
+		return Optional.fromNullable(result);
+	}
+
+	public Optional<IWVWMatchDTO> retrieveMatch(String matchId) {
+		checkNotNull(matchId);
+		final IWVWMatchDTO[] matches = this.retrieveAllMatches().getMatches();
+		int index = 0;
+		IWVWMatchDTO result = null;
+		while(index < matches.length && result == null){
+			result = matches[index].getId() == matchId ? matches[index] : null;
+			index++;
+		}
+		if(LOGGER.isTraceEnabled()){
+			LOGGER.trace("Retrieved "+IWVWMatchDTO.class.getSimpleName()+" for matchId="+matchId+": "+result);
+		}
+		return Optional.fromNullable(result);
 	}
 
 }

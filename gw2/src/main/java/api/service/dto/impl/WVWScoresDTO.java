@@ -18,8 +18,8 @@ class WVWScoresDTO implements IWVWScoresDTO {
 	@Since(1.0)
 	@SerializedName("2")
 	private int blue;
-	
-	static WVWScoresDTO fromArray(int[] scores){
+
+	static WVWScoresDTO fromArray(int[] scores) {
 		checkNotNull(scores);
 		checkArgument(scores.length == 3);
 		final WVWScoresDTO scoresDTO = new WVWScoresDTO();
@@ -28,8 +28,7 @@ class WVWScoresDTO implements IWVWScoresDTO {
 		scoresDTO.blue = scores[2];
 		return scoresDTO;
 	}
-	
-	
+
 	public int getRedScores() {
 		return this.red;
 	}
@@ -41,6 +40,7 @@ class WVWScoresDTO implements IWVWScoresDTO {
 	public int getGreenScores() {
 		return this.green;
 	}
+
 	public String toString() {
 		return Objects.toStringHelper(this).add("red", this.red).add("green", this.green).add("blue", this.blue).toString();
 	}

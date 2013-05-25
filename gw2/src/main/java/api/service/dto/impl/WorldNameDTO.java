@@ -1,10 +1,10 @@
 package api.service.dto.impl;
 
+import api.service.dto.IWorldNameDTO;
+
 import com.google.common.base.Objects;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
-
-import api.service.dto.IWorldNameDTO;
 
 public class WorldNameDTO implements IWorldNameDTO{
 	@Since(1.0)
@@ -13,6 +13,7 @@ public class WorldNameDTO implements IWorldNameDTO{
 	@Since(1.0)
 	@SerializedName("name")
 	private String name;
+	
 	
 	public int getId() {
 		return this.id;

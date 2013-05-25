@@ -9,12 +9,13 @@ import com.google.common.base.Objects;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 
-class WVWMatchesDTO implements IWVWMatchesDTO{
+class WVWMatchesDTO implements IWVWMatchesDTO {
+
 	@Since(1.0)
 	@SerializedName("wvw_matches")
 	private WVWMatchDTO[] matches;
 
-	public String toString(){
+	public String toString() {
 		return Objects.toStringHelper(this).add("matches", Arrays.deepToString(this.matches)).toString();
 	}
 

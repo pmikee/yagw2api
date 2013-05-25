@@ -1,16 +1,22 @@
 package api.service.dto.impl;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import java.util.Arrays;
 
-import com.google.common.base.Objects;
-import com.google.gson.annotations.SerializedName;
-import com.google.gson.annotations.Since;
-
+import api.service.IWVWService;
 import api.service.dto.IWVWMapDTO;
+import api.service.dto.IWVWMatchDTO;
 import api.service.dto.IWVWMatchDetailsDTO;
 import api.service.dto.IWVWScoresDTO;
 
-class WVWMatchDetailsDTO implements IWVWMatchDetailsDTO {
+import com.google.common.base.Objects;
+import com.google.common.base.Optional;
+import com.google.gson.annotations.SerializedName;
+import com.google.gson.annotations.Since;
+
+class WVWMatchDetailsDTO extends AbstractDTOWithService implements IWVWMatchDetailsDTO {
+
 	@Since(1.0)
 	@SerializedName("match_id")
 	private String id;
@@ -22,6 +28,10 @@ class WVWMatchDetailsDTO implements IWVWMatchDetailsDTO {
 	@Since(1.0)
 	@SerializedName("maps")
 	private WVWMapDTO[] maps;
+
+	public WVWMatchDetailsDTO(IWVWService service) {
+		super(service);
+	}
 	
 	public String getMatchID() {
 		return this.id;
@@ -36,6 +46,11 @@ class WVWMatchDetailsDTO implements IWVWMatchDetailsDTO {
 	}
 	
 	public String toString() {
-		return Objects.toStringHelper(this).add("id", this.id).add("scores", this.getScores()).add("maps", Arrays.deepToString(this.maps)).toString();
+		return Objects.toStringHelper(this).add("id", this.id).add("scores", this.getScores()).add("maps", Arrays.deepToString(this.maps)).add("match", this.getMatch()).toString();
+	}
+
+	public Optional<IWVWMatchDTO> getMatch() {
+		checkState(this.getMatchID() != null);
+		return this.getService().retrieveMatch(this.getMatchID());
 	}
 }
