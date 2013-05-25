@@ -34,7 +34,7 @@
 						<configuration>
 							<archive>
 								<manifest>
-									<mainClass>client.ClientApplication</mainClass>
+									<mainClass>client.Main</mainClass>
 								</manifest>
 							</archive>
 						</configuration>
