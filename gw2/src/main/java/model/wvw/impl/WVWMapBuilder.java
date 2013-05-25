@@ -1,5 +1,6 @@
 package model.wvw.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
@@ -21,12 +22,12 @@ import com.google.common.base.Optional;
 
 public class WVWMapBuilder implements IWVWMapBuilder {
 	private static final IWVWModelFactory WVW_MODEL_FACTORY = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWModelFactory.class);
-	
+
 	private Map<IWVWLocationType, IHasWVWLocation> contentMappedByLocation = new HashMap<IWVWLocationType, IHasWVWLocation>();
 	private Optional<IWVWMapType> type = Optional.absent();
-	
-	public WVWMapBuilder() {
-	}
+	private Optional<Integer> redScore = Optional.absent();
+	private Optional<Integer> blueScore = Optional.absent();
+	private Optional<Integer> greenScore = Optional.absent();
 
 	@Override
 	public IWVWMap build() {
@@ -40,7 +41,20 @@ public class WVWMapBuilder implements IWVWMapBuilder {
 				}
 			}
 		}
-		return new WVWMap(this.type.get(), this.contentMappedByLocation.values());
+		final IWVWMap map = WVW_MODEL_FACTORY.createMap(this.type.get(), this.contentMappedByLocation.values());
+		if (this.redScore.isPresent()) {
+			checkState(this.redScore.get() > 0);
+			map.getScores().setRedScore(this.redScore.get());
+		}
+		if (this.greenScore.isPresent()) {
+			checkState(this.greenScore.get() > 0);
+			map.getScores().setGreenScore(this.greenScore.get());
+		}
+		if (this.blueScore.isPresent()) {
+			checkState(this.blueScore.get() > 0);
+			map.getScores().setBlueScore(this.blueScore.get());
+		}
+		return map;
 	}
 
 	@Override
@@ -64,7 +78,28 @@ public class WVWMapBuilder implements IWVWMapBuilder {
 		for (IWVWObjectiveDTO objectiveDTO : dto.getObjectives()) {
 			this.objective(WVW_MODEL_FACTORY.createObjectiveBuilder().fromDTO(objectiveDTO).build());
 		}
-		this.type(WVW_MODEL_FACTORY.getMapTypeForDTOString(dto.getType()));
+		this.type(WVW_MODEL_FACTORY.getMapTypeForDTOString(dto.getType()));		
+		return this.blueScore(dto.getScores().getBlueScores()).redScore(dto.getScores().getRedScores()).greenScore(dto.getScores().getGreenScores());
+	}
+
+	@Override
+	public IWVWMapBuilder redScore(int score) {
+		checkArgument(score > 0);
+		this.redScore = Optional.of(score);
+		return this;
+	}
+
+	@Override
+	public IWVWMapBuilder blueScore(int score) {
+		checkArgument(score > 0);
+		this.blueScore = Optional.of(score);
+		return this;
+	}
+
+	@Override
+	public IWVWMapBuilder greenScore(int score) {
+		checkArgument(score > 0);
+		this.greenScore = Optional.of(score);
 		return this;
 	}
 

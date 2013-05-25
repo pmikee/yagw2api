@@ -70,7 +70,7 @@ class WVWMap extends AbstractHasChannel implements IWVWMap {
 	}
 
 	public String toString() {
-		return Objects.toStringHelper(this).add("type", this.type).add("content", this.content).toString();
+		return Objects.toStringHelper(this).add("type", this.type).add("content", this.content).add("scored", this.scores).toString();
 	}
 
 	@Override

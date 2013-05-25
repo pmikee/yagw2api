@@ -1,8 +1,10 @@
 package model.wvw.impl;
 
+import java.util.Collection;
 import java.util.Set;
 
 import model.IWorld;
+import model.wvw.IHasWVWLocation;
 import model.wvw.IWVWLocationType;
 import model.wvw.IWVWMap;
 import model.wvw.IWVWMapBuilder;
@@ -89,5 +91,10 @@ public class WVWModelFactory implements IWVWModelFactory {
 	@Override
 	public IWVWObjective createObjective(IWVWLocationType location) {
 		return new WVWObjective(location);
+	}
+
+	@Override
+	public IWVWMap createMap(IWVWMapType type, Collection<IHasWVWLocation> contents) {
+		return new WVWMap(type, contents);
 	}
 }

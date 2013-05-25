@@ -1,5 +1,6 @@
 package model.wvw;
 
+import java.util.Collection;
 import java.util.Set;
 
 import model.IWorld;
@@ -13,6 +14,7 @@ public interface IWVWModelFactory {
 	IWVWMatchBuilder createMatchBuilder();
 	
 	// creation	
+	IWVWMap createMap(IWVWMapType type, Collection<IHasWVWLocation> contents);
 	IWVWMatch createWVWMatch(String id, IWorld redWorld, IWorld greenWorld, IWorld blueWorld, IWVWMap centerMap, IWVWMap redMap, IWVWMap greenMap, IWVWMap blueMap);
 	IWVWScores createScores();
 	IWVWObjective createObjective(IWVWLocationType location);

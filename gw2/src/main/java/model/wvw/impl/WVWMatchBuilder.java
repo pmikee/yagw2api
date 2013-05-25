@@ -16,6 +16,7 @@ import model.wvw.IWVWObjective;
 import utils.InjectionHelper;
 import api.dto.IWVWMapDTO;
 import api.dto.IWVWMatchDTO;
+import api.dto.IWVWMatchDetailsDTO;
 import api.dto.IWVWObjectiveDTO;
 
 import com.google.common.base.Optional;
@@ -96,6 +97,13 @@ public class WVWMatchBuilder implements IWVWMatchBuilder {
 		this.redWorld = Optional.of(MODEL_FACTORY.createWorld(dto.getRedWorldId(), dto.getRedWorldName(locale).get().getName()));
 		this.greenWorld = Optional.of(MODEL_FACTORY.createWorld(dto.getGreenWorldId(), dto.getGreenWorldName(locale).get().getName()));
 		this.blueWorld = Optional.of(MODEL_FACTORY.createWorld(dto.getBlueWorldId(), dto.getGreenWorldName(locale).get().getName()));
+
+		final Optional<IWVWMatchDetailsDTO> details = dto.getDetails();
+		if (details.isPresent()) {
+			this.redScore(details.get().getScores().getRedScores());
+			this.blueScore(details.get().getScores().getBlueScores());
+			this.greenScore(details.get().getScores().getGreenScores());
+		}
 		return this;
 	}
 
