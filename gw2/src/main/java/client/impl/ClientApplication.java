@@ -1,11 +1,13 @@
 package client.impl;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.util.Locale;
+
 import model.IModelFactory;
-import model.wvw.IWVWMap;
+import model.wvw.IWVWMatch;
 import model.wvw.IWVWModelFactory;
 import api.dto.IWVWMatchDTO;
-import api.dto.IWVWMatchDetailsDTO;
 import api.service.IWVWService;
 import client.IClientApplication;
 
@@ -16,10 +18,7 @@ class ClientApplication implements IClientApplication {
 	private IWVWModelFactory wvwModelFactory;
 	private IModelFactory modelFactory;
 
-	private IWVWMap centerMap = null;
-	private IWVWMap redMap = null;
-	private IWVWMap greenMap = null;
-	private IWVWMap blueMap = null;
+
 
 	@Inject
 	public ClientApplication(IWVWService wvwService, IWVWModelFactory wvwModelFactory, IModelFactory modelFactory) {
@@ -32,20 +31,11 @@ class ClientApplication implements IClientApplication {
 	}
 
 	public void start() {
-		final IWVWMatchDTO match = this.wvwService.retrieveAllMatches().getMatches()[0];
-		System.out.println(match);
-		final IWVWMatchDetailsDTO matchDetails = match.getDetails().get();
-		System.out.println(matchDetails);
+		final IWVWMatchDTO matchDto = this.wvwService.retrieveAllMatches().getMatches()[0];
+		System.out.println(matchDto);
 		
-		this.centerMap = this.getWVWModelFactory().createMapBuilder().fromDTO(matchDetails.getCenterMap()).build();
-		this.redMap = this.getWVWModelFactory().createMapBuilder().fromDTO(matchDetails.getRedMap()).build();
-		this.greenMap = this.getWVWModelFactory().createMapBuilder().fromDTO(matchDetails.getGreenMap()).build();
-		this.blueMap = this.getWVWModelFactory().createMapBuilder().fromDTO(matchDetails.getBlueMap()).build();
-		System.out.println();
-		System.out.println(this.centerMap);
-		System.out.println(this.redMap);
-		System.out.println(this.greenMap);
-		System.out.println(this.blueMap);
+		final IWVWMatch match = this.getWVWModelFactory().createMatchBuilder().fromMatchDTO(matchDto, Locale.GERMAN).build();
+		System.out.println(match);
 
 		// final APISynchronizerDeamon deamon = new
 		// APISynchronizerDeamon(this.wvwService);

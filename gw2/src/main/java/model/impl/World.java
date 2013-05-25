@@ -2,6 +2,9 @@ package model.impl;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+
+import com.google.common.base.Objects;
+
 import model.IWorld;
 
 public class World implements IWorld {
@@ -31,4 +34,7 @@ public class World implements IWorld {
 		this.name = name;
 	}
 	
+	public String toString() {
+		return Objects.toStringHelper(this).add("id", this.id).add("name", this.name).toString();
+	}
 }

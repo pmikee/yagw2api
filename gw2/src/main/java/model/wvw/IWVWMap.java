@@ -13,4 +13,5 @@ public interface IWVWMap extends IHasChannel {
 	Set<IHasWVWLocation> getEverything();
 	Set<IWVWObjective> getObjectives();
 	Optional<IHasWVWLocation> getByLocation(IWVWLocationType location);
+	IWVWScores getScores();
 }

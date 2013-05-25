@@ -1,6 +1,9 @@
 package model.impl;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+
+import com.google.common.base.Objects;
+
 import model.IGuild;
 
 class Guild implements IGuild{
@@ -10,5 +13,9 @@ class Guild implements IGuild{
 	}
 	public String getId() {
 		return this.id;
+	}
+	
+	public String toString() {
+		return Objects.toStringHelper(this).add("id", this.id).toString();
 	}
 }

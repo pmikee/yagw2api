@@ -13,29 +13,23 @@ import model.wvw.IWVWMapBuilder;
 import model.wvw.IWVWMapType;
 import model.wvw.IWVWModelFactory;
 import model.wvw.IWVWObjective;
-
+import utils.InjectionHelper;
 import api.dto.IWVWMapDTO;
 import api.dto.IWVWObjectiveDTO;
 
 import com.google.common.base.Optional;
-import com.google.inject.Inject;
 
 public class WVWMapBuilder implements IWVWMapBuilder {
+	private static final IWVWModelFactory WVW_MODEL_FACTORY = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWModelFactory.class);
+	
 	private Map<IWVWLocationType, IHasWVWLocation> contentMappedByLocation = new HashMap<IWVWLocationType, IHasWVWLocation>();
 	private Optional<IWVWMapType> type = Optional.absent();
-	private final IWVWModelFactory wvwModelFactory;
 	
-	@Inject
-	public WVWMapBuilder(IWVWModelFactory wvwModelFactory) {
-		this.wvwModelFactory = checkNotNull(wvwModelFactory);
+	public WVWMapBuilder() {
 	}
 
 	@Override
 	public IWVWMap build() {
-		if(!this.type.isPresent()) {
-			this.type = Optional.of(this.wvwModelFactory.getCenterMapType());
-		}
-		checkState(this.type.isPresent());
 		checkState(WVWLocationType.forMapTyp(this.type.get()).isPresent());
 		for (IWVWLocationType location : WVWLocationType.forMapTyp(this.type.get()).get()) {
 			if (!this.contentMappedByLocation.containsKey(location)) {
@@ -68,9 +62,9 @@ public class WVWMapBuilder implements IWVWMapBuilder {
 	public IWVWMapBuilder fromDTO(IWVWMapDTO dto) {
 		checkNotNull(dto);
 		for (IWVWObjectiveDTO objectiveDTO : dto.getObjectives()) {
-			this.objective(this.wvwModelFactory.createObjectiveBuilder().fromDTO(objectiveDTO).build());
+			this.objective(WVW_MODEL_FACTORY.createObjectiveBuilder().fromDTO(objectiveDTO).build());
 		}
-		this.type(this.wvwModelFactory.createMapTypeFromDTOString(dto.getType()));
+		this.type(WVW_MODEL_FACTORY.getMapTypeForDTOString(dto.getType()));
 		return this;
 	}
 

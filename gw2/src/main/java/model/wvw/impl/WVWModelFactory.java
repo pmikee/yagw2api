@@ -2,11 +2,17 @@ package model.wvw.impl;
 
 import java.util.Set;
 
+import model.IWorld;
 import model.wvw.IWVWLocationType;
+import model.wvw.IWVWMap;
 import model.wvw.IWVWMapBuilder;
 import model.wvw.IWVWMapType;
+import model.wvw.IWVWMatch;
+import model.wvw.IWVWMatchBuilder;
 import model.wvw.IWVWModelFactory;
+import model.wvw.IWVWObjective;
 import model.wvw.IWVWObjectiveBuilder;
+import model.wvw.IWVWScores;
 import utils.InjectionHelper;
 
 import com.google.common.base.Optional;
@@ -16,7 +22,7 @@ public class WVWModelFactory implements IWVWModelFactory {
 
 	@Override
 	public IWVWMapBuilder createMapBuilder() {
-		return InjectionHelper.INSTANCE.getInjector().getInstance(IWVWMapBuilder.class);
+		return new WVWMapBuilder();
 	}
 
 	@Override
@@ -50,7 +56,7 @@ public class WVWModelFactory implements IWVWModelFactory {
 	}
 
 	@Override
-	public IWVWMapType createMapTypeFromDTOString(String string) {
+	public IWVWMapType getMapTypeForDTOString(String string) {
 		return WVWMapType.fromDTOString(string);
 	}
 
@@ -62,5 +68,26 @@ public class WVWModelFactory implements IWVWModelFactory {
 	@Override
 	public Optional<IWVWLocationType> getLocationTypeForObjectiveId(int objectiveId) {
 		return WVWLocationType.forObjectiveId(objectiveId);
+	}
+
+	@Override
+	public IWVWScores createScores() {
+		return new WVWScores();
+	}
+
+	@Override
+	public IWVWMatchBuilder createMatchBuilder() {
+		return new WVWMatchBuilder();
+	}
+
+	@Override
+	public IWVWMatch createWVWMatch(String id, IWorld redWorld, IWorld greenWorld, IWorld blueWorld, IWVWMap centerMap, IWVWMap redMap, IWVWMap greenMap,
+			IWVWMap blueMap) {
+		return new WVWMatch(id, redWorld, greenWorld, blueWorld, centerMap, redMap, greenMap, blueMap);
+	}
+
+	@Override
+	public IWVWObjective createObjective(IWVWLocationType location) {
+		return new WVWObjective(location);
 	}
 }
