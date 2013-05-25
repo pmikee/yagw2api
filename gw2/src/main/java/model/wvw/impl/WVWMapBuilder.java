@@ -11,19 +11,30 @@ import model.wvw.IWVWLocationType;
 import model.wvw.IWVWMap;
 import model.wvw.IWVWMapBuilder;
 import model.wvw.IWVWMapType;
+import model.wvw.IWVWModelFactory;
 import model.wvw.IWVWObjective;
 
-public class WVWMapBuilder implements IWVWMapBuilder {
-	private IWVWMapType type = WVWMapType.CENTER;
-	private Map<IWVWLocationType, IHasWVWLocation> contentMappedByLocation = new HashMap<IWVWLocationType, IHasWVWLocation>();
+import com.google.common.base.Optional;
+import com.google.inject.Inject;
 
-	public WVWMapBuilder() {
+public class WVWMapBuilder implements IWVWMapBuilder {
+	private Map<IWVWLocationType, IHasWVWLocation> contentMappedByLocation = new HashMap<IWVWLocationType, IHasWVWLocation>();
+	private Optional<IWVWMapType> type = Optional.absent();
+	private final IWVWModelFactory wvwModelFactory;
+	
+	@Inject
+	public WVWMapBuilder(IWVWModelFactory wvwModelFactory) {
+		this.wvwModelFactory = checkNotNull(wvwModelFactory);
 	}
 
 	@Override
 	public IWVWMap build() {
-		checkState(WVWLocationType.forMapTyp(this.type).isPresent());
-		for (IWVWLocationType location : WVWLocationType.forMapTyp(this.type).get()) {
+		if(!this.type.isPresent()) {
+			this.type = Optional.of(this.wvwModelFactory.getCenterMapType());
+		}
+		checkState(this.type.isPresent());
+		checkState(WVWLocationType.forMapTyp(this.type.get()).isPresent());
+		for (IWVWLocationType location : WVWLocationType.forMapTyp(this.type.get()).get()) {
 			if (!this.contentMappedByLocation.containsKey(location)) {
 				if (location.isObjectiveLocation()) {
 					this.contentMappedByLocation.put(location, new WVWObjective(location));
@@ -32,12 +43,12 @@ public class WVWMapBuilder implements IWVWMapBuilder {
 				}
 			}
 		}
-		return new WVWMap(this.type, this.contentMappedByLocation.values());
+		return new WVWMap(this.type.get(), this.contentMappedByLocation.values());
 	}
 
 	@Override
 	public IWVWMapBuilder type(IWVWMapType type) {
-		this.type = checkNotNull(type);
+		this.type = Optional.fromNullable(type);
 		return this;
 	}
 
