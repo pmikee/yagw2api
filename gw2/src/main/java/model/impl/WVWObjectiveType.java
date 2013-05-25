@@ -45,4 +45,20 @@ enum WVWObjectiveType implements IWVWObjectiveType{
 	public String toString() {
 		return Objects.toStringHelper(this).add("label", this.getLabel()).add("buffDuration",this.buffDurationMillis+"ms").add("points", this.points).toString();
 	}
+
+	public boolean isCamp() {
+		return this.equals(CAMP);
+	}
+
+	public boolean isTower() {
+		return this.equals(TOWER);
+	}
+
+	public boolean isKeep() {
+		return this.equals(KEEP);
+	}
+
+	public boolean isCastle() {
+		return this.equals(CASTLE);
+	}
 }
