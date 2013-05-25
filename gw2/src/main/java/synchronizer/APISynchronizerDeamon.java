@@ -1,7 +1,5 @@
 package synchronizer;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
@@ -10,17 +8,18 @@ import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 
 import synchronizer.poolaction.SynchronizeMatchAction;
+import utils.InjectionHelper;
 import api.dto.IWVWMatchDTO;
 import api.service.IWVWService;
 
 import com.google.common.util.concurrent.AbstractScheduledService;
 
 public class APISynchronizerDeamon extends AbstractScheduledService {
+	private static final transient IWVWService SERVICE = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWService.class);
 	private static final int CHUNK_SIZE = 2;
 	private static final long INTERVAL_MILLIS = 3000; // 3s
 	private static final Logger LOGGER = Logger.getLogger(APISynchronizerDeamon.class);
 	
-	private final IWVWService service;
 	private final ForkJoinPool pool = new ForkJoinPool(Runtime.getRuntime().availableProcessors(), ForkJoinPool.defaultForkJoinWorkerThreadFactory,
 			new Thread.UncaughtExceptionHandler() {
 				public void uncaughtException(Thread t, Throwable e) {
@@ -29,20 +28,16 @@ public class APISynchronizerDeamon extends AbstractScheduledService {
 			}, false);
 	
 	
-	public APISynchronizerDeamon(IWVWService service){
-		checkNotNull(service);
-		this.service = service;
-	}
 	
 	@Override
 	protected void runOneIteration() throws Exception {
 		final long startTimestamp = System.currentTimeMillis();
 		
 		final List<String> matchIds = new ArrayList<String>();
-		for (IWVWMatchDTO match : this.service.retrieveAllMatches().getMatches()){
+		for (IWVWMatchDTO match : SERVICE.retrieveAllMatches().getMatches()){
 			matchIds.add(match.getId());
 		}
-		this.pool.invoke(new SynchronizeMatchAction(this.service, matchIds, CHUNK_SIZE));
+		this.pool.invoke(new SynchronizeMatchAction(matchIds, CHUNK_SIZE));
 		
 		final long endTime = System.currentTimeMillis();
 		final long executionTime = endTime-startTimestamp;

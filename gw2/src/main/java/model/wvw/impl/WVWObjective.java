@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.log4j.Logger;
+
 import model.AbstractHasChannel;
 import model.IWorld;
 import model.wvw.IWVWLocationType;
@@ -20,6 +22,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 
 class WVWObjective extends AbstractHasChannel implements IWVWObjective{
+	private static final Logger LOGGER = Logger.getLogger(WVWObjective.class);
 	private final IWVWLocationType location;
 	private final List<IWVWObjectiveEvent> eventHistory = new CopyOnWriteArrayList<IWVWObjectiveEvent>();
 	private Optional<IWorld> owningWorld = Optional.absent();
@@ -57,6 +60,7 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective{
 		final WVWObjectiveCaptureEvent event = new WVWObjectiveCaptureEvent(this, capturingWorld, this.owningWorld.orNull()); 
 		this.owningWorld = Optional.of(capturingWorld);
 		this.lastCaptureEventTimestamp = Optional.of(event.getTimestamp());
+		LOGGER.debug(capturingWorld+" has captured "+this);
 		this.getChannel().post(event);
 	}
 

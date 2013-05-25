@@ -2,6 +2,7 @@ package model.wvw.impl;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Collection;
 import java.util.Map;
@@ -75,6 +76,23 @@ class WVWMap extends AbstractHasChannel implements IWVWMap {
 	@Override
 	public IWVWScores getScores() {
 		return this.scores;
+	}
+
+	@Override
+	public Optional<IWVWObjective> getByObjectiveId(int id) {
+		checkArgument(id >0);
+		final Optional<IWVWLocationType> location = WVW_MODEL_FACTORY.getLocationTypeForObjectiveId(id);
+		if(location.isPresent()) {
+			final Optional<IHasWVWLocation> content = this.getByLocation(location.get());
+			if(content.isPresent()) {
+				checkState(content.get() instanceof IWVWObjective);
+				return Optional.of((IWVWObjective)content.get());
+			}else {
+				return Optional.absent();	
+			}
+		}else {
+			return Optional.absent();
+		}
 	}
 
 }

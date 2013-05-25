@@ -7,7 +7,8 @@ public interface IWVWMatch {
 	IWorld[] getWorlds();
 	IWorld getRedWOrld();
 	IWorld getGreenWorld();
-	IWorld getBlueWorld();
+	IWorld getBlueWorld(); 
+	IWorld getWorldByDTOOwnerString(String dtoOwnerString);
 	IWVWMap getCenterMap();
 	IWVWMap getBlueMap();
 	IWVWMap getRedMap();

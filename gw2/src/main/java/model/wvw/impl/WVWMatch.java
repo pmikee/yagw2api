@@ -2,15 +2,15 @@ package model.wvw.impl;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-
-import com.google.common.base.Objects;
-
 import model.IWorld;
 import model.wvw.IWVWMap;
 import model.wvw.IWVWMatch;
 import model.wvw.IWVWModelFactory;
 import model.wvw.IWVWScores;
 import utils.InjectionHelper;
+import api.dto.IWVWObjectiveDTO;
+
+import com.google.common.base.Objects;
 
 public class WVWMatch implements IWVWMatch {
 	private static final IWVWModelFactory WVW_MODEL_FACTORY = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWModelFactory.class);
@@ -98,5 +98,20 @@ public class WVWMatch implements IWVWMatch {
 	public String toString() {
 		return Objects.toStringHelper(this).add("id", this.id).add("scores", this.scores).add("redWorld", this.redWorld).add("greenWorld", this.greenWorld)
 				.add("blueWorld", this.blueWorld).add("centerMap", this.centerMap).add("redMap", this.redMap).add("greenMap", this.greenMap).add("blueMap", this.blueMap).toString();
+	}
+
+	@Override
+	public IWorld getWorldByDTOOwnerString(String dtoOwnerString) {
+		checkNotNull(dtoOwnerString);
+		switch(dtoOwnerString.toUpperCase()) {
+			case IWVWObjectiveDTO.OWNER_RED_STRING:
+				return this.redWorld;
+			case IWVWObjectiveDTO.OWNER_GREEN_STRING:
+				return this.greenWorld;
+			case IWVWObjectiveDTO.OWNER_BLUE_STRING:
+				return this.blueWorld;
+			default:
+				throw new IllegalArgumentException("Invalid dtoOwnerString: "+dtoOwnerString);
+		}
 	}
 }

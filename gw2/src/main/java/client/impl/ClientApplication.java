@@ -1,13 +1,9 @@
 package client.impl;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.Locale;
-
 import model.IModelFactory;
-import model.wvw.IWVWMatch;
 import model.wvw.IWVWModelFactory;
-import api.dto.IWVWMatchDTO;
+import synchronizer.APISynchronizerDeamon;
 import api.service.IWVWService;
 import client.IClientApplication;
 
@@ -31,20 +27,13 @@ class ClientApplication implements IClientApplication {
 	}
 
 	public void start() {
-		final IWVWMatchDTO matchDto = this.wvwService.retrieveAllMatches().getMatches()[0];
-		System.out.println(matchDto);
-		
-		final IWVWMatch match = this.getWVWModelFactory().createMatchBuilder().fromMatchDTO(matchDto, Locale.GERMAN).build();
-		System.out.println(match);
-
-		// final APISynchronizerDeamon deamon = new
-		// APISynchronizerDeamon(this.wvwService);
-		// deamon.startAndWait();
-		// try {
-		// Thread.sleep(10000);
-		// } catch (InterruptedException e) {
-		// e.printStackTrace();
-		// }
+		final APISynchronizerDeamon deamon = new APISynchronizerDeamon();
+		deamon.startAndWait();
+		try {
+			Thread.sleep(10000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public IWVWService getWVWService() {
