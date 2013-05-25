@@ -9,8 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 
-import synchronizer.poolaction.SynchronizeMatchesAction;
-
+import synchronizer.poolaction.SynchronizeMatchAction;
 import api.service.IWVWService;
 import api.service.dto.IWVWMatchDTO;
 
@@ -43,7 +42,7 @@ public class APISynchronizerDeamon extends AbstractScheduledService {
 		for (IWVWMatchDTO match : this.service.retrieveAllMatches().getMatches()){
 			matchIds.add(match.getId());
 		}
-		this.pool.invoke(new SynchronizeMatchesAction(this.service, matchIds, CHUNK_SIZE));
+		this.pool.invoke(new SynchronizeMatchAction(this.service, matchIds, CHUNK_SIZE));
 		
 		final long endTime = System.currentTimeMillis();
 		final long executionTime = endTime-startTimestamp;

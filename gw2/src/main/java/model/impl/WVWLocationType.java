@@ -6,80 +6,16 @@ import static com.google.common.base.Preconditions.checkState;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
-
 import model.IWVWLocationType;
 import model.IWVWMapType;
+import model.IWVWObjectiveType;
+
+import org.apache.log4j.Logger;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
-/**
- * <ul>
- * <li>id:1 = “Overlook”,25</li>
- * <li>id:2 = “Valley”,25</li>
- * <li>id:3 = “Lowlands”,25</li>
- * <li>id:4 = “Golanta Clearing”,5</li>
- * <li>id:5 = “Pangloss Rise”,5</li>
- * <li>id:6 = “Speldan Clearcut”,5</li>
- * <li>id:7 = “Danelon Passage”,5</li>
- * <li>id:8 = “Umberglade Woods”,5</li>
- * <li>id:9 = “Stonemist Castle”,35</li>
- * <li>id:10 = “Rogue’s Quarry”,5</li>
- * <li>id:11 = “Aldon’s Ledge”,10</li>
- * <li>id:12 = “Wildcreek Run”,10</li>
- * <li>id:13 = “Jerrifer’s Slough”,10</li>
- * <li>id:14 = “Klovan Gully”,10</li>
- * <li>id:15 = “Langor Gulch”,10</li>
- * <li>id:16 = “Quentin Lake”,10</li>
- * <li>id:17 = “Mendon’s Gap”,10</li>
- * <li>id:18 = “Anzalias Pass”,10</li>
- * <li>id:19 = “Ogrewatch Cut”,10</li>
- * <li>id:20 = “Veloka Slope”,10</li>
- * <li>id:21 = “Durios Gulch”,10</li>
- * <li>id:22 = “Bravost Escarpment”,10</li>
- * <li>id:23 = “Garrison”,25</li>
- * <li>id:24 = “Champion’s demense”,5</li>
- * <li>id:25 = “Redbriar”,10</li>
- * <li>id:26 = “Greenlake”,10</li>
- * <li>id:27 = “Ascension Bay”,25</li>
- * <li>id:28 = “Dawn’s Eyrie”,10</li>
- * <li>id:29 = “The Spiritholme”,5</li>
- * <li>id:30 = “Woodhaven”,10</li>
- * <li>id:31 = “Askalion Hills”,25</li>
- * <li>id:32 = “Etheron Hills”,25</li>
- * <li>id:33 = “Dreaming Bay”,25</li>
- * <li>id:34 = “Victors’s Lodge”,5</li>
- * <li>id:35 = “Greenbriar”,10</li>
- * <li>id:36 = “Bluelake”,10</li>
- * <li>id:37 = “Garrison”,25</li>
- * <li>id:38 = “Longview”,10</li>
- * <li>id:39 = “The Godsword”,5</li>
- * <li>id:40 = “Cliffside”,10</li>
- * <li>id:41 = “Shadaran Hills”,25</li>
- * <li>id:42 = “Redlake”,10</li>
- * <li>id:43 = “Hero’s Lodge”,5</li>
- * <li>id:44 = “Dreadfall Bay”,25</li>
- * <li>id:45 = “Bluebriar”,10</li>
- * <li>id:46 = “Garrison”,25</li>
- * <li>id:47 = “Sunnyhill”,10</li>
- * <li>id:48 = “Faithleap”,5</li>
- * <li>id:49 = “Bluevale Refuge”,5</li>
- * <li>id:50 = “Bluewater Lowlands”,5</li>
- * <li>id:51 = “Astralholme”,5</li>
- * <li>id:52 = “Arah’s Hope”,5</li>
- * <li>id:53 = “Greenvale Refuge”,5</li>
- * <li>id:54 = “Foghaven”,5</li>
- * <li>id:55 = “Redwater Lowlands”,5</li>
- * <li>id:56 = “The Titanpaw”,5</li>
- * <li>id:57 = “Cragtop”,10</li>
- * <li>id:58 = “Godslore”,5</li>
- * <li>id:59 = “Redvale Refuge”,5</li>
- * <li>id:60 = “Stargrove”,5</li>
- * <li>id:61 = “Greenwater Lowlands”,5];</li>
- * </ul>
- */
 enum WVWLocationType implements IWVWLocationType {
 	// eternal battlegrounds -> spawns
 	/**
@@ -95,29 +31,29 @@ enum WVWLocationType implements IWVWLocationType {
 	 */
 	BLUE_WORLD_HILL(WVWMapType.CENTER),
 	// eternal battleground -> objectives
-	RED_WORLD_OVERLOOK(1, WVWMapType.CENTER),
-	BLUE_WORLD_VALLEY(2, WVWMapType.CENTER),
-	GREEN_WORLD_LOWLANDS(3, WVWMapType.CENTER),
-	GOLANTA_CLEARING(4, WVWMapType.CENTER),
-	PANGLOSS_RISE(5, WVWMapType.CENTER),
-	SPELDAN_CLEARCUT(6, WVWMapType.CENTER),
-	DANELON_PASSAGE(7, WVWMapType.CENTER),
-	UMBERGLADE_WOODS(8, WVWMapType.CENTER),
-	STONEMIST_CASTLE(9, WVWMapType.CENTER),
-	ROGUES_QUARRY(10, WVWMapType.CENTER),
-	ALDONS_LEDGE(11, WVWMapType.CENTER),
-	WILDCREEK_RUN(12, WVWMapType.CENTER),
-	JERRIFERS_SLOUGH(13, WVWMapType.CENTER),
-	KLOVAN_GULLY(14, WVWMapType.CENTER),
-	LANGOR_GULCH(15, WVWMapType.CENTER),
-	QUENTIN_LAKE(16, WVWMapType.CENTER),
-	MENDONS_GAP(17, WVWMapType.CENTER),
-	ANZALIAS_PASS(18, WVWMapType.CENTER),
-	OGRE_WATCH(19, WVWMapType.CENTER),
-	VELOKA_SLOPE(20, WVWMapType.CENTER),
-	DURIOS_GULCH(21, WVWMapType.CENTER),
-	BRAVOST_ESCARPMENT(22, WVWMapType.CENTER),
-	
+	RED_WORLD_OVERLOOK(1, WVWObjectiveType.KEEP, WVWMapType.CENTER),
+	BLUE_WORLD_VALLEY(2, WVWObjectiveType.KEEP, WVWMapType.CENTER),
+	GREEN_WORLD_LOWLANDS(3, WVWObjectiveType.KEEP, WVWMapType.CENTER),
+	GOLANTA_CLEARING(4, WVWObjectiveType.CAMP, WVWMapType.CENTER),
+	PANGLOSS_RISE(5, WVWObjectiveType.CAMP, WVWMapType.CENTER),
+	SPELDAN_CLEARCUT(6, WVWObjectiveType.CAMP, WVWMapType.CENTER),
+	DANELON_PASSAGE(7, WVWObjectiveType.CAMP, WVWMapType.CENTER),
+	UMBERGLADE_WOODS(8, WVWObjectiveType.CAMP, WVWMapType.CENTER),
+	STONEMIST_CASTLE(9, WVWObjectiveType.CASTLE, WVWMapType.CENTER),
+	ROGUES_QUARRY(10, WVWObjectiveType.CAMP, WVWMapType.CENTER),
+	ALDONS_LEDGE(11, WVWObjectiveType.TOWER, WVWMapType.CENTER),
+	WILDCREEK_RUN(12, WVWObjectiveType.TOWER, WVWMapType.CENTER),
+	JERRIFERS_SLOUGH(13, WVWObjectiveType.TOWER, WVWMapType.CENTER),
+	KLOVAN_GULLY(14, WVWObjectiveType.TOWER, WVWMapType.CENTER),
+	LANGOR_GULCH(15, WVWObjectiveType.TOWER, WVWMapType.CENTER),
+	QUENTIN_LAKE(16, WVWObjectiveType.TOWER, WVWMapType.CENTER),
+	MENDONS_GAP(17, WVWObjectiveType.TOWER, WVWMapType.CENTER),
+	ANZALIAS_PASS(18, WVWObjectiveType.TOWER, WVWMapType.CENTER),
+	OGRE_WATCH(19, WVWObjectiveType.TOWER, WVWMapType.CENTER),
+	VELOKA_SLOPE(20, WVWObjectiveType.TOWER, WVWMapType.CENTER),
+	DURIOS_GULCH(21, WVWObjectiveType.TOWER, WVWMapType.CENTER),
+	BRAVOST_ESCARPMENT(22, WVWObjectiveType.TOWER, WVWMapType.CENTER),
+
 	// red -> spawn
 	/**
 	 * red spawn
@@ -130,21 +66,21 @@ enum WVWLocationType implements IWVWLocationType {
 	/**
 	 * blue spawn
 	 */
-	RED_WORLD_BLUE_BORDER(WVWMapType.RED),	
+	RED_WORLD_BLUE_BORDER(WVWMapType.RED),
 	// red -> objectives
-	ETHERON_HILLS(32, WVWMapType.RED),
-	DREAMING_BAY(33, WVWMapType.RED),
-	VICTORS_LODGE(34, WVWMapType.RED),
-	GREENBRIAR(35, WVWMapType.RED),
-	BLUELAKE(36, WVWMapType.RED),
-	RED_WORLD_GARRISON(37, WVWMapType.RED), // ???
-	LONGVIEW(38, WVWMapType.RED),
-	THE_GODSWORD(39, WVWMapType.RED),
-	CLIFFSIDE(40, WVWMapType.RED),
-	BLUEWATER_LOWLANDS(50, WVWMapType.RED),
-	ASTRALHOLME(51, WVWMapType.RED),
-	ARAHS_HOPE(52, WVWMapType.RED),
-	GREENVALE_REFUGE(53, WVWMapType.RED),
+	ETHERON_HILLS(32, WVWObjectiveType.KEEP, WVWMapType.RED),
+	DREAMING_BAY(33, WVWObjectiveType.KEEP, WVWMapType.RED),
+	VICTORS_LODGE(34, WVWObjectiveType.CAMP, WVWMapType.RED),
+	GREENBRIAR(35, WVWObjectiveType.TOWER, WVWMapType.RED),
+	BLUELAKE(36, WVWObjectiveType.TOWER, WVWMapType.RED),
+	RED_WORLD_GARRISON(37, WVWObjectiveType.KEEP, WVWMapType.RED),
+	LONGVIEW(38, WVWObjectiveType.TOWER, WVWMapType.RED),
+	THE_GODSWORD(39, WVWObjectiveType.CAMP, WVWMapType.RED),
+	CLIFFSIDE(40, WVWObjectiveType.TOWER, WVWMapType.RED),
+	BLUEWATER_LOWLANDS(50, WVWObjectiveType.CAMP, WVWMapType.RED),
+	ASTRALHOLME(51, WVWObjectiveType.CAMP, WVWMapType.RED),
+	ARAHS_HOPE(52, WVWObjectiveType.CAMP, WVWMapType.RED),
+	GREENVALE_REFUGE(53, WVWObjectiveType.CAMP, WVWMapType.RED),
 	// blue -> spawn
 	/**
 	 * blue spawn
@@ -157,21 +93,21 @@ enum WVWLocationType implements IWVWLocationType {
 	/**
 	 * red spawn
 	 */
-	BLUE_WORLD_RED_BORDER(WVWMapType.BLUE),	
+	BLUE_WORLD_RED_BORDER(WVWMapType.BLUE),
 	// blue -> objectives
-	CHAMPIONS_DEMENSE(24, WVWMapType.BLUE),
-	BLUE_WORLD_GARRISON(23, WVWMapType.BLUE), // ???
-	REDBRIAR(25, WVWMapType.BLUE),
-	GREENLAKE(26, WVWMapType.BLUE),
-	ASCENSION_BAY(27, WVWMapType.BLUE),
-	DAWNS_EYRIE(28, WVWMapType.BLUE),
-	THE_SPIRITHOLME(29, WVWMapType.BLUE),
-	WOODHAVEN(30, WVWMapType.BLUE),
-	ASKALION_HILLS(31, WVWMapType.BLUE),
-	GODSLORE(58, WVWMapType.BLUE),
-	REDVALE_REFUGE(59, WVWMapType.BLUE),
-	STARGROVE(60, WVWMapType.BLUE),
-	GREEMWATER_LOWLANDS(61, WVWMapType.BLUE),
+	CHAMPIONS_DEMENSE(24, WVWObjectiveType.CAMP, WVWMapType.BLUE),
+	BLUE_WORLD_GARRISON(23, WVWObjectiveType.KEEP, WVWMapType.BLUE),
+	REDBRIAR(25, WVWObjectiveType.TOWER, WVWMapType.BLUE),
+	GREENLAKE(26, WVWObjectiveType.TOWER, WVWMapType.BLUE),
+	ASCENSION_BAY(27, WVWObjectiveType.KEEP, WVWMapType.BLUE),
+	DAWNS_EYRIE(28, WVWObjectiveType.TOWER, WVWMapType.BLUE),
+	THE_SPIRITHOLME(29, WVWObjectiveType.CAMP, WVWMapType.BLUE),
+	WOODHAVEN(30, WVWObjectiveType.TOWER, WVWMapType.BLUE),
+	ASKALION_HILLS(31, WVWObjectiveType.KEEP, WVWMapType.BLUE),
+	GODSLORE(58, WVWObjectiveType.CAMP, WVWMapType.BLUE),
+	REDVALE_REFUGE(59, WVWObjectiveType.CAMP, WVWMapType.BLUE),
+	STARGROVE(60, WVWObjectiveType.CAMP, WVWMapType.BLUE),
+	GREEMWATER_LOWLANDS(61, WVWObjectiveType.CAMP, WVWMapType.BLUE),
 	// green -> spawn
 	/**
 	 * green spawn
@@ -184,27 +120,27 @@ enum WVWLocationType implements IWVWLocationType {
 	/**
 	 * red spawn
 	 */
-	GREEN_WORLD_RED_BORDER(WVWMapType.GREEN),	
+	GREEN_WORLD_RED_BORDER(WVWMapType.GREEN),
 	// green -> objectives
-	SHADARAN_HILLS(41, WVWMapType.GREEN),
-	REDLAKE(42, WVWMapType.GREEN),
-	HEROS_LODGE(43, WVWMapType.GREEN),
-	DREADFALL_BAY(44, WVWMapType.GREEN),
-	BLUEBRIAR(45, WVWMapType.GREEN),
-	GREEN_WORLD_GARRISON(46, WVWMapType.GREEN), // ???
-	SUNNYHILL(47, WVWMapType.GREEN),
-	FAITHLEAP(48, WVWMapType.GREEN),
-	BLUEVALE_REFUGE(49, WVWMapType.GREEN),
-	FOGHAVEN(54, WVWMapType.GREEN),
-	REDWATER_LOWLANDS(55, WVWMapType.GREEN),
-	THE_TITANPAW(56, WVWMapType.GREEN),
-	CRAGTOP(57, WVWMapType.GREEN);
+	SHADARAN_HILLS(41, WVWObjectiveType.KEEP, WVWMapType.GREEN),
+	REDLAKE(42, WVWObjectiveType.TOWER, WVWMapType.GREEN),
+	HEROS_LODGE(43, WVWObjectiveType.CAMP, WVWMapType.GREEN),
+	DREADFALL_BAY(44, WVWObjectiveType.KEEP, WVWMapType.GREEN),
+	BLUEBRIAR(45, WVWObjectiveType.TOWER, WVWMapType.GREEN),
+	GREEN_WORLD_GARRISON(46, WVWObjectiveType.KEEP, WVWMapType.GREEN),
+	SUNNYHILL(47, WVWObjectiveType.TOWER, WVWMapType.GREEN),
+	FAITHLEAP(48, WVWObjectiveType.CAMP, WVWMapType.GREEN),
+	BLUEVALE_REFUGE(49, WVWObjectiveType.CAMP, WVWMapType.GREEN),
+	FOGHAVEN(54, WVWObjectiveType.CAMP, WVWMapType.GREEN),
+	REDWATER_LOWLANDS(55, WVWObjectiveType.CAMP, WVWMapType.GREEN),
+	THE_TITANPAW(56, WVWObjectiveType.CAMP, WVWMapType.GREEN),
+	CRAGTOP(57, WVWObjectiveType.TOWER, WVWMapType.GREEN);
 
 	private static final IWVWMapType CENTER_MAPTYPE = WVWMapType.CENTER;
 	private static final IWVWMapType RED_MAPTYPE = WVWMapType.RED;
 	private static final IWVWMapType GREEN_MAPTYPE = WVWMapType.GREEN;
 	private static final IWVWMapType BLUE_MAPTYPE = WVWMapType.BLUE;
-	
+
 	private static final Logger LOGGER = Logger.getLogger(WVWLocationType.class);
 	private static final Map<Integer, IWVWLocationType> LOCATIONTYPES_MAPPED_BY_OBJECTIVE_ID;
 	private static final Map<IWVWMapType, Set<IWVWLocationType>> LOCATIONTYPES_MAPPED_BY_MAPTYPE;
@@ -218,46 +154,53 @@ enum WVWLocationType implements IWVWLocationType {
 			if (location.getObjectiveId().isPresent()) {
 				mapByObjectiveIdBuilder.put(location.getObjectiveId().get(), location);
 			}
-			if(location.getMapType().isCenter()) {
+			if (location.getMapType().isCenter()) {
 				centerLocationSetBuilder.add(location);
-			}else if(location.getMapType().isBlue()) {
+			} else if (location.getMapType().isBlue()) {
 				blueLocationSetBuilder.add(location);
-			}else if(location.getMapType().isGreen()) {
+			} else if (location.getMapType().isGreen()) {
 				greenLocationSetBuilder.add(location);
-			}else if(location.getMapType().isRed()) {
-				redLocationSetBuilder.add(location);				
-			}else {
-				LOGGER.fatal("Invalid map type("+location.getMapType()+") for location "+location);
-				throw new IllegalStateException("Invalid map type("+location.getMapType()+") for location "+location);
+			} else if (location.getMapType().isRed()) {
+				redLocationSetBuilder.add(location);
+			} else {
+				LOGGER.fatal("Invalid map type(" + location.getMapType() + ") for location " + location);
+				throw new IllegalStateException("Invalid map type(" + location.getMapType() + ") for location " + location);
 			}
 		}
 		LOCATIONTYPES_MAPPED_BY_OBJECTIVE_ID = mapByObjectiveIdBuilder.build();
-		LOCATIONTYPES_MAPPED_BY_MAPTYPE = ImmutableMap.<IWVWMapType, Set<IWVWLocationType>> builder()
-				.put(RED_MAPTYPE, redLocationSetBuilder.build())
-				.put(GREEN_MAPTYPE, greenLocationSetBuilder.build())
-				.put(BLUE_MAPTYPE, blueLocationSetBuilder.build())
+		LOCATIONTYPES_MAPPED_BY_MAPTYPE = ImmutableMap.<IWVWMapType, Set<IWVWLocationType>> builder().put(RED_MAPTYPE, redLocationSetBuilder.build())
+				.put(GREEN_MAPTYPE, greenLocationSetBuilder.build()).put(BLUE_MAPTYPE, blueLocationSetBuilder.build())
 				.put(CENTER_MAPTYPE, centerLocationSetBuilder.build()).build();
-		
-		LOGGER.trace("Initialized "+WVWLocationType.class.getSimpleName()+":\n"+LOCATIONTYPES_MAPPED_BY_MAPTYPE+"\n"+LOCATIONTYPES_MAPPED_BY_OBJECTIVE_ID);
+
+		LOGGER.trace("Initialized " + WVWLocationType.class.getSimpleName() + ":\n" + LOCATIONTYPES_MAPPED_BY_MAPTYPE + "\n"
+				+ LOCATIONTYPES_MAPPED_BY_OBJECTIVE_ID);
 		checkState(WVWLocationType.forMapTyp(CENTER_MAPTYPE).isPresent());
 		checkState(WVWLocationType.forMapTyp(BLUE_MAPTYPE).isPresent());
 		checkState(WVWLocationType.forMapTyp(GREEN_MAPTYPE).isPresent());
-		checkState(WVWLocationType.forMapTyp(RED_MAPTYPE).isPresent());		
-		checkState(WVWLocationType.forMapTyp(GREEN_MAPTYPE).get().size() == WVWLocationType.forMapTyp(RED_MAPTYPE).get().size(), "green("+WVWLocationType.forMapTyp(GREEN_MAPTYPE).get().size()+")==red("+WVWLocationType.forMapTyp(RED_MAPTYPE).get().size()+")");
-		checkState(WVWLocationType.forMapTyp(BLUE_MAPTYPE).get().size() == WVWLocationType.forMapTyp(GREEN_MAPTYPE).get().size(), "blue("+WVWLocationType.forMapTyp(BLUE_MAPTYPE).get().size()+")==green("+WVWLocationType.forMapTyp(GREEN_MAPTYPE).get().size()+")");			
+		checkState(WVWLocationType.forMapTyp(RED_MAPTYPE).isPresent());
+		checkState(WVWLocationType.forMapTyp(GREEN_MAPTYPE).get().size() == WVWLocationType.forMapTyp(RED_MAPTYPE).get().size(), "green("
+				+ WVWLocationType.forMapTyp(GREEN_MAPTYPE).get().size() + ")==red(" + WVWLocationType.forMapTyp(RED_MAPTYPE).get().size() + ")");
+		checkState(WVWLocationType.forMapTyp(BLUE_MAPTYPE).get().size() == WVWLocationType.forMapTyp(GREEN_MAPTYPE).get().size(), "blue("
+				+ WVWLocationType.forMapTyp(BLUE_MAPTYPE).get().size() + ")==green(" + WVWLocationType.forMapTyp(GREEN_MAPTYPE).get().size() + ")");
 	}
 
 	private final IWVWMapType mapType;
 	private final Optional<Integer> objectiveId;
+	private final Optional<IWVWObjectiveType> objectiveType;
 
 	private WVWLocationType(IWVWMapType type) {
-		this(null, checkNotNull(type));
+		this(null, null, checkNotNull(type));
 	}
 
-	private WVWLocationType(Integer objectiveId, IWVWMapType type) {
+	private WVWLocationType(Integer objectiveId, IWVWObjectiveType objectiveType, IWVWMapType type) {
 		this.objectiveId = Optional.fromNullable(objectiveId);
+		this.objectiveType = Optional.fromNullable(objectiveType);
 		checkNotNull(type);
 		this.mapType = type;
+	}
+
+	public Optional<IWVWObjectiveType> getObjectiveType() {
+		return this.objectiveType;
 	}
 
 	public String getLabel() {

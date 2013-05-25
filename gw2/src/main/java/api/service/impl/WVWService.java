@@ -35,7 +35,7 @@ import com.google.inject.Inject;
 import com.sun.jersey.api.client.WebResource;
 
 public class WVWService extends AbstractService implements IWVWService {
-	private static final long MATCH_CACHE_EXPIRE_MILLIS = 1000 * 60 * 60; // 1h
+	private static final long MATCH_CACHE_EXPIRE_MILLIS = 1000 * 60 * 10; // 10m
 	private static final long MATCH_DETAILS_CACHE_EXPIRE_MILLIS = 1000 * 3; // 3s
 	private static final long WOLRD_NAMES_CACHE_EXPIRE_MILLIS = 1000 * 60 * 60 * 12; // 12h
 	private static final long OBJECTIVE_NAMES_CACHE_EXPIRE_MILLIS = 1000 * 60 * 60 * 12; // 12h

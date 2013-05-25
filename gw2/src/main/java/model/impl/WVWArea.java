@@ -19,18 +19,24 @@ class WVWArea extends AbstractHasChannel implements IWVWArea {
 	private static final IWVWMapType RED_TYPE = WVWMapType.RED;
 	private static final IWVWMapType GREEN_TYPE = WVWMapType.GREEN;
 	private static final IWVWMapType BLUE_TYPE = WVWMapType.BLUE;
+	static {
+		checkState(CENTER_TYPE.isCenter());
+		checkState(RED_TYPE.isCenter());
+		checkState(GREEN_TYPE.isCenter());
+		checkState(BLUE_TYPE.isCenter());
+	}
 	
 	private final Map<IWVWMapType, IWVWMap> maps;
 	
 	public WVWArea(IWVWMap center, IWVWMap red, IWVWMap green, IWVWMap blue){
 		checkNotNull(center);
-		checkArgument(center.getType().equals(CENTER_TYPE));
+		checkArgument(center.getType().isCenter());
 		checkNotNull(red);
-		checkArgument(red.getType().equals(RED_TYPE));
+		checkArgument(red.getType().isRed());
 		checkNotNull(green);
-		checkArgument(green.getType().equals(GREEN_TYPE));
+		checkArgument(green.getType().isGreen());
 		checkNotNull(blue);		
-		checkArgument(blue.getType().equals(BLUE_TYPE));
+		checkArgument(blue.getType().isBlue());
 		this.maps = ImmutableMap.<IWVWMapType, IWVWMap>builder().put(CENTER_TYPE, center).put(RED_TYPE, red).put(GREEN_TYPE, green).put(BLUE_TYPE, blue).build();
 	}
 	

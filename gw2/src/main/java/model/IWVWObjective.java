@@ -1,9 +1,13 @@
 package model;
 
-import java.util.Locale;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 
 public interface IWVWObjective extends IHasWVWLocation, IHasChannel {
-	
-	String getName(Locale locale);
+	List<IWVWObjectiveEvent> getEventHistory();
+	String getLabel();
 	IWVWObjectiveType getType();
+	void capture(IWorld capturingWorld);
+	long getRemainingBuffDuration(TimeUnit unit);
 }

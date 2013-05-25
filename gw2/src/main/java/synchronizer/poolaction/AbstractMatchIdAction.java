@@ -12,19 +12,19 @@ import com.google.common.collect.ImmutableList;
 
 import api.service.IWVWService;
 
-public class SynchronizeMatchesAction extends RecursiveAction{
+public abstract class AbstractMatchIdAction<A extends AbstractMatchIdAction<?>> extends RecursiveAction{
 	private static final long serialVersionUID = -2142136115104413103L;
-	private static final Logger LOGGER = Logger.getLogger(SynchronizeMatchesAction.class);
+	private static final Logger LOGGER = Logger.getLogger(AbstractMatchIdAction.class);
 	private final int chunkSize;
 	private final List<String> matchIds;
 	private final int fromInclusive;
 	private final int toExclusive;
 	private final IWVWService service;
 	
-	public SynchronizeMatchesAction(IWVWService service, List<String> matchIds, int chunkSize){
+	public AbstractMatchIdAction(IWVWService service, List<String> matchIds, int chunkSize){
 		this(checkNotNull(service), ImmutableList.copyOf(checkNotNull(matchIds)), chunkSize,0, matchIds.size());
 	}
-	private SynchronizeMatchesAction(IWVWService service, List<String> matchIds, int chunkSize, int fromInclusive, int toExclusive){
+	protected AbstractMatchIdAction(IWVWService service, List<String> matchIds, int chunkSize, int fromInclusive, int toExclusive){
 		checkArgument(chunkSize > 0);
 		checkNotNull(matchIds);
 		checkArgument(fromInclusive >= 0);
@@ -38,21 +38,23 @@ public class SynchronizeMatchesAction extends RecursiveAction{
 		LOGGER.trace("New " + this.getClass().getSimpleName() + " that handles match ids " + this.matchIds.subList(this.fromInclusive, this.toExclusive));
 	}
 	
-	protected SynchronizeMatchesAction createSubTask(List<String> mapIds, int chunkSize, int fromInclusive, int toExclusive) {
-		return new SynchronizeMatchesAction(this.service, mapIds, chunkSize, fromInclusive, toExclusive);
+	
+	
+	protected final IWVWService getService() {
+		return service;
 	}
 	
-	private void synchronizeMatch(String matchId){
-		this.service.retrieveMatchDetails(matchId);
-	}
+	protected abstract A createSubTask(List<String> mapIds, int chunkSize, int fromInclusive, int toExclusive);
+	
+	protected abstract void perform(String matchId);
 	
 	@Override
-	protected void compute() {
+	protected final void compute() {
 		try {
 			if (this.toExclusive - this.fromInclusive <= this.chunkSize) {
 				// compute directly
 				for (int index = this.fromInclusive; index < this.toExclusive; index++) {
-					this.synchronizeMatch(this.matchIds.get(index));
+					this.perform(this.matchIds.get(index));
 				}
 				return;
 			} else {
