@@ -1,16 +1,16 @@
 package client;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Locale;
+
+import synchronizer.APISynchronizerDeamon;
 
 import api.APIModule;
 import api.service.IWVWService;
-import api.service.dto.IWVWMatchDTO;
-import api.service.dto.IWVWMatchesDTO;
 
-import com.google.common.base.Objects;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -33,11 +33,16 @@ public class ClientApplication {
 	private IWVWService wvwService;
 
 	public void start() {
+		checkState(this.wvwService != null);
+		
+		
+		APISynchronizerDeamon deamon = new APISynchronizerDeamon(this.wvwService);
+		deamon.startAndWait();
 
-		IWVWMatchesDTO matches = this.wvwService.retrieveAllMatches();
-		for (IWVWMatchDTO match : matches.getMatches()) {
-			this.wvwService.retrieveMatchDetails(match.getId());
+		try {
+			Thread.sleep(10000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
-
 	}
 }

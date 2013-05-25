@@ -33,6 +33,12 @@ import com.google.inject.Inject;
 import com.sun.jersey.api.client.WebResource;
 
 public class WVWService extends AbstractService implements IWVWService {
+	private static final long MATCH_CACHE_EXPIRE_MILLIS = 1000 * 60 * 60; // 1h
+	private static final long MATCH_DETAILS_CACHE_EXPIRE_MILLIS = 1000 * 3; // 3s
+	private static final long WOLRD_NAMES_CACHE_EXPIRE_MILLIS = 1000 * 60 * 60 * 12; // 12h
+	private static final long OBJECTIVE_NAMES_CACHE_EXPIRE_MILLIS = 1000 * 60 * 60 * 12; // 12h
+	
+	
 	private static final String API_VERSION = "v1";
 	private static final Logger LOGGER = Logger.getLogger(WVWService.class);
 
@@ -53,16 +59,16 @@ public class WVWService extends AbstractService implements IWVWService {
 
 	@Inject
 	private IWVWDTOFactory wvwDTOFactory;
-	private final Cache<Locale, IWorldNameDTO[]> worldNamesCache = CacheBuilder.newBuilder().expireAfterAccess(1, TimeUnit.HOURS).build();
+	private final Cache<Locale, IWorldNameDTO[]> worldNamesCache = CacheBuilder.newBuilder().expireAfterWrite(WOLRD_NAMES_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build();
 	private final Map<Locale, Cache<Integer, IWorldNameDTO>> worldNameCaches = new HashMap<Locale, Cache<Integer, IWorldNameDTO>>();
 
-	private final Cache<Locale, IWVWObjectiveNameDTO[]> objectiveNamesCache = CacheBuilder.newBuilder().expireAfterAccess(1, TimeUnit.HOURS).build();
+	private final Cache<Locale, IWVWObjectiveNameDTO[]> objectiveNamesCache = CacheBuilder.newBuilder().expireAfterWrite(OBJECTIVE_NAMES_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build();
 	private final Map<Locale, Cache<Integer, IWVWObjectiveNameDTO>> objectiveNameCaches = new HashMap<Locale, Cache<Integer, IWVWObjectiveNameDTO>>();
 
-	private final Cache<String, IWVWMatchDetailsDTO> matchDetailsCache = CacheBuilder.newBuilder().expireAfterAccess(10, TimeUnit.SECONDS).build();
+	private final Cache<String, IWVWMatchDetailsDTO> matchDetailsCache = CacheBuilder.newBuilder().expireAfterWrite(MATCH_DETAILS_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build();
 	
-	private final Cache<String, IWVWMatchesDTO> matchesCache = CacheBuilder.newBuilder().initialCapacity(1).maximumSize(1).expireAfterAccess(1, TimeUnit.HOURS).build();
-	private final Cache<String, IWVWMatchDTO> matchCache = CacheBuilder.newBuilder().initialCapacity(1).maximumSize(1).expireAfterAccess(1, TimeUnit.HOURS).build();
+	private final Cache<String, IWVWMatchesDTO> matchesCache = CacheBuilder.newBuilder().initialCapacity(1).maximumSize(1).expireAfterWrite(MATCH_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build();
+	private final Cache<String, IWVWMatchDTO> matchCache = CacheBuilder.newBuilder().expireAfterWrite(MATCH_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build();
 
 	/**
 	 * get or create a locale specific cache for {@link IWorldNameDTO}s
@@ -75,7 +81,7 @@ public class WVWService extends AbstractService implements IWVWService {
 		if (!this.objectiveNameCaches.containsKey(locale)) {
 			synchronized (this) {
 				if (!this.worldNameCaches.containsKey(locale)) {
-					final Cache<Integer, IWorldNameDTO> newCache = CacheBuilder.newBuilder().expireAfterAccess(1, TimeUnit.HOURS).build();
+					final Cache<Integer, IWorldNameDTO> newCache = CacheBuilder.newBuilder().expireAfterWrite(WOLRD_NAMES_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build();
 					this.worldNameCaches.put(locale, newCache);
 				}
 			}
@@ -95,7 +101,7 @@ public class WVWService extends AbstractService implements IWVWService {
 		if (!this.objectiveNameCaches.containsKey(locale)) {
 			synchronized (this) {
 				if (!this.objectiveNameCaches.containsKey(locale)) {
-					final Cache<Integer, IWVWObjectiveNameDTO> newCache = CacheBuilder.newBuilder().expireAfterAccess(1, TimeUnit.HOURS).build();
+					final Cache<Integer, IWVWObjectiveNameDTO> newCache = CacheBuilder.newBuilder().expireAfterWrite(OBJECTIVE_NAMES_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build();
 					this.objectiveNameCaches.put(locale, newCache);
 				}
 			}
