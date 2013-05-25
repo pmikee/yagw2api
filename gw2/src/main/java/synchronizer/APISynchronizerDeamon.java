@@ -10,8 +10,8 @@ import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 
 import synchronizer.poolaction.SynchronizeMatchAction;
+import api.dto.IWVWMatchDTO;
 import api.service.IWVWService;
-import api.service.dto.IWVWMatchDTO;
 
 import com.google.common.util.concurrent.AbstractScheduledService;
 

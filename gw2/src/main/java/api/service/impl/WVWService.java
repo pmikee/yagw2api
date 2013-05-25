@@ -18,13 +18,13 @@ import javax.ws.rs.core.MediaType;
 
 import org.apache.log4j.Logger;
 
+import api.dto.IWVWDTOFactory;
+import api.dto.IWVWMatchDTO;
+import api.dto.IWVWMatchDetailsDTO;
+import api.dto.IWVWMatchesDTO;
+import api.dto.IWVWObjectiveNameDTO;
+import api.dto.IWorldNameDTO;
 import api.service.IWVWService;
-import api.service.dto.IWVWDTOFactory;
-import api.service.dto.IWVWMatchDTO;
-import api.service.dto.IWVWMatchDetailsDTO;
-import api.service.dto.IWVWMatchesDTO;
-import api.service.dto.IWVWObjectiveNameDTO;
-import api.service.dto.IWorldNameDTO;
 
 import com.google.common.base.Optional;
 import com.google.common.cache.Cache;
@@ -34,7 +34,7 @@ import com.google.common.cache.RemovalNotification;
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.WebResource;
 
-public class WVWService extends AbstractService implements IWVWService {
+class WVWService extends AbstractService implements IWVWService {
 	private static final long MATCH_CACHE_EXPIRE_MILLIS = 1000 * 60 * 10; // 10m
 	private static final long MATCH_DETAILS_CACHE_EXPIRE_MILLIS = 1000 * 3; // 3s
 	private static final long WOLRD_NAMES_CACHE_EXPIRE_MILLIS = 1000 * 60 * 60 * 12; // 12h
@@ -59,9 +59,6 @@ public class WVWService extends AbstractService implements IWVWService {
 		}
 	}
 
-	// injections
-	@Inject
-	private IWVWDTOFactory wvwDTOFactory;
 	
 	// caches
 	private final Cache<Locale, IWorldNameDTO[]> worldNamesCache = CacheBuilder.newBuilder().expireAfterWrite(WOLRD_NAMES_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).removalListener(new RemovalListener<Locale, IWorldNameDTO[]>() {
@@ -91,7 +88,14 @@ public class WVWService extends AbstractService implements IWVWService {
 	}).build();
 	private final Cache<String, IWVWMatchDTO> matchCache = CacheBuilder.newBuilder().expireAfterWrite(MATCH_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build();
 
+	// injections
+	private IWVWDTOFactory wvwDTOFactory;
 	
+	@Inject
+	public WVWService(IWVWDTOFactory wvwDTOFactory) {
+		checkNotNull(wvwDTOFactory);
+		this.wvwDTOFactory = wvwDTOFactory;
+	}
 	
 	/**
 	 * get or create a locale specific cache for {@link IWorldNameDTO}s

@@ -2,11 +2,11 @@ package api.service;
 
 import java.util.Locale;
 
-import api.service.dto.IWVWMatchDTO;
-import api.service.dto.IWVWMatchDetailsDTO;
-import api.service.dto.IWVWMatchesDTO;
-import api.service.dto.IWVWObjectiveNameDTO;
-import api.service.dto.IWorldNameDTO;
+import api.dto.IWVWMatchDTO;
+import api.dto.IWVWMatchDetailsDTO;
+import api.dto.IWVWMatchesDTO;
+import api.dto.IWVWObjectiveNameDTO;
+import api.dto.IWorldNameDTO;
 
 import com.google.common.base.Optional;
 
