@@ -12,6 +12,7 @@ import model.wvw.IWVWObjectiveType;
 
 import org.apache.log4j.Logger;
 
+import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -227,5 +228,9 @@ enum WVWLocationType implements IWVWLocationType {
 	@Override
 	public boolean isObjectiveLocation() {
 		return this.getObjectiveId().isPresent() || this.getObjectiveType().isPresent();
+	}
+	
+	public String toString() {
+		return Objects.toStringHelper(this).add("label",this.getLabel()).add("isObjectiveLocation",this.isObjectiveLocation()).add("objectiveId",this.getObjectiveId()).add("objectiveType",this.getObjectiveType()).add("mapType", this.getMapType()).toString();
 	}
 }
