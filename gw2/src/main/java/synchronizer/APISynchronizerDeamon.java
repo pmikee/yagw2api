@@ -18,7 +18,7 @@ import com.google.common.util.concurrent.AbstractScheduledService;
 
 public class APISynchronizerDeamon extends AbstractScheduledService {
 	private static final int CHUNK_SIZE = 2;
-	private static final long INTERVAL_MILLIS = 5000; // 2s
+	private static final long INTERVAL_MILLIS = 3000; // 3s
 	private static final Logger LOGGER = Logger.getLogger(APISynchronizerDeamon.class);
 	
 	private final IWVWService service;

@@ -29,6 +29,8 @@ import api.service.dto.IWorldNameDTO;
 import com.google.common.base.Optional;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.RemovalListener;
+import com.google.common.cache.RemovalNotification;
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.WebResource;
 
@@ -57,19 +59,40 @@ public class WVWService extends AbstractService implements IWVWService {
 		}
 	}
 
+	// injections
 	@Inject
 	private IWVWDTOFactory wvwDTOFactory;
-	private final Cache<Locale, IWorldNameDTO[]> worldNamesCache = CacheBuilder.newBuilder().expireAfterWrite(WOLRD_NAMES_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build();
-	private final Map<Locale, Cache<Integer, IWorldNameDTO>> worldNameCaches = new HashMap<Locale, Cache<Integer, IWorldNameDTO>>();
-
-	private final Cache<Locale, IWVWObjectiveNameDTO[]> objectiveNamesCache = CacheBuilder.newBuilder().expireAfterWrite(OBJECTIVE_NAMES_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build();
-	private final Map<Locale, Cache<Integer, IWVWObjectiveNameDTO>> objectiveNameCaches = new HashMap<Locale, Cache<Integer, IWVWObjectiveNameDTO>>();
-
-	private final Cache<String, IWVWMatchDetailsDTO> matchDetailsCache = CacheBuilder.newBuilder().expireAfterWrite(MATCH_DETAILS_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build();
 	
-	private final Cache<String, IWVWMatchesDTO> matchesCache = CacheBuilder.newBuilder().initialCapacity(1).maximumSize(1).expireAfterWrite(MATCH_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build();
+	// caches
+	private final Cache<Locale, IWorldNameDTO[]> worldNamesCache = CacheBuilder.newBuilder().expireAfterWrite(WOLRD_NAMES_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).removalListener(new RemovalListener<Locale, IWorldNameDTO[]>() {
+		public void onRemoval(RemovalNotification<Locale, IWorldNameDTO[]> notification) {
+			// synchronize worldNamesCache and worldNameCaches
+			if(WVWService.this.worldNameCaches.containsKey(notification.getKey())){
+				WVWService.this.worldNameCaches.get(notification.getKey()).invalidateAll();
+			}
+		}
+	}).build();
+	private final Map<Locale, Cache<Integer, IWorldNameDTO>> worldNameCaches = new HashMap<Locale, Cache<Integer, IWorldNameDTO>>();
+	private final Cache<Locale, IWVWObjectiveNameDTO[]> objectiveNamesCache = CacheBuilder.newBuilder().expireAfterWrite(OBJECTIVE_NAMES_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).removalListener(new RemovalListener<Locale, IWVWObjectiveNameDTO[]>() {
+		public void onRemoval(RemovalNotification<Locale, IWVWObjectiveNameDTO[]> notification) {
+			// synchronize objectiveNamesCache and objectiveNameCaches
+			if(WVWService.this.objectiveNameCaches.containsKey(notification.getKey())){
+				WVWService.this.objectiveNameCaches.get(notification.getKey()).invalidateAll();
+			}
+		}
+	}).build();
+	private final Map<Locale, Cache<Integer, IWVWObjectiveNameDTO>> objectiveNameCaches = new HashMap<Locale, Cache<Integer, IWVWObjectiveNameDTO>>();
+	private final Cache<String, IWVWMatchDetailsDTO> matchDetailsCache = CacheBuilder.newBuilder().expireAfterWrite(MATCH_DETAILS_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build();	
+	private final Cache<String, IWVWMatchesDTO> matchesCache = CacheBuilder.newBuilder().initialCapacity(1).maximumSize(1).expireAfterWrite(MATCH_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).removalListener(new RemovalListener<String, IWVWMatchesDTO>() {
+		public void onRemoval(RemovalNotification<String, IWVWMatchesDTO> notification) {
+			// synchronize matchesCache and matchCache
+			WVWService.this.matchCache.invalidateAll();
+		}
+	}).build();
 	private final Cache<String, IWVWMatchDTO> matchCache = CacheBuilder.newBuilder().expireAfterWrite(MATCH_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build();
 
+	
+	
 	/**
 	 * get or create a locale specific cache for {@link IWorldNameDTO}s
 	 * 
