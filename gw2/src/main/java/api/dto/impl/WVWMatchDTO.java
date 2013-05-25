@@ -5,17 +5,20 @@ import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Locale;
 
+import utils.InjectionHelper;
+
 import api.dto.IWVWMatchDTO;
 import api.dto.IWVWMatchDetailsDTO;
 import api.dto.IWorldNameDTO;
+import api.service.IWVWService;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 
-class WVWMatchDTO extends AbstractDTOWithService implements IWVWMatchDTO {
-
+class WVWMatchDTO implements IWVWMatchDTO {
+	private static final transient IWVWService SERVICE = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWService.class);
 
 	@Since(1.0)
 	@SerializedName("wvw_match_id")
@@ -55,24 +58,24 @@ class WVWMatchDTO extends AbstractDTOWithService implements IWVWMatchDTO {
 	public Optional<IWorldNameDTO> getRedWorldName(Locale locale) {
 		checkNotNull(locale);
 		checkState(this.getRedWorldId() > 0);
-		return this.getService().retrieveWorldName(locale, this.getRedWorldId());
+		return SERVICE.retrieveWorldName(locale, this.getRedWorldId());
 	}
 
 	public Optional<IWorldNameDTO> getGreenWorldName(Locale locale) {
 		checkNotNull(locale);
 		checkState(this.getGreenWorldId() > 0);
-		return this.getService().retrieveWorldName(locale, this.getGreenWorldId());
+		return SERVICE.retrieveWorldName(locale, this.getGreenWorldId());
 	}
 
 	public Optional<IWorldNameDTO> getBlueWorldName(Locale locale) {
 		checkNotNull(locale);
 		checkState(this.getBlueWorldId() > 0);
-		return this.getService().retrieveWorldName(locale, this.getBlueWorldId());
+		return SERVICE.retrieveWorldName(locale, this.getBlueWorldId());
 	}
 
 	@Override
 	public Optional<IWVWMatchDetailsDTO> getDetails() {
 		checkState(this.id != null);
-		return Optional.fromNullable(this.getService().retrieveMatchDetails(this.id));
+		return Optional.fromNullable(SERVICE.retrieveMatchDetails(this.id));
 	}
 }

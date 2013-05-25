@@ -5,17 +5,21 @@ import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Arrays;
 
+import utils.InjectionHelper;
+
 import api.dto.IWVWMapDTO;
 import api.dto.IWVWMatchDTO;
 import api.dto.IWVWMatchDetailsDTO;
 import api.dto.IWVWScoresDTO;
+import api.service.IWVWService;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 
-class WVWMatchDetailsDTO extends AbstractDTOWithService implements IWVWMatchDetailsDTO {
+class WVWMatchDetailsDTO implements IWVWMatchDetailsDTO {
+	private static final transient IWVWService SERVICE = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWService.class);
 	@Since(1.0)
 	@SerializedName("match_id")
 	private String id;
@@ -47,7 +51,7 @@ class WVWMatchDetailsDTO extends AbstractDTOWithService implements IWVWMatchDeta
 
 	public Optional<IWVWMatchDTO> getMatch() {
 		checkState(this.getMatchID() != null);
-		return this.getService().retrieveMatch(this.getMatchID());
+		return SERVICE.retrieveMatch(this.getMatchID());
 	}
 
 	@Override

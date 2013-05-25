@@ -5,16 +5,20 @@ import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Locale;
 
+import utils.InjectionHelper;
+
 import api.dto.IWVWObjectiveDTO;
 import api.dto.IWVWObjectiveNameDTO;
+import api.service.IWVWService;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 
-class WVWObjectiveDTO extends AbstractDTOWithService implements IWVWObjectiveDTO {
-
+class WVWObjectiveDTO implements IWVWObjectiveDTO {
+	private static final transient IWVWService SERVICE = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWService.class);
+	
 	@Since(1.0)
 	@SerializedName("id")
 	private int id;
@@ -44,6 +48,6 @@ class WVWObjectiveDTO extends AbstractDTOWithService implements IWVWObjectiveDTO
 	public Optional<IWVWObjectiveNameDTO> getName(Locale locale) {
 		checkNotNull(locale);
 		checkState(this.getId() > 0);
-		return this.getService().retrieveObjectiveName(locale, this.getId());
+		return SERVICE.retrieveObjectiveName(locale, this.getId());
 	}
 }
