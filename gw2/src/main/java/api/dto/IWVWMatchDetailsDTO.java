@@ -10,7 +10,10 @@ public interface IWVWMatchDetailsDTO {
 
 	String getMatchID();
 
-	IWVWScoresDTO getScores();
+	int getRedScore();
+	int getGreenScore();
+	int getBlueScore();
+	
 
 	IWVWMapDTO[] getMaps();
 

@@ -6,11 +6,9 @@ import static com.google.common.base.Preconditions.checkState;
 import java.util.Arrays;
 
 import utils.InjectionHelper;
-
 import api.dto.IWVWMapDTO;
 import api.dto.IWVWMatchDTO;
 import api.dto.IWVWMatchDetailsDTO;
-import api.dto.IWVWScoresDTO;
 import api.service.IWVWService;
 
 import com.google.common.base.Objects;
@@ -35,17 +33,27 @@ class WVWMatchDetailsDTO implements IWVWMatchDetailsDTO {
 	public String getMatchID() {
 		return this.id;
 	}
-
-	public IWVWScoresDTO getScores() {
-		return WVWScoresDTO.fromArray(this.scores);
+	@Override
+	public int getRedScore() {
+		return this.scores[0];
 	}
 
+	@Override
+	public int getGreenScore() {
+		return this.scores[1];
+	}
+
+	@Override
+	public int getBlueScore() {
+		return this.scores[2];
+	}
+	
 	public IWVWMapDTO[] getMaps() {
 		return this.maps;
 	}
 
 	public String toString() {
-		return Objects.toStringHelper(this).add("id", this.id).add("scores", this.getScores()).add("maps", Arrays.deepToString(this.maps))
+		return Objects.toStringHelper(this).add("id", this.id).add("redScore", this.getRedScore()).add("greenScore", this.getGreenScore()).add("blueScore", this.getBlueScore()).add("maps", Arrays.deepToString(this.maps))
 				.add("match", this.getMatch()).toString();
 	}
 

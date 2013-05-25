@@ -79,7 +79,7 @@ public class WVWMapBuilder implements IWVWMapBuilder {
 			this.objective(WVW_MODEL_FACTORY.createObjectiveBuilder().fromDTO(objectiveDTO).build());
 		}
 		this.type(WVW_MODEL_FACTORY.getMapTypeForDTOString(dto.getType()));		
-		return this.blueScore(dto.getScores().getBlueScores()).redScore(dto.getScores().getRedScores()).greenScore(dto.getScores().getGreenScores());
+		return this.blueScore(dto.getBlueScore()).redScore(dto.getRedScore()).greenScore(dto.getGreenScore());
 	}
 
 	@Override

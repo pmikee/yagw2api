@@ -100,9 +100,9 @@ public class WVWMatchBuilder implements IWVWMatchBuilder {
 
 		final Optional<IWVWMatchDetailsDTO> details = dto.getDetails();
 		if (details.isPresent()) {
-			this.redScore(details.get().getScores().getRedScores());
-			this.blueScore(details.get().getScores().getBlueScores());
-			this.greenScore(details.get().getScores().getGreenScores());
+			this.redScore(details.get().getRedScore());
+			this.blueScore(details.get().getBlueScore());
+			this.greenScore(details.get().getGreenScore());
 		}
 		return this;
 	}
