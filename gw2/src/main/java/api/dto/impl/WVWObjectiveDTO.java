@@ -7,7 +7,6 @@ import java.util.Locale;
 
 import api.dto.IWVWObjectiveDTO;
 import api.dto.IWVWObjectiveNameDTO;
-import api.service.IWVWService;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
@@ -25,11 +24,7 @@ class WVWObjectiveDTO extends AbstractDTOWithService implements IWVWObjectiveDTO
 	@Since(1.0)
 	@SerializedName("owner_guild")
 	private String guildId;
-
-	public WVWObjectiveDTO(IWVWService service) {
-		super(service);
-	}
-
+	
 	public int getId() {
 		return this.id;
 	}

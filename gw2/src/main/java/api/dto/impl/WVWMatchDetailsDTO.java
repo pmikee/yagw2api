@@ -8,7 +8,6 @@ import api.dto.IWVWMapDTO;
 import api.dto.IWVWMatchDTO;
 import api.dto.IWVWMatchDetailsDTO;
 import api.dto.IWVWScoresDTO;
-import api.service.IWVWService;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
@@ -28,10 +27,6 @@ class WVWMatchDetailsDTO extends AbstractDTOWithService implements IWVWMatchDeta
 	@Since(1.0)
 	@SerializedName("maps")
 	private WVWMapDTO[] maps;
-
-	public WVWMatchDetailsDTO(IWVWService service) {
-		super(service);
-	}
 	
 	public String getMatchID() {
 		return this.id;

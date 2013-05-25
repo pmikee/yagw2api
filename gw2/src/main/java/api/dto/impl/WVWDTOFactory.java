@@ -3,7 +3,6 @@ package api.dto.impl;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
-import java.lang.reflect.Type;
 import java.util.Arrays;
 
 import org.apache.log4j.Logger;
@@ -17,7 +16,6 @@ import api.service.IWVWService;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.InstanceCreator;
 
 class WVWDTOFactory implements IWVWDTOFactory {
 	private static final Logger LOGGER = Logger.getLogger(WVWDTOFactory.class);
@@ -27,20 +25,7 @@ class WVWDTOFactory implements IWVWDTOFactory {
 	}
 
 	private Gson createGSON(final IWVWService service) {
-		return new GsonBuilder().excludeFieldsWithModifiers(java.lang.reflect.Modifier.TRANSIENT).setVersion(1.0)
-				.registerTypeAdapter(WVWMatchDTO.class, new InstanceCreator<WVWMatchDTO>() {
-					public WVWMatchDTO createInstance(Type type) {
-						return new WVWMatchDTO(service);
-					}
-				}).registerTypeAdapter(WVWObjectiveDTO.class, new InstanceCreator<WVWObjectiveDTO>() {
-					public WVWObjectiveDTO createInstance(Type type) {
-						return new WVWObjectiveDTO(service);
-					}
-				}).registerTypeAdapter(WVWMatchDetailsDTO.class, new InstanceCreator<WVWMatchDetailsDTO>() {
-					public WVWMatchDetailsDTO createInstance(Type type) {
-						return new WVWMatchDetailsDTO(service);
-					}
-				}).create();
+		return new GsonBuilder().excludeFieldsWithModifiers(java.lang.reflect.Modifier.TRANSIENT).setVersion(1.0).create();
 	}
 
 	public IWVWMatchesDTO createMatchesDTOfromJSON(String json, IWVWService service) {

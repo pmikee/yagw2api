@@ -1,13 +1,10 @@
 package api.dto.impl;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import utils.InjectionHelper;
 import api.service.IWVWService;
 
 abstract class AbstractDTOWithService {
-	private final transient IWVWService service;
-	public AbstractDTOWithService(IWVWService service) {
-		this.service = checkNotNull(service);
-	}
+	private final transient IWVWService service = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWService.class);
 	protected final IWVWService getService(){
 		return this.service;
 	}

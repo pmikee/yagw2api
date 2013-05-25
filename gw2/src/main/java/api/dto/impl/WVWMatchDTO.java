@@ -7,7 +7,6 @@ import java.util.Locale;
 
 import api.dto.IWVWMatchDTO;
 import api.dto.IWorldNameDTO;
-import api.service.IWVWService;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
@@ -29,10 +28,6 @@ class WVWMatchDTO extends AbstractDTOWithService implements IWVWMatchDTO {
 	@Since(1.0)
 	@SerializedName("green_world_id")
 	private int greenWorldId;
-
-	public WVWMatchDTO(IWVWService service) {
-		super(service);
-	}
 	
 	public String toString() {
 		return Objects.toStringHelper(this).add("id", this.id).add("redWorldId", this.redWorldId).add("redWorld", this.getRedWorldName(Locale.getDefault()))
