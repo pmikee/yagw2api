@@ -33,24 +33,10 @@ public class ClientApplication {
 	private IWVWService wvwService;
 
 	public void start() {
-		for (int i = 0; i < 5; i++) {
-			this.wvwService.retrieveAllWorldNames(Locale.GERMAN);
-			this.wvwService.retrieveAllWorldNames(Locale.FRENCH);
-			this.wvwService.retrieveAllWorldNames(Locale.ENGLISH);
 
-		}
-		for (int i = 0; i < 5; i++) {
-			this.wvwService.retrieveAllWorldNames(Locale.GERMAN);
-			this.wvwService.retrieveAllWorldNames(Locale.FRENCH);
-			this.wvwService.retrieveAllWorldNames(Locale.ENGLISH);
-		}
-		for (int i = 0; i < 5; i++) {
-			IWVWMatchesDTO matches = this.wvwService.retrieveAllMatches();
-			for (IWVWMatchDTO match : matches.getMatches()) {
-				for (int ii = 0; ii < 5; ii++) {
-					this.wvwService.retrieveMatchDetails(match.getId());
-				}
-			}
+		IWVWMatchesDTO matches = this.wvwService.retrieveAllMatches();
+		for (IWVWMatchDTO match : matches.getMatches()) {
+			this.wvwService.retrieveMatchDetails(match.getId());
 		}
 
 	}

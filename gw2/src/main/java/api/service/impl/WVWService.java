@@ -174,7 +174,7 @@ public class WVWService extends AbstractService implements IWVWService {
 		int index = 0;
 		IWVWMatchDTO result = null;
 		while(index < matches.length && result == null){
-			result = matches[index].getId() == matchId ? matches[index] : null;
+			result = matches[index].getId().equals(matchId) ? matches[index] : null;
 			index++;
 		}
 		if(LOGGER.isTraceEnabled()){
