@@ -14,6 +14,7 @@ import model.wvw.IWVWMatchBuilder;
 import model.wvw.IWVWModelFactory;
 import model.wvw.IWVWObjective;
 import utils.InjectionHelper;
+import api.dto.IWVWMapDTO;
 import api.dto.IWVWMatchDTO;
 import api.dto.IWVWObjectiveDTO;
 
@@ -54,42 +55,28 @@ public class WVWMatchBuilder implements IWVWMatchBuilder {
 		}
 		if (this.fromMatchDTO.isPresent()) {
 			checkState(this.fromMatchDTO.get().getDetails().isPresent());
-			Optional<IWVWObjective> objective;
-			IWorld owner;
-			for (IWVWObjectiveDTO objectiveDTO : this.fromMatchDTO.get().getDetails().get().getCenterMap().getObjectives()) {
-				if (objectiveDTO.getOwner() != null) {
-					owner = match.getWorldByDTOOwnerString(objectiveDTO.getOwner());
-					objective = match.getCenterMap().getByObjectiveId(objectiveDTO.getId());
-					checkState(objective.isPresent());
-					objective.get().capture(owner);
-				}
-			}
-			for (IWVWObjectiveDTO objectiveDTO : this.fromMatchDTO.get().getDetails().get().getRedMap().getObjectives()) {
-				if (objectiveDTO.getOwner() != null) {
-					owner = match.getWorldByDTOOwnerString(objectiveDTO.getOwner());
-					objective = match.getRedMap().getByObjectiveId(objectiveDTO.getId());
-					checkState(objective.isPresent());
-					objective.get().capture(owner);
-				}
-			}
-			for (IWVWObjectiveDTO objectiveDTO : this.fromMatchDTO.get().getDetails().get().getGreenMap().getObjectives()) {
-				if (objectiveDTO.getOwner() != null) {
-					owner = match.getWorldByDTOOwnerString(objectiveDTO.getOwner());
-					objective = match.getGreenMap().getByObjectiveId(objectiveDTO.getId());
-					checkState(objective.isPresent());
-					objective.get().capture(owner);
-				}
-			}
-			for (IWVWObjectiveDTO objectiveDTO : this.fromMatchDTO.get().getDetails().get().getBlueMap().getObjectives()) {
-				if (objectiveDTO.getOwner() != null) {
-					owner = match.getWorldByDTOOwnerString(objectiveDTO.getOwner());
-					objective = match.getBlueMap().getByObjectiveId(objectiveDTO.getId());
-					checkState(objective.isPresent());
-					objective.get().capture(owner);
-				}
-			}
+			this.setupOwner(match, match.getCenterMap(), this.fromMatchDTO.get(), this.fromMatchDTO.get().getDetails().get().getCenterMap());
+			this.setupOwner(match, match.getBlueMap(), this.fromMatchDTO.get(), this.fromMatchDTO.get().getDetails().get().getBlueMap());
+			this.setupOwner(match, match.getRedMap(), this.fromMatchDTO.get(), this.fromMatchDTO.get().getDetails().get().getRedMap());
+			this.setupOwner(match, match.getGreenMap(), this.fromMatchDTO.get(), this.fromMatchDTO.get().getDetails().get().getGreenMap());
 		}
 		return match;
+	}
+
+	private void setupOwner(IWVWMatch match, IWVWMap map, IWVWMatchDTO matchDTO, IWVWMapDTO mapDTO) {
+		checkNotNull(match);
+		checkNotNull(map);
+		checkNotNull(matchDTO);
+		Optional<IWVWObjective> objective;
+		IWorld owner;
+		for (IWVWObjectiveDTO objectiveDTO : mapDTO.getObjectives()) {
+			if (objectiveDTO.getOwner() != null) {
+				owner = match.getWorldByDTOOwnerString(objectiveDTO.getOwner());
+				objective = map.getByObjectiveId(objectiveDTO.getId());
+				checkState(objective.isPresent());
+				objective.get().capture(owner);
+			}
+		}
 	}
 
 	@Override
