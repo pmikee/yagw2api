@@ -17,6 +17,8 @@ import api.service.dto.IWVWMatchDTO;
 import com.google.common.util.concurrent.AbstractScheduledService;
 
 public class APISynchronizerDeamon extends AbstractScheduledService {
+	private static final int CHUNK_SIZE = 2;
+	private static final long INTERVAL_MILLIS = 5000; // 2s
 	private static final Logger LOGGER = Logger.getLogger(APISynchronizerDeamon.class);
 	
 	private final IWVWService service;
@@ -26,6 +28,7 @@ public class APISynchronizerDeamon extends AbstractScheduledService {
 					LOGGER.fatal("Uncought exception thrown in " + t.getName(), e);
 				}
 			}, false);
+	
 	
 	public APISynchronizerDeamon(IWVWService service){
 		checkNotNull(service);
@@ -40,15 +43,18 @@ public class APISynchronizerDeamon extends AbstractScheduledService {
 		for (IWVWMatchDTO match : this.service.retrieveAllMatches().getMatches()){
 			matchIds.add(match.getId());
 		}
-		this.pool.invoke(new SynchronizeMatchesAction(this.service, matchIds, 2));
+		this.pool.invoke(new SynchronizeMatchesAction(this.service, matchIds, CHUNK_SIZE));
 		
 		final long endTime = System.currentTimeMillis();
 		final long executionTime = endTime-startTimestamp;
 		LOGGER.debug("Done with "+this.getClass().getSimpleName()+" after "+executionTime+"ms");
+		if(executionTime > INTERVAL_MILLIS){
+			LOGGER.error("Iteration of "+this.getClass().getSimpleName()+" took "+executionTime+"ms which is more than the interval of "+INTERVAL_MILLIS+"ms");
+		}
 	}
 
 	@Override
 	protected Scheduler scheduler() {
-		return AbstractScheduledService.Scheduler.newFixedDelaySchedule(0, 1, TimeUnit.SECONDS);
+		return AbstractScheduledService.Scheduler.newFixedRateSchedule(INTERVAL_MILLIS, INTERVAL_MILLIS, TimeUnit.MILLISECONDS);
 	}
 }
