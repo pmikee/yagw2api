@@ -1,5 +1,6 @@
 package model.wvw.impl;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import model.wvw.IWVWMapType;
 
 enum WVWMapType implements IWVWMapType {
@@ -8,6 +9,10 @@ enum WVWMapType implements IWVWMapType {
 	GREEN,
 	BLUE;
 
+	public static WVWMapType fromDTOString(String dtoString) {
+		return WVWMapType.valueOf(checkNotNull(dtoString).toUpperCase());
+	}
+	
 	public String getLabel() {
 		return this.name();
 	}

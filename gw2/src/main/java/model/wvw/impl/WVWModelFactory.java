@@ -2,12 +2,14 @@ package model.wvw.impl;
 
 import java.util.Set;
 
-import utils.InjectionHelper;
-
+import model.wvw.IWVWLocationType;
 import model.wvw.IWVWMapBuilder;
 import model.wvw.IWVWMapType;
 import model.wvw.IWVWModelFactory;
+import model.wvw.IWVWObjectiveBuilder;
+import utils.InjectionHelper;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 
 public class WVWModelFactory implements IWVWModelFactory {
@@ -15,6 +17,11 @@ public class WVWModelFactory implements IWVWModelFactory {
 	@Override
 	public IWVWMapBuilder createMapBuilder() {
 		return InjectionHelper.INSTANCE.getInjector().getInstance(IWVWMapBuilder.class);
+	}
+
+	@Override
+	public IWVWObjectiveBuilder createObjectiveBuilder() {
+		return InjectionHelper.INSTANCE.getInjector().getInstance(IWVWObjectiveBuilder.class);
 	}
 
 	@Override
@@ -40,5 +47,20 @@ public class WVWModelFactory implements IWVWModelFactory {
 	@Override
 	public IWVWMapType getBlueMapType() {
 		return WVWMapType.BLUE;
+	}
+
+	@Override
+	public IWVWMapType createMapTypeFromDTOString(String string) {
+		return WVWMapType.fromDTOString(string);
+	}
+
+	@Override
+	public Set<IWVWLocationType> allLocationTypes() {
+		return ImmutableSet.<IWVWLocationType>copyOf(WVWLocationType.values());
+	}
+
+	@Override
+	public Optional<IWVWLocationType> getLocationTypeForObjectiveId(int objectiveId) {
+		return WVWLocationType.forObjectiveId(objectiveId);
 	}
 }

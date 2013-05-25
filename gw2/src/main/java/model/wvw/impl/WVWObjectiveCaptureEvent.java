@@ -8,7 +8,7 @@ import model.IWorld;
 import model.wvw.IWVWObjective;
 import model.wvw.IWVWObjectiveCaptureEvent;
 
-public class WVWObjectiveCaptureEvent extends AbstractWVWObjectiveEvent implements IWVWObjectiveCaptureEvent {
+class WVWObjectiveCaptureEvent extends AbstractWVWObjectiveEvent implements IWVWObjectiveCaptureEvent {
 
 	private final IWorld newOwningWorld;
 	private final Optional<IWorld> previousOwningWorld;

@@ -14,6 +14,9 @@ import model.wvw.IWVWMapType;
 import model.wvw.IWVWModelFactory;
 import model.wvw.IWVWObjective;
 
+import api.dto.IWVWMapDTO;
+import api.dto.IWVWObjectiveDTO;
+
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
 
@@ -58,6 +61,16 @@ public class WVWMapBuilder implements IWVWMapBuilder {
 		checkNotNull(objective.getLocation());
 		checkState(!this.contentMappedByLocation.containsKey(objective.getLocation()));
 		this.contentMappedByLocation.put(objective.getLocation(), objective);
+		return this;
+	}
+
+	@Override
+	public IWVWMapBuilder fromDTO(IWVWMapDTO dto) {
+		checkNotNull(dto);
+		for (IWVWObjectiveDTO objectiveDTO : dto.getObjectives()) {
+			this.objective(this.wvwModelFactory.createObjectiveBuilder().fromDTO(objectiveDTO).build());
+		}
+		this.type(this.wvwModelFactory.createMapTypeFromDTOString(dto.getType()));
 		return this;
 	}
 
