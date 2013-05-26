@@ -1,10 +1,12 @@
-package model.wvw.types;
+package model.wvw.types.impl;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.util.concurrent.TimeUnit;
+
+import model.wvw.types.IWVWObjectiveType;
 
 
 

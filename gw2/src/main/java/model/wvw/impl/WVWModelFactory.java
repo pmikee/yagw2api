@@ -9,22 +9,22 @@ import model.wvw.types.IWVWObjective;
 public class WVWModelFactory implements IWVWModelFactory {
 
 	@Override
-	public IWVWMap.IWVWMapBuilder createMapBuilder() {
+	public IWVWMap.IWVWMapBuilder newMapBuilder() {
 		return new WVWMap.WVWMapBuilder();
 	}
 
 	@Override
-	public IWVWObjective.IWVWObjectiveBuilder createObjectiveBuilder() {
+	public IWVWObjective.IWVWObjectiveBuilder newObjectiveBuilder() {
 		return new WVWObjective.WVWObjectiveBuilder();
 	}
 
 	@Override
-	public IWVWScores createScores() {
+	public IWVWScores newScores() {
 		return new WVWScores();
 	}
 
 	@Override
-	public IWVWMatch.IWVWMatchBuilder createMatchBuilder() {
+	public IWVWMatch.IWVWMatchBuilder newMatchBuilder() {
 		return new WVWMatch.WVWMatchBuilder();
 	}
 }

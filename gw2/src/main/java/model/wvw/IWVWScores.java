@@ -1,10 +1,12 @@
 package model.wvw;
 
-public interface IWVWScores {
+import model.IHasChannel;
+
+public interface IWVWScores extends IHasChannel {
 	int getRedScore();
-	void setRedScore(int score);
 	int getGreenScore();
-	void setGreenScore(int score);
 	int getBlueScore();
-	void setBlueScore(int score);
+	
+	void update(int redScore, int greenScore, int blueScore);
+	IWVWScores newImmutableReference();
 }

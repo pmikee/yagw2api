@@ -51,19 +51,7 @@ public class WVWMatch implements IWVWMatch {
 		@Override
 		public IWVWMatch build() {
 			final IWVWMatch match = new WVWMatch(this.id.get(), this.redWorld.get(), this.greenWorld.get(), this.blueWorld.get(),
-					this.centerMap.get(), this.redMap.get(), this.greenMap.get(), this.blueMap.get());
-			if (this.redScore.isPresent()) {
-				checkState(this.redScore.get() > 0);
-				match.getScores().setRedScore(this.redScore.get());
-			}
-			if (this.greenScore.isPresent()) {
-				checkState(greenScore.get() > 0);
-				match.getScores().setGreenScore(this.greenScore.get());
-			}
-			if (this.blueScore.isPresent()) {
-				checkState(this.blueScore.get() > 0);
-				match.getScores().setBlueScore(this.blueScore.get());
-			}
+					this.centerMap.get(), this.redMap.get(), this.greenMap.get(), this.blueMap.get());						
 			if (this.fromMatchDTO.isPresent()) {
 				checkState(this.fromMatchDTO.get().getDetails().isPresent());
 				this.setupOwner(match, match.getCenterMap(), this.fromMatchDTO.get(), this.fromMatchDTO.get().getDetails().get().getCenterMap());
@@ -71,6 +59,7 @@ public class WVWMatch implements IWVWMatch {
 				this.setupOwner(match, match.getRedMap(), this.fromMatchDTO.get(), this.fromMatchDTO.get().getDetails().get().getRedMap());
 				this.setupOwner(match, match.getGreenMap(), this.fromMatchDTO.get(), this.fromMatchDTO.get().getDetails().get().getGreenMap());
 			}
+			match.getScores().update(this.redScore.or(0), this.greenScore.or(0), this.blueScore.or(0));
 			return match;
 		}
 
@@ -96,13 +85,13 @@ public class WVWMatch implements IWVWMatch {
 			checkState(!this.fromMatchDTO.isPresent());
 			this.fromMatchDTO = Optional.of(dto);
 			this.id = Optional.of(dto.getId());
-			this.centerMap = Optional.of(WVW_MODEL_FACTORY.createMapBuilder().fromDTO(dto.getDetails().get().getCenterMap()).build());
+			this.centerMap = Optional.of(WVW_MODEL_FACTORY.newMapBuilder().fromDTO(dto.getDetails().get().getCenterMap()).build());
 			checkState(this.centerMap.get().getType().isCenter());
-			this.redMap = Optional.of(WVW_MODEL_FACTORY.createMapBuilder().fromDTO(dto.getDetails().get().getRedMap()).build());
+			this.redMap = Optional.of(WVW_MODEL_FACTORY.newMapBuilder().fromDTO(dto.getDetails().get().getRedMap()).build());
 			checkState(this.redMap.get().getType().isRed());
-			this.greenMap = Optional.of(WVW_MODEL_FACTORY.createMapBuilder().fromDTO(dto.getDetails().get().getGreenMap()).build());
+			this.greenMap = Optional.of(WVW_MODEL_FACTORY.newMapBuilder().fromDTO(dto.getDetails().get().getGreenMap()).build());
 			checkState(this.greenMap.get().getType().isGreen());
-			this.blueMap = Optional.of(WVW_MODEL_FACTORY.createMapBuilder().fromDTO(dto.getDetails().get().getBlueMap()).build());
+			this.blueMap = Optional.of(WVW_MODEL_FACTORY.newMapBuilder().fromDTO(dto.getDetails().get().getBlueMap()).build());
 			checkState(this.blueMap.get().getType().isBlue());
 			this.redWorld = Optional.of(MODEL_FACTORY.createWorld(dto.getRedWorldId(), dto.getRedWorldName(locale).get().getName()));
 			this.greenWorld = Optional.of(MODEL_FACTORY.createWorld(dto.getGreenWorldId(), dto.getGreenWorldName(locale).get().getName()));
@@ -167,7 +156,7 @@ public class WVWMatch implements IWVWMatch {
 		checkNotNull(blueMap);
 		checkArgument(blueMap.getType().isBlue());
 		this.blueMap = blueMap;
-		this.scores = WVW_MODEL_FACTORY.createScores();
+		this.scores = WVW_MODEL_FACTORY.newScores();
 	}
 
 	@Override

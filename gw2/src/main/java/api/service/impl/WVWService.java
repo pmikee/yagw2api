@@ -144,7 +144,7 @@ class WVWService extends AbstractService implements IWVWService {
 					final WebResource resource = CLIENT.resource(MATCHES_URL.toExternalForm());
 					final String response = resource.accept(MediaType.APPLICATION_JSON_TYPE, MediaType.APPLICATION_XML_TYPE).get(String.class);
 					LOGGER.trace("Retrieved response=" + response);
-					final IWVWMatchesDTO result = WVWService.this.wvwDTOFactory.createMatchesDTOfromJSON(response, WVWService.this);
+					final IWVWMatchesDTO result = WVWService.this.wvwDTOFactory.newMatchesOf(response, WVWService.this);
 					LOGGER.debug("Built result=" + result);
 					return result;
 				}
@@ -163,7 +163,7 @@ class WVWService extends AbstractService implements IWVWService {
 					final WebResource resource = CLIENT.resource(MATCH_DETAILS_URL.toExternalForm()).queryParam("match_id", id);
 					final String response = resource.accept(MediaType.APPLICATION_JSON_TYPE, MediaType.APPLICATION_XML_TYPE).get(String.class);
 					LOGGER.trace("Retrieved response=" + response);
-					final IWVWMatchDetailsDTO result = WVWService.this.wvwDTOFactory.createMatchDetailsfromJSON(response, WVWService.this);
+					final IWVWMatchDetailsDTO result = WVWService.this.wvwDTOFactory.newMatchDetailsOf(response, WVWService.this);
 					LOGGER.debug("Built result=" + result);
 					return result;
 				}
@@ -182,7 +182,7 @@ class WVWService extends AbstractService implements IWVWService {
 					final WebResource resource = CLIENT.resource(OBJECTIVE_NAMES_URL.toExternalForm()).queryParam("lang", locale.getLanguage());
 					final String response = resource.accept(MediaType.APPLICATION_JSON_TYPE, MediaType.APPLICATION_XML_TYPE).get(String.class);
 					LOGGER.trace("Retrieved response=" + response);
-					final IWVWObjectiveNameDTO[] result = WVWService.this.wvwDTOFactory.createObjectiveNamesFromJSON(response, WVWService.this);
+					final IWVWObjectiveNameDTO[] result = WVWService.this.wvwDTOFactory.newObjectiveNamesOf(response, WVWService.this);
 					if (LOGGER.isDebugEnabled()) {
 						LOGGER.debug("Built result=" + Arrays.deepToString(result));
 					}
@@ -204,7 +204,7 @@ class WVWService extends AbstractService implements IWVWService {
 					final WebResource resource = CLIENT.resource(WORL_NAMES_URL.toExternalForm()).queryParam("lang", locale.getLanguage());
 					final String response = resource.accept(MediaType.APPLICATION_JSON_TYPE, MediaType.APPLICATION_XML_TYPE).get(String.class);
 					LOGGER.trace("Retrieved response=" + response);
-					final IWorldNameDTO[] result = WVWService.this.wvwDTOFactory.createWorldNamesFromJSON(response, WVWService.this);
+					final IWorldNameDTO[] result = WVWService.this.wvwDTOFactory.newWorldNamesOf(response, WVWService.this);
 					if (LOGGER.isDebugEnabled()) {
 						LOGGER.debug("Built result=" + Arrays.deepToString(result));
 					}

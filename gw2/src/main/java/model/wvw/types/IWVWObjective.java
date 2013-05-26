@@ -10,7 +10,7 @@ import api.dto.IWVWObjectiveDTO;
 import model.IHasChannel;
 import model.IWorld;
 import model.wvw.IHasWVWLocation;
-import model.wvw.IWVWObjectiveEvent;
+import model.wvw.events.IWVWObjectiveEvent;
 
 
 public interface IWVWObjective extends IHasWVWLocation, IHasChannel {

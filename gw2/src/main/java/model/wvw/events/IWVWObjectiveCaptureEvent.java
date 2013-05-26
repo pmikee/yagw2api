@@ -1,4 +1,4 @@
-package model.wvw;
+package model.wvw.events;
 
 import model.IWorld;
 

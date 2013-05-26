@@ -4,10 +4,10 @@ import model.wvw.types.IWVWObjective;
 
 public interface IWVWModelFactory {
 	// builders
-	IWVWMap.IWVWMapBuilder createMapBuilder();
-	IWVWObjective.IWVWObjectiveBuilder createObjectiveBuilder();
-	IWVWMatch.IWVWMatchBuilder createMatchBuilder();
+	IWVWMap.IWVWMapBuilder newMapBuilder();
+	IWVWObjective.IWVWObjectiveBuilder newObjectiveBuilder();
+	IWVWMatch.IWVWMatchBuilder newMatchBuilder();
 	
 	// creation	
-	IWVWScores createScores();
+	IWVWScores newScores();
 }

@@ -1,11 +1,11 @@
-package model.wvw.impl;
+package model.wvw.events.impl;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.Optional;
 
 import model.IWorld;
-import model.wvw.IWVWObjectiveCaptureEvent;
+import model.wvw.events.IWVWObjectiveCaptureEvent;
 import model.wvw.types.IWVWObjective;
 
 class WVWObjectiveCaptureEvent extends AbstractWVWObjectiveEvent implements IWVWObjectiveCaptureEvent {

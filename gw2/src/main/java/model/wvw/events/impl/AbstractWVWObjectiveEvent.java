@@ -1,27 +1,20 @@
-package model.wvw.impl;
+package model.wvw.events.impl;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.Calendar;
-
-import model.wvw.IWVWObjectiveEvent;
+import model.AbstractEvent;
+import model.wvw.events.IWVWObjectiveEvent;
 import model.wvw.types.IWVWObjective;
 
-abstract class AbstractWVWObjectiveEvent implements IWVWObjectiveEvent {
-	private final Calendar timestamp;
+abstract class AbstractWVWObjectiveEvent extends AbstractEvent implements IWVWObjectiveEvent {
 	private final IWVWObjective source;
 	
 	public AbstractWVWObjectiveEvent(IWVWObjective source) {
+		super();
 		this.source = checkNotNull(source);
-		this.timestamp = Calendar.getInstance();
 	}
 	
 	public IWVWObjective getSource() {
 		return this.source;
-	}
-
-	public Calendar getTimestamp() {
-		return this.timestamp;
 	}
 
 }

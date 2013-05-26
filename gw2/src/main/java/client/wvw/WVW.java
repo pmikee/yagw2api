@@ -15,7 +15,7 @@ import utils.InjectionHelper;
 import api.dto.IWVWMatchDTO;
 import api.dto.IWVWMatchesDTO;
 import api.service.IWVWService;
-import client.wvw.poolaction.SynchronizeMatchAction;
+import client.wvw.poolactions.SynchronizeMatchAction;
 
 import com.google.common.util.concurrent.AbstractScheduledService;
 
@@ -40,7 +40,7 @@ public class WVW extends AbstractScheduledService {
 		final IWVWMatchesDTO matchesDto = SERVICE.retrieveAllMatches();
 		IWVWMatch match;
 		for (IWVWMatchDTO matchDTO : matchesDto.getMatches()) {
-			match = WVW_MODEL_FACTORY.createMatchBuilder().fromMatchDTO(matchDTO, Locale.GERMAN).build();
+			match = WVW_MODEL_FACTORY.newMatchBuilder().fromMatchDTO(matchDTO, Locale.GERMAN).build();
 			this.matchesMappedById.put(match.getId(), match);
 		}
 

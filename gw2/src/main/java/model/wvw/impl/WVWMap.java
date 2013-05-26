@@ -17,8 +17,8 @@ import model.wvw.IWVWModelFactory;
 import model.wvw.IWVWScores;
 import model.wvw.types.IWVWLocationType;
 import model.wvw.types.IWVWObjective;
-import model.wvw.types.WVWLocationType;
-import model.wvw.types.WVWMapType;
+import model.wvw.types.impl.WVWLocationType;
+import model.wvw.types.impl.WVWMapType;
 import utils.InjectionHelper;
 import api.dto.IWVWMapDTO;
 import api.dto.IWVWObjectiveDTO;
@@ -45,25 +45,14 @@ class WVWMap extends AbstractHasChannel implements IWVWMap {
 			for (IWVWLocationType location : WVWLocationType.forMapTyp(this.type.get()).get()) {
 				if (!this.contentMappedByLocation.containsKey(location)) {
 					if (location.isObjectiveLocation()) {						
-						this.contentMappedByLocation.put(location, WVW_MODEL_FACTORY.createObjectiveBuilder().location(location).build());
+						this.contentMappedByLocation.put(location, WVW_MODEL_FACTORY.newObjectiveBuilder().location(location).build());
 					} else {
-						// TODO
+						// TODO build non objective map content for locations
 					}
 				}
 			}
 			final IWVWMap map = new WVWMap(this.type.get(), this.contentMappedByLocation.values());
-			if (this.redScore.isPresent()) {
-				checkState(this.redScore.get() > 0);
-				map.getScores().setRedScore(this.redScore.get());
-			}
-			if (this.greenScore.isPresent()) {
-				checkState(this.greenScore.get() > 0);
-				map.getScores().setGreenScore(this.greenScore.get());
-			}
-			if (this.blueScore.isPresent()) {
-				checkState(this.blueScore.get() > 0);
-				map.getScores().setBlueScore(this.blueScore.get());
-			}
+			map.getScores().update(this.redScore.or(0), this.greenScore.or(0), this.blueScore.or(0));
 			return map;
 		}
 
@@ -86,7 +75,7 @@ class WVWMap extends AbstractHasChannel implements IWVWMap {
 		public IWVWMap.IWVWMapBuilder fromDTO(IWVWMapDTO dto) {
 			checkNotNull(dto);
 			for (IWVWObjectiveDTO objectiveDTO : dto.getObjectives()) {
-				this.objective(WVW_MODEL_FACTORY.createObjectiveBuilder().fromDTO(objectiveDTO).build());
+				this.objective(WVW_MODEL_FACTORY.newObjectiveBuilder().fromDTO(objectiveDTO).build());
 			}
 			this.type(WVWMapType.fromDTOString(dto.getType()));		
 			return this.blueScore(dto.getBlueScore()).redScore(dto.getRedScore()).greenScore(dto.getGreenScore());
@@ -131,7 +120,7 @@ class WVWMap extends AbstractHasChannel implements IWVWMap {
 			contentBuilder.put(content.getLocation(), content);
 		}
 		this.content = contentBuilder.build();
-		this.scores = WVW_MODEL_FACTORY.createScores();
+		this.scores = WVW_MODEL_FACTORY.newScores();
 	}
 
 	public IWVWMapType getType() {

@@ -1,4 +1,4 @@
-package model.wvw.types;
+package model.wvw.types.impl;
 
 import model.wvw.IWVWMapType;
 import api.dto.IWVWMatchDetailsDTO;

@@ -12,11 +12,13 @@ import model.AbstractHasChannel;
 import model.IModelFactory;
 import model.IWorld;
 import model.wvw.IWVWModelFactory;
-import model.wvw.IWVWObjectiveEvent;
+import model.wvw.events.IWVWModelEventFactory;
+import model.wvw.events.IWVWObjectiveCaptureEvent;
+import model.wvw.events.IWVWObjectiveEvent;
 import model.wvw.types.IWVWLocationType;
 import model.wvw.types.IWVWObjective;
 import model.wvw.types.IWVWObjectiveType;
-import model.wvw.types.WVWLocationType;
+import model.wvw.types.impl.WVWLocationType;
 
 import org.apache.log4j.Logger;
 
@@ -30,6 +32,7 @@ import com.google.common.collect.ImmutableList;
 class WVWObjective extends AbstractHasChannel implements IWVWObjective{
 	private static final Logger LOGGER = Logger.getLogger(WVWObjective.class);
 	private static final IWVWModelFactory WVW_MODEL_FACTORY = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWModelFactory.class);
+	private static final IWVWModelEventFactory WVW_MODEL_EVENTS_FACTORY = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWModelEventFactory.class);
 	private static final IModelFactory MODEL_FACTORY = InjectionHelper.INSTANCE.getInjector().getInstance(IModelFactory.class);
 	
 	public static class WVWObjectiveBuilder implements IWVWObjective.IWVWObjectiveBuilder {		
@@ -100,7 +103,7 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective{
 
 	public void capture(IWorld capturingWorld) {
 		checkNotNull(capturingWorld);
-		final WVWObjectiveCaptureEvent event = new WVWObjectiveCaptureEvent(this, capturingWorld, this.owningWorld.orNull()); 
+		final IWVWObjectiveCaptureEvent event = WVW_MODEL_EVENTS_FACTORY.newObjectiveCapturedEvent(this, capturingWorld, this.owningWorld); 
 		this.owningWorld = Optional.of(capturingWorld);
 		this.lastCaptureEventTimestamp = Optional.of(event.getTimestamp());
 		LOGGER.debug(capturingWorld+" has captured "+this);

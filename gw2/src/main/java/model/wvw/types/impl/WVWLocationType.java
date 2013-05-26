@@ -1,4 +1,4 @@
-package model.wvw.types;
+package model.wvw.types.impl;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
@@ -8,6 +8,8 @@ import java.util.Set;
 
 
 import model.wvw.IWVWMapType;
+import model.wvw.types.IWVWLocationType;
+import model.wvw.types.IWVWObjectiveType;
 
 import org.apache.log4j.Logger;
 

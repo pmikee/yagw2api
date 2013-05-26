@@ -28,7 +28,7 @@ class WVWDTOFactory implements IWVWDTOFactory {
 		return new GsonBuilder().excludeFieldsWithModifiers(java.lang.reflect.Modifier.TRANSIENT).setVersion(1.0).create();
 	}
 
-	public IWVWMatchesDTO createMatchesDTOfromJSON(String json, IWVWService service) {
+	public IWVWMatchesDTO newMatchesOf(String json, IWVWService service) {
 		checkNotNull(service);
 		LOGGER.trace("Going to built " + IWVWMatchesDTO.class.getSimpleName() + " using service=" + service);
 		final WVWMatchesDTO result = this.createGSON(service).fromJson(checkNotNull(json), WVWMatchesDTO.class);
@@ -37,7 +37,7 @@ class WVWDTOFactory implements IWVWDTOFactory {
 		return result;
 	}
 
-	public IWVWMatchDetailsDTO createMatchDetailsfromJSON(String json, IWVWService service) {
+	public IWVWMatchDetailsDTO newMatchDetailsOf(String json, IWVWService service) {
 		checkNotNull(service);
 		LOGGER.trace("Going to built " + IWVWMatchDetailsDTO.class.getSimpleName() + " using service=" + service);
 		final WVWMatchDetailsDTO result = this.createGSON(service).fromJson(checkNotNull(json), WVWMatchDetailsDTO.class);
@@ -46,7 +46,7 @@ class WVWDTOFactory implements IWVWDTOFactory {
 		return result;
 	}
 
-	public IWVWObjectiveNameDTO[] createObjectiveNamesFromJSON(String json, IWVWService service) {
+	public IWVWObjectiveNameDTO[] newObjectiveNamesOf(String json, IWVWService service) {
 		checkNotNull(service);
 		LOGGER.trace("Going to built all " + IWVWObjectiveNameDTO.class.getSimpleName() + " using service=" + service);
 		final WVWObjectiveNameDTO[] result = this.createGSON(service).fromJson(checkNotNull(json), WVWObjectiveNameDTO[].class);
@@ -57,7 +57,7 @@ class WVWDTOFactory implements IWVWDTOFactory {
 		return result;
 	}
 
-	public IWorldNameDTO[] createWorldNamesFromJSON(String json, IWVWService service) {
+	public IWorldNameDTO[] newWorldNamesOf(String json, IWVWService service) {
 		checkNotNull(service);
 		LOGGER.trace("Going to built " + IWorldNameDTO.class.getSimpleName() + " using service=" + service);
 		final WorldNameDTO[] result = this.createGSON(service).fromJson(checkNotNull(json), WorldNameDTO[].class);

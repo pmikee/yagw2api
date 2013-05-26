@@ -1,4 +1,4 @@
-package client.wvw.poolaction;
+package client.wvw.poolactions;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
