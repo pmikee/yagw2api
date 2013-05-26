@@ -12,14 +12,13 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import model.AbstractHasChannel;
+import model.IEvent;
 import model.IModelFactory;
 import model.IWorld;
 import model.wvw.IWVWMap;
 import model.wvw.IWVWMatch;
 import model.wvw.IWVWModelFactory;
 import model.wvw.IWVWScores;
-import model.wvw.events.IWVWMatchScoresChangedEvent;
-import model.wvw.events.IWVWObjectiveCaptureEvent;
 import model.wvw.types.IWVWObjective;
 
 import org.apache.log4j.Logger;
@@ -262,15 +261,7 @@ class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 	}
 
 	@Subscribe
-	public void onWVWObjectiveCaptureEvent(IWVWObjectiveCaptureEvent event) {
-		if (LOGGER.isTraceEnabled()) {
-			LOGGER.trace(this.getClass().getSimpleName() + " is going to forward " + event);
-		}
-		this.getChannel().post(event);
-	}
-	
-	@Subscribe
-	public void onWVWMatchScoreChangeEvent(IWVWMatchScoresChangedEvent event) {
+	public void onEvent(IEvent event) {
 		if (LOGGER.isTraceEnabled()) {
 			LOGGER.trace(this.getClass().getSimpleName() + " is going to forward " + event);
 		}

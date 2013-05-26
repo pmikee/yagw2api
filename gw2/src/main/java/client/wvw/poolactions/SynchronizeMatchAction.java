@@ -125,5 +125,6 @@ public class SynchronizeMatchAction extends AbstractMatchIdAction<SynchronizeMat
 		}
 		
 		// 2. synchronize scores
+		//TODO synchronize scores
 	}
 }
