@@ -156,7 +156,7 @@ public class WVWMatch implements IWVWMatch {
 		checkNotNull(blueMap);
 		checkArgument(blueMap.getType().isBlue());
 		this.blueMap = blueMap;
-		this.scores = WVW_MODEL_FACTORY.newScores();
+		this.scores = WVW_MODEL_FACTORY.newMatchScores(this);
 	}
 
 	@Override

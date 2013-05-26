@@ -6,7 +6,7 @@ import model.wvw.IWVWScores;
 
 import com.google.common.base.Objects;
 
-class WVWScores extends AbstractHasChannel implements IWVWScores {
+abstract class AbstractWVWScores extends AbstractHasChannel implements IWVWScores {
 
 	private int redScore = 0;
 	private int greenScore = 0;
@@ -42,9 +42,11 @@ class WVWScores extends AbstractHasChannel implements IWVWScores {
 		this.blueScore = blueScore;
 		
 		if(changed) {
-			//TODO create event
+			this.onChange();
 		}
 	}
+	
+	protected abstract void onChange(); 
 
 	@Override
 	public IWVWScores newImmutableReference() {

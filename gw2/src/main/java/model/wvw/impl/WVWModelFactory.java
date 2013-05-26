@@ -1,5 +1,6 @@
 package model.wvw.impl;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import model.wvw.IWVWMap;
 import model.wvw.IWVWMatch;
 import model.wvw.IWVWModelFactory;
@@ -19,12 +20,17 @@ public class WVWModelFactory implements IWVWModelFactory {
 	}
 
 	@Override
-	public IWVWScores newScores() {
-		return new WVWScores();
+	public IWVWScores newMapScores(IWVWMap map) {
+		return new WVWMapScores(checkNotNull(map));
 	}
 
 	@Override
 	public IWVWMatch.IWVWMatchBuilder newMatchBuilder() {
 		return new WVWMatch.WVWMatchBuilder();
+	}
+
+	@Override
+	public IWVWScores newMatchScores(IWVWMatch match) {
+		return new WVWMatchScores(checkNotNull(match));
 	}
 }

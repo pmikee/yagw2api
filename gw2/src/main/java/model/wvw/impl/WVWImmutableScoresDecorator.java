@@ -16,7 +16,7 @@ class WVWImmutableScoresDecorator implements IWVWScores{
 	
 	@Override
 	public EventBus getChannel() {
-		throw new UnsupportedOperationException(this.getClass().getSimpleName()+" is only a decorator for "+WVWScores.class.getSimpleName()+" and has no channel for its own.");
+		throw new UnsupportedOperationException(this.getClass().getSimpleName()+" is only a decorator for "+AbstractWVWScores.class.getSimpleName()+" and has no channel for its own.");
 	}
 
 	@Override

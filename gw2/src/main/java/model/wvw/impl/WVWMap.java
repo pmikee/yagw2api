@@ -120,7 +120,7 @@ class WVWMap extends AbstractHasChannel implements IWVWMap {
 			contentBuilder.put(content.getLocation(), content);
 		}
 		this.content = contentBuilder.build();
-		this.scores = WVW_MODEL_FACTORY.newScores();
+		this.scores = WVW_MODEL_FACTORY.newMapScores(this);
 	}
 
 	public IWVWMapType getType() {

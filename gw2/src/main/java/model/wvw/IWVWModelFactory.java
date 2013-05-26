@@ -9,5 +9,6 @@ public interface IWVWModelFactory {
 	IWVWMatch.IWVWMatchBuilder newMatchBuilder();
 	
 	// creation	
-	IWVWScores newScores();
+	IWVWScores newMapScores(IWVWMap map);
+	IWVWScores newMatchScores(IWVWMatch match); 
 }
