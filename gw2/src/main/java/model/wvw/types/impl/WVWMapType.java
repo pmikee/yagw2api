@@ -43,4 +43,9 @@ public enum WVWMapType implements IWVWMapType {
 	public boolean isBlue() {
 		return this.equals(BLUE);
 	}
+
+	@Override
+	public IWVWMapType getImmutableReference() {
+		return this;
+	}
 }

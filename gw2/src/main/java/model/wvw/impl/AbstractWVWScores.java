@@ -5,9 +5,44 @@ import model.AbstractHasChannel;
 import model.wvw.IWVWScores;
 
 import com.google.common.base.Objects;
+import com.google.common.eventbus.EventBus;
 
 abstract class AbstractWVWScores extends AbstractHasChannel implements IWVWScores {
 
+	class WVWImmutableScoresDecorator implements IWVWScores{
+		@Override
+		public EventBus getChannel() {
+			throw new UnsupportedOperationException(this.getClass().getSimpleName()+" is only a decorator for "+AbstractWVWScores.class.getSimpleName()+" and has no channel for its own.");
+		}
+
+		@Override
+		public int getRedScore() {
+			return AbstractWVWScores.this.getRedScore();
+		}
+
+		@Override
+		public int getGreenScore() {
+			return AbstractWVWScores.this.getGreenScore();
+		}
+
+		@Override
+		public int getBlueScore() {
+			return AbstractWVWScores.this.getBlueScore();
+		}
+
+		@Override
+		public void update(int redScore, int greenScore, int blueScore) {
+			throw new UnsupportedOperationException(this.getClass().getSimpleName()+" are immutable and therefore can not be updated.");
+		}
+
+		@Override
+		public IWVWScores createImmutableReference() {
+			return this;
+		}
+
+	}
+	
+	// FIELDS
 	private int redScore = 0;
 	private int greenScore = 0;
 	private int blueScore = 0;
@@ -49,7 +84,7 @@ abstract class AbstractWVWScores extends AbstractHasChannel implements IWVWScore
 	protected abstract void onChange(); 
 
 	@Override
-	public IWVWScores newImmutableReference() {
-		return new WVWImmutableScoresDecorator(this);
+	public IWVWScores createImmutableReference() {
+		return new WVWImmutableScoresDecorator();
 	}
 }

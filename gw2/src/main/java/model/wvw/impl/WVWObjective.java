@@ -124,4 +124,10 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective{
 	public Optional<IWorld> getOwner() {
 		return this.owningWorld;
 	}
+
+	@Override
+	public IWVWObjective createImmutableReference() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

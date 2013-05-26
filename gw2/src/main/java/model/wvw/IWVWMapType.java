@@ -6,4 +6,6 @@ public interface IWVWMapType{
 	boolean isRed();
 	boolean isGreen();
 	boolean isBlue();
+	
+	IWVWMapType getImmutableReference();
 }

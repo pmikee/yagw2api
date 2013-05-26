@@ -13,7 +13,7 @@ import model.wvw.IHasWVWLocation;
 import model.wvw.events.IWVWObjectiveEvent;
 
 
-public interface IWVWObjective extends IHasWVWLocation, IHasChannel {
+public interface IWVWObjective extends IHasWVWLocation<IWVWObjective>, IHasChannel {
 	static interface IWVWObjectiveBuilder {
 		IWVWObjective build();
 		IWVWObjectiveBuilder location(IWVWLocationType location);

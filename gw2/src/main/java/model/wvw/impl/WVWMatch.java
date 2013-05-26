@@ -4,11 +4,14 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import model.AbstractHasChannel;
 import model.IModelFactory;
 import model.IWorld;
 import model.wvw.IWVWMap;
@@ -28,12 +31,98 @@ import api.dto.IWVWObjectiveDTO;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.eventbus.EventBus;
 
-public class WVWMatch implements IWVWMatch {
+class WVWMatch extends AbstractHasChannel implements IWVWMatch {
+
+	class WVWImmutableMatchDecorator implements IWVWMatch {
+
+		@Override
+		public Set<IWorld> searchWorldsByNamePattern(Pattern searchPattern) {
+			final Collection<IWorld> result = new ArrayList<IWorld>();
+			for (IWorld world : WVWMatch.this.searchWorldsByNamePattern(searchPattern)) {
+				result.add(world.createImmutableReference());
+			}
+			return ImmutableSet.copyOf(result);
+		}
+
+		@Override
+		public String getId() {
+			return WVWMatch.this.getId();
+		}
+
+		@Override
+		public IWorld[] getWorlds() {
+			final java.util.List<IWorld> buffer = new ArrayList<IWorld>();
+			for (IWorld world : WVWMatch.this.getWorlds()) {
+				buffer.add(world.createImmutableReference());
+			}
+			return buffer.toArray(new IWorld[0]);
+		}
+
+		@Override
+		public IWorld getRedWorld() {
+			return WVWMatch.this.getRedWorld().createImmutableReference();
+		}
+
+		@Override
+		public IWorld getGreenWorld() {
+			return WVWMatch.this.getGreenWorld().createImmutableReference();
+		}
+
+		@Override
+		public IWorld getBlueWorld() {
+			return WVWMatch.this.getBlueWorld().createImmutableReference();
+		}
+
+		@Override
+		public Optional<IWorld> getWorldByDTOOwnerString(String dtoOwnerString) {
+			final Optional<IWorld> buffer = WVWMatch.this.getWorldByDTOOwnerString(dtoOwnerString);
+			return buffer.isPresent() ? Optional.of(buffer.get().createImmutableReference()) : buffer;
+		}
+
+		@Override
+		public IWVWMap getCenterMap() {
+			return WVWMatch.this.getCenterMap().createImmutableReference();
+		}
+
+		@Override
+		public IWVWMap getBlueMap() {
+			return WVWMatch.this.getBlueMap().createImmutableReference();
+		}
+
+		@Override
+		public IWVWMap getRedMap() {
+			return WVWMatch.this.getRedMap().createImmutableReference();
+		}
+
+		@Override
+		public IWVWMap getGreenMap() {
+			return WVWMatch.this.getGreenMap().createImmutableReference();
+		}
+
+		@Override
+		public IWVWScores getScores() {
+			return WVWMatch.this.getScores().createImmutableReference();
+		}
+
+		@Override
+		public IWVWMatch createImmutableReference() {
+			return this;
+		}
+
+		@Override
+		public EventBus getChannel() {
+			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is only a decorator for " + WVWMatch.class.getSimpleName()
+					+ " and has no channel for its own.");
+		}
+
+	}
+
 	private static final Logger LOGGER = Logger.getLogger(WVWMatch.class);
 	private static final IWVWModelFactory WVW_MODEL_FACTORY = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWModelFactory.class);
 	private static final IModelFactory MODEL_FACTORY = InjectionHelper.INSTANCE.getInjector().getInstance(IModelFactory.class);
-	
+
 	public static class WVWMatchBuilder implements IWVWMatch.IWVWMatchBuilder {
 		private Optional<IWVWMatchDTO> fromMatchDTO = Optional.absent();
 		private Optional<String> id = Optional.absent();
@@ -50,8 +139,8 @@ public class WVWMatch implements IWVWMatch {
 
 		@Override
 		public IWVWMatch build() {
-			final IWVWMatch match = new WVWMatch(this.id.get(), this.redWorld.get(), this.greenWorld.get(), this.blueWorld.get(),
-					this.centerMap.get(), this.redMap.get(), this.greenMap.get(), this.blueMap.get());						
+			final IWVWMatch match = new WVWMatch(this.id.get(), this.redWorld.get(), this.greenWorld.get(), this.blueWorld.get(), this.centerMap.get(),
+					this.redMap.get(), this.greenMap.get(), this.blueMap.get());
 			if (this.fromMatchDTO.isPresent()) {
 				checkState(this.fromMatchDTO.get().getDetails().isPresent());
 				this.setupOwner(match, match.getCenterMap(), this.fromMatchDTO.get(), this.fromMatchDTO.get().getDetails().get().getCenterMap());
@@ -170,7 +259,7 @@ public class WVWMatch implements IWVWMatch {
 	}
 
 	@Override
-	public IWorld getRedWOrld() {
+	public IWorld getRedWorld() {
 		return this.redWorld;
 	}
 
@@ -211,13 +300,14 @@ public class WVWMatch implements IWVWMatch {
 
 	public String toString() {
 		return Objects.toStringHelper(this).add("id", this.id).add("scores", this.scores).add("redWorld", this.redWorld).add("greenWorld", this.greenWorld)
-				.add("blueWorld", this.blueWorld).add("centerMap", this.centerMap).add("redMap", this.redMap).add("greenMap", this.greenMap).add("blueMap", this.blueMap).toString();
+				.add("blueWorld", this.blueWorld).add("centerMap", this.centerMap).add("redMap", this.redMap).add("greenMap", this.greenMap)
+				.add("blueMap", this.blueMap).toString();
 	}
 
 	@Override
 	public Optional<IWorld> getWorldByDTOOwnerString(String dtoOwnerString) {
 		checkNotNull(dtoOwnerString);
-		switch(dtoOwnerString.toUpperCase()) {
+		switch (dtoOwnerString.toUpperCase()) {
 			case IWVWObjectiveDTO.OWNER_RED_STRING:
 				return Optional.of(this.redWorld);
 			case IWVWObjectiveDTO.OWNER_GREEN_STRING:
@@ -225,7 +315,7 @@ public class WVWMatch implements IWVWMatch {
 			case IWVWObjectiveDTO.OWNER_BLUE_STRING:
 				return Optional.of(this.blueWorld);
 			default:
-				LOGGER.error("Invalid dtoOwnerString: "+dtoOwnerString);
+				LOGGER.error("Invalid dtoOwnerString: " + dtoOwnerString);
 				return Optional.absent();
 		}
 	}
@@ -237,15 +327,20 @@ public class WVWMatch implements IWVWMatch {
 		checkState(this.greenWorld != null);
 		checkState(this.blueWorld != null);
 		final Set<IWorld> result = new HashSet<IWorld>();
-		if(this.greenWorld.getName().matches(searchPattern.toString())) {
+		if (this.greenWorld.getName().matches(searchPattern.toString())) {
 			result.add(this.greenWorld);
 		}
-		if(this.blueWorld.getName().matches(searchPattern.toString())) {
+		if (this.blueWorld.getName().matches(searchPattern.toString())) {
 			result.add(this.blueWorld);
 		}
-		if(this.redWorld.getName().matches(searchPattern.toString())) {
+		if (this.redWorld.getName().matches(searchPattern.toString())) {
 			result.add(this.redWorld);
 		}
 		return ImmutableSet.copyOf(result);
+	}
+
+	@Override
+	public IWVWMatch createImmutableReference() {
+		return new WVWImmutableMatchDecorator();
 	}
 }

@@ -27,14 +27,13 @@ public class World implements IWorld {
 	public String getName() {
 		return this.name;
 	}
-
-	@Override
-	public void setName(String name) {
-		checkNotNull(name);
-		this.name = name;
-	}
 	
 	public String toString() {
 		return Objects.toStringHelper(this).add("id", this.id).add("name", this.name).toString();
+	}
+
+	@Override
+	public IWorld createImmutableReference() {
+		return this;
 	}
 }

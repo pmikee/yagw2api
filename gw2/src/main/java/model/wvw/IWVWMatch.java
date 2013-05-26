@@ -6,10 +6,11 @@ import java.util.regex.Pattern;
 
 import com.google.common.base.Optional;
 
+import model.IHasChannel;
 import model.IWorld;
 import api.dto.IWVWMatchDTO;
 
-public interface IWVWMatch {
+public interface IWVWMatch extends IHasChannel {
 	interface IWVWMatchBuilder {
 		IWVWMatch build();
 		IWVWMatchBuilder fromMatchDTO(IWVWMatchDTO dto, Locale locale);
@@ -21,7 +22,7 @@ public interface IWVWMatch {
 	Set<IWorld> searchWorldsByNamePattern(Pattern searchPattern);
 	String getId();
 	IWorld[] getWorlds();
-	IWorld getRedWOrld();
+	IWorld getRedWorld();
 	IWorld getGreenWorld();
 	IWorld getBlueWorld(); 
 	Optional<IWorld> getWorldByDTOOwnerString(String dtoOwnerString);
@@ -30,4 +31,6 @@ public interface IWVWMatch {
 	IWVWMap getRedMap();
 	IWVWMap getGreenMap();
 	IWVWScores getScores();
+	
+	IWVWMatch createImmutableReference();
 }

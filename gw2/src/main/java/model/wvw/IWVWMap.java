@@ -24,10 +24,12 @@ public interface IWVWMap extends IHasChannel {
 	}
 	
 	IWVWMapType getType();
-	Map<IWVWLocationType, IHasWVWLocation> getMappedByPosition();
-	Set<IHasWVWLocation> getEverything();
+	Map<IWVWLocationType, IHasWVWLocation<?>> getMappedByPosition();
+	Set<IHasWVWLocation<?>> getEverything();
 	Set<IWVWObjective> getObjectives();
 	Optional<IWVWObjective> getByObjectiveId(int id);
-	Optional<IHasWVWLocation> getByLocation(IWVWLocationType location);
+	Optional<IHasWVWLocation<?>> getByLocation(IWVWLocationType location);
 	IWVWScores getScores();
+	
+	IWVWMap createImmutableReference();
 }

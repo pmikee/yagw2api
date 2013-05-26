@@ -6,6 +6,7 @@ import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -28,12 +29,81 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.common.eventbus.EventBus;
 
 class WVWMap extends AbstractHasChannel implements IWVWMap {
+	
+	class WVWImmutableMapDecorator implements IWVWMap {
+
+		@Override
+		public EventBus getChannel() {
+			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is only a decorator for " + WVWMap.class.getSimpleName()
+					+ " and has no channel for its own.");
+		}
+
+		@Override
+		public IWVWMapType getType() {
+			return WVWMap.this.getType().getImmutableReference();
+		}
+
+		@Override
+		public Map<IWVWLocationType, IHasWVWLocation<?>> getMappedByPosition() {
+			final Map<IWVWLocationType, IHasWVWLocation<?>> mutableResult = WVWMap.this.getMappedByPosition();
+			final Map<IWVWLocationType, IHasWVWLocation<?>> buffer = new HashMap<IWVWLocationType, IHasWVWLocation<?>>();
+			for(IWVWLocationType key : WVWMap.this.getMappedByPosition().keySet()) {
+				buffer.put(key, mutableResult.get(key).createImmutableReference());
+			}
+			return ImmutableMap.copyOf(buffer);
+		}
+
+		@Override
+		public Set<IHasWVWLocation<?>> getEverything() {
+			final Set<IHasWVWLocation<?>> mutableResult = WVWMap.this.getEverything();
+			final Set<IHasWVWLocation<?>> buffer = new HashSet<IHasWVWLocation<?>>();
+			for(IHasWVWLocation<?> element : mutableResult) {
+				buffer.add(element.createImmutableReference());
+			}
+			return ImmutableSet.copyOf(buffer);
+		}
+
+		@Override
+		public Set<IWVWObjective> getObjectives() {
+			final Set<IWVWObjective> mutableResult = WVWMap.this.getObjectives();
+			final Set<IWVWObjective> buffer = new HashSet<IWVWObjective>();
+			for(IWVWObjective element : mutableResult) {
+				buffer.add(element.createImmutableReference());
+			}
+			return ImmutableSet.copyOf(buffer);
+		}
+
+		@Override
+		public Optional<IWVWObjective> getByObjectiveId(int id) {
+			final Optional<IWVWObjective> buffer = WVWMap.this.getByObjectiveId(id);
+			return buffer.isPresent() ? Optional.of(buffer.get().createImmutableReference()) : buffer;
+		}
+
+		@Override
+		public Optional<IHasWVWLocation<?>> getByLocation(IWVWLocationType location) {
+			final Optional<IHasWVWLocation<?>> buffer = WVWMap.this.getByLocation(location);
+			return buffer.isPresent() ? Optional.<IHasWVWLocation<?>>of(buffer.get().createImmutableReference()) : buffer;
+		}
+
+		@Override
+		public IWVWScores getScores() {
+			return WVWMap.this.getScores().createImmutableReference();
+		}
+
+		@Override
+		public IWVWMap createImmutableReference() {
+			return this;
+		}
+		
+	}
+	
 	private static final IWVWModelFactory WVW_MODEL_FACTORY = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWModelFactory.class);
 
 	public static class WVWMapBuilder implements IWVWMap.IWVWMapBuilder {
-		private Map<IWVWLocationType, IHasWVWLocation> contentMappedByLocation = new HashMap<IWVWLocationType, IHasWVWLocation>();
+		private Map<IWVWLocationType, IHasWVWLocation<?>> contentMappedByLocation = new HashMap<IWVWLocationType, IHasWVWLocation<?>>();
 		private Optional<IWVWMapType> type = Optional.absent();
 		private Optional<Integer> redScore = Optional.absent();
 		private Optional<Integer> blueScore = Optional.absent();
@@ -106,17 +176,17 @@ class WVWMap extends AbstractHasChannel implements IWVWMap {
 	
 	
 	private final IWVWMapType type;
-	private final Map<IWVWLocationType, IHasWVWLocation> content;
+	private final Map<IWVWLocationType, IHasWVWLocation<?>> content;
 	private final IWVWScores scores;
 
-	private WVWMap(IWVWMapType type, Collection<IHasWVWLocation> contents) {
+	private WVWMap(IWVWMapType type, Collection<IHasWVWLocation<?>> contents) {
 		checkNotNull(type);
 		checkNotNull(contents);
 		checkArgument(contents.size() > 0);
 
 		this.type = type;
-		final ImmutableMap.Builder<IWVWLocationType, IHasWVWLocation> contentBuilder = ImmutableMap.builder();
-		for (IHasWVWLocation content : contents) {
+		final ImmutableMap.Builder<IWVWLocationType, IHasWVWLocation<?>> contentBuilder = ImmutableMap.builder();
+		for (IHasWVWLocation<?> content : contents) {
 			contentBuilder.put(content.getLocation(), content);
 		}
 		this.content = contentBuilder.build();
@@ -127,11 +197,11 @@ class WVWMap extends AbstractHasChannel implements IWVWMap {
 		return this.type;
 	}
 
-	public Map<IWVWLocationType, IHasWVWLocation> getMappedByPosition() {
+	public Map<IWVWLocationType, IHasWVWLocation<?>> getMappedByPosition() {
 		return this.content;
 	}
 
-	public Set<IHasWVWLocation> getEverything() {
+	public Set<IHasWVWLocation<?>> getEverything() {
 		return ImmutableSet.copyOf(this.content.values());
 	}
 
@@ -139,9 +209,9 @@ class WVWMap extends AbstractHasChannel implements IWVWMap {
 		return ImmutableSet.copyOf(Iterables.filter(this.content.values(), IWVWObjective.class));
 	}
 
-	public Optional<IHasWVWLocation> getByLocation(IWVWLocationType location) {
+	public Optional<IHasWVWLocation<?>> getByLocation(IWVWLocationType location) {
 		if (this.content.containsKey(location)) {
-			return Optional.fromNullable(this.content.get(location));
+			return Optional.<IHasWVWLocation<?>>fromNullable(this.content.get(location));
 		} else {
 			return Optional.absent();
 		}
@@ -161,7 +231,7 @@ class WVWMap extends AbstractHasChannel implements IWVWMap {
 		checkArgument(id >0);
 		final Optional<IWVWLocationType> location = WVWLocationType.forObjectiveId(id);
 		if(location.isPresent()) {
-			final Optional<IHasWVWLocation> content = this.getByLocation(location.get());
+			final Optional<IHasWVWLocation<?>> content = this.getByLocation(location.get());
 			if(content.isPresent()) {
 				checkState(content.get() instanceof IWVWObjective);
 				return Optional.of((IWVWObjective)content.get());
@@ -171,6 +241,11 @@ class WVWMap extends AbstractHasChannel implements IWVWMap {
 		}else {
 			return Optional.absent();
 		}
+	}
+
+	@Override
+	public IWVWMap createImmutableReference() {
+		return new WVWImmutableMapDecorator();
 	}
 
 }
