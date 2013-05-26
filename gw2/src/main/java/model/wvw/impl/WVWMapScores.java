@@ -16,7 +16,7 @@ public class WVWMapScores extends AbstractWVWScores {
 	
 	@Override
 	protected void onChange() {
-		this.getChannel().post(WVW_MODEL_EVENT_FACTORY.newMapScoresChangedEvent(this.createImmutableReference(), this.map));
+		this.getChannel().post(WVW_MODEL_EVENT_FACTORY.newMapScoresChangedEvent(this.createImmutableReference(), this.map.createImmutableReference()));
 	}
 
 }

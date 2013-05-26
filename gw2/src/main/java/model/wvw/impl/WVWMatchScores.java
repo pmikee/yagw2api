@@ -16,7 +16,7 @@ public class WVWMatchScores extends AbstractWVWScores {
 	
 	@Override
 	protected void onChange() {
-		this.getChannel().post(WVW_MODEL_EVENT_FACTORY.newMatchScoresChangedEvent(this.createImmutableReference(), this.match));
+		this.getChannel().post(WVW_MODEL_EVENT_FACTORY.newMatchScoresChangedEvent(this.createImmutableReference(), this.match.createImmutableReference()));
 	}
 
 }
