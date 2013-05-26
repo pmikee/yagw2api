@@ -116,4 +116,9 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective{
 			return 0;
 		}
 	}
+
+	@Override
+	public Optional<IWorld> getOwner() {
+		return this.owningWorld;
+	}
 }

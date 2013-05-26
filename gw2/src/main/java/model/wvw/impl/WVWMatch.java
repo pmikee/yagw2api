@@ -16,6 +16,9 @@ import model.wvw.IWVWMatch;
 import model.wvw.IWVWModelFactory;
 import model.wvw.IWVWScores;
 import model.wvw.types.IWVWObjective;
+
+import org.apache.log4j.Logger;
+
 import utils.InjectionHelper;
 import api.dto.IWVWMapDTO;
 import api.dto.IWVWMatchDTO;
@@ -27,12 +30,11 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 
 public class WVWMatch implements IWVWMatch {
+	private static final Logger LOGGER = Logger.getLogger(WVWMatch.class);
 	private static final IWVWModelFactory WVW_MODEL_FACTORY = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWModelFactory.class);
+	private static final IModelFactory MODEL_FACTORY = InjectionHelper.INSTANCE.getInjector().getInstance(IModelFactory.class);
 	
 	public static class WVWMatchBuilder implements IWVWMatch.IWVWMatchBuilder {
-		private static final IWVWModelFactory WVW_MODEL_FACTORY = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWModelFactory.class);
-		private static final IModelFactory MODEL_FACTORY = InjectionHelper.INSTANCE.getInjector().getInstance(IModelFactory.class);
-
 		private Optional<IWVWMatchDTO> fromMatchDTO = Optional.absent();
 		private Optional<String> id = Optional.absent();
 		private Optional<IWVWMap> centerMap = Optional.absent();
@@ -80,7 +82,7 @@ public class WVWMatch implements IWVWMatch {
 			IWorld owner;
 			for (IWVWObjectiveDTO objectiveDTO : mapDTO.getObjectives()) {
 				if (objectiveDTO.getOwner() != null) {
-					owner = match.getWorldByDTOOwnerString(objectiveDTO.getOwner());
+					owner = match.getWorldByDTOOwnerString(objectiveDTO.getOwner()).get();
 					objective = map.getByObjectiveId(objectiveDTO.getId());
 					checkState(objective.isPresent());
 					objective.get().capture(owner);
@@ -104,7 +106,7 @@ public class WVWMatch implements IWVWMatch {
 			checkState(this.blueMap.get().getType().isBlue());
 			this.redWorld = Optional.of(MODEL_FACTORY.createWorld(dto.getRedWorldId(), dto.getRedWorldName(locale).get().getName()));
 			this.greenWorld = Optional.of(MODEL_FACTORY.createWorld(dto.getGreenWorldId(), dto.getGreenWorldName(locale).get().getName()));
-			this.blueWorld = Optional.of(MODEL_FACTORY.createWorld(dto.getBlueWorldId(), dto.getGreenWorldName(locale).get().getName()));
+			this.blueWorld = Optional.of(MODEL_FACTORY.createWorld(dto.getBlueWorldId(), dto.getBlueWorldName(locale).get().getName()));
 
 			final Optional<IWVWMatchDetailsDTO> details = dto.getDetails();
 			if (details.isPresent()) {
@@ -224,17 +226,18 @@ public class WVWMatch implements IWVWMatch {
 	}
 
 	@Override
-	public IWorld getWorldByDTOOwnerString(String dtoOwnerString) {
+	public Optional<IWorld> getWorldByDTOOwnerString(String dtoOwnerString) {
 		checkNotNull(dtoOwnerString);
 		switch(dtoOwnerString.toUpperCase()) {
 			case IWVWObjectiveDTO.OWNER_RED_STRING:
-				return this.redWorld;
+				return Optional.of(this.redWorld);
 			case IWVWObjectiveDTO.OWNER_GREEN_STRING:
-				return this.greenWorld;
+				return Optional.of(this.greenWorld);
 			case IWVWObjectiveDTO.OWNER_BLUE_STRING:
-				return this.blueWorld;
+				return Optional.of(this.blueWorld);
 			default:
-				throw new IllegalArgumentException("Invalid dtoOwnerString: "+dtoOwnerString);
+				LOGGER.error("Invalid dtoOwnerString: "+dtoOwnerString);
+				return Optional.absent();
 		}
 	}
 

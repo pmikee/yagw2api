@@ -4,6 +4,8 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import com.google.common.base.Optional;
+
 import model.IWorld;
 import api.dto.IWVWMatchDTO;
 
@@ -22,7 +24,7 @@ public interface IWVWMatch {
 	IWorld getRedWOrld();
 	IWorld getGreenWorld();
 	IWorld getBlueWorld(); 
-	IWorld getWorldByDTOOwnerString(String dtoOwnerString);
+	Optional<IWorld> getWorldByDTOOwnerString(String dtoOwnerString);
 	IWVWMap getCenterMap();
 	IWVWMap getBlueMap();
 	IWVWMap getRedMap();

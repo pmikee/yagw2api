@@ -3,6 +3,8 @@ package model.wvw.types;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import com.google.common.base.Optional;
+
 import api.dto.IWVWObjectiveDTO;
 
 import model.IHasChannel;
@@ -22,6 +24,7 @@ public interface IWVWObjective extends IHasWVWLocation, IHasChannel {
 	List<IWVWObjectiveEvent> getEventHistory();
 	String getLabel();
 	IWVWObjectiveType getType();
+	Optional<IWorld> getOwner();
 	void capture(IWorld capturingWorld);
 	long getRemainingBuffDuration(TimeUnit unit);
 }
