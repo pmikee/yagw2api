@@ -1,21 +1,14 @@
 package model.wvw.impl;
 
-import java.util.Collection;
 import java.util.Set;
 
-import model.IWorld;
-import model.wvw.IHasWVWLocation;
 import model.wvw.IWVWLocationType;
 import model.wvw.IWVWMap;
-import model.wvw.IWVWMapBuilder;
 import model.wvw.IWVWMapType;
 import model.wvw.IWVWMatch;
-import model.wvw.IWVWMatchBuilder;
 import model.wvw.IWVWModelFactory;
 import model.wvw.IWVWObjective;
-import model.wvw.IWVWObjectiveBuilder;
 import model.wvw.IWVWScores;
-import utils.InjectionHelper;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
@@ -23,18 +16,18 @@ import com.google.common.collect.ImmutableSet;
 public class WVWModelFactory implements IWVWModelFactory {
 
 	@Override
-	public IWVWMapBuilder createMapBuilder() {
-		return new WVWMapBuilder();
+	public IWVWMap.IWVWMapBuilder createMapBuilder() {
+		return new WVWMap.WVWMapBuilder();
 	}
 
 	@Override
-	public IWVWObjectiveBuilder createObjectiveBuilder() {
-		return InjectionHelper.INSTANCE.getInjector().getInstance(IWVWObjectiveBuilder.class);
+	public IWVWObjective.IWVWObjectiveBuilder createObjectiveBuilder() {
+		return new WVWObjective.WVWObjectiveBuilder();
 	}
 
 	@Override
 	public Set<IWVWMapType> allMapTypes() {
-		return ImmutableSet.<IWVWMapType>copyOf(WVWMapType.values());
+		return ImmutableSet.<IWVWMapType> copyOf(WVWMapType.values());
 	}
 
 	@Override
@@ -64,7 +57,7 @@ public class WVWModelFactory implements IWVWModelFactory {
 
 	@Override
 	public Set<IWVWLocationType> allLocationTypes() {
-		return ImmutableSet.<IWVWLocationType>copyOf(WVWLocationType.values());
+		return ImmutableSet.<IWVWLocationType> copyOf(WVWLocationType.values());
 	}
 
 	@Override
@@ -78,23 +71,7 @@ public class WVWModelFactory implements IWVWModelFactory {
 	}
 
 	@Override
-	public IWVWMatchBuilder createMatchBuilder() {
-		return new WVWMatchBuilder();
-	}
-
-	@Override
-	public IWVWMatch createWVWMatch(String id, IWorld redWorld, IWorld greenWorld, IWorld blueWorld, IWVWMap centerMap, IWVWMap redMap, IWVWMap greenMap,
-			IWVWMap blueMap) {
-		return new WVWMatch(id, redWorld, greenWorld, blueWorld, centerMap, redMap, greenMap, blueMap);
-	}
-
-	@Override
-	public IWVWObjective createObjective(IWVWLocationType location) {
-		return new WVWObjective(location);
-	}
-
-	@Override
-	public IWVWMap createMap(IWVWMapType type, Collection<IHasWVWLocation> contents) {
-		return new WVWMap(type, contents);
+	public IWVWMatch.IWVWMatchBuilder createMatchBuilder() {
+		return new WVWMatch.WVWMatchBuilder();
 	}
 }

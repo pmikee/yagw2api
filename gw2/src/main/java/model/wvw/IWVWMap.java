@@ -5,9 +5,22 @@ import java.util.Set;
 
 import model.IHasChannel;
 
+import api.dto.IWVWMapDTO;
+
 import com.google.common.base.Optional;
 
 public interface IWVWMap extends IHasChannel {
+	static interface IWVWMapBuilder {
+		IWVWMap build();
+		IWVWMapBuilder type(IWVWMapType type);
+		IWVWMapBuilder objective(IWVWObjective objective);
+		IWVWMapBuilder fromDTO(IWVWMapDTO dto);
+
+		IWVWMapBuilder redScore(int score);
+		IWVWMapBuilder blueScore(int score);
+		IWVWMapBuilder greenScore(int score);
+	}
+	
 	IWVWMapType getType();
 	Map<IWVWLocationType, IHasWVWLocation> getMappedByPosition();
 	Set<IHasWVWLocation> getEverything();

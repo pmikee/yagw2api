@@ -8,14 +8,19 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
-
 import model.AbstractHasChannel;
+import model.IModelFactory;
 import model.IWorld;
 import model.wvw.IWVWLocationType;
+import model.wvw.IWVWModelFactory;
 import model.wvw.IWVWObjective;
 import model.wvw.IWVWObjectiveEvent;
 import model.wvw.IWVWObjectiveType;
+
+import org.apache.log4j.Logger;
+
+import utils.InjectionHelper;
+import api.dto.IWVWObjectiveDTO;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
@@ -23,12 +28,49 @@ import com.google.common.collect.ImmutableList;
 
 class WVWObjective extends AbstractHasChannel implements IWVWObjective{
 	private static final Logger LOGGER = Logger.getLogger(WVWObjective.class);
+	private static final IWVWModelFactory WVW_MODEL_FACTORY = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWModelFactory.class);
+	private static final IModelFactory MODEL_FACTORY = InjectionHelper.INSTANCE.getInjector().getInstance(IModelFactory.class);
+	
+	public static class WVWObjectiveBuilder implements IWVWObjective.IWVWObjectiveBuilder {		
+		private Optional<IWVWLocationType> location = Optional.absent();
+		private Optional<IWorld> owner = Optional.absent();
+		
+		@Override
+		public IWVWObjective build() {
+			final IWVWObjective result = new WVWObjective(this.location.get());
+			if(this.owner.isPresent()) {
+				result.capture(this.owner.get());
+			}
+			return result;
+		}
+
+		@Override
+		public IWVWObjective.IWVWObjectiveBuilder fromDTO(IWVWObjectiveDTO dto) {
+			checkNotNull(dto);		
+			return this.location(WVW_MODEL_FACTORY.getLocationTypeForObjectiveId(dto.getId()).get());
+		}
+
+		@Override
+		public IWVWObjective.IWVWObjectiveBuilder location(IWVWLocationType location) {
+			this.location = Optional.fromNullable(location);
+			return this;
+		}
+
+		@Override
+		public IWVWObjective.IWVWObjectiveBuilder owner(IWorld world) {
+			this.owner = Optional.fromNullable(world);
+			return this;
+		}
+
+	}
+
+	
 	private final IWVWLocationType location;
 	private final List<IWVWObjectiveEvent> eventHistory = new CopyOnWriteArrayList<IWVWObjectiveEvent>();
 	private Optional<IWorld> owningWorld = Optional.absent();
 	private Optional<Calendar> lastCaptureEventTimestamp = Optional.absent();
 
-	public WVWObjective(IWVWLocationType location){
+	private WVWObjective(IWVWLocationType location){
 		checkNotNull(location);
 		checkArgument(location.getObjectiveId().isPresent());
 		checkArgument(location.getObjectiveType().isPresent());
