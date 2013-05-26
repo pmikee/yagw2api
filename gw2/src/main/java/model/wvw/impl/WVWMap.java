@@ -11,12 +11,14 @@ import java.util.Set;
 
 import model.AbstractHasChannel;
 import model.wvw.IHasWVWLocation;
-import model.wvw.IWVWLocationType;
 import model.wvw.IWVWMap;
 import model.wvw.IWVWMapType;
 import model.wvw.IWVWModelFactory;
-import model.wvw.IWVWObjective;
 import model.wvw.IWVWScores;
+import model.wvw.types.IWVWLocationType;
+import model.wvw.types.IWVWObjective;
+import model.wvw.types.WVWLocationType;
+import model.wvw.types.WVWMapType;
 import utils.InjectionHelper;
 import api.dto.IWVWMapDTO;
 import api.dto.IWVWObjectiveDTO;
@@ -86,7 +88,7 @@ class WVWMap extends AbstractHasChannel implements IWVWMap {
 			for (IWVWObjectiveDTO objectiveDTO : dto.getObjectives()) {
 				this.objective(WVW_MODEL_FACTORY.createObjectiveBuilder().fromDTO(objectiveDTO).build());
 			}
-			this.type(WVW_MODEL_FACTORY.getMapTypeForDTOString(dto.getType()));		
+			this.type(WVWMapType.fromDTOString(dto.getType()));		
 			return this.blueScore(dto.getBlueScore()).redScore(dto.getRedScore()).greenScore(dto.getGreenScore());
 		}
 
@@ -168,7 +170,7 @@ class WVWMap extends AbstractHasChannel implements IWVWMap {
 	@Override
 	public Optional<IWVWObjective> getByObjectiveId(int id) {
 		checkArgument(id >0);
-		final Optional<IWVWLocationType> location = WVW_MODEL_FACTORY.getLocationTypeForObjectiveId(id);
+		final Optional<IWVWLocationType> location = WVWLocationType.forObjectiveId(id);
 		if(location.isPresent()) {
 			final Optional<IHasWVWLocation> content = this.getByLocation(location.get());
 			if(content.isPresent()) {

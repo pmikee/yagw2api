@@ -1,4 +1,4 @@
-package model.wvw.impl;
+package model.wvw.types;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -6,12 +6,11 @@ import static com.google.common.base.Preconditions.checkState;
 
 import java.util.concurrent.TimeUnit;
 
-import model.wvw.IWVWObjectiveType;
 
 
 import com.google.common.base.Objects;
 
-enum WVWObjectiveType implements IWVWObjectiveType{
+public enum WVWObjectiveType implements IWVWObjectiveType{
 	CAMP(5, TimeUnit.MINUTES, 5),
 	TOWER(5, TimeUnit.MINUTES, 10),
 	KEEP(5, TimeUnit.MINUTES, 25),

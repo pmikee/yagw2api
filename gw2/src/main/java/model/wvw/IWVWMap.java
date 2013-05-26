@@ -4,6 +4,8 @@ import java.util.Map;
 import java.util.Set;
 
 import model.IHasChannel;
+import model.wvw.types.IWVWLocationType;
+import model.wvw.types.IWVWObjective;
 
 import api.dto.IWVWMapDTO;
 

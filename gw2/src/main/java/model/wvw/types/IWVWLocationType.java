@@ -1,4 +1,6 @@
-package model.wvw;
+package model.wvw.types;
+
+import model.wvw.IWVWMapType;
 
 import com.google.common.base.Optional;
 

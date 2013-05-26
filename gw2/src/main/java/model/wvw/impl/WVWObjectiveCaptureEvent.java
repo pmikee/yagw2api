@@ -5,8 +5,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.base.Optional;
 
 import model.IWorld;
-import model.wvw.IWVWObjective;
 import model.wvw.IWVWObjectiveCaptureEvent;
+import model.wvw.types.IWVWObjective;
 
 class WVWObjectiveCaptureEvent extends AbstractWVWObjectiveEvent implements IWVWObjectiveCaptureEvent {
 

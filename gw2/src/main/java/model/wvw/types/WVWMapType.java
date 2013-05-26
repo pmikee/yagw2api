@@ -1,9 +1,9 @@
-package model.wvw.impl;
+package model.wvw.types;
 
 import model.wvw.IWVWMapType;
 import api.dto.IWVWMatchDetailsDTO;
 
-enum WVWMapType implements IWVWMapType {
+public enum WVWMapType implements IWVWMapType {
 	CENTER,
 	RED,
 	GREEN,

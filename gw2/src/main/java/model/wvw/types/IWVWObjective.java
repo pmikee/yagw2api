@@ -1,4 +1,4 @@
-package model.wvw;
+package model.wvw.types;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -7,6 +7,8 @@ import api.dto.IWVWObjectiveDTO;
 
 import model.IHasChannel;
 import model.IWorld;
+import model.wvw.IHasWVWLocation;
+import model.wvw.IWVWObjectiveEvent;
 
 
 public interface IWVWObjective extends IHasWVWLocation, IHasChannel {

@@ -1,8 +1,8 @@
-package model.wvw;
+package model.wvw.types;
 
 import java.util.concurrent.TimeUnit;
 
-public interface IWVWObjectiveType {
+public interface IWVWObjectiveType{
 	String getLabel();
 	long getBuffDuration(TimeUnit timeUnit);
 	int getPoints();

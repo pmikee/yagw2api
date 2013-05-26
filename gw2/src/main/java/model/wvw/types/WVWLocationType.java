@@ -1,4 +1,4 @@
-package model.wvw.impl;
+package model.wvw.types;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
@@ -6,9 +6,8 @@ import static com.google.common.base.Preconditions.checkState;
 import java.util.Map;
 import java.util.Set;
 
-import model.wvw.IWVWLocationType;
+
 import model.wvw.IWVWMapType;
-import model.wvw.IWVWObjectiveType;
 
 import org.apache.log4j.Logger;
 
@@ -17,7 +16,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
-enum WVWLocationType implements IWVWLocationType {
+public enum WVWLocationType implements IWVWLocationType {
 	// eternal battlegrounds -> spawns
 	/**
 	 * red spawn

@@ -11,11 +11,12 @@ import java.util.concurrent.TimeUnit;
 import model.AbstractHasChannel;
 import model.IModelFactory;
 import model.IWorld;
-import model.wvw.IWVWLocationType;
 import model.wvw.IWVWModelFactory;
-import model.wvw.IWVWObjective;
 import model.wvw.IWVWObjectiveEvent;
-import model.wvw.IWVWObjectiveType;
+import model.wvw.types.IWVWLocationType;
+import model.wvw.types.IWVWObjective;
+import model.wvw.types.IWVWObjectiveType;
+import model.wvw.types.WVWLocationType;
 
 import org.apache.log4j.Logger;
 
@@ -47,7 +48,7 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective{
 		@Override
 		public IWVWObjective.IWVWObjectiveBuilder fromDTO(IWVWObjectiveDTO dto) {
 			checkNotNull(dto);		
-			return this.location(WVW_MODEL_FACTORY.getLocationTypeForObjectiveId(dto.getId()).get());
+			return this.location(WVWLocationType.forObjectiveId(dto.getId()).get());
 		}
 
 		@Override

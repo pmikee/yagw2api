@@ -4,8 +4,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Calendar;
 
-import model.wvw.IWVWObjective;
 import model.wvw.IWVWObjectiveEvent;
+import model.wvw.types.IWVWObjective;
 
 abstract class AbstractWVWObjectiveEvent implements IWVWObjectiveEvent {
 	private final Calendar timestamp;
