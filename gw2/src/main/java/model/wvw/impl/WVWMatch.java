@@ -4,7 +4,10 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 import model.IModelFactory;
 import model.IWorld;
@@ -21,6 +24,7 @@ import api.dto.IWVWObjectiveDTO;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableSet;
 
 public class WVWMatch implements IWVWMatch {
 	private static final IWVWModelFactory WVW_MODEL_FACTORY = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWModelFactory.class);
@@ -232,5 +236,24 @@ public class WVWMatch implements IWVWMatch {
 			default:
 				throw new IllegalArgumentException("Invalid dtoOwnerString: "+dtoOwnerString);
 		}
+	}
+
+	@Override
+	public Set<IWorld> searchWorldsByNamePattern(Pattern searchPattern) {
+		checkNotNull(searchPattern);
+		checkState(this.redWorld != null);
+		checkState(this.greenWorld != null);
+		checkState(this.blueWorld != null);
+		final Set<IWorld> result = new HashSet<IWorld>();
+		if(this.greenWorld.getName().matches(searchPattern.toString())) {
+			result.add(this.greenWorld);
+		}
+		if(this.blueWorld.getName().matches(searchPattern.toString())) {
+			result.add(this.blueWorld);
+		}
+		if(this.redWorld.getName().matches(searchPattern.toString())) {
+			result.add(this.redWorld);
+		}
+		return ImmutableSet.copyOf(result);
 	}
 }

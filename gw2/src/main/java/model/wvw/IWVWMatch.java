@@ -1,9 +1,11 @@
 package model.wvw;
 
 import java.util.Locale;
+import java.util.Set;
+import java.util.regex.Pattern;
 
-import api.dto.IWVWMatchDTO;
 import model.IWorld;
+import api.dto.IWVWMatchDTO;
 
 public interface IWVWMatch {
 	interface IWVWMatchBuilder {
@@ -14,6 +16,7 @@ public interface IWVWMatch {
 		IWVWMatchBuilder greenScore(int score);
 	}
 	
+	Set<IWorld> searchWorldsByNamePattern(Pattern searchPattern);
 	String getId();
 	IWorld[] getWorlds();
 	IWorld getRedWOrld();

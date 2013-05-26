@@ -3,9 +3,9 @@ package client.impl;
 import static com.google.common.base.Preconditions.checkNotNull;
 import model.IModelFactory;
 import model.wvw.IWVWModelFactory;
-import synchronizer.APISynchronizerDeamon;
 import api.service.IWVWService;
 import client.IClientApplication;
+import client.wvw.WVW;
 
 import com.google.inject.Inject;
 
@@ -27,7 +27,7 @@ class ClientApplication implements IClientApplication {
 	}
 
 	public void start() {
-		final APISynchronizerDeamon deamon = new APISynchronizerDeamon();
+		final WVW deamon = new WVW();
 		deamon.startAndWait();
 		try {
 			Thread.sleep(10000);
