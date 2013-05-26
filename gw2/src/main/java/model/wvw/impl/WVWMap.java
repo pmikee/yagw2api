@@ -10,12 +10,17 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import model.AbstractHasChannel;
+import model.IHasChannel;
 import model.wvw.IHasWVWLocation;
 import model.wvw.IWVWMap;
 import model.wvw.IWVWMapType;
 import model.wvw.IWVWModelFactory;
 import model.wvw.IWVWScores;
+import model.wvw.events.IWVWMapScoresChangedEvent;
+import model.wvw.events.IWVWObjectiveCaptureEvent;
 import model.wvw.types.IWVWLocationType;
 import model.wvw.types.IWVWObjective;
 import model.wvw.types.impl.WVWLocationType;
@@ -30,8 +35,12 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 
 class WVWMap extends AbstractHasChannel implements IWVWMap {
+
+	private static final Logger LOGGER = Logger.getLogger(WVWMap.class);
+	private static final IWVWModelFactory WVW_MODEL_FACTORY = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWModelFactory.class);
 	
 	class WVWImmutableMapDecorator implements IWVWMap {
 
@@ -100,7 +109,6 @@ class WVWMap extends AbstractHasChannel implements IWVWMap {
 		
 	}
 	
-	private static final IWVWModelFactory WVW_MODEL_FACTORY = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWModelFactory.class);
 
 	public static class WVWMapBuilder implements IWVWMap.IWVWMapBuilder {
 		private Map<IWVWLocationType, IHasWVWLocation<?>> contentMappedByLocation = new HashMap<IWVWLocationType, IHasWVWLocation<?>>();
@@ -191,6 +199,30 @@ class WVWMap extends AbstractHasChannel implements IWVWMap {
 		}
 		this.content = contentBuilder.build();
 		this.scores = WVW_MODEL_FACTORY.newMapScores(this);
+		
+		// register as listener to scores
+		this.scores.getChannel().register(this);
+		
+		// register as listener to content with channels
+		for(IHasChannel contentWithChannel : Iterables.filter(this.content.values(), IHasChannel.class)) {
+			contentWithChannel.getChannel().register(this);
+		}
+	}
+	
+	@Subscribe
+	public void onWVWObjectiveCaptureEvent(IWVWObjectiveCaptureEvent event) {
+		if(LOGGER.isTraceEnabled()) {
+			LOGGER.trace(this.getClass().getSimpleName()+" is going to forward "+event);
+		}
+		this.getChannel().post(event);
+	}
+	
+	@Subscribe
+	public void onWVWMapScoreChangeEvent(IWVWMapScoresChangedEvent event) {
+		if(LOGGER.isTraceEnabled()) {
+			LOGGER.trace(this.getClass().getSimpleName()+" is going to forward "+event);
+		}
+		this.getChannel().post(event);
 	}
 
 	public IWVWMapType getType() {

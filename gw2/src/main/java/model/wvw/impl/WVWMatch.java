@@ -18,6 +18,8 @@ import model.wvw.IWVWMap;
 import model.wvw.IWVWMatch;
 import model.wvw.IWVWModelFactory;
 import model.wvw.IWVWScores;
+import model.wvw.events.IWVWMatchScoresChangedEvent;
+import model.wvw.events.IWVWObjectiveCaptureEvent;
 import model.wvw.types.IWVWObjective;
 
 import org.apache.log4j.Logger;
@@ -32,6 +34,7 @@ import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 
 class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 
@@ -245,7 +248,33 @@ class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 		checkNotNull(blueMap);
 		checkArgument(blueMap.getType().isBlue());
 		this.blueMap = blueMap;
+
 		this.scores = WVW_MODEL_FACTORY.newMatchScores(this);
+
+		// register as listener
+		this.centerMap.getChannel().register(this);
+		this.redMap.getChannel().register(this);
+		this.greenMap.getChannel().register(this);
+		this.blueMap.getChannel().register(this);
+
+		// register as listener to scores
+		this.scores.getChannel().register(this);
+	}
+
+	@Subscribe
+	public void onWVWObjectiveCaptureEvent(IWVWObjectiveCaptureEvent event) {
+		if (LOGGER.isTraceEnabled()) {
+			LOGGER.trace(this.getClass().getSimpleName() + " is going to forward " + event);
+		}
+		this.getChannel().post(event);
+	}
+	
+	@Subscribe
+	public void onWVWMatchScoreChangeEvent(IWVWMatchScoresChangedEvent event) {
+		if (LOGGER.isTraceEnabled()) {
+			LOGGER.trace(this.getClass().getSimpleName() + " is going to forward " + event);
+		}
+		this.getChannel().post(event);
 	}
 
 	@Override

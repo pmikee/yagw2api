@@ -8,6 +8,8 @@ import java.util.concurrent.TimeUnit;
 
 import model.wvw.IWVWMatch;
 import model.wvw.IWVWModelFactory;
+import model.wvw.events.IWVWMatchScoresChangedEvent;
+import model.wvw.events.IWVWObjectiveCaptureEvent;
 
 import org.apache.log4j.Logger;
 
@@ -17,6 +19,7 @@ import api.dto.IWVWMatchesDTO;
 import api.service.IWVWService;
 import client.wvw.poolactions.SynchronizeMatchAction;
 
+import com.google.common.eventbus.Subscribe;
 import com.google.common.util.concurrent.AbstractScheduledService;
 
 public class WVW extends AbstractScheduledService {
@@ -41,9 +44,20 @@ public class WVW extends AbstractScheduledService {
 		IWVWMatch match;
 		for (IWVWMatchDTO matchDTO : matchesDto.getMatches()) {
 			match = WVW_MODEL_FACTORY.newMatchBuilder().fromMatchDTO(matchDTO, Locale.GERMAN).build();
-			this.matchesMappedById.put(match.getId(), match);
+			match.getChannel().register(this);
+			this.matchesMappedById.put(match.getId(), match);			
 		}
 
+	}
+	
+	@Subscribe
+	public void onWVWObjectiveCaptureEvent(IWVWObjectiveCaptureEvent event) {
+		System.out.println(event);
+	}
+	
+	@Subscribe
+	public void onWVWMatchScoreChangeEvent(IWVWMatchScoresChangedEvent event) {
+		System.out.println(event);
 	}
 
 	@Override
