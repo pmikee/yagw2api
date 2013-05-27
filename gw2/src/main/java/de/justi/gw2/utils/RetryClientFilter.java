@@ -25,7 +25,7 @@ public class RetryClientFilter extends ClientFilter {
 
 		while (i <= this.maximumRetryCount) {
 			if(i++ > 0){
-				LOGGER.warn("Will now perform retry " + i+"/"+this.maximumRetryCount);
+				LOGGER.warn("Will now perform retry " + (i - 1) +"/"+this.maximumRetryCount);
 			}
 			try {
 				return this.getNext().handle(cr);
