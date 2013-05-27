@@ -21,6 +21,7 @@ import de.justi.gw2.model.wvw.IWVWMatch;
 import de.justi.gw2.model.wvw.IWVWModelFactory;
 import de.justi.gw2.model.wvw.events.IWVWMatchScoresChangedEvent;
 import de.justi.gw2.model.wvw.events.IWVWObjectiveCaptureEvent;
+import de.justi.gw2.model.wvw.events.IWVWScoresChangedEvent;
 import de.justi.gw2.utils.InjectionHelper;
 
 public class WVW extends AbstractScheduledService {
@@ -38,9 +39,6 @@ public class WVW extends AbstractScheduledService {
 			}, false);
 
 	public WVW() {
-		// this.matchesMappedById.put("2-6",
-		// WVW_MODEL_FACTORY.createMatchBuilder().fromMatchDTO(SERVICE.retrieveMatch("2-6").get(),
-		// Locale.GERMAN).build());
 		final IWVWMatchesDTO matchesDto = SERVICE.retrieveAllMatches();
 		IWVWMatch match;
 		for (IWVWMatchDTO matchDTO : matchesDto.getMatches()) {
@@ -53,11 +51,11 @@ public class WVW extends AbstractScheduledService {
 	
 	@Subscribe
 	public void onWVWObjectiveCaptureEvent(IWVWObjectiveCaptureEvent event) {
-		System.out.println(event.toString()+"| "+event.getSource().getMap().get().getType()+" | "+event.getSource().getMap().get().getMatch().get().getId()+" | "+event.getNewOwningWorld().getName()+" captured "+event.getSource().getLabel()+" that was owned by "+(event.getPreviousOwningWorld().isPresent()?event.getPreviousOwningWorld().get().getName():"none"));
+		System.out.println(event);
 	}
 	
 	@Subscribe
-	public void onWVWMatchScoreChangeEvent(IWVWMatchScoresChangedEvent event) {
+	public void onWVWMatchScoreChangeEvent(IWVWScoresChangedEvent event) {
 		System.out.println(event);
 	}
 

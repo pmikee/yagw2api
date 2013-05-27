@@ -25,17 +25,17 @@ class WVWModelEventFactory implements IWVWModelEventFactory {
 	}
 
 	@Override
-	public IWVWMapScoresChangedEvent newMapScoresChangedEvent(IWVWScores source, IWVWMap map) {
+	public IWVWMapScoresChangedEvent newMapScoresChangedEvent(IWVWScores source, int deltaRed, int deltaGreen, int deltaBlue, IWVWMap map) {
 		checkNotNull(source);
 		checkNotNull(map);
-		return new WVWMapScoresChangedEvent(source, map);
+		return new WVWMapScoresChangedEvent(source, deltaRed, deltaGreen, deltaBlue, map);
 	}
 
 	@Override
-	public IWVWMatchScoresChangedEvent newMatchScoresChangedEvent(IWVWScores source, IWVWMatch match) {
+	public IWVWMatchScoresChangedEvent newMatchScoresChangedEvent(IWVWScores source, int deltaRed, int deltaGreen, int deltaBlue, IWVWMatch match) {
 		checkNotNull(source);
 		checkNotNull(match);
-		return new WVWMatchScoresChanged(source, match);
+		return new WVWMatchScoresChanged(source, deltaRed, deltaGreen, deltaBlue, match);
 	}
 
 }

@@ -120,7 +120,10 @@ class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is only a decorator for " + WVWMatch.class.getSimpleName()
 					+ " and has no channel for its own.");
 		}
-
+		
+		public String toString() {
+			return Objects.toStringHelper(this).addValue(WVWMatch.this.toString()).toString();
+		}
 	}
 
 	private static final Logger LOGGER = Logger.getLogger(WVWMatch.class);

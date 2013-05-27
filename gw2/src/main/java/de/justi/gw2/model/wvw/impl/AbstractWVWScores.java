@@ -2,6 +2,8 @@ package de.justi.gw2.model.wvw.impl;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import org.apache.log4j.Logger;
+
 import com.google.common.base.Objects;
 import com.google.common.eventbus.EventBus;
 
@@ -10,6 +12,8 @@ import de.justi.gw2.model.IImmutable;
 import de.justi.gw2.model.wvw.IWVWScores;
 
 abstract class AbstractWVWScores extends AbstractHasChannel implements IWVWScores {
+	
+	private static final Logger LOGGER = Logger.getLogger(AbstractWVWScores.class);
 
 	class WVWImmutableScoresDecorator implements IWVWScores, IImmutable{
 		@Override
@@ -42,6 +46,9 @@ abstract class AbstractWVWScores extends AbstractHasChannel implements IWVWScore
 			return this;
 		}
 
+		public String toString() {
+			return Objects.toStringHelper(this).addValue(AbstractWVWScores.this.toString()).toString();
+		}
 	}
 	
 	// FIELDS
@@ -74,16 +81,20 @@ abstract class AbstractWVWScores extends AbstractHasChannel implements IWVWScore
 		checkArgument(greenScore >= 0);
 		checkArgument(blueScore >= 0);
 		boolean changed = this.redScore != redScore || this.greenScore != greenScore || this.blueScore != blueScore;
+		final int deltaRed = redScore - this.redScore;
+		final int deltaGreen = greenScore - this.greenScore;
+		final int deltaBlue = blueScore - this.blueScore;
 		this.redScore = redScore;
 		this.greenScore = greenScore;
 		this.blueScore = blueScore;
 		
 		if(changed) {
-			this.onChange();
+			LOGGER.trace(this.toString()+" has been changed: deltaRed="+deltaRed+", deltaGreen="+deltaGreen+", deltaBlue="+deltaBlue);
+			this.onChange(deltaRed, deltaGreen, deltaBlue);
 		}
 	}
 	
-	protected abstract void onChange(); 
+	protected abstract void onChange(int deltaRed, int deltaGreen, int deltaBlue); 
 
 	@Override
 	public IWVWScores createImmutableReference() {

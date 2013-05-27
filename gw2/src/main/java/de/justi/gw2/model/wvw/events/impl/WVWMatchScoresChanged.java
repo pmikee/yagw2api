@@ -1,14 +1,18 @@
 package de.justi.gw2.model.wvw.events.impl;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+
+import com.google.common.base.Objects;
+
 import de.justi.gw2.model.wvw.IWVWMatch;
 import de.justi.gw2.model.wvw.IWVWScores;
 import de.justi.gw2.model.wvw.events.IWVWMatchScoresChangedEvent;
 
 class WVWMatchScoresChanged extends AbstractWVWScoresChangedEvent implements IWVWMatchScoresChangedEvent {
 	private final IWVWMatch match;
-	public WVWMatchScoresChanged(IWVWScores scores, IWVWMatch match) {
-		super(checkNotNull(scores));
+
+	public WVWMatchScoresChanged(IWVWScores scores,int deltaRed, int deltaGreen, int deltaBlue, IWVWMatch match) {
+		super(checkNotNull(scores),deltaRed, deltaGreen, deltaBlue);
 		this.match = checkNotNull(match);
 	}
 
@@ -17,4 +21,7 @@ class WVWMatchScoresChanged extends AbstractWVWScoresChangedEvent implements IWV
 		return this.match;
 	}
 
+	public String toString() {
+		return Objects.toStringHelper(this).add("super", super.toString()).add("scores", this.getScores()).add("delta", "r:"+this.getDeltaRed()+",g:"+this.getDeltaBlue()+",b:"+this.getDeltaBlue()).add("matchId", this.getMatch().getId()).toString();
+	}
 }

@@ -1,14 +1,13 @@
 package de.justi.gw2.client.wvw.poolactions;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-
 import org.apache.log4j.Logger;
-
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
@@ -25,11 +24,13 @@ import de.justi.gw2.model.wvw.IWVWMap;
 import de.justi.gw2.model.wvw.IWVWMatch;
 import de.justi.gw2.model.wvw.IWVWModelFactory;
 import de.justi.gw2.model.wvw.IWVWObjective;
+import de.justi.gw2.model.wvw.types.IWVWMapType;
+import de.justi.gw2.model.wvw.types.impl.WVWMapType;
 import de.justi.gw2.utils.InjectionHelper;
 
 public class SynchronizeMatchAction extends AbstractMatchIdAction<SynchronizeMatchAction> {
 	private static final long serialVersionUID = 8391498327079686666L;
-	private static final int MAX_CHUNK_SIZE = 2;
+	private static final int MAX_CHUNK_SIZE = 1;
 	private static final Logger LOGGER = Logger.getLogger(SynchronizeMatchAction.class);
 	private static final IWVWService SERVICE = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWService.class);
 	private static final IWVWModelFactory WVW_MODEL_FACTORY = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWModelFactory.class);
@@ -74,6 +75,12 @@ public class SynchronizeMatchAction extends AbstractMatchIdAction<SynchronizeMat
 	private void synchronizeMap(IWVWMatch match, IWVWMap mapModel, IWVWMapDTO mapDTO) {
 		checkNotNull(mapDTO);
 		checkNotNull(mapModel);
+		
+		checkArgument(WVWMapType.fromDTOString(mapDTO.getType()).equals(mapModel.getType()));
+		
+		checkArgument(mapDTO.getRedScore() >= 0);
+		checkArgument(mapDTO.getBlueScore() >= 0);
+		checkArgument(mapDTO.getGreenScore() >= 0);
 		
 		// 1. synchronize objectives
 		Optional<IWVWObjective> optionalObjectiveModel;
@@ -126,6 +133,6 @@ public class SynchronizeMatchAction extends AbstractMatchIdAction<SynchronizeMat
 		}
 		
 		// 2. synchronize scores
-		//TODO synchronize scores
+		mapModel.getScores().update(mapDTO.getRedScore(), mapDTO.getGreenScore(), mapDTO.getBlueScore());
 	}
 }

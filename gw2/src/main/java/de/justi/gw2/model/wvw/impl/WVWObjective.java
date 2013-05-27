@@ -33,10 +33,10 @@ import de.justi.gw2.model.wvw.types.impl.WVWLocationType;
 import de.justi.gw2.utils.InjectionHelper;
 
 class WVWObjective extends AbstractHasChannel implements IWVWObjective {
-	private static final Logger					LOGGER						= Logger.getLogger(WVWObjective.class);
-	private static final IWVWModelFactory		WVW_MODEL_FACTORY			= InjectionHelper.INSTANCE.getInjector().getInstance(IWVWModelFactory.class);
-	private static final IWVWModelEventFactory	WVW_MODEL_EVENTS_FACTORY	= InjectionHelper.INSTANCE.getInjector().getInstance(IWVWModelEventFactory.class);
-	private static final IModelFactory			MODEL_FACTORY				= InjectionHelper.INSTANCE.getInjector().getInstance(IModelFactory.class);
+	private static final Logger LOGGER = Logger.getLogger(WVWObjective.class);
+	private static final IWVWModelFactory WVW_MODEL_FACTORY = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWModelFactory.class);
+	private static final IWVWModelEventFactory WVW_MODEL_EVENTS_FACTORY = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWModelEventFactory.class);
+	private static final IModelFactory MODEL_FACTORY = InjectionHelper.INSTANCE.getInjector().getInstance(IModelFactory.class);
 
 	class WVWImmutableObjectiveDecorator implements IWVWObjective, IImmutable {
 
@@ -52,7 +52,8 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 
 		@Override
 		public EventBus getChannel() {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName()+" is only a decorator for "+WVWObjective.class.getSimpleName()+" and has no channel for its own.");
+			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is only a decorator for " + WVWObjective.class.getSimpleName()
+					+ " and has no channel for its own.");
 		}
 
 		@Override
@@ -78,7 +79,7 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 
 		@Override
 		public void capture(IWorld capturingWorld) {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName()+" is immutable.");
+			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is immutable.");
 		}
 
 		@Override
@@ -94,22 +95,25 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 
 		@Override
 		public void connectWithMap(IWVWMap map) {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName()+" is immutable.");
+			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is immutable.");
 		}
 
+		public String toString() {
+			return Objects.toStringHelper(this).addValue(WVWObjective.this.toString()).toString();
+		}
 	}
-	
+
 	public static class WVWObjectiveBuilder implements IWVWObjective.IWVWObjectiveBuilder {
-		private Optional<IWVWLocationType>	location	= Optional.absent();
-		private Optional<IWorld>			owner		= Optional.absent();
-		private Optional<IWVWMap>			map			= Optional.absent();
+		private Optional<IWVWLocationType> location = Optional.absent();
+		private Optional<IWorld> owner = Optional.absent();
+		private Optional<IWVWMap> map = Optional.absent();
 
 		@Override
 		public IWVWObjective build() {
 			checkState(this.location.isPresent());
 
 			final IWVWObjective result = new WVWObjective(this.location.get());
-			if(this.map.isPresent()){
+			if (this.map.isPresent()) {
 				result.connectWithMap(map.get());
 			}
 			if (this.owner.isPresent()) {
@@ -144,11 +148,11 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 
 	}
 
-	private final IWVWLocationType			location;
-	private final List<IWVWObjectiveEvent>	eventHistory				= new CopyOnWriteArrayList<IWVWObjectiveEvent>();
-	private Optional<IWorld>				owningWorld					= Optional.absent();
-	private Optional<Calendar>				lastCaptureEventTimestamp	= Optional.absent();
-	private Optional<IWVWMap>				map							= Optional.absent();
+	private final IWVWLocationType location;
+	private final List<IWVWObjectiveEvent> eventHistory = new CopyOnWriteArrayList<IWVWObjectiveEvent>();
+	private Optional<IWorld> owningWorld = Optional.absent();
+	private Optional<Calendar> lastCaptureEventTimestamp = Optional.absent();
+	private Optional<IWVWMap> map = Optional.absent();
 
 	private WVWObjective(IWVWLocationType location) {
 		checkNotNull(location);

@@ -119,6 +119,9 @@ class WVWMap extends AbstractHasChannel implements IWVWMap {
 		public void connectWithMatch(IWVWMatch map) {
 			throw new UnsupportedOperationException(this.getClass().getSimpleName()+" is immutable.");
 		}
+		public String toString() {
+			return Objects.toStringHelper(this).addValue(WVWMap.this.toString()).toString();
+		}
 		
 	}
 	

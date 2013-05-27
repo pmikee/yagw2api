@@ -8,9 +8,10 @@ import de.justi.gw2.model.wvw.IWVWMatch;
 import de.justi.gw2.model.wvw.IWVWObjective;
 import de.justi.gw2.model.wvw.IWVWScores;
 
-
 public interface IWVWModelEventFactory {
 	IWVWObjectiveCaptureEvent newObjectiveCapturedEvent(IWVWObjective source, IWorld newOwner, Optional<IWorld> previousOwner);
-	IWVWMapScoresChangedEvent newMapScoresChangedEvent(IWVWScores source, IWVWMap map);
-	IWVWMatchScoresChangedEvent newMatchScoresChangedEvent(IWVWScores source, IWVWMatch match);
+
+	IWVWMapScoresChangedEvent newMapScoresChangedEvent(IWVWScores source, int deltaRed, int deltaGreen, int deltaBlue, IWVWMap map);
+
+	IWVWMatchScoresChangedEvent newMatchScoresChangedEvent(IWVWScores source, int deltaRed, int deltaGreen, int deltaBlue, IWVWMatch match);
 }
