@@ -200,7 +200,7 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 	public long getRemainingBuffDuration(TimeUnit unit) {
 		if (this.lastCaptureEventTimestamp.isPresent()) {
 			final Calendar now = Calendar.getInstance();
-			return unit.convert(this.getType().getBuffDuration(TimeUnit.MILLISECONDS) - Math.max(0, now.getTimeInMillis() - this.lastCaptureEventTimestamp.get().getTimeInMillis()), TimeUnit.MILLISECONDS);
+			return unit.convert(Math.max(0,this.getType().getBuffDuration(TimeUnit.MILLISECONDS) - Math.max(0, now.getTimeInMillis() - this.lastCaptureEventTimestamp.get().getTimeInMillis())), TimeUnit.MILLISECONDS);
 		} else {
 			// not capture yet
 			return 0;
