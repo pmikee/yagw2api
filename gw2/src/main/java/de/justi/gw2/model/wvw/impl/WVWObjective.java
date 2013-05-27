@@ -18,6 +18,7 @@ import com.google.common.eventbus.EventBus;
 
 import de.justi.gw2.api.dto.IWVWObjectiveDTO;
 import de.justi.gw2.model.AbstractHasChannel;
+import de.justi.gw2.model.IImmutable;
 import de.justi.gw2.model.IModelFactory;
 import de.justi.gw2.model.IWorld;
 import de.justi.gw2.model.wvw.IWVWMap;
@@ -37,7 +38,7 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 	private static final IWVWModelEventFactory	WVW_MODEL_EVENTS_FACTORY	= InjectionHelper.INSTANCE.getInjector().getInstance(IWVWModelEventFactory.class);
 	private static final IModelFactory			MODEL_FACTORY				= InjectionHelper.INSTANCE.getInjector().getInstance(IModelFactory.class);
 
-	class WVWImmutableObjectiveDecorator implements IWVWObjective {
+	class WVWImmutableObjectiveDecorator implements IWVWObjective, IImmutable {
 
 		@Override
 		public IWVWLocationType getLocation() {
@@ -214,7 +215,6 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 
 	@Override
 	public IWVWObjective createImmutableReference() {
-		// TODO Auto-generated method stub
-		return null;
+		return new WVWImmutableObjectiveDecorator();
 	}
 }

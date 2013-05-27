@@ -27,6 +27,7 @@ import de.justi.gw2.api.dto.IWVWMatchDetailsDTO;
 import de.justi.gw2.api.dto.IWVWObjectiveDTO;
 import de.justi.gw2.model.AbstractHasChannel;
 import de.justi.gw2.model.IEvent;
+import de.justi.gw2.model.IImmutable;
 import de.justi.gw2.model.IModelFactory;
 import de.justi.gw2.model.IWorld;
 import de.justi.gw2.model.wvw.IWVWMap;
@@ -38,7 +39,7 @@ import de.justi.gw2.utils.InjectionHelper;
 
 class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 
-	class WVWImmutableMatchDecorator implements IWVWMatch {
+	class WVWImmutableMatchDecorator implements IWVWMatch , IImmutable{
 
 		@Override
 		public Set<IWorld> searchWorldsByNamePattern(Pattern searchPattern) {
@@ -152,6 +153,12 @@ class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 				this.setupOwner(match, match.getGreenMap(), this.fromMatchDTO.get(), this.fromMatchDTO.get().getDetails().get().getGreenMap());
 			}
 			match.getScores().update(this.redScore.or(0), this.greenScore.or(0), this.blueScore.or(0));
+			
+			match.getRedMap().connectWithMatch(match);
+			match.getGreenMap().connectWithMatch(match);
+			match.getBlueMap().connectWithMatch(match);
+			match.getCenterMap().connectWithMatch(match);
+			
 			return match;
 		}
 

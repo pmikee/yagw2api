@@ -12,7 +12,6 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
@@ -25,8 +24,10 @@ import de.justi.gw2.api.dto.IWVWMapDTO;
 import de.justi.gw2.api.dto.IWVWObjectiveDTO;
 import de.justi.gw2.model.AbstractHasChannel;
 import de.justi.gw2.model.IHasChannel;
+import de.justi.gw2.model.IImmutable;
 import de.justi.gw2.model.wvw.IHasWVWLocation;
 import de.justi.gw2.model.wvw.IWVWMap;
+import de.justi.gw2.model.wvw.IWVWMatch;
 import de.justi.gw2.model.wvw.IWVWModelFactory;
 import de.justi.gw2.model.wvw.IWVWObjective;
 import de.justi.gw2.model.wvw.IWVWScores;
@@ -43,7 +44,7 @@ class WVWMap extends AbstractHasChannel implements IWVWMap {
 	private static final Logger LOGGER = Logger.getLogger(WVWMap.class);
 	private static final IWVWModelFactory WVW_MODEL_FACTORY = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWModelFactory.class);
 	
-	class WVWImmutableMapDecorator implements IWVWMap {
+	class WVWImmutableMapDecorator implements IWVWMap, IImmutable{
 
 		@Override
 		public EventBus getChannel() {
@@ -107,6 +108,17 @@ class WVWMap extends AbstractHasChannel implements IWVWMap {
 		public IWVWMap createImmutableReference() {
 			return this;
 		}
+
+		@Override
+		public Optional<IWVWMatch> getMatch() {
+			final Optional<IWVWMatch> buffer = WVWMap.this.getMatch();
+			return buffer.isPresent() ? Optional.<IWVWMatch>of(buffer.get().createImmutableReference()) : buffer;
+		}
+
+		@Override
+		public void connectWithMatch(IWVWMatch map) {
+			throw new UnsupportedOperationException(this.getClass().getSimpleName()+" is immutable.");
+		}
 		
 	}
 	
@@ -114,6 +126,7 @@ class WVWMap extends AbstractHasChannel implements IWVWMap {
 	public static class WVWMapBuilder implements IWVWMap.IWVWMapBuilder {
 		private Map<IWVWLocationType, IHasWVWLocation<?>> contentMappedByLocation = new HashMap<IWVWLocationType, IHasWVWLocation<?>>();
 		private Optional<IWVWMapType> type = Optional.absent();
+		private Optional<IWVWMatch> match = Optional.absent();
 		private Optional<Integer> redScore = Optional.absent();
 		private Optional<Integer> blueScore = Optional.absent();
 		private Optional<Integer> greenScore = Optional.absent();
@@ -132,6 +145,10 @@ class WVWMap extends AbstractHasChannel implements IWVWMap {
 			}
 			final IWVWMap map = new WVWMap(this.type.get(), this.contentMappedByLocation.values());
 			map.getScores().update(this.redScore.or(0), this.greenScore.or(0), this.blueScore.or(0));
+			
+			if(this.match.isPresent()) {
+				map.connectWithMatch(this.match.get());
+			}
 			
 			for (IWVWObjective objective : map.getObjectives()){
 				objective.connectWithMap(map);
@@ -186,13 +203,20 @@ class WVWMap extends AbstractHasChannel implements IWVWMap {
 			return this;
 		}
 
+		@Override
+		public IWVWMapBuilder match(IWVWMatch match) {
+			this.match = Optional.fromNullable(match);
+			return this;
+		}
+
 	}
 	
 	
 	private final IWVWMapType type;
 	private final Map<IWVWLocationType, IHasWVWLocation<?>> content;
 	private final IWVWScores scores;
-
+	private Optional<IWVWMatch> match = Optional.absent();
+	
 	private WVWMap(IWVWMapType type, Collection<IHasWVWLocation<?>> contents) {
 		checkNotNull(type);
 		checkNotNull(contents);
@@ -284,6 +308,18 @@ class WVWMap extends AbstractHasChannel implements IWVWMap {
 	@Override
 	public IWVWMap createImmutableReference() {
 		return new WVWImmutableMapDecorator();
+	}
+
+	@Override
+	public Optional<IWVWMatch> getMatch() {
+		return this.match;
+	}
+
+	@Override
+	public void connectWithMatch(IWVWMatch match) {
+		checkNotNull(match);
+		checkState(!this.match.isPresent(),"Connect with map can only be called once.");
+		this.match = Optional.of(match);
 	}
 
 }

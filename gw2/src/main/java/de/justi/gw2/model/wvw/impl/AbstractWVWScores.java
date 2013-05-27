@@ -6,11 +6,12 @@ import com.google.common.base.Objects;
 import com.google.common.eventbus.EventBus;
 
 import de.justi.gw2.model.AbstractHasChannel;
+import de.justi.gw2.model.IImmutable;
 import de.justi.gw2.model.wvw.IWVWScores;
 
 abstract class AbstractWVWScores extends AbstractHasChannel implements IWVWScores {
 
-	class WVWImmutableScoresDecorator implements IWVWScores{
+	class WVWImmutableScoresDecorator implements IWVWScores, IImmutable{
 		@Override
 		public EventBus getChannel() {
 			throw new UnsupportedOperationException(this.getClass().getSimpleName()+" is only a decorator for "+AbstractWVWScores.class.getSimpleName()+" and has no channel for its own.");

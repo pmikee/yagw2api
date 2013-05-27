@@ -18,11 +18,13 @@ public interface IWVWMap extends IHasChannel {
 		IWVWMapBuilder type(IWVWMapType type);
 		IWVWMapBuilder objective(IWVWObjective objective);
 		IWVWMapBuilder fromDTO(IWVWMapDTO dto);
-
+		IWVWMapBuilder match(IWVWMatch match);
 		IWVWMapBuilder redScore(int score);
 		IWVWMapBuilder blueScore(int score);
 		IWVWMapBuilder greenScore(int score);
 	}
+	
+	Optional<IWVWMatch> getMatch();
 	
 	IWVWMapType getType();
 	Map<IWVWLocationType, IHasWVWLocation<?>> getMappedByPosition();
@@ -33,4 +35,9 @@ public interface IWVWMap extends IHasChannel {
 	IWVWScores getScores();
 	
 	IWVWMap createImmutableReference();
+	/**
+	 * can only be called once
+	 * @param map not null
+	 */
+	void connectWithMatch(IWVWMatch match);
 }
