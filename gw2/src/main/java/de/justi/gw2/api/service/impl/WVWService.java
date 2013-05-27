@@ -34,8 +34,10 @@ import de.justi.gw2.api.dto.IWVWMatchesDTO;
 import de.justi.gw2.api.dto.IWVWObjectiveNameDTO;
 import de.justi.gw2.api.dto.IWorldNameDTO;
 import de.justi.gw2.api.service.IWVWService;
+import de.justi.gw2.utils.RetryClientFilter;
 
 class WVWService extends AbstractService implements IWVWService {
+	private static final int										RETRY_COUNT							= 10;
 	private static final long										MATCH_CACHE_EXPIRE_MILLIS			= 1000 * 60 * 10;												// 10m
 	private static final long										MATCH_DETAILS_CACHE_EXPIRE_MILLIS	= 1000 * 3;													// 3s
 	private static final long										WOLRD_NAMES_CACHE_EXPIRE_MILLIS		= 1000 * 60 * 60 * 12;											// 12h
@@ -187,7 +189,8 @@ class WVWService extends AbstractService implements IWVWService {
 			return this.matchesCache.get("", new Callable<IWVWMatchesDTO>() {
 				public IWVWMatchesDTO call() throws Exception {
 					final WebResource resource = CLIENT.resource(MATCHES_URL.toExternalForm());
-					final WebResource.Builder builder = resource.accept(MediaType.APPLICATION_JSON_TYPE, MediaType.APPLICATION_XML_TYPE);
+					resource.addFilter(new RetryClientFilter(10));
+					final WebResource.Builder builder = resource.accept(MediaType.APPLICATION_JSON_TYPE);
 					try {
 						final String response = builder.get(String.class);
 						LOGGER.trace("Retrieved response=" + response);
@@ -212,9 +215,10 @@ class WVWService extends AbstractService implements IWVWService {
 			return this.matchDetailsCache.get(id, new Callable<IWVWMatchDetailsDTO>() {
 				public IWVWMatchDetailsDTO call() throws Exception {
 					final WebResource resource = CLIENT.resource(MATCH_DETAILS_URL.toExternalForm()).queryParam("match_id", id);
-					final WebResource.Builder builder = resource.accept(MediaType.APPLICATION_JSON_TYPE, MediaType.APPLICATION_XML_TYPE);
+					resource.addFilter(new RetryClientFilter(10));
+					final WebResource.Builder builder = resource.accept(MediaType.APPLICATION_JSON_TYPE);
 					try {
-						final String response = builder.get(String.class);
+						final String response = builder.get(String.class);						
 						LOGGER.trace("Retrieved response=" + response);
 						final IWVWMatchDetailsDTO result = WVWService.this.wvwDTOFactory.newMatchDetailsOf(response, WVWService.this);
 						LOGGER.debug("Built result=" + result);
@@ -237,7 +241,8 @@ class WVWService extends AbstractService implements IWVWService {
 			return this.objectiveNamesCache.get(locale, new Callable<IWVWObjectiveNameDTO[]>() {
 				public IWVWObjectiveNameDTO[] call() throws Exception {
 					final WebResource resource = CLIENT.resource(OBJECTIVE_NAMES_URL.toExternalForm()).queryParam("lang", locale.getLanguage());
-					final WebResource.Builder builder = resource.accept(MediaType.APPLICATION_JSON_TYPE, MediaType.APPLICATION_XML_TYPE);
+					resource.addFilter(new RetryClientFilter(10));
+					final WebResource.Builder builder = resource.accept(MediaType.APPLICATION_JSON_TYPE);
 					try {
 						final String response = builder.get(String.class);
 						LOGGER.trace("Retrieved response=" + response);
@@ -265,7 +270,8 @@ class WVWService extends AbstractService implements IWVWService {
 				public IWorldNameDTO[] call() throws Exception {
 					checkNotNull(locale);
 					final WebResource resource = CLIENT.resource(WORL_NAMES_URL.toExternalForm()).queryParam("lang", locale.getLanguage());
-					final WebResource.Builder builder = resource.accept(MediaType.APPLICATION_JSON_TYPE, MediaType.APPLICATION_XML_TYPE);
+					resource.addFilter(new RetryClientFilter(10));
+					final WebResource.Builder builder = resource.accept(MediaType.APPLICATION_JSON_TYPE);
 					try {
 						final String response = builder.get(String.class);
 						LOGGER.trace("Retrieved response=" + response);
