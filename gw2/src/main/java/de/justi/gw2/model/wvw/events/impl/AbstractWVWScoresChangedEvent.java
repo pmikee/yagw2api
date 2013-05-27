@@ -19,6 +19,7 @@ abstract class AbstractWVWScoresChangedEvent extends AbstractEvent implements IW
 		checkArgument(deltaRed >= 0);
 		checkArgument(deltaGreen >= 0);
 		checkArgument(deltaBlue >= 0);
+		checkArgument(deltaRed+deltaGreen+deltaBlue > 0);
 		this.scores = scores;
 		this.deltaRed = deltaRed;
 		this.deltaGreen = deltaGreen;

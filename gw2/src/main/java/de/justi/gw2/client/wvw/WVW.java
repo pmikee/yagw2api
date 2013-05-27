@@ -6,9 +6,7 @@ import java.util.Map;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 
-
 import org.apache.log4j.Logger;
-
 
 import com.google.common.eventbus.Subscribe;
 import com.google.common.util.concurrent.AbstractScheduledService;
@@ -19,7 +17,6 @@ import de.justi.gw2.api.service.IWVWService;
 import de.justi.gw2.client.wvw.poolactions.SynchronizeMatchAction;
 import de.justi.gw2.model.wvw.IWVWMatch;
 import de.justi.gw2.model.wvw.IWVWModelFactory;
-import de.justi.gw2.model.wvw.events.IWVWMatchScoresChangedEvent;
 import de.justi.gw2.model.wvw.events.IWVWObjectiveCaptureEvent;
 import de.justi.gw2.model.wvw.events.IWVWScoresChangedEvent;
 import de.justi.gw2.utils.InjectionHelper;

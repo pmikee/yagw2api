@@ -24,7 +24,6 @@ import de.justi.gw2.model.wvw.IWVWMap;
 import de.justi.gw2.model.wvw.IWVWMatch;
 import de.justi.gw2.model.wvw.IWVWModelFactory;
 import de.justi.gw2.model.wvw.IWVWObjective;
-import de.justi.gw2.model.wvw.types.IWVWMapType;
 import de.justi.gw2.model.wvw.types.impl.WVWMapType;
 import de.justi.gw2.utils.InjectionHelper;
 
@@ -60,11 +59,14 @@ public class SynchronizeMatchAction extends AbstractMatchIdAction<SynchronizeMat
 			final IWVWMatchDTO matchDTO = matchDTOOptional.get();
 			final IWVWMatchDetailsDTO matchDetailsDTO = matchDTO.getDetails().get();
 			final IWVWMatch matchModel = this.matchesMappedById.get(matchId);
+			
+			// 1. synchronize maps
 			this.synchronizeMap(matchModel, matchModel.getCenterMap(), matchDetailsDTO.getCenterMap());
 			this.synchronizeMap(matchModel, matchModel.getRedMap(), matchDetailsDTO.getRedMap());
 			this.synchronizeMap(matchModel, matchModel.getBlueMap(), matchDetailsDTO.getBlueMap());
 			this.synchronizeMap(matchModel, matchModel.getGreenMap(), matchDetailsDTO.getGreenMap());
-
+			// 2. synchronize match scores
+			matchModel.getScores().update(matchDetailsDTO.getRedScore(), matchDetailsDTO.getGreenScore(), matchDetailsDTO.getBlueScore());
 		} else {
 			LOGGER.error("Failed to retrieve " + IWVWMatchDTO.class.getSimpleName() + " for matchId=" + matchId);
 		}
