@@ -15,8 +15,8 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
-import de.justi.gw2.model.wvw.IWVWMapType;
 import de.justi.gw2.model.wvw.types.IWVWLocationType;
+import de.justi.gw2.model.wvw.types.IWVWMapType;
 import de.justi.gw2.model.wvw.types.IWVWObjectiveType;
 
 public enum WVWLocationType implements IWVWLocationType {

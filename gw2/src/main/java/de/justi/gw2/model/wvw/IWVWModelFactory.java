@@ -1,6 +1,5 @@
 package de.justi.gw2.model.wvw;
 
-import de.justi.gw2.model.wvw.types.IWVWObjective;
 
 public interface IWVWModelFactory {
 	// builders

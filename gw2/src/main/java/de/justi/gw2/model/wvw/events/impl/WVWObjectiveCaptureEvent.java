@@ -5,8 +5,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.base.Optional;
 
 import de.justi.gw2.model.IWorld;
+import de.justi.gw2.model.wvw.IWVWObjective;
 import de.justi.gw2.model.wvw.events.IWVWObjectiveCaptureEvent;
-import de.justi.gw2.model.wvw.types.IWVWObjective;
 
 
 class WVWObjectiveCaptureEvent extends AbstractWVWObjectiveEvent implements IWVWObjectiveCaptureEvent {
@@ -31,5 +31,4 @@ class WVWObjectiveCaptureEvent extends AbstractWVWObjectiveEvent implements IWVW
 	public Optional<IWorld> getPreviousOwningWorld() {
 		return this.previousOwningWorld;
 	}
-
 }

@@ -2,6 +2,6 @@ package de.justi.gw2.model;
 
 import java.util.Calendar;
 
-public interface IEvent {
+public interface IEvent extends IImmutable{
 	Calendar getTimestamp();
 }

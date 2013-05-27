@@ -27,13 +27,13 @@ import de.justi.gw2.model.AbstractHasChannel;
 import de.justi.gw2.model.IHasChannel;
 import de.justi.gw2.model.wvw.IHasWVWLocation;
 import de.justi.gw2.model.wvw.IWVWMap;
-import de.justi.gw2.model.wvw.IWVWMapType;
 import de.justi.gw2.model.wvw.IWVWModelFactory;
+import de.justi.gw2.model.wvw.IWVWObjective;
 import de.justi.gw2.model.wvw.IWVWScores;
 import de.justi.gw2.model.wvw.events.IWVWMapScoresChangedEvent;
 import de.justi.gw2.model.wvw.events.IWVWObjectiveCaptureEvent;
 import de.justi.gw2.model.wvw.types.IWVWLocationType;
-import de.justi.gw2.model.wvw.types.IWVWObjective;
+import de.justi.gw2.model.wvw.types.IWVWMapType;
 import de.justi.gw2.model.wvw.types.impl.WVWLocationType;
 import de.justi.gw2.model.wvw.types.impl.WVWMapType;
 import de.justi.gw2.utils.InjectionHelper;
@@ -53,7 +53,7 @@ class WVWMap extends AbstractHasChannel implements IWVWMap {
 
 		@Override
 		public IWVWMapType getType() {
-			return WVWMap.this.getType().getImmutableReference();
+			return WVWMap.this.getType();
 		}
 
 		@Override
@@ -132,6 +132,11 @@ class WVWMap extends AbstractHasChannel implements IWVWMap {
 			}
 			final IWVWMap map = new WVWMap(this.type.get(), this.contentMappedByLocation.values());
 			map.getScores().update(this.redScore.or(0), this.greenScore.or(0), this.blueScore.or(0));
+			
+			for (IWVWObjective objective : map.getObjectives()){
+				objective.connectWithMap(map);
+			}
+			
 			return map;
 		}
 

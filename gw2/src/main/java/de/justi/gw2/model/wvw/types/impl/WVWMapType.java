@@ -1,9 +1,9 @@
 package de.justi.gw2.model.wvw.types.impl;
 
 import de.justi.gw2.api.dto.IWVWMatchDetailsDTO;
-import de.justi.gw2.model.wvw.IWVWMapType;
+import de.justi.gw2.model.wvw.types.IWVWMapType;
 
-public enum WVWMapType implements IWVWMapType {
+public enum WVWMapType implements IWVWMapType{
 	CENTER,
 	RED,
 	GREEN,
@@ -42,10 +42,5 @@ public enum WVWMapType implements IWVWMapType {
 
 	public boolean isBlue() {
 		return this.equals(BLUE);
-	}
-
-	@Override
-	public IWVWMapType getImmutableReference() {
-		return this;
 	}
 }

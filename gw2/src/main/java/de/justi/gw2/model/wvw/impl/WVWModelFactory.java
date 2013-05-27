@@ -4,8 +4,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import de.justi.gw2.model.wvw.IWVWMap;
 import de.justi.gw2.model.wvw.IWVWMatch;
 import de.justi.gw2.model.wvw.IWVWModelFactory;
+import de.justi.gw2.model.wvw.IWVWObjective;
 import de.justi.gw2.model.wvw.IWVWScores;
-import de.justi.gw2.model.wvw.types.IWVWObjective;
 
 public class WVWModelFactory implements IWVWModelFactory {
 

@@ -2,7 +2,9 @@ package de.justi.gw2.model.wvw.types;
 
 import java.util.concurrent.TimeUnit;
 
-public interface IWVWObjectiveType{
+import de.justi.gw2.model.IImmutable;
+
+public interface IWVWObjectiveType extends IImmutable{
 	String getLabel();
 	long getBuffDuration(TimeUnit timeUnit);
 	int getPoints();

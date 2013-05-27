@@ -6,30 +6,24 @@ import static com.google.common.base.Preconditions.checkState;
 
 import java.util.concurrent.TimeUnit;
 
-
-
-
 import com.google.common.base.Objects;
 
 import de.justi.gw2.model.wvw.types.IWVWObjectiveType;
 
-public enum WVWObjectiveType implements IWVWObjectiveType{
-	CAMP(5, TimeUnit.MINUTES, 5),
-	TOWER(5, TimeUnit.MINUTES, 10),
-	KEEP(5, TimeUnit.MINUTES, 25),
-	CASTLE(5, TimeUnit.MINUTES, 35);
+public enum WVWObjectiveType implements IWVWObjectiveType {
+	CAMP(5, TimeUnit.MINUTES, 5), TOWER(5, TimeUnit.MINUTES, 10), KEEP(5, TimeUnit.MINUTES, 25), CASTLE(5, TimeUnit.MINUTES, 35);
 
-	private final long buffDurationMillis;
-	private final int points;
-	
-	private WVWObjectiveType(long buffDuration, TimeUnit buffDurationTimeUnit, int points){
+	private final long	buffDurationMillis;
+	private final int	points;
+
+	private WVWObjectiveType(long buffDuration, TimeUnit buffDurationTimeUnit, int points) {
 		checkArgument(buffDuration > 0);
 		checkNotNull(buffDurationTimeUnit);
 		this.buffDurationMillis = buffDurationTimeUnit.toMillis(buffDuration);
 		checkArgument(points > 0);
 		this.points = points;
 	}
-	
+
 	public String getLabel() {
 		return this.name();
 	}
@@ -42,10 +36,11 @@ public enum WVWObjectiveType implements IWVWObjectiveType{
 
 	public int getPoints() {
 		return this.points;
-	}	
-	
+	}
+
 	public String toString() {
-		return Objects.toStringHelper(this).add("label", this.getLabel()).add("buffDuration",this.buffDurationMillis+"ms").add("points", this.points).toString();
+		return Objects.toStringHelper(this).add("label", this.getLabel()).add("buffDuration", this.buffDurationMillis + "ms").add("points", this.points)
+				.toString();
 	}
 
 	public boolean isCamp() {
