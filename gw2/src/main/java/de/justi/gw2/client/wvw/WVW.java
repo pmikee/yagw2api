@@ -15,10 +15,9 @@ import de.justi.gw2.api.dto.IWVWMatchDTO;
 import de.justi.gw2.api.dto.IWVWMatchesDTO;
 import de.justi.gw2.api.service.IWVWService;
 import de.justi.gw2.client.wvw.poolactions.SynchronizeMatchAction;
+import de.justi.gw2.model.IEvent;
 import de.justi.gw2.model.wvw.IWVWMatch;
 import de.justi.gw2.model.wvw.IWVWModelFactory;
-import de.justi.gw2.model.wvw.events.IWVWObjectiveCaptureEvent;
-import de.justi.gw2.model.wvw.events.IWVWScoresChangedEvent;
 import de.justi.gw2.utils.InjectionHelper;
 
 public class WVW extends AbstractScheduledService {
@@ -27,7 +26,7 @@ public class WVW extends AbstractScheduledService {
 	private static final long INTERVAL_MILLIS = 1000; // 3s
 	private static final Logger LOGGER = Logger.getLogger(WVW.class);
 
-	private final Map<String, IWVWMatch> matchesMappedById = new HashMap<String, IWVWMatch>(); 
+	private final Map<String, IWVWMatch> matchesMappedById = new HashMap<String, IWVWMatch>();
 	private final ForkJoinPool pool = new ForkJoinPool(Runtime.getRuntime().availableProcessors(), ForkJoinPool.defaultForkJoinWorkerThreadFactory,
 			new Thread.UncaughtExceptionHandler() {
 				public void uncaughtException(Thread t, Throwable e) {
@@ -41,18 +40,13 @@ public class WVW extends AbstractScheduledService {
 		for (IWVWMatchDTO matchDTO : matchesDto.getMatches()) {
 			match = WVW_MODEL_FACTORY.newMatchBuilder().fromMatchDTO(matchDTO, Locale.GERMAN).build();
 			match.getChannel().register(this);
-			this.matchesMappedById.put(match.getId(), match);			
+			this.matchesMappedById.put(match.getId(), match);
 		}
 
 	}
-	
+
 	@Subscribe
-	public void onWVWObjectiveCaptureEvent(IWVWObjectiveCaptureEvent event) {
-		System.out.println(event);
-	}
-	
-	@Subscribe
-	public void onWVWMatchScoreChangeEvent(IWVWScoresChangedEvent event) {
+	public void onEvent(IEvent event) {
 		System.out.println(event);
 	}
 

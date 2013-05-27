@@ -101,6 +101,11 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 		public String toString() {
 			return Objects.toStringHelper(this).addValue(WVWObjective.this.toString()).toString();
 		}
+
+		@Override
+		public void updateOnSynchronization() {
+			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is immutable.");
+		}
 	}
 
 	public static class WVWObjectiveBuilder implements IWVWObjective.IWVWObjectiveBuilder {
@@ -152,6 +157,7 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 	private final List<IWVWObjectiveEvent> eventHistory = new CopyOnWriteArrayList<IWVWObjectiveEvent>();
 	private Optional<IWorld> owningWorld = Optional.absent();
 	private Optional<Calendar> lastCaptureEventTimestamp = Optional.absent();
+	private boolean postedEndOfBuffEvent = false;
 	private Optional<IWVWMap> map = Optional.absent();
 
 	private WVWObjective(IWVWLocationType location) {
@@ -184,9 +190,10 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 	public void capture(IWorld capturingWorld) {
 		checkNotNull(capturingWorld);
 		final IWVWObjectiveCaptureEvent event = WVW_MODEL_EVENTS_FACTORY.newObjectiveCapturedEvent(this, capturingWorld, this.owningWorld);
+		LOGGER.debug(capturingWorld + " has captured " + this+ " when expected remaining buff duration was "+this.getRemainingBuffDuration(TimeUnit.MILLISECONDS)+"ms");
 		this.owningWorld = Optional.of(capturingWorld);
 		this.lastCaptureEventTimestamp = Optional.of(event.getTimestamp());
-		LOGGER.debug(capturingWorld + " has captured " + this);
+		this.postedEndOfBuffEvent = false;
 		this.getChannel().post(event);
 	}
 
@@ -220,5 +227,20 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 	@Override
 	public IWVWObjective createImmutableReference() {
 		return new WVWImmutableObjectiveDecorator();
+	}
+
+	@Override
+	public void updateOnSynchronization() {
+		final long remainingBuffMillis = this.getRemainingBuffDuration(TimeUnit.MILLISECONDS);
+		if (!this.postedEndOfBuffEvent && remainingBuffMillis == 0) {
+			synchronized (this) {
+				if (!this.postedEndOfBuffEvent) {
+					this.postedEndOfBuffEvent = true;
+					this.getChannel().post(WVW_MODEL_EVENTS_FACTORY.newObjectiveEndOfBuffEvent(this));
+				}
+			}
+		}else if(remainingBuffMillis > 0 && LOGGER.isTraceEnabled()) {
+			LOGGER.trace("Remaining buff duration for "+this.toString()+": "+remainingBuffMillis+"ms");
+		}
 	}
 }

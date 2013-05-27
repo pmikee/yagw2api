@@ -34,6 +34,7 @@ public interface IWVWObjective extends IHasWVWLocation<IWVWObjective>, IHasChann
 	Optional<IWorld> getOwner();
 
 	void capture(IWorld capturingWorld);
+	void updateOnSynchronization();
 
 	long getRemainingBuffDuration(TimeUnit unit);
 	

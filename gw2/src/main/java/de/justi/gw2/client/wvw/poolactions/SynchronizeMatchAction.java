@@ -53,6 +53,7 @@ public class SynchronizeMatchAction extends AbstractMatchIdAction<SynchronizeMat
 
 	@Override
 	protected void perform(String matchId) {
+		final long startTimestamp = System.currentTimeMillis();
 		LOGGER.trace("Going to synchronize matchId=" + matchId);
 		final Optional<IWVWMatchDTO> matchDTOOptional = SERVICE.retrieveMatch(matchId);
 		if (matchDTOOptional.isPresent() && matchDTOOptional.get().getDetails().isPresent()) {
@@ -70,8 +71,9 @@ public class SynchronizeMatchAction extends AbstractMatchIdAction<SynchronizeMat
 		} else {
 			LOGGER.error("Failed to retrieve " + IWVWMatchDTO.class.getSimpleName() + " for matchId=" + matchId);
 		}
-
-		LOGGER.trace("Synchronized matchId=" + matchId);
+		final long endTimestamp = System.currentTimeMillis();
+		final long duration = endTimestamp-startTimestamp;
+		LOGGER.info("Synchronized matchId=" + matchId+" in "+duration+"ms.");
 	}
 
 	private void synchronizeMap(IWVWMatch match, IWVWMap mapModel, IWVWMapDTO mapDTO) {
@@ -83,6 +85,7 @@ public class SynchronizeMatchAction extends AbstractMatchIdAction<SynchronizeMat
 		checkArgument(mapDTO.getRedScore() >= 0);
 		checkArgument(mapDTO.getBlueScore() >= 0);
 		checkArgument(mapDTO.getGreenScore() >= 0);
+		checkArgument(mapDTO.getObjectives().length == mapModel.getObjectives().size());
 		
 		// 1. synchronize objectives
 		Optional<IWVWObjective> optionalObjectiveModel;
@@ -92,6 +95,7 @@ public class SynchronizeMatchAction extends AbstractMatchIdAction<SynchronizeMat
 			optionalObjectiveModel = mapModel.getByObjectiveId(objectiveDTO.getId());
 			if (optionalObjectiveModel.isPresent()) {
 				objectiveModel = optionalObjectiveModel.get();
+				objectiveModel.updateOnSynchronization();
 				if (LOGGER.isTraceEnabled()) {
 					LOGGER.trace("Going to synchronize model=" + objectiveModel + " with dto=" + objectiveDTO);
 				}

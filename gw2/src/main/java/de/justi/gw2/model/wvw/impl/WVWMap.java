@@ -32,7 +32,7 @@ import de.justi.gw2.model.wvw.IWVWModelFactory;
 import de.justi.gw2.model.wvw.IWVWObjective;
 import de.justi.gw2.model.wvw.IWVWScores;
 import de.justi.gw2.model.wvw.events.IWVWMapScoresChangedEvent;
-import de.justi.gw2.model.wvw.events.IWVWObjectiveCaptureEvent;
+import de.justi.gw2.model.wvw.events.IWVWObjectiveEvent;
 import de.justi.gw2.model.wvw.types.IWVWLocationType;
 import de.justi.gw2.model.wvw.types.IWVWMapType;
 import de.justi.gw2.model.wvw.types.impl.WVWLocationType;
@@ -243,7 +243,7 @@ class WVWMap extends AbstractHasChannel implements IWVWMap {
 	}
 	
 	@Subscribe
-	public void onWVWObjectiveCaptureEvent(IWVWObjectiveCaptureEvent event) {
+	public void onWVWObjectiveEvent(IWVWObjectiveEvent event) {
 		if(LOGGER.isTraceEnabled()) {
 			LOGGER.trace(this.getClass().getSimpleName()+" is going to forward "+event);
 		}

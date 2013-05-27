@@ -13,6 +13,7 @@ import de.justi.gw2.model.wvw.events.IWVWMapScoresChangedEvent;
 import de.justi.gw2.model.wvw.events.IWVWMatchScoresChangedEvent;
 import de.justi.gw2.model.wvw.events.IWVWModelEventFactory;
 import de.justi.gw2.model.wvw.events.IWVWObjectiveCaptureEvent;
+import de.justi.gw2.model.wvw.events.IWVWObjectiveEndOfBuffEvent;
 
 class WVWModelEventFactory implements IWVWModelEventFactory {
 
@@ -36,6 +37,12 @@ class WVWModelEventFactory implements IWVWModelEventFactory {
 		checkNotNull(source);
 		checkNotNull(match);
 		return new WVWMatchScoresChanged(source, deltaRed, deltaGreen, deltaBlue, match);
+	}
+
+	@Override
+	public IWVWObjectiveEndOfBuffEvent newObjectiveEndOfBuffEvent(IWVWObjective source) {
+		checkNotNull(source);
+		return new WVWObjectiveEndOfBuffEvent(source);
 	}
 
 }
