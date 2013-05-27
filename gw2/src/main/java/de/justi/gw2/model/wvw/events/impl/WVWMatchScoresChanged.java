@@ -22,6 +22,6 @@ class WVWMatchScoresChanged extends AbstractWVWScoresChangedEvent implements IWV
 	}
 
 	public String toString() {
-		return Objects.toStringHelper(this).add("super", super.toString()).add("scores", this.getScores()).add("delta", "r:"+this.getDeltaRed()+",g:"+this.getDeltaBlue()+",b:"+this.getDeltaBlue()).add("matchId", this.getMatch().getId()).toString();
+		return Objects.toStringHelper(this).add("super", super.toString()).add("scores", this.getScores()).add("delta", "r:"+this.getDeltaRed()+",g:"+this.getDeltaGreen()+",b:"+this.getDeltaBlue()).add("matchId", this.getMatch().getId()).toString();
 	}
 }

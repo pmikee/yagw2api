@@ -26,7 +26,7 @@ class WVWMapScoresChangedEvent extends AbstractWVWScoresChangedEvent implements 
 
 	public String toString() {
 		final Optional<IWVWMatch> matchOptional = this.getMap().getMatch();
-		final ToStringHelper helper = Objects.toStringHelper(this).add("super", super.toString()).add("scores", this.getScores()).add("delta", "r:"+this.getDeltaRed()+",g:"+this.getDeltaBlue()+",b:"+this.getDeltaBlue()).add("mapType",this.getMap().getType());
+		final ToStringHelper helper = Objects.toStringHelper(this).add("super", super.toString()).add("scores", this.getScores()).add("delta", "r:"+this.getDeltaRed()+",g:"+this.getDeltaGreen()+",b:"+this.getDeltaBlue()).add("mapType",this.getMap().getType());
 		if(matchOptional.isPresent()) {
 			helper.add("matchId", matchOptional.get().getId());
 		}
