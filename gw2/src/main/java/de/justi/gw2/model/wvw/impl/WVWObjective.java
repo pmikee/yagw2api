@@ -190,7 +190,7 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 	public void capture(IWorld capturingWorld) {
 		checkNotNull(capturingWorld);
 		final IWVWObjectiveCaptureEvent event = WVW_MODEL_EVENTS_FACTORY.newObjectiveCapturedEvent(this, capturingWorld, this.owningWorld);
-		LOGGER.debug(capturingWorld + " has captured " + this+ " when expected remaining buff duration was "+this.getRemainingBuffDuration(TimeUnit.MILLISECONDS)+"ms");
+		LOGGER.debug(capturingWorld + " has captured " + this+ " when expected remaining buff duration was "+this.getRemainingBuffDuration(TimeUnit.SECONDS)+"s");
 		this.owningWorld = Optional.of(capturingWorld);
 		this.lastCaptureEventTimestamp = Optional.of(event.getTimestamp());
 		this.postedEndOfBuffEvent = false;
@@ -200,7 +200,7 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 	public long getRemainingBuffDuration(TimeUnit unit) {
 		if (this.lastCaptureEventTimestamp.isPresent()) {
 			final Calendar now = Calendar.getInstance();
-			return unit.convert(Math.max(0, now.getTimeInMillis() - this.lastCaptureEventTimestamp.get().getTimeInMillis()), TimeUnit.MILLISECONDS);
+			return unit.convert(this.getType().getBuffDuration(TimeUnit.MILLISECONDS) - Math.max(0, now.getTimeInMillis() - this.lastCaptureEventTimestamp.get().getTimeInMillis()), TimeUnit.MILLISECONDS);
 		} else {
 			// not capture yet
 			return 0;

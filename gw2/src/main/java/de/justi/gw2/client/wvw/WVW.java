@@ -23,7 +23,7 @@ import de.justi.gw2.utils.InjectionHelper;
 public class WVW extends AbstractScheduledService {
 	private static final IWVWService SERVICE = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWService.class);
 	private static final IWVWModelFactory WVW_MODEL_FACTORY = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWModelFactory.class);
-	private static final long INTERVAL_MILLIS = 1000; // 3s
+	private static final long DELAY_MILLIS = 50;
 	private static final Logger LOGGER = Logger.getLogger(WVW.class);
 
 	private final Map<String, IWVWMatch> matchesMappedById = new HashMap<String, IWVWMatch>();
@@ -65,6 +65,6 @@ public class WVW extends AbstractScheduledService {
 
 	@Override
 	protected Scheduler scheduler() {
-		return AbstractScheduledService.Scheduler.newFixedDelaySchedule(INTERVAL_MILLIS, INTERVAL_MILLIS, TimeUnit.MILLISECONDS);
+		return AbstractScheduledService.Scheduler.newFixedDelaySchedule(DELAY_MILLIS, DELAY_MILLIS, TimeUnit.MILLISECONDS);
 	}
 }
