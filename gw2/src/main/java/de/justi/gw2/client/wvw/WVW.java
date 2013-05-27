@@ -53,7 +53,7 @@ public class WVW extends AbstractScheduledService {
 	
 	@Subscribe
 	public void onWVWObjectiveCaptureEvent(IWVWObjectiveCaptureEvent event) {
-		System.out.println(event);
+		System.out.println(event.toString()+" --> "+event.getNewOwningWorld().getName()+" captured "+event.getSource().getLabel()+" that was owned by "+(event.getPreviousOwningWorld().isPresent()?event.getPreviousOwningWorld().get().getName():"none"));
 	}
 	
 	@Subscribe
