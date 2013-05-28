@@ -3,6 +3,7 @@ package de.justi.yagw2api.analyzer.utils;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
+import de.justi.yagw2api.analyzer.wvw.entities.impl.AnalyzerWVWEntitiesModule;
 import de.justi.yagw2api.analyzer.wvw.impl.AnalyzerWVWModule;
 
 public enum YAGW2APIAnalyzerInjectionHelper {
@@ -12,5 +13,5 @@ public enum YAGW2APIAnalyzerInjectionHelper {
 		return INSTANCE.injector;
 	}
 
-	private final Injector injector = Guice.createInjector(new AnalyzerWVWModule());
+	private final Injector injector = Guice.createInjector(new AnalyzerWVWModule(), new AnalyzerWVWEntitiesModule());
 }
