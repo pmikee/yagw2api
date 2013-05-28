@@ -19,7 +19,7 @@ import de.justi.yagw2api.api.service.IWVWService;
 import de.justi.yagw2api.utils.InjectionHelper;
 
 class WVWMatchDTO implements IWVWMatchDTO {
-	private static final transient IWVWService SERVICE = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWService.class);
+	private static final transient IWVWService SERVICE = InjectionHelper.getInjector().getInstance(IWVWService.class);
 
 	@Since(1.0)
 	@SerializedName("wvw_match_id")

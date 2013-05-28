@@ -29,7 +29,7 @@ class WVWSynchronizerAction extends RecursiveAction{
 	private static final long serialVersionUID = 8391498327079686666L;
 	private static final int MAX_CHUNK_SIZE = 1;
 	private static final Logger LOGGER = Logger.getLogger(WVWSynchronizerAction.class);
-	private static final IWVWService SERVICE = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWService.class);
+	private static final IWVWService SERVICE = InjectionHelper.getInjector().getInstance(IWVWService.class);
 
 	private final int chunkSize;
 	private final List<String> matchIds;

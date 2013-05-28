@@ -20,8 +20,8 @@ import de.justi.yagw2api.wrapper.model.wvw.IWVWMatch;
 import de.justi.yagw2api.wrapper.model.wvw.IWVWModelFactory;
 
 class WVWSynchronizer extends AbstractScheduledService {
-	private static final IWVWService SERVICE = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWService.class);
-	private static final IWVWModelFactory WVW_MODEL_FACTORY = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWModelFactory.class);
+	private static final IWVWService SERVICE = InjectionHelper.getInjector().getInstance(IWVWService.class);
+	private static final IWVWModelFactory WVW_MODEL_FACTORY = InjectionHelper.getInjector().getInstance(IWVWModelFactory.class);
 	private static final long DELAY_MILLIS = 50;
 	private static final Logger LOGGER = Logger.getLogger(WVWSynchronizer.class);
 

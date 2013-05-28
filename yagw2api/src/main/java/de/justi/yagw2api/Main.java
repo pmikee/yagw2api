@@ -4,23 +4,30 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import org.apache.log4j.Logger;
+
 import de.justi.yagw2api.utils.InjectionHelper;
+import de.justi.yagw2api.utils.PersistenceHelper;
 import de.justi.yagw2api.wrapper.IWVWWrapper;
 
 public class Main {
-
+	private static final Logger LOGGER = Logger.getLogger(Main.class);
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		InjectionHelper.INSTANCE.getInjector().getInstance(IWVWWrapper.class).start();
+		try {
+			InjectionHelper.getInjector().getInstance(IWVWWrapper.class).start();
 
-		EntityManagerFactory factory = Persistence.createEntityManagerFactory("de.justi.yagw2api");
-		EntityManager em = factory.createEntityManager();
-		em.getTransaction().begin();
-		em.getTransaction().commit();
+			EntityManager em = PersistenceHelper.getSharedEntityManager();
+			em.getTransaction().begin();
+			em.getTransaction().commit();
 
-		em.close();
+		} catch (Exception e) {
+			LOGGER.fatal("Uncought exception while running "+Main.class.getName()+"#main(String[])", e);
+		} finally {
+			PersistenceHelper.getEntityManagerFactory().close();
+		}
 	}
 
 }

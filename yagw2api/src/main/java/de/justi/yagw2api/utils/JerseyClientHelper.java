@@ -17,7 +17,11 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.client.urlconnection.HTTPSProperties;
 
 public enum JerseyClientHelper {
-	INSTANCE;
+	DEFAULT;
+	
+	public static Client createDefaultClient() {
+		return DEFAULT.createClient();
+	}
 
 	private static final int	CONNECTION_TIMEOUT_MILLIS	= 30 * 1000;
 	private static final int	READ_TIMEOUT_MILLIS			= 30 * 1000;
@@ -26,7 +30,7 @@ public enum JerseyClientHelper {
 
 	}
 
-	public ClientConfig configureClient() {
+	private ClientConfig configureClient() {
 		TrustManager[] certs = new TrustManager[] { new X509TrustManager() {
 			public X509Certificate[] getAcceptedIssuers() {
 				return null;

@@ -14,8 +14,9 @@ import de.justi.yagw2api.wrapper.model.wvw.impl.WVWModelModule;
 public enum InjectionHelper {
 	INSTANCE;
 	
-	private final Injector injector = Guice.createInjector(new WrapperModule(), new APIServiceModule(), new APIDTOModule(), new ModelModule(), new WVWModelModule(), new WVWModelEventsModule());
-	public Injector getInjector() {
-		return this.injector;
+	public static Injector getInjector() {
+		return INSTANCE.injector;
 	}
+	
+	private final Injector injector = Guice.createInjector(new WrapperModule(), new APIServiceModule(), new APIDTOModule(), new ModelModule(), new WVWModelModule(), new WVWModelEventsModule());
 }

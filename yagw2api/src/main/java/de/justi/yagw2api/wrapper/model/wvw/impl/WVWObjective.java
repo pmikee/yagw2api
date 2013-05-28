@@ -32,7 +32,7 @@ import de.justi.yagw2api.wrapper.model.wvw.types.WVWLocationType;
 
 class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 	private static final Logger LOGGER = Logger.getLogger(WVWObjective.class);
-	private static final IWVWModelEventFactory WVW_MODEL_EVENTS_FACTORY = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWModelEventFactory.class);
+	private static final IWVWModelEventFactory WVW_MODEL_EVENTS_FACTORY = InjectionHelper.getInjector().getInstance(IWVWModelEventFactory.class);
 
 	class WVWImmutableObjectiveDecorator implements IWVWObjective, IImmutable {
 

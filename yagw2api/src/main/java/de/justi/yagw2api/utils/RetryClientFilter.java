@@ -19,13 +19,13 @@ public class RetryClientFilter extends ClientFilter {
 	}
 
 	@Override
-	public ClientResponse handle(ClientRequest cr) throws ClientHandlerException {
+	public final ClientResponse handle(ClientRequest cr) throws ClientHandlerException {
 
 		int i = 0;
 
 		while (i <= this.maximumRetryCount) {
 			if(i++ > 0){
-				LOGGER.warn("Will now perform retry " + (i - 1) +"/"+this.maximumRetryCount);
+				this.onRetry(i-1);
 			}
 			try {
 				return this.getNext().handle(cr);
@@ -34,6 +34,10 @@ public class RetryClientFilter extends ClientFilter {
 			}
 		}
 		throw new ClientHandlerException("Connection retries limit of " + this.maximumRetryCount + " exceeded.");
+	}
+	
+	protected void onRetry(int retry) {
+		LOGGER.warn("Will now perform retry " + retry +"/"+this.maximumRetryCount);
 	}
 
 }

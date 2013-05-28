@@ -11,9 +11,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-
 import org.apache.log4j.Logger;
-
 
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
@@ -39,7 +37,7 @@ import de.justi.yagw2api.wrapper.model.wvw.IWVWScores;
 
 class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 
-	class WVWImmutableMatchDecorator implements IWVWMatch , IImmutable{
+	class WVWImmutableMatchDecorator implements IWVWMatch, IImmutable {
 
 		@Override
 		public Set<IWorld> searchWorldsByNamePattern(Pattern searchPattern) {
@@ -120,15 +118,15 @@ class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is only a decorator for " + WVWMatch.class.getSimpleName()
 					+ " and has no channel for its own.");
 		}
-		
+
 		public String toString() {
 			return Objects.toStringHelper(this).addValue(WVWMatch.this.toString()).toString();
 		}
 	}
 
 	private static final Logger LOGGER = Logger.getLogger(WVWMatch.class);
-	private static final IWVWModelFactory WVW_MODEL_FACTORY = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWModelFactory.class);
-	private static final IModelFactory MODEL_FACTORY = InjectionHelper.INSTANCE.getInjector().getInstance(IModelFactory.class);
+	private static final IWVWModelFactory WVW_MODEL_FACTORY = InjectionHelper.getInjector().getInstance(IWVWModelFactory.class);
+	private static final IModelFactory MODEL_FACTORY = InjectionHelper.getInjector().getInstance(IModelFactory.class);
 
 	public static class WVWMatchBuilder implements IWVWMatch.IWVWMatchBuilder {
 		private Optional<IWVWMatchDTO> fromMatchDTO = Optional.absent();
@@ -156,12 +154,12 @@ class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 				this.setupOwner(match, match.getGreenMap(), this.fromMatchDTO.get(), this.fromMatchDTO.get().getDetails().get().getGreenMap());
 			}
 			match.getScores().update(this.redScore.or(0), this.greenScore.or(0), this.blueScore.or(0));
-			
+
 			match.getRedMap().connectWithMatch(match);
 			match.getGreenMap().connectWithMatch(match);
 			match.getBlueMap().connectWithMatch(match);
 			match.getCenterMap().connectWithMatch(match);
-			
+
 			return match;
 		}
 

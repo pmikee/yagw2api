@@ -42,7 +42,7 @@ import de.justi.yagw2api.wrapper.model.wvw.types.WVWMapType;
 class WVWMap extends AbstractHasChannel implements IWVWMap {
 
 	private static final Logger LOGGER = Logger.getLogger(WVWMap.class);
-	private static final IWVWModelFactory WVW_MODEL_FACTORY = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWModelFactory.class);
+	private static final IWVWModelFactory WVW_MODEL_FACTORY = InjectionHelper.getInjector().getInstance(IWVWModelFactory.class);
 	
 	class WVWImmutableMapDecorator implements IWVWMap, IImmutable{
 
