@@ -1,4 +1,4 @@
-package de.justi.yagw2api.wrapper.wvw;
+package de.justi.yagw2api.wrapper.impl;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -18,13 +18,12 @@ import de.justi.yagw2api.utils.InjectionHelper;
 import de.justi.yagw2api.wrapper.model.IEvent;
 import de.justi.yagw2api.wrapper.model.wvw.IWVWMatch;
 import de.justi.yagw2api.wrapper.model.wvw.IWVWModelFactory;
-import de.justi.yagw2api.wrapper.wvw.poolactions.SynchronizeMatchAction;
 
-public class WVW extends AbstractScheduledService {
+public class WVWSynchronizer extends AbstractScheduledService {
 	private static final IWVWService SERVICE = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWService.class);
 	private static final IWVWModelFactory WVW_MODEL_FACTORY = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWModelFactory.class);
 	private static final long DELAY_MILLIS = 50;
-	private static final Logger LOGGER = Logger.getLogger(WVW.class);
+	private static final Logger LOGGER = Logger.getLogger(WVWSynchronizer.class);
 
 	private final Map<String, IWVWMatch> matchesMappedById = new HashMap<String, IWVWMatch>();
 	private final ForkJoinPool pool = new ForkJoinPool(Runtime.getRuntime().availableProcessors(), ForkJoinPool.defaultForkJoinWorkerThreadFactory,
@@ -34,7 +33,7 @@ public class WVW extends AbstractScheduledService {
 				}
 			}, false);
 
-	public WVW() {
+	public WVWSynchronizer() {
 		final IWVWMatchesDTO matchesDto = SERVICE.retrieveAllMatches();
 		IWVWMatch match;
 		for (IWVWMatchDTO matchDTO : matchesDto.getMatches()) {
@@ -54,7 +53,7 @@ public class WVW extends AbstractScheduledService {
 	protected void runOneIteration() throws Exception {
 		final long startTimestamp = System.currentTimeMillis();
 
-		this.pool.invoke(new SynchronizeMatchAction(this.matchesMappedById));
+		this.pool.invoke(new WVWSynchronizerAction(this.matchesMappedById));
 
 		final long endTime = System.currentTimeMillis();
 		final long executionTime = endTime - startTimestamp;

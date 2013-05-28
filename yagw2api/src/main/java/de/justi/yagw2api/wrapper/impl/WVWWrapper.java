@@ -5,12 +5,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.inject.Inject;
 
 import de.justi.yagw2api.api.service.IWVWService;
-import de.justi.yagw2api.wrapper.IWVW;
+import de.justi.yagw2api.wrapper.IWVWWrapper;
 import de.justi.yagw2api.wrapper.model.IModelFactory;
 import de.justi.yagw2api.wrapper.model.wvw.IWVWModelFactory;
-import de.justi.yagw2api.wrapper.wvw.WVW;
 
-class ClientApplication implements IWVW {
+class WVWWrapper implements IWVWWrapper {
 	private IWVWService wvwService;
 	private IWVWModelFactory wvwModelFactory;
 	private IModelFactory modelFactory;
@@ -18,7 +17,7 @@ class ClientApplication implements IWVW {
 
 
 	@Inject
-	public ClientApplication(IWVWService wvwService, IWVWModelFactory wvwModelFactory, IModelFactory modelFactory) {
+	public WVWWrapper(IWVWService wvwService, IWVWModelFactory wvwModelFactory, IModelFactory modelFactory) {
 		checkNotNull(wvwService);
 		checkNotNull(wvwModelFactory);
 		checkNotNull(modelFactory);
@@ -28,7 +27,7 @@ class ClientApplication implements IWVW {
 	}
 
 	public void start() {
-		final WVW deamon = new WVW();
+		final WVWSynchronizer deamon = new WVWSynchronizer();
 		deamon.startAndWait();
 		try {
 			Thread.sleep(10000);

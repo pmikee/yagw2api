@@ -1,11 +1,11 @@
-package de.justi.yagw2api.wrapper.wvw.poolactions;
+package de.justi.yagw2api.wrapper.impl;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.RecursiveAction;
 
 import org.apache.log4j.Logger;
 
@@ -27,31 +27,62 @@ import de.justi.yagw2api.wrapper.model.wvw.IWVWModelFactory;
 import de.justi.yagw2api.wrapper.model.wvw.IWVWObjective;
 import de.justi.yagw2api.wrapper.model.wvw.types.impl.WVWMapType;
 
-public class SynchronizeMatchAction extends AbstractMatchIdAction<SynchronizeMatchAction> {
+public class WVWSynchronizerAction extends RecursiveAction{
 	private static final long serialVersionUID = 8391498327079686666L;
 	private static final int MAX_CHUNK_SIZE = 1;
-	private static final Logger LOGGER = Logger.getLogger(SynchronizeMatchAction.class);
+	private static final Logger LOGGER = Logger.getLogger(WVWSynchronizerAction.class);
 	private static final IWVWService SERVICE = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWService.class);
 	private static final IWVWModelFactory WVW_MODEL_FACTORY = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWModelFactory.class);
 	private static final IModelFactory MODEL_FACTORY = InjectionHelper.INSTANCE.getInjector().getInstance(IModelFactory.class);
 
+	private final int chunkSize;
+	private final List<String> matchIds;
+	private final int fromInclusive;
+	private final int toExclusive;
+	
 	private final Map<String, IWVWMatch> matchesMappedById;
 
-	public SynchronizeMatchAction(Map<String, IWVWMatch> matchesMappedById) {
-		this(ImmutableMap.copyOf(matchesMappedById), matchesMappedById.keySet(), MAX_CHUNK_SIZE, 0, matchesMappedById.size());
+	public WVWSynchronizerAction(Map<String, IWVWMatch> matchesMappedById) {
+		this(ImmutableMap.copyOf(matchesMappedById), ImmutableList.copyOf(matchesMappedById.keySet()), MAX_CHUNK_SIZE, 0, matchesMappedById.size());
 	}
 
-	private SynchronizeMatchAction(Map<String, IWVWMatch> matchesMappedById, Collection<String> matchIds, int chunkSize, int fromInclusive, int toExclusive) {
-		super(ImmutableList.copyOf(matchIds), chunkSize, fromInclusive, toExclusive);
+	private WVWSynchronizerAction(Map<String, IWVWMatch> matchesMappedById, List<String> matchIds, int chunkSize, int fromInclusive, int toExclusive) {
+		checkArgument(chunkSize > 0);
+		checkNotNull(matchIds);
+		checkArgument(fromInclusive >= 0);
+		checkArgument(fromInclusive <= toExclusive);
+		this.chunkSize = chunkSize;
+		this.matchIds = matchIds;
+		this.fromInclusive = fromInclusive;
+		this.toExclusive = toExclusive;
 		this.matchesMappedById = matchesMappedById;
+		LOGGER.trace("New " + this.getClass().getSimpleName() + " that handles match ids " + this.matchIds.subList(this.fromInclusive, this.toExclusive));
+	}
+	
+	@Override
+	protected final void compute() {
+		try {
+			if (this.toExclusive - this.fromInclusive <= this.chunkSize) {
+				// compute directly
+				for (int index = this.fromInclusive; index < this.toExclusive; index++) {
+					this.perform(this.matchIds.get(index));
+				}
+				return;
+			} else {
+				// fork
+				final int splitAtIndex = this.fromInclusive + ((this.toExclusive - this.fromInclusive) / 2);
+				invokeAll(this.createSubTask(this.matchIds, this.chunkSize, this.fromInclusive, splitAtIndex), this.createSubTask(this.matchIds, this.chunkSize, splitAtIndex,
+						this.toExclusive));
+			}
+		} catch (Exception e) {
+			LOGGER.fatal("Failed during execution of "+this.getClass().getSimpleName()+" computing "+this.fromInclusive+"-"+this.toExclusive,e);
+		}
 	}
 
-	@Override
-	protected SynchronizeMatchAction createSubTask(List<String> mapIds, int chunkSize, int fromInclusive, int toExclusive) {
-		return new SynchronizeMatchAction(this.matchesMappedById, mapIds, chunkSize, fromInclusive, toExclusive);
+	protected WVWSynchronizerAction createSubTask(List<String> mapIds, int chunkSize, int fromInclusive, int toExclusive) {
+		return new WVWSynchronizerAction(this.matchesMappedById, mapIds, chunkSize, fromInclusive, toExclusive);
 	}
 
-	@Override
 	protected void perform(String matchId) {
 		final long startTimestamp = System.currentTimeMillis();
 		LOGGER.trace("Going to synchronize matchId=" + matchId);
