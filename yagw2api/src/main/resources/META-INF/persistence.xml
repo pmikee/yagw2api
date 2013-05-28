@@ -7,12 +7,12 @@
 		<exclude-unlisted-classes>false</exclude-unlisted-classes>
 		<properties>
 			<property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.EmbeddedDriver" />
-			<property name="javax.persistence.jdbc.url" value="jdbc:derby:memory:tempDb;create=true" />
+			<property name="javax.persistence.jdbc.url" value="jdbc:derby:yagw2api;create=true" />
 			<property name="javax.persistence.jdbc.user" value="yagw2api" />
 			<property name="javax.persistence.jdbc.password" value="yagw2api" />
 
 			<!-- EclipseLink should create the database schema automatically -->
-			<property name="eclipselink.ddl-generation" value="create-tables" />
+			<property name="eclipselink.ddl-generation" value="create-or-extend-tables" />
 			<property name="eclipselink.target-database" value="Derby" />
 			<property name="eclipselink.debug" value="ALL" />
 			<property name="eclipselink.weaving" value="static" />
