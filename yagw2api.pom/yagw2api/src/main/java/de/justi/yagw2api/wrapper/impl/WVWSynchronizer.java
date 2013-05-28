@@ -17,15 +17,15 @@ import com.google.common.util.concurrent.AbstractScheduledService;
 import de.justi.yagw2api.api.dto.IWVWMatchDTO;
 import de.justi.yagw2api.api.dto.IWVWMatchesDTO;
 import de.justi.yagw2api.api.service.IWVWService;
-import de.justi.yagw2api.utils.InjectionHelper;
+import de.justi.yagw2api.utils.YAGW2APIInjectionHelper;
 import de.justi.yagw2api.wrapper.model.IEvent;
 import de.justi.yagw2api.wrapper.model.IHasChannel;
 import de.justi.yagw2api.wrapper.model.wvw.IWVWMatch;
 import de.justi.yagw2api.wrapper.model.wvw.IWVWModelFactory;
 
 class WVWSynchronizer extends AbstractScheduledService implements IHasChannel{
-	private static final IWVWService SERVICE = InjectionHelper.getInjector().getInstance(IWVWService.class);
-	private static final IWVWModelFactory WVW_MODEL_FACTORY = InjectionHelper.getInjector().getInstance(IWVWModelFactory.class);
+	private static final IWVWService SERVICE = YAGW2APIInjectionHelper.getInjector().getInstance(IWVWService.class);
+	private static final IWVWModelFactory WVW_MODEL_FACTORY = YAGW2APIInjectionHelper.getInjector().getInstance(IWVWModelFactory.class);
 	private static final long DELAY_MILLIS = 50;
 	private static final Logger LOGGER = Logger.getLogger(WVWSynchronizer.class);
 

@@ -18,7 +18,7 @@ import de.justi.yagw2api.api.dto.IWVWMatchDTO;
 import de.justi.yagw2api.api.dto.IWVWMatchDetailsDTO;
 import de.justi.yagw2api.api.dto.IWVWObjectiveDTO;
 import de.justi.yagw2api.api.service.IWVWService;
-import de.justi.yagw2api.utils.InjectionHelper;
+import de.justi.yagw2api.utils.YAGW2APIInjectionHelper;
 import de.justi.yagw2api.wrapper.model.IWorld;
 import de.justi.yagw2api.wrapper.model.wvw.IWVWMap;
 import de.justi.yagw2api.wrapper.model.wvw.IWVWMatch;
@@ -29,7 +29,7 @@ class WVWSynchronizerAction extends RecursiveAction{
 	private static final long serialVersionUID = 8391498327079686666L;
 	private static final int MAX_CHUNK_SIZE = 1;
 	private static final Logger LOGGER = Logger.getLogger(WVWSynchronizerAction.class);
-	private static final IWVWService SERVICE = InjectionHelper.getInjector().getInstance(IWVWService.class);
+	private static final IWVWService SERVICE = YAGW2APIInjectionHelper.getInjector().getInstance(IWVWService.class);
 
 	private final int chunkSize;
 	private final List<String> matchIds;

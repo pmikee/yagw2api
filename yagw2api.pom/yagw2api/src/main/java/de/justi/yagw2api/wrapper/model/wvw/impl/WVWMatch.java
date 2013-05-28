@@ -23,7 +23,7 @@ import de.justi.yagw2api.api.dto.IWVWMapDTO;
 import de.justi.yagw2api.api.dto.IWVWMatchDTO;
 import de.justi.yagw2api.api.dto.IWVWMatchDetailsDTO;
 import de.justi.yagw2api.api.dto.IWVWObjectiveDTO;
-import de.justi.yagw2api.utils.InjectionHelper;
+import de.justi.yagw2api.utils.YAGW2APIInjectionHelper;
 import de.justi.yagw2api.wrapper.model.AbstractHasChannel;
 import de.justi.yagw2api.wrapper.model.IEvent;
 import de.justi.yagw2api.wrapper.model.IImmutable;
@@ -125,8 +125,8 @@ class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 	}
 
 	private static final Logger LOGGER = Logger.getLogger(WVWMatch.class);
-	private static final IWVWModelFactory WVW_MODEL_FACTORY = InjectionHelper.getInjector().getInstance(IWVWModelFactory.class);
-	private static final IModelFactory MODEL_FACTORY = InjectionHelper.getInjector().getInstance(IModelFactory.class);
+	private static final IWVWModelFactory WVW_MODEL_FACTORY = YAGW2APIInjectionHelper.getInjector().getInstance(IWVWModelFactory.class);
+	private static final IModelFactory MODEL_FACTORY = YAGW2APIInjectionHelper.getInjector().getInstance(IModelFactory.class);
 
 	public static class WVWMatchBuilder implements IWVWMatch.IWVWMatchBuilder {
 		private Optional<IWVWMatchDTO> fromMatchDTO = Optional.absent();

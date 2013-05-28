@@ -10,7 +10,7 @@ import de.justi.yagw2api.wrapper.model.impl.ModelModule;
 import de.justi.yagw2api.wrapper.model.wvw.events.impl.WVWModelEventsModule;
 import de.justi.yagw2api.wrapper.model.wvw.impl.WVWModelModule;
 
-public enum InjectionHelper {
+public enum YAGW2APIInjectionHelper {
 	INSTANCE;
 
 	public static Injector getInjector() {

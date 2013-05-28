@@ -22,7 +22,7 @@ import com.google.common.eventbus.Subscribe;
 
 import de.justi.yagw2api.api.dto.IWVWMapDTO;
 import de.justi.yagw2api.api.dto.IWVWObjectiveDTO;
-import de.justi.yagw2api.utils.InjectionHelper;
+import de.justi.yagw2api.utils.YAGW2APIInjectionHelper;
 import de.justi.yagw2api.wrapper.model.AbstractHasChannel;
 import de.justi.yagw2api.wrapper.model.IHasChannel;
 import de.justi.yagw2api.wrapper.model.IImmutable;
@@ -42,7 +42,7 @@ import de.justi.yagw2api.wrapper.model.wvw.types.WVWMapType;
 class WVWMap extends AbstractHasChannel implements IWVWMap {
 
 	private static final Logger LOGGER = Logger.getLogger(WVWMap.class);
-	private static final IWVWModelFactory WVW_MODEL_FACTORY = InjectionHelper.getInjector().getInstance(IWVWModelFactory.class);
+	private static final IWVWModelFactory WVW_MODEL_FACTORY = YAGW2APIInjectionHelper.getInjector().getInstance(IWVWModelFactory.class);
 	
 	class WVWImmutableMapDecorator implements IWVWMap, IImmutable{
 

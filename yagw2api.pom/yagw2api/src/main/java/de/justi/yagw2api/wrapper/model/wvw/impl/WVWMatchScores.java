@@ -5,14 +5,14 @@ import static com.google.common.base.Preconditions.checkState;
 
 import org.apache.log4j.Logger;
 
-import de.justi.yagw2api.utils.InjectionHelper;
+import de.justi.yagw2api.utils.YAGW2APIInjectionHelper;
 import de.justi.yagw2api.wrapper.model.wvw.IWVWMatch;
 import de.justi.yagw2api.wrapper.model.wvw.events.IWVWMatchScoresChangedEvent;
 import de.justi.yagw2api.wrapper.model.wvw.events.IWVWModelEventFactory;
 
 class WVWMatchScores extends AbstractWVWScores {
 	private static final Logger LOGGER = Logger.getLogger(WVWMatchScores.class);
-	private static final IWVWModelEventFactory WVW_MODEL_EVENT_FACTORY = InjectionHelper.getInjector().getInstance(IWVWModelEventFactory.class);
+	private static final IWVWModelEventFactory WVW_MODEL_EVENT_FACTORY = YAGW2APIInjectionHelper.getInjector().getInstance(IWVWModelEventFactory.class);
 
 	private final IWVWMatch match;
 

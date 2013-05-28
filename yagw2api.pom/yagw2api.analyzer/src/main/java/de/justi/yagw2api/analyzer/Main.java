@@ -7,7 +7,7 @@ import org.apache.log4j.Logger;
 import com.google.common.eventbus.Subscribe;
 
 import de.justi.yagw2api.analyzer.utils.PersistenceHelper;
-import de.justi.yagw2api.utils.InjectionHelper;
+import de.justi.yagw2api.utils.YAGW2APIInjectionHelper;
 import de.justi.yagw2api.wrapper.IWVWWrapper;
 import de.justi.yagw2api.wrapper.model.wvw.events.IWVWMapScoresChangedEvent;
 import de.justi.yagw2api.wrapper.model.wvw.events.IWVWMatchScoresChangedEvent;
@@ -23,8 +23,8 @@ public class Main {
 	public static void main(String[] args) {
 		try {
 			checkState(PersistenceHelper.getSharedEntityManager().isOpen());
-			final IWVWWrapper apiWrapper = InjectionHelper.getInjector().getInstance(IWVWWrapper.class);
-			final IWVWAnalyzer analyzer = InjectionHelper.getInjector().getInstance(IWVWAnalyzer.class);
+			final IWVWWrapper apiWrapper = YAGW2APIInjectionHelper.getInjector().getInstance(IWVWWrapper.class);
+			final IWVWAnalyzer analyzer = YAGW2APIInjectionHelper.getInjector().getInstance(IWVWAnalyzer.class);
 			
 			// wire everything up
 			apiWrapper.getChannel().register(new Object() {

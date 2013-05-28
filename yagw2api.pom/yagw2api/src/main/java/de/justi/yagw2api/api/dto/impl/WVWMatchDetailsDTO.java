@@ -15,10 +15,10 @@ import de.justi.yagw2api.api.dto.IWVWMapDTO;
 import de.justi.yagw2api.api.dto.IWVWMatchDTO;
 import de.justi.yagw2api.api.dto.IWVWMatchDetailsDTO;
 import de.justi.yagw2api.api.service.IWVWService;
-import de.justi.yagw2api.utils.InjectionHelper;
+import de.justi.yagw2api.utils.YAGW2APIInjectionHelper;
 
 class WVWMatchDetailsDTO implements IWVWMatchDetailsDTO {
-	private static final transient IWVWService SERVICE = InjectionHelper.getInjector().getInstance(IWVWService.class);
+	private static final transient IWVWService SERVICE = YAGW2APIInjectionHelper.getInjector().getInstance(IWVWService.class);
 	@Since(1.0)
 	@SerializedName("match_id")
 	private String id;

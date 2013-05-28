@@ -15,10 +15,10 @@ import com.google.gson.annotations.Since;
 import de.justi.yagw2api.api.dto.IWVWObjectiveDTO;
 import de.justi.yagw2api.api.dto.IWVWObjectiveNameDTO;
 import de.justi.yagw2api.api.service.IWVWService;
-import de.justi.yagw2api.utils.InjectionHelper;
+import de.justi.yagw2api.utils.YAGW2APIInjectionHelper;
 
 class WVWObjectiveDTO implements IWVWObjectiveDTO {
-	private static final transient IWVWService SERVICE = InjectionHelper.getInjector().getInstance(IWVWService.class);
+	private static final transient IWVWService SERVICE = YAGW2APIInjectionHelper.getInjector().getInstance(IWVWService.class);
 	
 	@Since(1.0)
 	@SerializedName("id")

@@ -3,17 +3,12 @@ package de.justi.yagw2api.analyzer.wvw.impl;
 import org.apache.log4j.Logger;
 
 import de.justi.yagw2api.analyzer.IWVWAnalyzer;
-import de.justi.yagw2api.analyzer.wvw.IWVWWorldEnityDAO;
-import de.justi.yagw2api.utils.InjectionHelper;
 import de.justi.yagw2api.wrapper.model.wvw.IWVWMap;
 import de.justi.yagw2api.wrapper.model.wvw.IWVWMatch;
 import de.justi.yagw2api.wrapper.model.wvw.IWVWObjective;
 
 class WVWAnalyzer implements IWVWAnalyzer {
 	private static final Logger LOGGER = Logger.getLogger(WVWAnalyzer.class);
-
-	private final IWVWWorldEnityDAO dao = InjectionHelper.getInjector().getInstance(IWVWWorldEnityDAO.class);
-
 	@Override
 	public void notifyAboutUpdatedMapScores(IWVWMap map) {
 		LOGGER.debug("Notified about map score change for " + map.getType().getLabel() + " of " + map.getMatch().get().getId() + " to " + map.getScores());

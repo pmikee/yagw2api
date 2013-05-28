@@ -17,7 +17,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.eventbus.EventBus;
 
 import de.justi.yagw2api.api.dto.IWVWObjectiveDTO;
-import de.justi.yagw2api.utils.InjectionHelper;
+import de.justi.yagw2api.utils.YAGW2APIInjectionHelper;
 import de.justi.yagw2api.wrapper.model.AbstractHasChannel;
 import de.justi.yagw2api.wrapper.model.IImmutable;
 import de.justi.yagw2api.wrapper.model.IWorld;
@@ -32,7 +32,7 @@ import de.justi.yagw2api.wrapper.model.wvw.types.WVWLocationType;
 
 class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 	private static final Logger LOGGER = Logger.getLogger(WVWObjective.class);
-	private static final IWVWModelEventFactory WVW_MODEL_EVENTS_FACTORY = InjectionHelper.getInjector().getInstance(IWVWModelEventFactory.class);
+	private static final IWVWModelEventFactory WVW_MODEL_EVENTS_FACTORY = YAGW2APIInjectionHelper.getInjector().getInstance(IWVWModelEventFactory.class);
 
 	class WVWImmutableObjectiveDecorator implements IWVWObjective, IImmutable {
 
