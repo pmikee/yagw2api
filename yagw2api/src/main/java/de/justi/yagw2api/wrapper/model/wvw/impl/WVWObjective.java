@@ -20,10 +20,8 @@ import de.justi.yagw2api.api.dto.IWVWObjectiveDTO;
 import de.justi.yagw2api.utils.InjectionHelper;
 import de.justi.yagw2api.wrapper.model.AbstractHasChannel;
 import de.justi.yagw2api.wrapper.model.IImmutable;
-import de.justi.yagw2api.wrapper.model.IModelFactory;
 import de.justi.yagw2api.wrapper.model.IWorld;
 import de.justi.yagw2api.wrapper.model.wvw.IWVWMap;
-import de.justi.yagw2api.wrapper.model.wvw.IWVWModelFactory;
 import de.justi.yagw2api.wrapper.model.wvw.IWVWObjective;
 import de.justi.yagw2api.wrapper.model.wvw.events.IWVWModelEventFactory;
 import de.justi.yagw2api.wrapper.model.wvw.events.IWVWObjectiveCaptureEvent;
@@ -34,9 +32,7 @@ import de.justi.yagw2api.wrapper.model.wvw.types.WVWLocationType;
 
 class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 	private static final Logger LOGGER = Logger.getLogger(WVWObjective.class);
-	private static final IWVWModelFactory WVW_MODEL_FACTORY = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWModelFactory.class);
 	private static final IWVWModelEventFactory WVW_MODEL_EVENTS_FACTORY = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWModelEventFactory.class);
-	private static final IModelFactory MODEL_FACTORY = InjectionHelper.INSTANCE.getInjector().getInstance(IModelFactory.class);
 
 	class WVWImmutableObjectiveDecorator implements IWVWObjective, IImmutable {
 
@@ -190,7 +186,8 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 	public void capture(IWorld capturingWorld) {
 		checkNotNull(capturingWorld);
 		final IWVWObjectiveCaptureEvent event = WVW_MODEL_EVENTS_FACTORY.newObjectiveCapturedEvent(this, capturingWorld, this.owningWorld);
-		LOGGER.debug(capturingWorld + " has captured " + this+ " when expected remaining buff duration was "+this.getRemainingBuffDuration(TimeUnit.SECONDS)+"s");
+		LOGGER.debug(capturingWorld + " has captured " + this + " when expected remaining buff duration was " + this.getRemainingBuffDuration(TimeUnit.SECONDS)
+				+ "s");
 		this.owningWorld = Optional.of(capturingWorld);
 		this.lastCaptureEventTimestamp = Optional.of(event.getTimestamp());
 		this.postedEndOfBuffEvent = false;
@@ -200,7 +197,11 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 	public long getRemainingBuffDuration(TimeUnit unit) {
 		if (this.lastCaptureEventTimestamp.isPresent()) {
 			final Calendar now = Calendar.getInstance();
-			return unit.convert(Math.max(0,this.getType().getBuffDuration(TimeUnit.MILLISECONDS) - Math.max(0, now.getTimeInMillis() - this.lastCaptureEventTimestamp.get().getTimeInMillis())), TimeUnit.MILLISECONDS);
+			return unit.convert(
+					Math.max(
+							0,
+							this.getType().getBuffDuration(TimeUnit.MILLISECONDS)
+									- Math.max(0, now.getTimeInMillis() - this.lastCaptureEventTimestamp.get().getTimeInMillis())), TimeUnit.MILLISECONDS);
 		} else {
 			// not capture yet
 			return 0;
@@ -239,8 +240,8 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 					this.getChannel().post(WVW_MODEL_EVENTS_FACTORY.newObjectiveEndOfBuffEvent(this));
 				}
 			}
-		}else if(remainingBuffMillis > 0 && LOGGER.isTraceEnabled()) {
-			LOGGER.trace("Remaining buff duration for "+this.toString()+": "+remainingBuffMillis+"ms");
+		} else if (remainingBuffMillis > 0 && LOGGER.isTraceEnabled()) {
+			LOGGER.trace("Remaining buff duration for " + this.toString() + ": " + remainingBuffMillis + "ms");
 		}
 	}
 }

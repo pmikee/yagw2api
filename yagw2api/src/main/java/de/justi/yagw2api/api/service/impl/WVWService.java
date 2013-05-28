@@ -189,7 +189,7 @@ class WVWService extends AbstractService implements IWVWService {
 			return this.matchesCache.get("", new Callable<IWVWMatchesDTO>() {
 				public IWVWMatchesDTO call() throws Exception {
 					final WebResource resource = CLIENT.resource(MATCHES_URL.toExternalForm());
-					resource.addFilter(new RetryClientFilter(10));
+					resource.addFilter(new RetryClientFilter(RETRY_COUNT));
 					final WebResource.Builder builder = resource.accept(MediaType.APPLICATION_JSON_TYPE);
 					try {
 						final String response = builder.get(String.class);
@@ -215,7 +215,7 @@ class WVWService extends AbstractService implements IWVWService {
 			return this.matchDetailsCache.get(id, new Callable<IWVWMatchDetailsDTO>() {
 				public IWVWMatchDetailsDTO call() throws Exception {
 					final WebResource resource = CLIENT.resource(MATCH_DETAILS_URL.toExternalForm()).queryParam("match_id", id);
-					resource.addFilter(new RetryClientFilter(10));
+					resource.addFilter(new RetryClientFilter(RETRY_COUNT));
 					final WebResource.Builder builder = resource.accept(MediaType.APPLICATION_JSON_TYPE);
 					try {
 						final String response = builder.get(String.class);						
@@ -241,7 +241,7 @@ class WVWService extends AbstractService implements IWVWService {
 			return this.objectiveNamesCache.get(locale, new Callable<IWVWObjectiveNameDTO[]>() {
 				public IWVWObjectiveNameDTO[] call() throws Exception {
 					final WebResource resource = CLIENT.resource(OBJECTIVE_NAMES_URL.toExternalForm()).queryParam("lang", locale.getLanguage());
-					resource.addFilter(new RetryClientFilter(10));
+					resource.addFilter(new RetryClientFilter(RETRY_COUNT));
 					final WebResource.Builder builder = resource.accept(MediaType.APPLICATION_JSON_TYPE);
 					try {
 						final String response = builder.get(String.class);
@@ -270,7 +270,7 @@ class WVWService extends AbstractService implements IWVWService {
 				public IWorldNameDTO[] call() throws Exception {
 					checkNotNull(locale);
 					final WebResource resource = CLIENT.resource(WORL_NAMES_URL.toExternalForm()).queryParam("lang", locale.getLanguage());
-					resource.addFilter(new RetryClientFilter(10));
+					resource.addFilter(new RetryClientFilter(RETRY_COUNT));
 					final WebResource.Builder builder = resource.accept(MediaType.APPLICATION_JSON_TYPE);
 					try {
 						final String response = builder.get(String.class);

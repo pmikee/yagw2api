@@ -19,11 +19,9 @@ import de.justi.yagw2api.api.dto.IWVWMatchDetailsDTO;
 import de.justi.yagw2api.api.dto.IWVWObjectiveDTO;
 import de.justi.yagw2api.api.service.IWVWService;
 import de.justi.yagw2api.utils.InjectionHelper;
-import de.justi.yagw2api.wrapper.model.IModelFactory;
 import de.justi.yagw2api.wrapper.model.IWorld;
 import de.justi.yagw2api.wrapper.model.wvw.IWVWMap;
 import de.justi.yagw2api.wrapper.model.wvw.IWVWMatch;
-import de.justi.yagw2api.wrapper.model.wvw.IWVWModelFactory;
 import de.justi.yagw2api.wrapper.model.wvw.IWVWObjective;
 import de.justi.yagw2api.wrapper.model.wvw.types.WVWMapType;
 
@@ -32,8 +30,6 @@ class WVWSynchronizerAction extends RecursiveAction{
 	private static final int MAX_CHUNK_SIZE = 1;
 	private static final Logger LOGGER = Logger.getLogger(WVWSynchronizerAction.class);
 	private static final IWVWService SERVICE = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWService.class);
-	private static final IWVWModelFactory WVW_MODEL_FACTORY = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWModelFactory.class);
-	private static final IModelFactory MODEL_FACTORY = InjectionHelper.INSTANCE.getInjector().getInstance(IModelFactory.class);
 
 	private final int chunkSize;
 	private final List<String> matchIds;
