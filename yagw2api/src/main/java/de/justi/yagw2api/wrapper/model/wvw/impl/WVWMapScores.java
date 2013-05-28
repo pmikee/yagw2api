@@ -10,7 +10,7 @@ import de.justi.yagw2api.wrapper.model.wvw.IWVWMap;
 import de.justi.yagw2api.wrapper.model.wvw.events.IWVWMapScoresChangedEvent;
 import de.justi.yagw2api.wrapper.model.wvw.events.IWVWModelEventFactory;
 
-public class WVWMapScores extends AbstractWVWScores {
+class WVWMapScores extends AbstractWVWScores {
 	private static final Logger LOGGER = Logger.getLogger(WVWMapScores.class);
 	private static final IWVWModelEventFactory WVW_MODEL_EVENT_FACTORY = InjectionHelper.INSTANCE.getInjector().getInstance(IWVWModelEventFactory.class);
 	

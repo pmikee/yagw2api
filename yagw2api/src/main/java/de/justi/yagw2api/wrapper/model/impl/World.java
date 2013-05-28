@@ -8,7 +8,7 @@ import com.google.common.base.Objects;
 import de.justi.yagw2api.wrapper.model.IWorld;
 
 
-public class World implements IWorld {
+class World implements IWorld {
 	private final int id;	
 	private String name;
 	

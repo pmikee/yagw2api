@@ -25,9 +25,9 @@ import de.justi.yagw2api.wrapper.model.wvw.IWVWMap;
 import de.justi.yagw2api.wrapper.model.wvw.IWVWMatch;
 import de.justi.yagw2api.wrapper.model.wvw.IWVWModelFactory;
 import de.justi.yagw2api.wrapper.model.wvw.IWVWObjective;
-import de.justi.yagw2api.wrapper.model.wvw.types.impl.WVWMapType;
+import de.justi.yagw2api.wrapper.model.wvw.types.WVWMapType;
 
-public class WVWSynchronizerAction extends RecursiveAction{
+class WVWSynchronizerAction extends RecursiveAction{
 	private static final long serialVersionUID = 8391498327079686666L;
 	private static final int MAX_CHUNK_SIZE = 1;
 	private static final Logger LOGGER = Logger.getLogger(WVWSynchronizerAction.class);

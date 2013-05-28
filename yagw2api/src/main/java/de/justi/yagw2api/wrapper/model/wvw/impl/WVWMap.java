@@ -36,8 +36,8 @@ import de.justi.yagw2api.wrapper.model.wvw.events.IWVWMapScoresChangedEvent;
 import de.justi.yagw2api.wrapper.model.wvw.events.IWVWObjectiveEvent;
 import de.justi.yagw2api.wrapper.model.wvw.types.IWVWLocationType;
 import de.justi.yagw2api.wrapper.model.wvw.types.IWVWMapType;
-import de.justi.yagw2api.wrapper.model.wvw.types.impl.WVWLocationType;
-import de.justi.yagw2api.wrapper.model.wvw.types.impl.WVWMapType;
+import de.justi.yagw2api.wrapper.model.wvw.types.WVWLocationType;
+import de.justi.yagw2api.wrapper.model.wvw.types.WVWMapType;
 
 class WVWMap extends AbstractHasChannel implements IWVWMap {
 

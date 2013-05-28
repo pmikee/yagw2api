@@ -1,7 +1,6 @@
-package de.justi.yagw2api.wrapper.model.wvw.types.impl;
+package de.justi.yagw2api.wrapper.model.wvw.types;
 
 import de.justi.yagw2api.api.dto.IWVWMatchDetailsDTO;
-import de.justi.yagw2api.wrapper.model.wvw.types.IWVWMapType;
 
 public enum WVWMapType implements IWVWMapType{
 	CENTER,

@@ -7,7 +7,7 @@ import com.google.gson.annotations.Since;
 
 import de.justi.yagw2api.api.dto.IWVWObjectiveNameDTO;
 
-public class WVWObjectiveNameDTO implements IWVWObjectiveNameDTO {
+class WVWObjectiveNameDTO implements IWVWObjectiveNameDTO {
 	@Since(1.0)
 	@SerializedName("id")
 	private int id;

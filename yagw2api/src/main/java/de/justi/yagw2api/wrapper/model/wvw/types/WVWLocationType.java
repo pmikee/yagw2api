@@ -1,4 +1,4 @@
-package de.justi.yagw2api.wrapper.model.wvw.types.impl;
+package de.justi.yagw2api.wrapper.model.wvw.types;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
@@ -15,9 +15,6 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
-import de.justi.yagw2api.wrapper.model.wvw.types.IWVWLocationType;
-import de.justi.yagw2api.wrapper.model.wvw.types.IWVWMapType;
-import de.justi.yagw2api.wrapper.model.wvw.types.IWVWObjectiveType;
 
 public enum WVWLocationType implements IWVWLocationType {
 	// eternal battlegrounds -> spawns

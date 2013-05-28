@@ -7,7 +7,7 @@ import com.google.gson.annotations.Since;
 
 import de.justi.yagw2api.api.dto.IWorldNameDTO;
 
-public class WorldNameDTO implements IWorldNameDTO{
+class WorldNameDTO implements IWorldNameDTO{
 	@Since(1.0)
 	@SerializedName("id")
 	private int id;

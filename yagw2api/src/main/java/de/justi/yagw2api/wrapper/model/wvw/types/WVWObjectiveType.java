@@ -1,4 +1,4 @@
-package de.justi.yagw2api.wrapper.model.wvw.types.impl;
+package de.justi.yagw2api.wrapper.model.wvw.types;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -8,7 +8,6 @@ import java.util.concurrent.TimeUnit;
 
 import com.google.common.base.Objects;
 
-import de.justi.yagw2api.wrapper.model.wvw.types.IWVWObjectiveType;
 
 public enum WVWObjectiveType implements IWVWObjectiveType {
 	CAMP(5, TimeUnit.MINUTES, 5), TOWER(5, TimeUnit.MINUTES, 10), KEEP(5, TimeUnit.MINUTES, 25), CASTLE(5, TimeUnit.MINUTES, 35);
