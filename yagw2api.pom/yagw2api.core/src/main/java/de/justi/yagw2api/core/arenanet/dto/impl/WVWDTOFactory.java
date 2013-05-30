@@ -1,4 +1,4 @@
-package de.justi.yagw2api.core.api.dto.impl;
+package de.justi.yagw2api.core.arenanet.dto.impl;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
@@ -11,12 +11,12 @@ import org.apache.log4j.Logger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import de.justi.yagw2api.core.api.dto.IWVWDTOFactory;
-import de.justi.yagw2api.core.api.dto.IWVWMatchDetailsDTO;
-import de.justi.yagw2api.core.api.dto.IWVWMatchesDTO;
-import de.justi.yagw2api.core.api.dto.IWVWObjectiveNameDTO;
-import de.justi.yagw2api.core.api.dto.IWorldNameDTO;
-import de.justi.yagw2api.core.api.service.IWVWService;
+import de.justi.yagw2api.core.arenanet.dto.IWVWDTOFactory;
+import de.justi.yagw2api.core.arenanet.dto.IWVWMatchDetailsDTO;
+import de.justi.yagw2api.core.arenanet.dto.IWVWMatchesDTO;
+import de.justi.yagw2api.core.arenanet.dto.IWVWObjectiveNameDTO;
+import de.justi.yagw2api.core.arenanet.dto.IWorldNameDTO;
+import de.justi.yagw2api.core.arenanet.service.IWVWService;
 
 class WVWDTOFactory implements IWVWDTOFactory {
 	private static final Logger LOGGER = Logger.getLogger(WVWDTOFactory.class);

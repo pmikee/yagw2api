@@ -1,4 +1,4 @@
-package de.justi.yagw2api.core.api.dto;
+package de.justi.yagw2api.core.arenanet.dto;
 
 public interface IWVWMapDTO {
 	int getRedScore();

@@ -1,4 +1,4 @@
-package de.justi.yagw2api.core.api.dto.impl;
+package de.justi.yagw2api.core.arenanet.dto.impl;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
@@ -12,10 +12,10 @@ import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 
-import de.justi.yagw2api.core.api.dto.IWVWObjectiveDTO;
-import de.justi.yagw2api.core.api.dto.IWVWObjectiveNameDTO;
-import de.justi.yagw2api.core.api.service.IWVWService;
-import de.justi.yagw2api.core.utils.YAGW2APIInjectionHelper;
+import de.justi.yagw2api.core.YAGW2APIInjectionHelper;
+import de.justi.yagw2api.core.arenanet.dto.IWVWObjectiveDTO;
+import de.justi.yagw2api.core.arenanet.dto.IWVWObjectiveNameDTO;
+import de.justi.yagw2api.core.arenanet.service.IWVWService;
 
 class WVWObjectiveDTO implements IWVWObjectiveDTO {
 	private static final transient IWVWService SERVICE = YAGW2APIInjectionHelper.getInjector().getInstance(IWVWService.class);

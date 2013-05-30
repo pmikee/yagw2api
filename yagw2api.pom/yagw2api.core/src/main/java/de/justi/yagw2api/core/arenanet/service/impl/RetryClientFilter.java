@@ -1,4 +1,4 @@
-package de.justi.yagw2api.core.utils;
+package de.justi.yagw2api.core.arenanet.service.impl;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -9,7 +9,7 @@ import com.sun.jersey.api.client.ClientRequest;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.filter.ClientFilter;
 
-public class RetryClientFilter extends ClientFilter {
+class RetryClientFilter extends ClientFilter {
 	private static final Logger	LOGGER	= Logger.getLogger(RetryClientFilter.class);
 	private final int			maximumRetryCount;
 

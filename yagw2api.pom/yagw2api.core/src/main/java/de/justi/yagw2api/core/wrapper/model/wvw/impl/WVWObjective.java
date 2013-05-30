@@ -16,8 +16,8 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.eventbus.EventBus;
 
-import de.justi.yagw2api.core.api.dto.IWVWObjectiveDTO;
-import de.justi.yagw2api.core.utils.YAGW2APIInjectionHelper;
+import de.justi.yagw2api.core.YAGW2APIInjectionHelper;
+import de.justi.yagw2api.core.arenanet.dto.IWVWObjectiveDTO;
 import de.justi.yagw2api.core.wrapper.model.AbstractHasChannel;
 import de.justi.yagw2api.core.wrapper.model.IImmutable;
 import de.justi.yagw2api.core.wrapper.model.IWorld;

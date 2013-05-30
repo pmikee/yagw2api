@@ -5,7 +5,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 
-import de.justi.yagw2api.core.api.service.IWVWService;
+import de.justi.yagw2api.core.arenanet.service.IWVWService;
 import de.justi.yagw2api.core.wrapper.IWVWWrapper;
 import de.justi.yagw2api.core.wrapper.model.AbstractHasChannel;
 import de.justi.yagw2api.core.wrapper.model.IEvent;

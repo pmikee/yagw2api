@@ -1,4 +1,4 @@
-package de.justi.yagw2api.core.utils;
+package de.justi.yagw2api.core.arenanet.service.impl;
 
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
@@ -16,7 +16,7 @@ import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.client.urlconnection.HTTPSProperties;
 
-public enum JerseyClientHelper {
+enum JerseyClientHelper {
 	DEFAULT;
 	
 	public static Client createDefaultClient() {

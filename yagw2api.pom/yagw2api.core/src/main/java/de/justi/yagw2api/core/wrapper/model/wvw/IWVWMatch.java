@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 import com.google.common.base.Optional;
 
-import de.justi.yagw2api.core.api.dto.IWVWMatchDTO;
+import de.justi.yagw2api.core.arenanet.dto.IWVWMatchDTO;
 import de.justi.yagw2api.core.wrapper.model.IHasChannel;
 import de.justi.yagw2api.core.wrapper.model.IWorld;
 

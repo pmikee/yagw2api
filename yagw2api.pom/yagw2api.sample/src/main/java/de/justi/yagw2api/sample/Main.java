@@ -9,7 +9,7 @@ import com.google.common.eventbus.Subscribe;
 import de.justi.yagw2api.analyzer.IWVWAnalyzer;
 import de.justi.yagw2api.analyzer.utils.PersistenceHelper;
 import de.justi.yagw2api.analyzer.utils.YAGW2APIAnalyzerInjectionHelper;
-import de.justi.yagw2api.core.utils.YAGW2APIInjectionHelper;
+import de.justi.yagw2api.core.YAGW2APIInjectionHelper;
 import de.justi.yagw2api.core.wrapper.IWVWWrapper;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMapScoresChangedEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMatchScoresChangedEvent;

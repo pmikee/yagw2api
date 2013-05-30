@@ -1,13 +1,13 @@
-package de.justi.yagw2api.core.api.dto.impl;
+package de.justi.yagw2api.core.arenanet.dto.impl;
 
 
 import com.google.common.base.Objects;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 
-import de.justi.yagw2api.core.api.dto.IWVWObjectiveNameDTO;
+import de.justi.yagw2api.core.arenanet.dto.IWorldNameDTO;
 
-class WVWObjectiveNameDTO implements IWVWObjectiveNameDTO {
+class WorldNameDTO implements IWorldNameDTO{
 	@Since(1.0)
 	@SerializedName("id")
 	private int id;
@@ -15,7 +15,7 @@ class WVWObjectiveNameDTO implements IWVWObjectiveNameDTO {
 	@SerializedName("name")
 	private String name;
 	
-
+	
 	public int getId() {
 		return this.id;
 	}
@@ -23,9 +23,8 @@ class WVWObjectiveNameDTO implements IWVWObjectiveNameDTO {
 	public String getName() {
 		return this.name;
 	}
-
-	public String toString() {
+	
+	public String toString(){
 		return Objects.toStringHelper(this).add("id", this.id).add("name", this.name).toString();
 	}
-
 }

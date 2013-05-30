@@ -1,4 +1,4 @@
-package de.justi.yagw2api.core.api.service.impl;
+package de.justi.yagw2api.core.arenanet.service.impl;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -27,14 +27,13 @@ import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.WebResource;
 
-import de.justi.yagw2api.core.api.dto.IWVWDTOFactory;
-import de.justi.yagw2api.core.api.dto.IWVWMatchDTO;
-import de.justi.yagw2api.core.api.dto.IWVWMatchDetailsDTO;
-import de.justi.yagw2api.core.api.dto.IWVWMatchesDTO;
-import de.justi.yagw2api.core.api.dto.IWVWObjectiveNameDTO;
-import de.justi.yagw2api.core.api.dto.IWorldNameDTO;
-import de.justi.yagw2api.core.api.service.IWVWService;
-import de.justi.yagw2api.core.utils.RetryClientFilter;
+import de.justi.yagw2api.core.arenanet.dto.IWVWDTOFactory;
+import de.justi.yagw2api.core.arenanet.dto.IWVWMatchDTO;
+import de.justi.yagw2api.core.arenanet.dto.IWVWMatchDetailsDTO;
+import de.justi.yagw2api.core.arenanet.dto.IWVWMatchesDTO;
+import de.justi.yagw2api.core.arenanet.dto.IWVWObjectiveNameDTO;
+import de.justi.yagw2api.core.arenanet.dto.IWorldNameDTO;
+import de.justi.yagw2api.core.arenanet.service.IWVWService;
 
 class WVWService extends AbstractService implements IWVWService {
 	private static final int										RETRY_COUNT							= 10;

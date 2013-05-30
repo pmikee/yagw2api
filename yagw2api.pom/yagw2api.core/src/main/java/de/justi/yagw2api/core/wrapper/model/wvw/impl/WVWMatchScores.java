@@ -5,7 +5,7 @@ import static com.google.common.base.Preconditions.checkState;
 
 import org.apache.log4j.Logger;
 
-import de.justi.yagw2api.core.utils.YAGW2APIInjectionHelper;
+import de.justi.yagw2api.core.YAGW2APIInjectionHelper;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMatchScoresChangedEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWModelEventFactory;

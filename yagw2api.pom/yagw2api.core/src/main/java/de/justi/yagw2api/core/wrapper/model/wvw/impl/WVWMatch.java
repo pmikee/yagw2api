@@ -19,11 +19,11 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
-import de.justi.yagw2api.core.api.dto.IWVWMapDTO;
-import de.justi.yagw2api.core.api.dto.IWVWMatchDTO;
-import de.justi.yagw2api.core.api.dto.IWVWMatchDetailsDTO;
-import de.justi.yagw2api.core.api.dto.IWVWObjectiveDTO;
-import de.justi.yagw2api.core.utils.YAGW2APIInjectionHelper;
+import de.justi.yagw2api.core.YAGW2APIInjectionHelper;
+import de.justi.yagw2api.core.arenanet.dto.IWVWMapDTO;
+import de.justi.yagw2api.core.arenanet.dto.IWVWMatchDTO;
+import de.justi.yagw2api.core.arenanet.dto.IWVWMatchDetailsDTO;
+import de.justi.yagw2api.core.arenanet.dto.IWVWObjectiveDTO;
 import de.justi.yagw2api.core.wrapper.model.AbstractHasChannel;
 import de.justi.yagw2api.core.wrapper.model.IEvent;
 import de.justi.yagw2api.core.wrapper.model.IImmutable;

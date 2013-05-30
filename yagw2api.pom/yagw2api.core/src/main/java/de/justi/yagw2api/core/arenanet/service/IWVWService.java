@@ -1,15 +1,15 @@
-package de.justi.yagw2api.core.api.service;
+package de.justi.yagw2api.core.arenanet.service;
 
 import java.util.Locale;
 
 
 import com.google.common.base.Optional;
 
-import de.justi.yagw2api.core.api.dto.IWVWMatchDTO;
-import de.justi.yagw2api.core.api.dto.IWVWMatchDetailsDTO;
-import de.justi.yagw2api.core.api.dto.IWVWMatchesDTO;
-import de.justi.yagw2api.core.api.dto.IWVWObjectiveNameDTO;
-import de.justi.yagw2api.core.api.dto.IWorldNameDTO;
+import de.justi.yagw2api.core.arenanet.dto.IWVWMatchDTO;
+import de.justi.yagw2api.core.arenanet.dto.IWVWMatchDetailsDTO;
+import de.justi.yagw2api.core.arenanet.dto.IWVWMatchesDTO;
+import de.justi.yagw2api.core.arenanet.dto.IWVWObjectiveNameDTO;
+import de.justi.yagw2api.core.arenanet.dto.IWorldNameDTO;
 
 public interface IWVWService {
 	IWVWMatchesDTO retrieveAllMatches();

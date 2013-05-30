@@ -1,4 +1,4 @@
-package de.justi.yagw2api.core.api.dto.impl;
+package de.justi.yagw2api.core.arenanet.dto.impl;
 
 import java.util.Arrays;
 
@@ -7,8 +7,8 @@ import com.google.common.base.Objects;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 
-import de.justi.yagw2api.core.api.dto.IWVWMatchDTO;
-import de.justi.yagw2api.core.api.dto.IWVWMatchesDTO;
+import de.justi.yagw2api.core.arenanet.dto.IWVWMatchDTO;
+import de.justi.yagw2api.core.arenanet.dto.IWVWMatchesDTO;
 
 class WVWMatchesDTO implements IWVWMatchesDTO {
 
