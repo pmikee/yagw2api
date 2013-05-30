@@ -4,9 +4,9 @@ import static com.google.common.base.Preconditions.checkState;
 
 import org.apache.log4j.Logger;
 
-import de.justi.yagw2api.analyzer.IWVWAnalyzer;
+import de.justi.yagw2api.analyzer.YAGW2APIAnalyzer;
 import de.justi.yagw2api.analyzer.utils.PersistenceHelper;
-import de.justi.yagw2api.analyzer.utils.YAGW2APIAnalyzer;
+import de.justi.yagw2api.analyzer.wvw.IWVWAnalyzer;
 import de.justi.yagw2api.core.YAGW2APICore;
 import de.justi.yagw2api.core.wrapper.IWVWWrapper;
 import de.justi.yagw2api.sample.view.MainWindow;

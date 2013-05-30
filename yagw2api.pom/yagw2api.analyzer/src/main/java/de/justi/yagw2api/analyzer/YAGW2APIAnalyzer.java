@@ -1,11 +1,11 @@
-package de.justi.yagw2api.analyzer.utils;
+package de.justi.yagw2api.analyzer;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-import de.justi.yagw2api.analyzer.IWVWAnalyzer;
-import de.justi.yagw2api.analyzer.wvw.entities.impl.AnalyzerWVWEntitiesModule;
-import de.justi.yagw2api.analyzer.wvw.impl.AnalyzerWVWModule;
+import de.justi.yagw2api.analyzer.entities.impl.AnalyzerWVWEntitiesModule;
+import de.justi.yagw2api.analyzer.impl.AnalyzerWVWModule;
+import de.justi.yagw2api.analyzer.wvw.IWVWAnalyzer;
 
 public enum YAGW2APIAnalyzer {
 	INSTANCE;

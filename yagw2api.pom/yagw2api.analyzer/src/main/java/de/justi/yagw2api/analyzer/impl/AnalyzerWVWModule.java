@@ -1,8 +1,8 @@
-package de.justi.yagw2api.analyzer.wvw.impl;
+package de.justi.yagw2api.analyzer.impl;
 
 import com.google.inject.AbstractModule;
 
-import de.justi.yagw2api.analyzer.IWVWAnalyzer;
+import de.justi.yagw2api.analyzer.wvw.IWVWAnalyzer;
 
 public class AnalyzerWVWModule extends AbstractModule {
 

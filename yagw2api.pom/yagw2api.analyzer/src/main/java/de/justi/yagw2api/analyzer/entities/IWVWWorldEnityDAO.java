@@ -1,4 +1,4 @@
-package de.justi.yagw2api.analyzer.wvw;
+package de.justi.yagw2api.analyzer.entities;
 
 import java.util.Collection;
 
