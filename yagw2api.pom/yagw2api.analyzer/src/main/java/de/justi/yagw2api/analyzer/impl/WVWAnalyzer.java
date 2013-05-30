@@ -2,7 +2,7 @@ package de.justi.yagw2api.analyzer.impl;
 
 import org.apache.log4j.Logger;
 
-import de.justi.yagw2api.analyzer.wvw.IWVWAnalyzer;
+import de.justi.yagw2api.analyzer.IWVWAnalyzer;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMapScoresChangedEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMatchScoresChangedEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveCaptureEvent;
