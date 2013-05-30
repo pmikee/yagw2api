@@ -5,7 +5,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 
-import de.justi.yagw2api.analyzer.YAGW2APIAnalyzer;
 import de.justi.yagw2api.analyzer.entities.YAGW2APIAnalyzerPersistence;
 
 public abstract class AbstractAnalyzerTest {
@@ -15,8 +14,9 @@ public abstract class AbstractAnalyzerTest {
 	}
 	@Before
 	public void before() {
-		YAGW2APIAnalyzerPersistence.getDefaultEM();
+		// nothing to do
 	}	
+	
 	@After
 	public void after() {
 		YAGW2APIAnalyzerPersistence.getDefaultEMF().close();
@@ -24,6 +24,6 @@ public abstract class AbstractAnalyzerTest {
 	
 	@AfterClass
 	public static void afterClass() {
-		
+		// nothing to do
 	}
 }
