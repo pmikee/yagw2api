@@ -32,7 +32,21 @@ class World implements IWorld {
 		public IWorld createUnmodifiableReference() {
 			return this;
 		}
+
+		public String toString() {
+			return Objects.toStringHelper(this).addValue(World.this.toString()).toString();
+		}
 		
+		
+		@Override
+		public int hashCode() {		
+			return World.this.hashCode();
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			return World.this.equals(obj);
+		}
 	}
 	
 	private final int id;	
@@ -72,7 +86,7 @@ class World implements IWorld {
 
 	@Override
 	public int hashCode() {		
-		return Objects.hashCode(this.id);
+		return Objects.hashCode(this.getClass().getName(),this.id);
 	}
 
 	@Override

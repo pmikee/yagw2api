@@ -121,6 +121,16 @@ class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 		public String toString() {
 			return Objects.toStringHelper(this).addValue(WVWMatch.this.toString()).toString();
 		}
+		
+		@Override
+		public int hashCode() {		
+			return WVWMatch.this.hashCode();
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			return WVWMatch.this.equals(obj);
+		}
 	}
 
 	private static final Logger LOGGER = Logger.getLogger(WVWMatch.class);
@@ -370,5 +380,19 @@ class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 	@Override
 	public IWVWMatch createUnmodifiableReference() {
 		return new UnmodifiableWVWMatch();
+	}
+	@Override
+	public int hashCode() {		
+		return Objects.hashCode(this.getClass().getName(),this.id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == null || ! (obj instanceof IWVWMatch)) {
+			return false;
+		}else{
+			final IWVWMatch match = (IWVWMatch)obj;
+			return Objects.equal(this.id, match.getId());
+		}
 	}
 }

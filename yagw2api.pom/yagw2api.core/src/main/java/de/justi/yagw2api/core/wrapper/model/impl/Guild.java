@@ -24,7 +24,7 @@ class Guild implements IGuild, IUnmodifiable{
 
 	@Override
 	public int hashCode() {		
-		return Objects.hashCode(this.id);
+		return Objects.hashCode(this.getClass().getName(),this.id);
 	}
 
 	@Override
