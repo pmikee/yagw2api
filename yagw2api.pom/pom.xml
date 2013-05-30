@@ -10,6 +10,7 @@
 	<modules>
 		<module>yagw2api.core</module>
 		<module>yagw2api.analyzer</module>
+		<module>yagw2api.sample</module>
 	</modules>
 
 	<properties>
@@ -49,6 +50,11 @@
 		<dependencies>
 			<dependency>
 				<artifactId>yagw2api.core</artifactId>
+				<groupId>de.justi</groupId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<artifactId>yagw2api.analyzer</artifactId>
 				<groupId>de.justi</groupId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>

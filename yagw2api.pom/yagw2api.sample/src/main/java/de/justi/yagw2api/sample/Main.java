@@ -1,4 +1,4 @@
-package de.justi.yagw2api.analyzer;
+package de.justi.yagw2api.sample;
 
 import static com.google.common.base.Preconditions.checkState;
 
@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 
 import com.google.common.eventbus.Subscribe;
 
+import de.justi.yagw2api.analyzer.IWVWAnalyzer;
 import de.justi.yagw2api.analyzer.utils.PersistenceHelper;
 import de.justi.yagw2api.analyzer.utils.YAGW2APIAnalyzerInjectionHelper;
 import de.justi.yagw2api.core.utils.YAGW2APIInjectionHelper;
