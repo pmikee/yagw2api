@@ -1,5 +1,7 @@
 package de.justi.yagw2api.core;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
@@ -16,6 +18,8 @@ public enum YAGW2APICore {
 	INSTANCE;
 
 	public static Injector getInjector() {
+		checkState(INSTANCE != null);
+		checkState(INSTANCE.injector != null);
 		return INSTANCE.injector;
 	}
 
@@ -24,6 +28,8 @@ public enum YAGW2APICore {
 	 * @return
 	 */
 	public static IWVWService getLowLevelWVWService() {
+		checkState(INSTANCE != null);
+		checkState(INSTANCE.injector != null);
 		return  getInjector().getInstance(IWVWService.class);
 	}
 	
@@ -32,8 +38,13 @@ public enum YAGW2APICore {
 	 * @return
 	 */
 	public static IWVWWrapper getWVWWrapper() {
+		checkState(INSTANCE != null);
+		checkState(INSTANCE.injector != null);
 		return getInjector().getInstance(IWVWWrapper.class);
 	}
 
-	private final Injector injector = Guice.createInjector(new WrapperModule(), new APIServiceModule(), new APIDTOModule(), new ModelModule(), new WVWModelModule(), new WVWModelEventsModule());
+	private final Injector injector;
+	private YAGW2APICore() {
+		this.injector = Guice.createInjector(new APIDTOModule(), new ModelModule(), new WVWModelModule(), new WVWModelEventsModule(), new APIServiceModule() ,new WrapperModule());	
+	}
 }

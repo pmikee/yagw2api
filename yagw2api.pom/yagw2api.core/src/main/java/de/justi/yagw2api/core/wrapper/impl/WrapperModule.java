@@ -9,6 +9,6 @@ public class WrapperModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bind(IWVWWrapper.class).to(de.justi.yagw2api.core.wrapper.impl.WVWWrapper.class).asEagerSingleton();
+		bind(IWVWWrapper.class).to(de.justi.yagw2api.core.wrapper.impl.WVWWrapper.class);
 	}
 }

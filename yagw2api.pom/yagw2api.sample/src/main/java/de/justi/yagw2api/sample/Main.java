@@ -23,13 +23,14 @@ public class Main {
 			checkState(PersistenceHelper.getSharedEntityManager().isOpen());
 			final IWVWWrapper apiWrapper = YAGW2APICore.getWVWWrapper();
 			final IWVWAnalyzer analyzer = YAGW2APIAnalyzer.getInjector().getInstance(IWVWAnalyzer.class);
+
+			// start the api wrapper
+			apiWrapper.start();	
 			
 			// wire everything up
 			apiWrapper.registerWVWMapListener(analyzer);
 			apiWrapper.registerWVWMatchListener(analyzer);
 			
-			// start the api wrapper
-			apiWrapper.start();	
 
 			final MainWindow mainWindow = new MainWindow();
 			mainWindow.setVisible(true);
