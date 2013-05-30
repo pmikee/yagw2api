@@ -3,7 +3,7 @@ package de.justi.yagw2api.analyzer;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-import de.justi.yagw2api.analyzer.entities.impl.AnalyzerWVWEntitiesModule;
+import de.justi.yagw2api.analyzer.entities.wvw.impl.AnalyzerWVWEntitiesModule;
 import de.justi.yagw2api.analyzer.impl.AnalyzerWVWModule;
 import de.justi.yagw2api.analyzer.wvw.IWVWAnalyzer;
 

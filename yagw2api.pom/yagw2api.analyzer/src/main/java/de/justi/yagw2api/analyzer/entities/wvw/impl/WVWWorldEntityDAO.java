@@ -1,4 +1,4 @@
-package de.justi.yagw2api.analyzer.entities.impl;
+package de.justi.yagw2api.analyzer.entities.wvw.impl;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -14,8 +14,8 @@ import org.apache.log4j.Logger;
 
 import com.google.common.base.Optional;
 
-import de.justi.yagw2api.analyzer.entities.IWVWWorldEnityDAO;
-import de.justi.yagw2api.analyzer.entities.IWVWWorldEntity;
+import de.justi.yagw2api.analyzer.entities.wvw.IWVWWorldEnityDAO;
+import de.justi.yagw2api.analyzer.entities.wvw.IWVWWorldEntity;
 import de.justi.yagw2api.analyzer.utils.PersistenceHelper;
 
 class WVWWorldEntityDAO implements IWVWWorldEnityDAO {

@@ -36,11 +36,11 @@ class WVWObjectiveCaptureEvent extends AbstractWVWObjectiveEvent implements IWVW
 	
 	public String toString() {
 		final ToStringHelper helper = Objects.toStringHelper(this).add("super", super.toString());
-		helper.add("objective", this.getSource());
-		if(this.getSource().getMap().isPresent()) {
-			helper.add("mapType",this.getSource().getMap().get().getType());
-			if(this.getSource().getMap().get().getMatch().isPresent()) {
-				helper.add("matchId",this.getSource().getMap().get().getMatch().get().getId());
+		helper.add("objective", this.getObjective());
+		if(this.getObjective().getMap().isPresent()) {
+			helper.add("mapType",this.getObjective().getMap().get().getType());
+			if(this.getObjective().getMap().get().getMatch().isPresent()) {
+				helper.add("matchId",this.getObjective().getMap().get().getMatch().get().getId());
 			}
 		}
 		helper.add("capturedBy", this.newOwningWorld);

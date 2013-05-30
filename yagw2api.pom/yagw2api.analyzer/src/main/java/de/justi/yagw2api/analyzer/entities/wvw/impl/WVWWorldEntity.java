@@ -1,4 +1,4 @@
-package de.justi.yagw2api.analyzer.entities.impl;
+package de.justi.yagw2api.analyzer.entities.wvw.impl;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -8,7 +8,7 @@ import javax.persistence.Entity;
 
 import com.google.common.base.Objects;
 
-import de.justi.yagw2api.analyzer.entities.IWVWWorldEntity;
+import de.justi.yagw2api.analyzer.entities.wvw.IWVWWorldEntity;
 
 @Entity(name="world")
 class WVWWorldEntity extends AbstractEntity implements IWVWWorldEntity{

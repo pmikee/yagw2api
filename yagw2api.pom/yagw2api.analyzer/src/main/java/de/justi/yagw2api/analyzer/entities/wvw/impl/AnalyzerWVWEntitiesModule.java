@@ -1,8 +1,8 @@
-package de.justi.yagw2api.analyzer.entities.impl;
+package de.justi.yagw2api.analyzer.entities.wvw.impl;
 
 import com.google.inject.AbstractModule;
 
-import de.justi.yagw2api.analyzer.entities.IWVWWorldEnityDAO;
+import de.justi.yagw2api.analyzer.entities.wvw.IWVWWorldEnityDAO;
 
 public class AnalyzerWVWEntitiesModule extends AbstractModule {
 

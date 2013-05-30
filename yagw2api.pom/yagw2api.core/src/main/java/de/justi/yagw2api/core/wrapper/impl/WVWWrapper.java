@@ -20,8 +20,12 @@ import de.justi.yagw2api.core.wrapper.IWVWWrapper;
 import de.justi.yagw2api.core.wrapper.model.IWorld;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMap;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
+import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMapEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMapScoresChangedEvent;
+import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMatchEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMatchScoresChangedEvent;
+import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveCaptureEvent;
+import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveEndOfBuffEvent;
 
 class WVWWrapper implements IWVWWrapper {
 	private static final Logger LOGGER = Logger.getLogger(WVWWrapper.class);
@@ -53,23 +57,31 @@ class WVWWrapper implements IWVWWrapper {
 	}
 
 	@Subscribe
-	public void onWVWMatchScoreChangedEvent(IWVWMatchScoresChangedEvent event) {
+	public void onWVWMatchEvent(IWVWMatchEvent event) {
 		checkNotNull(event);
 		LOGGER.debug(this+" will now inform it's registered listeners about "+event);
 		final IWVWMatch match = event.getMatch();
 
-		for (IWVWMatchListener listener : this.allMatchesListeners) {
-			listener.informAboutMatchScoreChangedEvent(event);
+		for (IWVWMatchListener listener : this.allMatchesListeners) {			
+			this.notifyWVWMatchListener(listener, event);
 		}
 		if (this.singleMatchListeners.containsKey(match)) {
 			for (IWVWMatchListener listener : this.singleMatchListeners.get(match)) {
-				listener.informAboutMatchScoreChangedEvent(event);
+				this.notifyWVWMatchListener(listener, event);
 			}
+		}
+	}
+	
+	private void notifyWVWMatchListener(IWVWMatchListener listener, IWVWMatchEvent event) {
+		checkNotNull(listener);
+		checkNotNull(event);
+		if(event instanceof IWVWMatchScoresChangedEvent) {
+			listener.notifyAboutMatchScoreChangedEvent((IWVWMatchScoresChangedEvent)event);
 		}
 	}
 
 	@Subscribe
-	public void onWVWMapScoreChangedEvent(IWVWMapScoresChangedEvent event) {
+	public void onWVWMapScoreChangedEvent(IWVWMapEvent event) {
 		checkNotNull(event);
 		checkArgument(event.getMap().getMatch().isPresent());
 		LOGGER.debug(this+" will now inform it's registered listeners about "+event);
@@ -77,17 +89,29 @@ class WVWWrapper implements IWVWWrapper {
 		final IWVWMatch match = map.getMatch().get();
 
 		for (IWVWMapListener listener : this.allMapsOfAllMatchesListeners) {
-			listener.informAboutChangedMapScore(event);
+			this.notifyWVWMapListener(listener, event);
 		}
 		if (this.allMapsOfSingleMatchListeners.containsKey(match)) {
 			for (IWVWMapListener listener : this.allMapsOfSingleMatchListeners.get(match)) {
-				listener.informAboutChangedMapScore(event);
+				this.notifyWVWMapListener(listener, event);
 			}
 		}
 		if (this.singleMapListeners.containsKey(map)) {
 			for (IWVWMapListener listener : this.singleMapListeners.get(map)) {
-				listener.informAboutChangedMapScore(event);
+				this.notifyWVWMapListener(listener, event);
 			}
+		}
+	}
+	
+	private void notifyWVWMapListener(IWVWMapListener listener, IWVWMapEvent event) {
+		checkNotNull(listener);
+		checkNotNull(event);
+		if(event instanceof IWVWMapScoresChangedEvent) {
+			listener.notifyAboutChangedMapScoreEvent((IWVWMapScoresChangedEvent)event);
+		}else if(event instanceof IWVWObjectiveCaptureEvent) {
+			listener.notifyAboutObjectiveCapturedEvent((IWVWObjectiveCaptureEvent)event);
+		}else if(event instanceof IWVWObjectiveEndOfBuffEvent) {
+			listener.notifyAboutObjectiveEndOfBuffEvent((IWVWObjectiveEndOfBuffEvent)event);
 		}
 	}
 

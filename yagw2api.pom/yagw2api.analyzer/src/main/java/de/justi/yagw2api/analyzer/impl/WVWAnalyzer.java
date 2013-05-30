@@ -11,22 +11,22 @@ import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveEndOfBuffEve
 class WVWAnalyzer implements IWVWAnalyzer {
 	private static final Logger LOGGER = Logger.getLogger(WVWAnalyzer.class);
 	@Override
-	public void informAboutMatchScoreChangedEvent(IWVWMatchScoresChangedEvent event) {
+	public void notifyAboutMatchScoreChangedEvent(IWVWMatchScoresChangedEvent event) {
 		LOGGER.debug(event);
 	}
 
 	@Override
-	public void informAboutObjectiveCapturedEvent(IWVWObjectiveCaptureEvent event) {
+	public void notifyAboutObjectiveCapturedEvent(IWVWObjectiveCaptureEvent event) {
 		LOGGER.debug(event);
 	}
 
 	@Override
-	public void informAboutObjectiveEndOfBuffEvent(IWVWObjectiveEndOfBuffEvent event) {
+	public void notifyAboutObjectiveEndOfBuffEvent(IWVWObjectiveEndOfBuffEvent event) {
 		LOGGER.debug(event);
 	}
 
 	@Override
-	public void informAboutChangedMapScore(IWVWMapScoresChangedEvent event) {
+	public void notifyAboutChangedMapScoreEvent(IWVWMapScoresChangedEvent event) {
 		LOGGER.debug(event);
 	}
 

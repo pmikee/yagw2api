@@ -5,7 +5,7 @@ import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveCaptureEvent
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveEndOfBuffEvent;
 
 public interface IWVWMapListener {
-	void informAboutChangedMapScore(IWVWMapScoresChangedEvent event);
-	void informAboutObjectiveCapturedEvent(IWVWObjectiveCaptureEvent event);
-	void informAboutObjectiveEndOfBuffEvent(IWVWObjectiveEndOfBuffEvent event);
+	void notifyAboutChangedMapScoreEvent(IWVWMapScoresChangedEvent event);
+	void notifyAboutObjectiveCapturedEvent(IWVWObjectiveCaptureEvent event);
+	void notifyAboutObjectiveEndOfBuffEvent(IWVWObjectiveEndOfBuffEvent event);
 }

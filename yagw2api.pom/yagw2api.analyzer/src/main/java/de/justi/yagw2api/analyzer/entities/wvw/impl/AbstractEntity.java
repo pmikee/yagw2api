@@ -1,4 +1,4 @@
-package de.justi.yagw2api.analyzer.entities.impl;
+package de.justi.yagw2api.analyzer.entities.wvw.impl;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
