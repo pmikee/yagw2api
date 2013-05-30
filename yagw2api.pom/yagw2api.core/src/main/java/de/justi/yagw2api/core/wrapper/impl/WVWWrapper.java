@@ -32,7 +32,7 @@ class WVWWrapper extends AbstractHasChannel implements IWVWWrapper {
 	public void start() {
 		final WVWSynchronizer deamon = new WVWSynchronizer();
 		deamon.getChannel().register(this);
-		deamon.startAndWait();
+		deamon.start();
 	}
 	
 	@Subscribe

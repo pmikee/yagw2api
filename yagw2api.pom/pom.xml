@@ -60,6 +60,16 @@
 			</dependency>
 
 			<dependency>
+				<groupId>jgrapht</groupId>
+				<artifactId>jgrapht</artifactId>
+				<version>0.7.3</version>
+			</dependency>
+			<dependency>
+				<groupId>jgraph</groupId>
+				<artifactId>jgraph</artifactId>
+				<version>5.13.0.0</version>
+			</dependency>
+			<dependency>
 				<groupId>org.eclipse.persistence</groupId>
 				<artifactId>org.eclipse.persistence.jpa</artifactId>
 				<version>2.5.0</version>
