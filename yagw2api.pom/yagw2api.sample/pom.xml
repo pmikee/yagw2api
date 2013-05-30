@@ -33,11 +33,64 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>com.akathist.maven.plugins.launch4j</groupId>
+				<artifactId>launch4j-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>launch4j</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<!-- see http://launch4j.sourceforge.net/docs.html -->
+					<headerType>gui</headerType>
+					<outfile>${project.build.directory}/${project.name}.exe</outfile>
+					<jar>${project.build.directory}/${project.artifactId}-${project.version}-jar-with-dependencies.jar</jar>
+					<jre>
+						<minVersion>1.7.0</minVersion>
+					</jre>
+					<errTitle>YAGW2API-Sample Error</errTitle>
+					<stayAlive>true</stayAlive>
+					<customProcName>true</customProcName>
+					<singleInstance>
+						<mutexName>yagw2api.sample</mutexName>
+					</singleInstance>
+					<splash>
+					    <file>${project.basedir}/etc/splash.bmp</file>
+						<waitForWindow>true</waitForWindow>
+						<timeout>120</timeout>
+						<timeoutErr>true</timeoutErr>
+					</splash>
+					<versionInfo>
+						<fileVersion>0.0.0.1</fileVersion>
+						<txtFileVersion>${project.version}</txtFileVersion>
+						<fileDescription>Yet another GW2 API sample application</fileDescription>
+						<copyright>Julian Stitz - 2013 - All rights reserved </copyright>
+						<productVersion>0.0.0.1</productVersion>
+						<txtProductVersion>${project.version}</txtProductVersion>
+						<txtProductVersion>0.0.0.1</txtProductVersion>
+						<productName>YAGW2API Sample Application</productName>
+						<internalName>yagw2api.sample</internalName>
+						<originalFilename>${project.name}.exe</originalFilename>
+					</versionInfo>
+					<messages>
+						<startupErr>Failed to start YAGW2API Sample Application.</startupErr>
+						<jreVersionErr>Incompatible or missing java runtime. The following JRE is required: </jreVersionErr>
+						<launcherErr>Launcher for YAGW2API Sample Application failed.</launcherErr>
+					</messages>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
 	<dependencies>
-
+		<dependency>
+			<groupId>com.miglayout</groupId>
+			<artifactId>miglayout</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>jgrapht</groupId>
 			<artifactId>jgrapht</artifactId>

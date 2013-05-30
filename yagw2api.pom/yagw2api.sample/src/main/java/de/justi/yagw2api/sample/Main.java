@@ -15,7 +15,7 @@ import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMapScoresChangedEvent
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMatchScoresChangedEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveCaptureEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveEndOfBuffEvent;
-import de.justi.yagw2api.sample.view.GraphWindow;
+import de.justi.yagw2api.sample.view.MainWindow;
 
 public class Main {
 	private static final Logger LOGGER = Logger.getLogger(Main.class);
@@ -24,6 +24,7 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {	
+		
 		try {
 			checkState(PersistenceHelper.getSharedEntityManager().isOpen());
 			final IWVWWrapper apiWrapper = YAGW2APIInjectionHelper.getInjector().getInstance(IWVWWrapper.class);
@@ -51,8 +52,9 @@ public class Main {
 			
 			// start the api wrapper
 			apiWrapper.start();	
-			
-			new GraphWindow().setVisible(true);
+
+			final MainWindow mainWindow = new MainWindow();
+			mainWindow.setVisible(true);
 		} catch (Exception e) {
 			LOGGER.fatal("Uncought exception while running " + Main.class.getName() + "#main(String[])", e);
 		}
