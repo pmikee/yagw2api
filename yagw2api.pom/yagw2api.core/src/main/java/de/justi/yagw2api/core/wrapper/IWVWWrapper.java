@@ -1,6 +1,6 @@
 package de.justi.yagw2api.core.wrapper;
 
-import java.util.Collection;
+import java.util.Set;
 
 import de.justi.yagw2api.core.wrapper.model.IWorld;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMap;
@@ -15,13 +15,13 @@ public interface IWVWWrapper{
 	 * retrieve unmodifiable access to all matches
 	 * @return
 	 */
-	Collection<IWVWMatch> getAllMatches();
+	Set<IWVWMatch> getAllMatches();
 	
 	/**
 	 * retrieve unmodifiable access to all worlds
 	 * @return
 	 */
-	Collection<IWorld> getAllWorlds();
+	Set<IWorld> getAllWorlds();
 	
 	/**
 	 * register a listener for a single match
