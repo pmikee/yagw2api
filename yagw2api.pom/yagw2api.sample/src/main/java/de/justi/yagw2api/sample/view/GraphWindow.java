@@ -21,6 +21,13 @@ public class GraphWindow extends AbstractWindow {
 		super();
 		final ListenableUndirectedWeightedGraph<String, DefaultEdge> graph = new ListenableUndirectedWeightedGraph<String, DefaultEdge>(DefaultEdge.class);
 		graph.addVertex("TEST");
+		graph.addVertex("TEST1");
+		graph.addVertex("TEST2");
+		graph.addVertex("TEST3");
+		graph.addEdge("TEST", "TEST1");
+		graph.addEdge("TEST", "TEST2");
+		graph.addEdge("TEST", "TEST3");
+		graph.addEdge("TEST3", "TEST2");
 		final JGraphModelAdapter<String, DefaultEdge> graphAdapter = new JGraphModelAdapter<String, DefaultEdge>(graph);
 		final JGraph graphComponent = new JGraph(graphAdapter);
 
