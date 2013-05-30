@@ -8,17 +8,17 @@ import com.google.common.base.Objects;
 import com.google.common.eventbus.EventBus;
 
 import de.justi.yagw2api.core.wrapper.model.AbstractHasChannel;
-import de.justi.yagw2api.core.wrapper.model.IImmutable;
+import de.justi.yagw2api.core.wrapper.model.IUnmodifiable;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWScores;
 
 abstract class AbstractWVWScores extends AbstractHasChannel implements IWVWScores {
 	
 	private static final Logger LOGGER = Logger.getLogger(AbstractWVWScores.class);
 
-	class WVWImmutableScoresDecorator implements IWVWScores, IImmutable{
+	final class UnmodifiableWVWScores implements IWVWScores, IUnmodifiable{
 		@Override
 		public EventBus getChannel() {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName()+" is only a decorator for "+AbstractWVWScores.class.getSimpleName()+" and has no channel for its own.");
+			throw new UnsupportedOperationException(this.getClass().getSimpleName()+" is instance of "+IUnmodifiable.class.getSimpleName()+" and therefore can not be modified.");
 		}
 
 		@Override
@@ -38,11 +38,11 @@ abstract class AbstractWVWScores extends AbstractHasChannel implements IWVWScore
 
 		@Override
 		public void update(int redScore, int greenScore, int blueScore) {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName()+" are immutable and therefore can not be updated.");
+			throw new UnsupportedOperationException(this.getClass().getSimpleName()+" is instance of "+IUnmodifiable.class.getSimpleName()+" and therefore can not be modified.");
 		}
 
 		@Override
-		public IWVWScores createImmutableReference() {
+		public IWVWScores createUnmodifiableReference() {
 			return this;
 		}
 
@@ -94,10 +94,10 @@ abstract class AbstractWVWScores extends AbstractHasChannel implements IWVWScore
 		}
 	}
 	
-	protected abstract void onChange(int deltaRed, int deltaGreen, int deltaBlue); 
+	protected abstract void onChange(int deltaRed, int deltaGreen, int deltaBlue);
 
 	@Override
-	public IWVWScores createImmutableReference() {
-		return new WVWImmutableScoresDecorator();
+	public IWVWScores createUnmodifiableReference() {
+		return new UnmodifiableWVWScores();
 	}
 }

@@ -19,15 +19,15 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
-import de.justi.yagw2api.core.YAGW2APIInjectionHelper;
+import de.justi.yagw2api.core.YAGW2APICore;
 import de.justi.yagw2api.core.arenanet.dto.IWVWMapDTO;
 import de.justi.yagw2api.core.arenanet.dto.IWVWMatchDTO;
 import de.justi.yagw2api.core.arenanet.dto.IWVWMatchDetailsDTO;
 import de.justi.yagw2api.core.arenanet.dto.IWVWObjectiveDTO;
 import de.justi.yagw2api.core.wrapper.model.AbstractHasChannel;
 import de.justi.yagw2api.core.wrapper.model.IEvent;
-import de.justi.yagw2api.core.wrapper.model.IImmutable;
 import de.justi.yagw2api.core.wrapper.model.IModelFactory;
+import de.justi.yagw2api.core.wrapper.model.IUnmodifiable;
 import de.justi.yagw2api.core.wrapper.model.IWorld;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMap;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
@@ -37,13 +37,13 @@ import de.justi.yagw2api.core.wrapper.model.wvw.IWVWScores;
 
 class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 
-	class WVWImmutableMatchDecorator implements IWVWMatch, IImmutable {
+	final class UnmodifiableWVWMatch implements IWVWMatch, IUnmodifiable {
 
 		@Override
 		public Set<IWorld> searchWorldsByNamePattern(Pattern searchPattern) {
 			final Collection<IWorld> result = new ArrayList<IWorld>();
 			for (IWorld world : WVWMatch.this.searchWorldsByNamePattern(searchPattern)) {
-				result.add(world.createImmutableReference());
+				result.add(world.createUnmodifiableReference());
 			}
 			return ImmutableSet.copyOf(result);
 		}
@@ -57,66 +57,65 @@ class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 		public IWorld[] getWorlds() {
 			final java.util.List<IWorld> buffer = new ArrayList<IWorld>();
 			for (IWorld world : WVWMatch.this.getWorlds()) {
-				buffer.add(world.createImmutableReference());
+				buffer.add(world.createUnmodifiableReference());
 			}
 			return buffer.toArray(new IWorld[0]);
 		}
 
 		@Override
 		public IWorld getRedWorld() {
-			return WVWMatch.this.getRedWorld().createImmutableReference();
+			return WVWMatch.this.getRedWorld().createUnmodifiableReference();
 		}
 
 		@Override
 		public IWorld getGreenWorld() {
-			return WVWMatch.this.getGreenWorld().createImmutableReference();
+			return WVWMatch.this.getGreenWorld().createUnmodifiableReference();
 		}
 
 		@Override
 		public IWorld getBlueWorld() {
-			return WVWMatch.this.getBlueWorld().createImmutableReference();
+			return WVWMatch.this.getBlueWorld().createUnmodifiableReference();
 		}
 
 		@Override
 		public Optional<IWorld> getWorldByDTOOwnerString(String dtoOwnerString) {
 			final Optional<IWorld> buffer = WVWMatch.this.getWorldByDTOOwnerString(dtoOwnerString);
-			return buffer.isPresent() ? Optional.of(buffer.get().createImmutableReference()) : buffer;
+			return buffer.isPresent() ? Optional.of(buffer.get().createUnmodifiableReference()) : buffer;
 		}
 
 		@Override
 		public IWVWMap getCenterMap() {
-			return WVWMatch.this.getCenterMap().createImmutableReference();
+			return WVWMatch.this.getCenterMap().createUnmodifiableReference();
 		}
 
 		@Override
 		public IWVWMap getBlueMap() {
-			return WVWMatch.this.getBlueMap().createImmutableReference();
+			return WVWMatch.this.getBlueMap().createUnmodifiableReference();
 		}
 
 		@Override
 		public IWVWMap getRedMap() {
-			return WVWMatch.this.getRedMap().createImmutableReference();
+			return WVWMatch.this.getRedMap().createUnmodifiableReference();
 		}
 
 		@Override
 		public IWVWMap getGreenMap() {
-			return WVWMatch.this.getGreenMap().createImmutableReference();
+			return WVWMatch.this.getGreenMap().createUnmodifiableReference();
 		}
 
 		@Override
 		public IWVWScores getScores() {
-			return WVWMatch.this.getScores().createImmutableReference();
+			return WVWMatch.this.getScores().createUnmodifiableReference();
 		}
 
 		@Override
-		public IWVWMatch createImmutableReference() {
+		public IWVWMatch createUnmodifiableReference() {
 			return this;
 		}
 
 		@Override
 		public EventBus getChannel() {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is only a decorator for " + WVWMatch.class.getSimpleName()
-					+ " and has no channel for its own.");
+			throw new UnsupportedOperationException(this.getClass().getSimpleName()+" is instance of "+IUnmodifiable.class.getSimpleName()+" and therefore can not be modified.");
 		}
 
 		public String toString() {
@@ -125,8 +124,8 @@ class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 	}
 
 	private static final Logger LOGGER = Logger.getLogger(WVWMatch.class);
-	private static final IWVWModelFactory WVW_MODEL_FACTORY = YAGW2APIInjectionHelper.getInjector().getInstance(IWVWModelFactory.class);
-	private static final IModelFactory MODEL_FACTORY = YAGW2APIInjectionHelper.getInjector().getInstance(IModelFactory.class);
+	private static final IWVWModelFactory WVW_MODEL_FACTORY = YAGW2APICore.getInjector().getInstance(IWVWModelFactory.class);
+	private static final IModelFactory MODEL_FACTORY = YAGW2APICore.getInjector().getInstance(IModelFactory.class);
 
 	public static class WVWMatchBuilder implements IWVWMatch.IWVWMatchBuilder {
 		private Optional<IWVWMatchDTO> fromMatchDTO = Optional.absent();
@@ -193,9 +192,9 @@ class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 			checkState(this.greenMap.get().getType().isGreen());
 			this.blueMap = Optional.of(WVW_MODEL_FACTORY.newMapBuilder().fromDTO(dto.getDetails().get().getBlueMap()).build());
 			checkState(this.blueMap.get().getType().isBlue());
-			this.redWorld = Optional.of(MODEL_FACTORY.createWorld(dto.getRedWorldId(), dto.getRedWorldName(locale).get().getName()));
-			this.greenWorld = Optional.of(MODEL_FACTORY.createWorld(dto.getGreenWorldId(), dto.getGreenWorldName(locale).get().getName()));
-			this.blueWorld = Optional.of(MODEL_FACTORY.createWorld(dto.getBlueWorldId(), dto.getBlueWorldName(locale).get().getName()));
+			this.redWorld = Optional.of(MODEL_FACTORY.getOrCreateWorld(dto.getRedWorldId(), dto.getRedWorldName(locale).get().getName()));
+			this.greenWorld = Optional.of(MODEL_FACTORY.getOrCreateWorld(dto.getGreenWorldId(), dto.getGreenWorldName(locale).get().getName()));
+			this.blueWorld = Optional.of(MODEL_FACTORY.getOrCreateWorld(dto.getBlueWorldId(), dto.getBlueWorldName(locale).get().getName()));
 
 			final Optional<IWVWMatchDetailsDTO> details = dto.getDetails();
 			if (details.isPresent()) {
@@ -369,7 +368,7 @@ class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 	}
 
 	@Override
-	public IWVWMatch createImmutableReference() {
-		return new WVWImmutableMatchDecorator();
+	public IWVWMatch createUnmodifiableReference() {
+		return new UnmodifiableWVWMatch();
 	}
 }

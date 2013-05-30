@@ -5,21 +5,19 @@ import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Locale;
 
-
-
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 
-import de.justi.yagw2api.core.YAGW2APIInjectionHelper;
+import de.justi.yagw2api.core.YAGW2APICore;
 import de.justi.yagw2api.core.arenanet.dto.IWVWMatchDTO;
 import de.justi.yagw2api.core.arenanet.dto.IWVWMatchDetailsDTO;
 import de.justi.yagw2api.core.arenanet.dto.IWorldNameDTO;
 import de.justi.yagw2api.core.arenanet.service.IWVWService;
 
 class WVWMatchDTO implements IWVWMatchDTO {
-	private static final transient IWVWService SERVICE = YAGW2APIInjectionHelper.getInjector().getInstance(IWVWService.class);
+	private static final transient IWVWService SERVICE = YAGW2APICore.getInjector().getInstance(IWVWService.class);
 
 	@Since(1.0)
 	@SerializedName("wvw_match_id")

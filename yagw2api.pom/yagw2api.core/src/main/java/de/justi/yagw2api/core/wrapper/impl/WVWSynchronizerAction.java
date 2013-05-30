@@ -13,7 +13,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
-import de.justi.yagw2api.core.YAGW2APIInjectionHelper;
+import de.justi.yagw2api.core.YAGW2APICore;
 import de.justi.yagw2api.core.arenanet.dto.IWVWMapDTO;
 import de.justi.yagw2api.core.arenanet.dto.IWVWMatchDTO;
 import de.justi.yagw2api.core.arenanet.dto.IWVWMatchDetailsDTO;
@@ -29,7 +29,7 @@ class WVWSynchronizerAction extends RecursiveAction{
 	private static final long serialVersionUID = 8391498327079686666L;
 	private static final int MAX_CHUNK_SIZE = 1;
 	private static final Logger LOGGER = Logger.getLogger(WVWSynchronizerAction.class);
-	private static final IWVWService SERVICE = YAGW2APIInjectionHelper.getInjector().getInstance(IWVWService.class);
+	private static final IWVWService SERVICE = YAGW2APICore.getInjector().getInstance(IWVWService.class);
 
 	private final int chunkSize;
 	private final List<String> matchIds;

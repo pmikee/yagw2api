@@ -2,6 +2,6 @@ package de.justi.yagw2api.core.wrapper.model;
 
 
 public interface IModelFactory {
-	IGuild createGuild(String id);
-	IWorld createWorld(int id, String name);
+	IGuild getOrCreateGuild(String id);
+	IWorld getOrCreateWorld(int id, String name);
 }

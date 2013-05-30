@@ -58,12 +58,6 @@
 					<singleInstance>
 						<mutexName>yagw2api.sample</mutexName>
 					</singleInstance>
-					<splash>
-					    <file>${project.basedir}/etc/splash.bmp</file>
-						<waitForWindow>true</waitForWindow>
-						<timeout>120</timeout>
-						<timeoutErr>true</timeoutErr>
-					</splash>
 					<versionInfo>
 						<fileVersion>0.0.0.1</fileVersion>
 						<txtFileVersion>${project.version}</txtFileVersion>

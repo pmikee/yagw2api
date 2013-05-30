@@ -33,5 +33,5 @@ public interface IWVWMatch extends IHasChannel {
 	IWVWMap getGreenMap();
 	IWVWScores getScores();
 	
-	IWVWMatch createImmutableReference();
+	IWVWMatch createUnmodifiableReference();
 }

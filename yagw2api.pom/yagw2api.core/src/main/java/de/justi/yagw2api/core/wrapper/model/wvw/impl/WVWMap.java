@@ -20,12 +20,12 @@ import com.google.common.collect.Iterables;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
-import de.justi.yagw2api.core.YAGW2APIInjectionHelper;
+import de.justi.yagw2api.core.YAGW2APICore;
 import de.justi.yagw2api.core.arenanet.dto.IWVWMapDTO;
 import de.justi.yagw2api.core.arenanet.dto.IWVWObjectiveDTO;
 import de.justi.yagw2api.core.wrapper.model.AbstractHasChannel;
 import de.justi.yagw2api.core.wrapper.model.IHasChannel;
-import de.justi.yagw2api.core.wrapper.model.IImmutable;
+import de.justi.yagw2api.core.wrapper.model.IUnmodifiable;
 import de.justi.yagw2api.core.wrapper.model.wvw.IHasWVWLocation;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMap;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
@@ -42,14 +42,13 @@ import de.justi.yagw2api.core.wrapper.model.wvw.types.WVWMapType;
 class WVWMap extends AbstractHasChannel implements IWVWMap {
 
 	private static final Logger LOGGER = Logger.getLogger(WVWMap.class);
-	private static final IWVWModelFactory WVW_MODEL_FACTORY = YAGW2APIInjectionHelper.getInjector().getInstance(IWVWModelFactory.class);
+	private static final IWVWModelFactory WVW_MODEL_FACTORY = YAGW2APICore.getInjector().getInstance(IWVWModelFactory.class);
 	
-	class WVWImmutableMapDecorator implements IWVWMap, IImmutable{
+	class UnmodifiableWVWMap implements IWVWMap, IUnmodifiable{
 
 		@Override
 		public EventBus getChannel() {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is only a decorator for " + WVWMap.class.getSimpleName()
-					+ " and has no channel for its own.");
+			throw new UnsupportedOperationException(this.getClass().getSimpleName()+" is instance of "+IUnmodifiable.class.getSimpleName()+" and therefore can not be modified.");
 		}
 
 		@Override
@@ -62,7 +61,7 @@ class WVWMap extends AbstractHasChannel implements IWVWMap {
 			final Map<IWVWLocationType, IHasWVWLocation<?>> mutableResult = WVWMap.this.getMappedByPosition();
 			final Map<IWVWLocationType, IHasWVWLocation<?>> buffer = new HashMap<IWVWLocationType, IHasWVWLocation<?>>();
 			for(IWVWLocationType key : WVWMap.this.getMappedByPosition().keySet()) {
-				buffer.put(key, mutableResult.get(key).createImmutableReference());
+				buffer.put(key, mutableResult.get(key).createUnmodifiableReference());
 			}
 			return ImmutableMap.copyOf(buffer);
 		}
@@ -72,7 +71,7 @@ class WVWMap extends AbstractHasChannel implements IWVWMap {
 			final Set<IHasWVWLocation<?>> mutableResult = WVWMap.this.getEverything();
 			final Set<IHasWVWLocation<?>> buffer = new HashSet<IHasWVWLocation<?>>();
 			for(IHasWVWLocation<?> element : mutableResult) {
-				buffer.add(element.createImmutableReference());
+				buffer.add(element.createUnmodifiableReference());
 			}
 			return ImmutableSet.copyOf(buffer);
 		}
@@ -82,7 +81,7 @@ class WVWMap extends AbstractHasChannel implements IWVWMap {
 			final Set<IWVWObjective> mutableResult = WVWMap.this.getObjectives();
 			final Set<IWVWObjective> buffer = new HashSet<IWVWObjective>();
 			for(IWVWObjective element : mutableResult) {
-				buffer.add(element.createImmutableReference());
+				buffer.add(element.createUnmodifiableReference());
 			}
 			return ImmutableSet.copyOf(buffer);
 		}
@@ -90,34 +89,34 @@ class WVWMap extends AbstractHasChannel implements IWVWMap {
 		@Override
 		public Optional<IWVWObjective> getByObjectiveId(int id) {
 			final Optional<IWVWObjective> buffer = WVWMap.this.getByObjectiveId(id);
-			return buffer.isPresent() ? Optional.of(buffer.get().createImmutableReference()) : buffer;
+			return buffer.isPresent() ? Optional.of(buffer.get().createUnmodifiableReference()) : buffer;
 		}
 
 		@Override
 		public Optional<IHasWVWLocation<?>> getByLocation(IWVWLocationType location) {
 			final Optional<IHasWVWLocation<?>> buffer = WVWMap.this.getByLocation(location);
-			return buffer.isPresent() ? Optional.<IHasWVWLocation<?>>of(buffer.get().createImmutableReference()) : buffer;
+			return buffer.isPresent() ? Optional.<IHasWVWLocation<?>>of(buffer.get().createUnmodifiableReference()) : buffer;
 		}
 
 		@Override
 		public IWVWScores getScores() {
-			return WVWMap.this.getScores().createImmutableReference();
+			return WVWMap.this.getScores().createUnmodifiableReference();
 		}
 
 		@Override
-		public IWVWMap createImmutableReference() {
+		public IWVWMap createUnmodifiableReference() {
 			return this;
 		}
 
 		@Override
 		public Optional<IWVWMatch> getMatch() {
 			final Optional<IWVWMatch> buffer = WVWMap.this.getMatch();
-			return buffer.isPresent() ? Optional.<IWVWMatch>of(buffer.get().createImmutableReference()) : buffer;
+			return buffer.isPresent() ? Optional.<IWVWMatch>of(buffer.get().createUnmodifiableReference()) : buffer;
 		}
 
 		@Override
 		public void connectWithMatch(IWVWMatch map) {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName()+" is immutable.");
+			throw new UnsupportedOperationException(this.getClass().getSimpleName()+" is instance of "+IUnmodifiable.class.getSimpleName()+" and therefore can not be modified.");
 		}
 		public String toString() {
 			return Objects.toStringHelper(this).addValue(WVWMap.this.toString()).toString();
@@ -309,8 +308,8 @@ class WVWMap extends AbstractHasChannel implements IWVWMap {
 	}
 
 	@Override
-	public IWVWMap createImmutableReference() {
-		return new WVWImmutableMapDecorator();
+	public IWVWMap createUnmodifiableReference() {
+		return new UnmodifiableWVWMap();
 	}
 
 	@Override

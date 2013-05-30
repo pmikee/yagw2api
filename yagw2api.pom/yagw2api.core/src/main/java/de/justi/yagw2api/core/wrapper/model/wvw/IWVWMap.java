@@ -34,7 +34,7 @@ public interface IWVWMap extends IHasChannel {
 	Optional<IHasWVWLocation<?>> getByLocation(IWVWLocationType location);
 	IWVWScores getScores();
 	
-	IWVWMap createImmutableReference();
+	IWVWMap createUnmodifiableReference();
 	/**
 	 * can only be called once
 	 * @param map not null

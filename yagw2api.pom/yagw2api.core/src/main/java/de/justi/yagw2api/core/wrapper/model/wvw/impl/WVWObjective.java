@@ -16,10 +16,10 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.eventbus.EventBus;
 
-import de.justi.yagw2api.core.YAGW2APIInjectionHelper;
+import de.justi.yagw2api.core.YAGW2APICore;
 import de.justi.yagw2api.core.arenanet.dto.IWVWObjectiveDTO;
 import de.justi.yagw2api.core.wrapper.model.AbstractHasChannel;
-import de.justi.yagw2api.core.wrapper.model.IImmutable;
+import de.justi.yagw2api.core.wrapper.model.IUnmodifiable;
 import de.justi.yagw2api.core.wrapper.model.IWorld;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMap;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWObjective;
@@ -32,9 +32,9 @@ import de.justi.yagw2api.core.wrapper.model.wvw.types.WVWLocationType;
 
 class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 	private static final Logger LOGGER = Logger.getLogger(WVWObjective.class);
-	private static final IWVWModelEventFactory WVW_MODEL_EVENTS_FACTORY = YAGW2APIInjectionHelper.getInjector().getInstance(IWVWModelEventFactory.class);
+	private static final IWVWModelEventFactory WVW_MODEL_EVENTS_FACTORY = YAGW2APICore.getInjector().getInstance(IWVWModelEventFactory.class);
 
-	class WVWImmutableObjectiveDecorator implements IWVWObjective, IImmutable {
+	final class UnmodifiableWVWObjective implements IWVWObjective, IUnmodifiable {
 
 		@Override
 		public IWVWLocationType getLocation() {
@@ -42,14 +42,13 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 		}
 
 		@Override
-		public IWVWObjective createImmutableReference() {
+		public IWVWObjective createUnmodifiableReference() {
 			return this;
 		}
 
 		@Override
 		public EventBus getChannel() {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is only a decorator for " + WVWObjective.class.getSimpleName()
-					+ " and has no channel for its own.");
+			throw new UnsupportedOperationException(this.getClass().getSimpleName()+" is instance of "+IUnmodifiable.class.getSimpleName()+" and therefore can not be modified.");
 		}
 
 		@Override
@@ -70,12 +69,12 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 		@Override
 		public Optional<IWorld> getOwner() {
 			final Optional<IWorld> buffer = WVWObjective.this.getOwner();
-			return buffer.isPresent() ? Optional.of(buffer.get().createImmutableReference()) : buffer;
+			return buffer.isPresent() ? Optional.of(buffer.get().createUnmodifiableReference()) : buffer;
 		}
 
 		@Override
 		public void capture(IWorld capturingWorld) {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is immutable.");
+			throw new UnsupportedOperationException(this.getClass().getSimpleName()+" is instance of "+IUnmodifiable.class.getSimpleName()+" and therefore can not be modified.");
 		}
 
 		@Override
@@ -86,12 +85,12 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 		@Override
 		public Optional<IWVWMap> getMap() {
 			final Optional<IWVWMap> buffer = WVWObjective.this.getMap();
-			return buffer.isPresent() ? Optional.of(buffer.get().createImmutableReference()) : buffer;
+			return buffer.isPresent() ? Optional.of(buffer.get().createUnmodifiableReference()) : buffer;
 		}
 
 		@Override
 		public void connectWithMap(IWVWMap map) {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is immutable.");
+			throw new UnsupportedOperationException(this.getClass().getSimpleName()+" is instance of "+IUnmodifiable.class.getSimpleName()+" and therefore can not be modified.");
 		}
 
 		public String toString() {
@@ -100,7 +99,7 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 
 		@Override
 		public void updateOnSynchronization() {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is immutable.");
+			throw new UnsupportedOperationException(this.getClass().getSimpleName()+" is instance of "+IUnmodifiable.class.getSimpleName()+" and therefore can not be modified.");
 		}
 	}
 
@@ -226,8 +225,8 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 	}
 
 	@Override
-	public IWVWObjective createImmutableReference() {
-		return new WVWImmutableObjectiveDecorator();
+	public IWVWObjective createUnmodifiableReference() {
+		return new UnmodifiableWVWObjective();
 	}
 
 	@Override

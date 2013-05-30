@@ -3,32 +3,31 @@ package de.justi.yagw2api.analyzer.wvw.impl;
 import org.apache.log4j.Logger;
 
 import de.justi.yagw2api.analyzer.IWVWAnalyzer;
-import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMap;
-import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
-import de.justi.yagw2api.core.wrapper.model.wvw.IWVWObjective;
+import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMapScoresChangedEvent;
+import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMatchScoresChangedEvent;
+import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveCaptureEvent;
+import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveEndOfBuffEvent;
 
 class WVWAnalyzer implements IWVWAnalyzer {
 	private static final Logger LOGGER = Logger.getLogger(WVWAnalyzer.class);
 	@Override
-	public void notifyAboutUpdatedMapScores(IWVWMap map) {
-		LOGGER.debug("Notified about map score change for " + map.getType().getLabel() + " of " + map.getMatch().get().getId() + " to " + map.getScores());
+	public void informAboutMatchScoreChangedEvent(IWVWMatchScoresChangedEvent event) {
+		LOGGER.debug(event);
 	}
 
 	@Override
-	public void notifyAboutUpdatedMatchScores(IWVWMatch match) {
-		LOGGER.debug("Notified about match score change for " + match.getId() + " to " + match.getScores());
+	public void informAboutObjectiveCapturedEvent(IWVWObjectiveCaptureEvent event) {
+		LOGGER.debug(event);
 	}
 
 	@Override
-	public void notifyAboutCapturedObjective(IWVWObjective objective) {
-		LOGGER.debug("Notified about captured " + objective.getLabel() + " on " + objective.getMap().get().getType() + "-map in match("
-				+ objective.getMap().get().getMatch().get().getId() + ") by " + objective.getOwner().get().getName());
+	public void informAboutObjectiveEndOfBuffEvent(IWVWObjectiveEndOfBuffEvent event) {
+		LOGGER.debug(event);
 	}
 
 	@Override
-	public void notifyAboutEndOfBuffObjective(IWVWObjective objective) {
-		LOGGER.debug("Notified about end of buff for " + objective.getLabel() + " on " + objective.getMap().get().getType() + "-map in match("
-				+ objective.getMap().get().getMatch().get().getId() + ") by " + objective.getOwner().get().getName());
+	public void informAboutChangedMapScore(IWVWMapScoresChangedEvent event) {
+		LOGGER.debug(event);
 	}
 
 }
