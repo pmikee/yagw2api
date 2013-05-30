@@ -1,5 +1,6 @@
 package de.justi.yagw2api.core.wrapper;
 
+import java.util.Map;
 import java.util.Set;
 
 import de.justi.yagw2api.core.wrapper.model.IWorld;
@@ -8,7 +9,15 @@ import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
 
 
 public interface IWVWWrapper{
+	/**
+	 * start the arenanet api sync deamon
+	 */
 	void start();	
+	
+	/**
+	 * check if the arenanet api sync deamon is running
+	 * @return
+	 */
 	boolean isRunning();
 	
 	/**
@@ -16,12 +25,24 @@ public interface IWVWWrapper{
 	 * @return
 	 */
 	Set<IWVWMatch> getAllMatches();
+	/**
+	 * <p>retrieve unmodifiable access to all matches mapped by their id</p>
+	 * <p><strong>potentially expensive</strong>, because this map is build on each method call</p>
+	 * @return
+	 */
+	Map<String, IWVWMatch> getAllMatchesMappedById();
 	
 	/**
 	 * retrieve unmodifiable access to all worlds
 	 * @return
 	 */
 	Set<IWorld> getAllWorlds();
+	/**
+	 * <p>retrieve unmodifiable access to all worlds mapped by their id</p>
+	 * <p><strong>potentially expensive</strong>, because this map is build on each method call</p>
+	 * @return
+	 */
+	Map<Integer, IWorld> getAllWorldMappedById();
 	
 	/**
 	 * register a listener for a single match
@@ -60,4 +81,10 @@ public interface IWVWWrapper{
 	 * @param listener
 	 */
 	void registerWVWMapListener(IWVWMap map, IWVWMapListener listener);
+	
+	/**
+	 * unregister a given map listener
+	 * @param listener
+	 */
+	void unregisterWVWMapListener(IWVWMapListener listener);
 }

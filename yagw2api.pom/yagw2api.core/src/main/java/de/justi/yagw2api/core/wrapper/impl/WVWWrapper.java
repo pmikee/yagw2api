@@ -5,12 +5,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.log4j.Logger;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.eventbus.Subscribe;
 import com.sun.jersey.client.impl.CopyOnWriteHashMap;
 
@@ -158,6 +160,28 @@ class WVWWrapper implements IWVWWrapper {
 	}
 
 	@Override
+	public void unregisterWVWMapListener(IWVWMapListener listener) {
+		checkNotNull(listener);
+		
+		// remove listener references
+		if(this.singleMapListeners.containsValue(listener)) {
+			for (IWVWMap key : this.singleMapListeners.keySet()) {
+				if(this.singleMapListeners.get(key).contains(listener)) {
+					this.singleMapListeners.get(key).remove(listener);
+				}
+			}
+		}		
+		if(this.allMapsOfSingleMatchListeners.containsValue(listener)) {
+			for (IWVWMatch key : this.allMapsOfSingleMatchListeners.keySet()) {
+				if(this.allMapsOfSingleMatchListeners.get(key).contains(listener)) {
+					this.allMapsOfSingleMatchListeners.get(key).remove(listener);
+				}
+			}
+		}		
+		this.allMapsOfAllMatchesListeners.remove(listener);
+	}
+
+	@Override
 	public void registerWVWMapListener(IWVWMapListener listener) {
 		checkNotNull(listener);
 		checkState(!this.allMapsOfAllMatchesListeners.contains(listener));
@@ -210,5 +234,23 @@ class WVWWrapper implements IWVWWrapper {
 	@Override
 	public Set<IWorld> getAllWorlds() {
 		return this.deamon.getAllWorlds();
+	}
+
+	@Override
+	public Map<String, IWVWMatch> getAllMatchesMappedById() {
+		final Map<String, IWVWMatch> matchesMap = new HashMap<String, IWVWMatch>();
+		for (IWVWMatch match : this.deamon.getAllMatches()) {
+			matchesMap.put(match.getId(), match);
+		}
+		return ImmutableMap.copyOf(matchesMap);
+	}
+
+	@Override
+	public Map<Integer, IWorld> getAllWorldMappedById() {
+		final Map<Integer, IWorld> worldMap = new HashMap<Integer, IWorld>();
+		for (IWorld world : this.deamon.getAllWorlds()) {
+			worldMap.put(world.getId(), world);
+		}
+		return ImmutableMap.copyOf(worldMap);
 	}
 }
