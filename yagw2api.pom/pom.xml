@@ -8,7 +8,7 @@
 	<name>Parent POM for "Yet another GW2 API"</name>
 
 	<modules>
-		<module>yagw2api</module>
+		<module>yagw2api.core</module>
 		<module>yagw2api.analyzer</module>
 	</modules>
 
@@ -48,7 +48,7 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<artifactId>yagw2api</artifactId>
+				<artifactId>yagw2api.core</artifactId>
 				<groupId>de.justi</groupId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>

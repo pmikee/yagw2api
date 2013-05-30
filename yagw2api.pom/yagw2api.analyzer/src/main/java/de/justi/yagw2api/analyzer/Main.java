@@ -8,12 +8,12 @@ import com.google.common.eventbus.Subscribe;
 
 import de.justi.yagw2api.analyzer.utils.PersistenceHelper;
 import de.justi.yagw2api.analyzer.utils.YAGW2APIAnalyzerInjectionHelper;
-import de.justi.yagw2api.utils.YAGW2APIInjectionHelper;
-import de.justi.yagw2api.wrapper.IWVWWrapper;
-import de.justi.yagw2api.wrapper.model.wvw.events.IWVWMapScoresChangedEvent;
-import de.justi.yagw2api.wrapper.model.wvw.events.IWVWMatchScoresChangedEvent;
-import de.justi.yagw2api.wrapper.model.wvw.events.IWVWObjectiveCaptureEvent;
-import de.justi.yagw2api.wrapper.model.wvw.events.IWVWObjectiveEndOfBuffEvent;
+import de.justi.yagw2api.core.utils.YAGW2APIInjectionHelper;
+import de.justi.yagw2api.core.wrapper.IWVWWrapper;
+import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMapScoresChangedEvent;
+import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMatchScoresChangedEvent;
+import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveCaptureEvent;
+import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveEndOfBuffEvent;
 
 public class Main {
 	private static final Logger LOGGER = Logger.getLogger(Main.class);

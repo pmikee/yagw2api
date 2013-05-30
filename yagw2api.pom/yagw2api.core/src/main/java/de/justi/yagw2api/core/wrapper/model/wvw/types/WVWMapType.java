@@ -1,0 +1,45 @@
+package de.justi.yagw2api.core.wrapper.model.wvw.types;
+
+import de.justi.yagw2api.core.api.dto.IWVWMatchDetailsDTO;
+
+public enum WVWMapType implements IWVWMapType{
+	CENTER,
+	RED,
+	GREEN,
+	BLUE;
+	
+	public static WVWMapType fromDTOString(String dtoString) {
+		switch(dtoString.toUpperCase()) {
+			case IWVWMatchDetailsDTO.CENTER_MAP_TYPE_STRING:
+				return CENTER;
+			case IWVWMatchDetailsDTO.BLUE_MAP_TYPE_STRING:
+				return BLUE;
+			case IWVWMatchDetailsDTO.GREEN_MAP_TYPE_STRING:
+				return GREEN;
+			case IWVWMatchDetailsDTO.RED_MAP_TYPE_STRING:
+				return RED;
+			default:
+				throw new IllegalArgumentException("Unknown dtoString: "+dtoString);
+		}
+	}
+	
+	public String getLabel() {
+		return this.name();
+	}
+
+	public boolean isCenter() {
+		return this.equals(CENTER);
+	}
+
+	public boolean isRed() {
+		return this.equals(RED);
+	}
+
+	public boolean isGreen() {
+		return this.equals(GREEN);
+	}
+
+	public boolean isBlue() {
+		return this.equals(BLUE);
+	}
+}

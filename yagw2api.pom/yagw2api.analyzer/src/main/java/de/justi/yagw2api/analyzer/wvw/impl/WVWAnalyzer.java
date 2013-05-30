@@ -3,9 +3,9 @@ package de.justi.yagw2api.analyzer.wvw.impl;
 import org.apache.log4j.Logger;
 
 import de.justi.yagw2api.analyzer.IWVWAnalyzer;
-import de.justi.yagw2api.wrapper.model.wvw.IWVWMap;
-import de.justi.yagw2api.wrapper.model.wvw.IWVWMatch;
-import de.justi.yagw2api.wrapper.model.wvw.IWVWObjective;
+import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMap;
+import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
+import de.justi.yagw2api.core.wrapper.model.wvw.IWVWObjective;
 
 class WVWAnalyzer implements IWVWAnalyzer {
 	private static final Logger LOGGER = Logger.getLogger(WVWAnalyzer.class);

@@ -42,7 +42,7 @@
 
 	<dependencies>
 		<dependency>
-			<artifactId>yagw2api</artifactId>
+			<artifactId>yagw2api.core</artifactId>
 			<groupId>de.justi</groupId>
 		</dependency>
 		<dependency>
