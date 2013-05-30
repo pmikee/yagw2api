@@ -34,7 +34,7 @@ public class Main {
 			final IWVWAnalyzer analyzer = YAGW2APIAnalyzer.getAnalyzer();
 
 			// start the api wrapper
-//			apiWrapper.start();	
+			apiWrapper.start();	
 			
 			apiWrapper.getAllMatches();
 			
