@@ -62,7 +62,7 @@ class WVWService extends AbstractService implements IWVWService {
 	
 	private static Locale normalizeLocaleForAPIUsage(Locale locale) {
 		checkNotNull(locale);
-		return  normalizeLocaleForAPIUsage(locale);
+		return Locale.forLanguageTag(locale.getLanguage());
 	}
 
 	// caches
