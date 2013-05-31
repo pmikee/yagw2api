@@ -5,6 +5,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
@@ -53,7 +54,7 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 
 		@Override
 		public List<IWVWObjectiveEvent> getEventHistory() {
-			return ImmutableList.copyOf(WVWObjective.this.getEventHistory());
+			return Collections.unmodifiableList(WVWObjective.this.getEventHistory());
 		}
 
 		@Override

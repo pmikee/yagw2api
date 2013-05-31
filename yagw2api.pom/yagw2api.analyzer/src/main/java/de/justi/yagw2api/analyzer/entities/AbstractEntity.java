@@ -1,4 +1,4 @@
-package de.justi.yagw2api.analyzer.entities.wvw.impl;
+package de.justi.yagw2api.analyzer.entities;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -8,12 +8,12 @@ import javax.persistence.MappedSuperclass;
 import com.google.common.base.Objects;
 
 @MappedSuperclass
-abstract class AbstractEntity {
+public abstract class AbstractEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	public int getId() {
+	public final int getId() {
 		return this.id;
 	}
 	

@@ -3,6 +3,8 @@ package de.justi.yagw2api.analyzer.impl;
 import org.apache.log4j.Logger;
 
 import de.justi.yagw2api.analyzer.IWVWAnalyzer;
+import de.justi.yagw2api.analyzer.entities.IWorldEntity;
+import de.justi.yagw2api.core.wrapper.model.IWorld;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMapScoresChangedEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMatchScoresChangedEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveCaptureEvent;
@@ -28,6 +30,11 @@ class WVWAnalyzer implements IWVWAnalyzer {
 	@Override
 	public void notifyAboutChangedMapScoreEvent(IWVWMapScoresChangedEvent event) {
 		LOGGER.debug(event);
+	}
+
+	@Override
+	public IWorldEntity of(IWorld world) {
+		return null;
 	}
 
 }

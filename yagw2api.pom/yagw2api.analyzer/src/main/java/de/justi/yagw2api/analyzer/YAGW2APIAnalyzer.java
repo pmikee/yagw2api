@@ -6,12 +6,13 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 import de.justi.yagw2api.analyzer.entities.YAGWAPIAnalyzerPersistenceModule;
+import de.justi.yagw2api.analyzer.entities.impl.AnalyzerEntitiesModule;
 import de.justi.yagw2api.analyzer.entities.wvw.impl.AnalyzerWVWEntitiesModule;
 import de.justi.yagw2api.analyzer.impl.AnalyzerWVWModule;
 
 public enum YAGW2APIAnalyzer {
-	DEFAULT(Guice.createInjector(new AnalyzerWVWModule(), new AnalyzerWVWEntitiesModule(), new YAGWAPIAnalyzerPersistenceModule(false))), TEST(Guice.createInjector(
-			new AnalyzerWVWModule(), new AnalyzerWVWEntitiesModule(), new YAGWAPIAnalyzerPersistenceModule(true)));
+	DEFAULT(Guice.createInjector(new AnalyzerWVWModule(),new AnalyzerEntitiesModule(), new AnalyzerWVWEntitiesModule(), new YAGWAPIAnalyzerPersistenceModule(false))), TEST(Guice.createInjector(
+			new AnalyzerWVWModule(), new AnalyzerEntitiesModule(), new AnalyzerWVWEntitiesModule(), new YAGWAPIAnalyzerPersistenceModule(true)));
 
 	private static YAGW2APIAnalyzer instance = DEFAULT;
 

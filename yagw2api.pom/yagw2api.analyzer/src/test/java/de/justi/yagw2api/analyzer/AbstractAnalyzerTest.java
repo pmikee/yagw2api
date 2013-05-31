@@ -9,21 +9,21 @@ import de.justi.yagw2api.analyzer.entities.YAGW2APIAnalyzerPersistence;
 
 public abstract class AbstractAnalyzerTest {
 	@BeforeClass
-	public static void beforeClass() {
+	public final static void beforeClassAbstractAnalyzerTest() {
 		YAGW2APIAnalyzer.changeYAGW2APIAnalyzerInstance(YAGW2APIAnalyzer.TEST);
 	}
 	@Before
-	public void before() {
+	public final void beforeAbstractAnalyzerTest() {
 		// nothing to do
 	}	
 	
 	@After
-	public void after() {
+	public final void afterAbstractAnalyzerTest() {
 		YAGW2APIAnalyzerPersistence.getDefaultEMF().close();
 	}
 	
 	@AfterClass
-	public static void afterClass() {
+	public final static void afterClassAbstractAnalyzerTest() {
 		// nothing to do
 	}
 }

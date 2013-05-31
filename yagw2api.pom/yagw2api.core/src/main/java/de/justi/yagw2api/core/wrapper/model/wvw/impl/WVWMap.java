@@ -5,6 +5,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -63,7 +64,7 @@ class WVWMap extends AbstractHasChannel implements IWVWMap {
 			for(IWVWLocationType key : WVWMap.this.getMappedByPosition().keySet()) {
 				buffer.put(key, mutableResult.get(key).createUnmodifiableReference());
 			}
-			return ImmutableMap.copyOf(buffer);
+			return Collections.unmodifiableMap(buffer);
 		}
 
 		@Override
@@ -73,7 +74,7 @@ class WVWMap extends AbstractHasChannel implements IWVWMap {
 			for(IHasWVWLocation<?> element : mutableResult) {
 				buffer.add(element.createUnmodifiableReference());
 			}
-			return ImmutableSet.copyOf(buffer);
+			return Collections.unmodifiableSet(buffer);
 		}
 
 		@Override
@@ -83,7 +84,7 @@ class WVWMap extends AbstractHasChannel implements IWVWMap {
 			for(IWVWObjective element : mutableResult) {
 				buffer.add(element.createUnmodifiableReference());
 			}
-			return ImmutableSet.copyOf(buffer);
+			return Collections.unmodifiableSet(buffer);
 		}
 
 		@Override
