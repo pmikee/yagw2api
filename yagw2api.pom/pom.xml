@@ -9,12 +9,12 @@
 
 	<url>http://yagw2api.appspot.com</url>
 	<organization>
-		<name>JuSti</name>
+		<name>Julian Stitz</name>
 	</organization>
 	<developers>
 		<developer>
 			<id>Lul4n.8497</id>
-			<email>julian.stitz@googlemail.com</email>
+			<email>julian.stitz@gmail.com</email>
 			<name>Julian Stitz</name>
 			<roles>
 				<role>owner</role>
@@ -24,15 +24,21 @@
 		</developer>
 	</developers>
 
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<de.justi.yagw2api.core.version>0.0.1-SNAPSHOT</de.justi.yagw2api.core.version>
+		<de.justi.yagw2api.analyzer.version>0.0.1-SNAPSHOT</de.justi.yagw2api.analyzer.version>
+		<de.justi.yagw2api.sample.version>0.0.1-SNAPSHOT</de.justi.yagw2api.sample.version>
+		<de.justi.yagw2api.webapp.version>0.0.1-SNAPSHOT</de.justi.yagw2api.webapp.version>
+	</properties>
+
 	<modules>
 		<module>yagw2api.core</module>
 		<module>yagw2api.analyzer</module>
 		<module>yagw2api.sample</module>
+		<module>yagw2api.webapp</module>
 	</modules>
-
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
 
 	<build>
 		<plugins>
@@ -51,9 +57,9 @@
 		<pluginManagement>
 			<plugins>
 				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>webstart-maven-plugin</artifactId>
-					<version>1.0-beta-3</version>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-war-plugin</artifactId>
+					<version>2.1.1</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -101,6 +107,37 @@
 						</dependency>
 					</dependencies>
 				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>webstart-maven-plugin</artifactId>
+					<version>1.0-beta-3</version>
+					<configuration>
+						<libPath>lib</libPath>
+						<excludeTransitive>false</excludeTransitive>
+						<unsignAlreadySignedJars>true</unsignAlreadySignedJars>
+						<sign>
+							<keystore>yagw2api</keystore>
+							<keypass>gwodh!</keypass>
+							<storepass>wvwitb!</storepass>
+							<alias>yagw2api</alias>
+							<dnameCn>None</dnameCn>
+							<dnameOu>None</dnameOu>
+							<dnameO>de.justi</dnameO>
+							<dnameL>Stuttgart</dnameL>
+							<dnameSt>BW</dnameSt>
+							<dnameC>DE</dnameC>
+							<verify>true</verify>
+							<keystoreConfig>
+								<delete>true</delete>
+								<gen>true</gen>
+							</keystoreConfig>
+						</sign>
+						<pack200>true</pack200>
+						<gzip>true</gzip>
+						<outputJarVersions>false</outputJarVersions>
+						<verbose>false</verbose>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
@@ -125,12 +162,17 @@
 			<dependency>
 				<artifactId>yagw2api.core</artifactId>
 				<groupId>de.justi</groupId>
-				<version>0.0.1-SNAPSHOT</version>
+				<version>${de.justi.yagw2api.core.version}</version>
 			</dependency>
 			<dependency>
 				<artifactId>yagw2api.analyzer</artifactId>
 				<groupId>de.justi</groupId>
-				<version>0.0.1-SNAPSHOT</version>
+				<version>${de.justi.yagw2api.analyzer.version}</version>
+			</dependency>
+			<dependency>
+				<artifactId>yagw2api.sample</artifactId>
+				<groupId>de.justi</groupId>
+				<version>${de.justi.yagw2api.sample.version}</version>
 			</dependency>
 
 			<dependency>

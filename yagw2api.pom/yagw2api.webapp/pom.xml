@@ -1,0 +1,47 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>de.justi</groupId>
+		<artifactId>yagw2api.pom</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>yagw2api.webapp</artifactId>
+	<packaging>war</packaging>
+	<url>http://yagw2api.appspot.com/webstart</url>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>webstart-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>jnlp-download-servlet</goal>
+						</goals>
+					</execution>
+				</executions>
+
+				<configuration>
+					<jnlpFiles>
+						<jnlpFile>
+							<jarResources>
+								<jarResource>
+									<groupId>de.justi</groupId>
+									<artifactId>yagw2api.sample</artifactId>
+									<version>${de.justi.yagw2api.sample.version}</version>
+									<mainClass>de.justi.yagw2api.sample.Main</mainClass>
+								</jarResource>
+							</jarResources>
+						</jnlpFile>
+					</jnlpFiles>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

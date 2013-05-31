@@ -76,50 +76,7 @@
 						<launcherErr>Launcher for YAGW2API Sample Application failed.</launcherErr>
 					</messages>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>webstart-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>jnlp-single</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<libPath>lib</libPath>
-					<excludeTransitive>false</excludeTransitive>
-					<resourcesDirectory>${project.basedir}/src/main/jnlp/resources</resourcesDirectory>
-					<unsignAlreadySignedJars>true</unsignAlreadySignedJars>
-					<jnlp>
-						<outputFile>yagw2api.sample.jnlp</outputFile>
-						<mainClass>de.justi.yagw2api.sample.Main</mainClass>
-					</jnlp>
-					<sign>
-						<keystore>yagw2api</keystore>
-						<keypass>gwodh!</keypass>
-						<storepass>wvwitb!</storepass>
-						<alias>yagw2api</alias>
-						<dnameCn>None</dnameCn>
-						<dnameOu>None</dnameOu>
-						<dnameO>de.justi</dnameO>
-						<dnameL>Stuttgart</dnameL>
-						<dnameSt>BW</dnameSt>
-						<dnameC>DE</dnameC>
-						<verify>true</verify>
-						<keystoreConfig>
-							<delete>true</delete>
-							<gen>true</gen>
-						</keystoreConfig>
-					</sign>
-					<pack200>true</pack200>
-					<gzip>true</gzip>
-					<outputJarVersions>false</outputJarVersions>
-					<verbose>false</verbose>
-				</configuration>
-			</plugin>
+			</plugin>			
 		</plugins>
 	</build>
 
