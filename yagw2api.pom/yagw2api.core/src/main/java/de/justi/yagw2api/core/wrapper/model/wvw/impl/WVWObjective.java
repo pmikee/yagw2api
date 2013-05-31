@@ -7,6 +7,7 @@ import static com.google.common.base.Preconditions.checkState;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -19,6 +20,7 @@ import com.google.common.eventbus.EventBus;
 
 import de.justi.yagw2api.core.YAGW2APICore;
 import de.justi.yagw2api.core.arenanet.dto.IWVWObjectiveDTO;
+import de.justi.yagw2api.core.arenanet.dto.IWVWObjectiveNameDTO;
 import de.justi.yagw2api.core.wrapper.model.AbstractHasChannel;
 import de.justi.yagw2api.core.wrapper.model.IUnmodifiable;
 import de.justi.yagw2api.core.wrapper.model.IWorld;
@@ -49,7 +51,8 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 
 		@Override
 		public EventBus getChannel() {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName()+" is instance of "+IUnmodifiable.class.getSimpleName()+" and therefore can not be modified.");
+			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName()
+					+ " and therefore can not be modified.");
 		}
 
 		@Override
@@ -75,7 +78,8 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 
 		@Override
 		public void capture(IWorld capturingWorld) {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName()+" is instance of "+IUnmodifiable.class.getSimpleName()+" and therefore can not be modified.");
+			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName()
+					+ " and therefore can not be modified.");
 		}
 
 		@Override
@@ -91,7 +95,8 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 
 		@Override
 		public void connectWithMap(IWVWMap map) {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName()+" is instance of "+IUnmodifiable.class.getSimpleName()+" and therefore can not be modified.");
+			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName()
+					+ " and therefore can not be modified.");
 		}
 
 		public String toString() {
@@ -100,12 +105,20 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 
 		@Override
 		public void updateOnSynchronization() {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName()+" is instance of "+IUnmodifiable.class.getSimpleName()+" and therefore can not be modified.");
+			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName()
+					+ " and therefore can not be modified.");
+		}
+
+		@Override
+		public void updateLabel(String label) {
+			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName()
+					+ " and therefore can not be modified.");
 		}
 	}
 
 	public static class WVWObjectiveBuilder implements IWVWObjective.IWVWObjectiveBuilder {
 		private Optional<IWVWLocationType> location = Optional.absent();
+		private Optional<String> label = Optional.absent();
 		private Optional<IWorld> owner = Optional.absent();
 		private Optional<IWVWMap> map = Optional.absent();
 
@@ -120,13 +133,23 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 			if (this.owner.isPresent()) {
 				result.capture(this.owner.get());
 			}
+			if (this.label.isPresent()) {
+				result.updateLabel(this.label.get());
+			}
 			return result;
 		}
 
 		@Override
 		public IWVWObjective.IWVWObjectiveBuilder fromDTO(IWVWObjectiveDTO dto) {
 			checkNotNull(dto);
-			return this.location(WVWLocationType.forObjectiveId(dto.getId()).get());
+			final String objectiveName;
+			final Optional<IWVWObjectiveNameDTO> nameDTO = dto.getName(Locale.getDefault());
+			if (nameDTO.isPresent()) {
+				objectiveName = nameDTO.get().getName();
+			} else {
+				objectiveName = null;
+			}
+			return this.location(WVWLocationType.forObjectiveId(dto.getId()).get()).label(objectiveName);
 		}
 
 		@Override
@@ -147,6 +170,12 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 			return this;
 		}
 
+		@Override
+		public IWVWObjectiveBuilder label(String label) {
+			this.label = Optional.fromNullable(label);
+			return this;
+		}
+
 	}
 
 	private final IWVWLocationType location;
@@ -155,6 +184,7 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 	private Optional<Calendar> lastCaptureEventTimestamp = Optional.absent();
 	private boolean postedEndOfBuffEvent = false;
 	private Optional<IWVWMap> map = Optional.absent();
+	private Optional<String> label = Optional.absent();
 
 	private WVWObjective(IWVWLocationType location) {
 		checkNotNull(location);
@@ -164,7 +194,7 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 	}
 
 	public String getLabel() {
-		return this.location.getLabel();
+		return this.location.getLabel()+" | "+this.label.or("");
 	}
 
 	public IWVWObjectiveType getType() {
@@ -243,5 +273,11 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 		} else if (remainingBuffMillis > 0 && LOGGER.isTraceEnabled()) {
 			LOGGER.trace("Remaining buff duration for " + this.toString() + ": " + remainingBuffMillis + "ms");
 		}
+	}
+
+	@Override
+	public void updateLabel(String label) {
+		checkNotNull(label);
+		this.label = Optional.of(label);
 	}
 }

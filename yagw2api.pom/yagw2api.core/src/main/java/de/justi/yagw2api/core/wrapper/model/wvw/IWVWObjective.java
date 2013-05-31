@@ -15,6 +15,8 @@ import de.justi.yagw2api.core.wrapper.model.wvw.types.IWVWObjectiveType;
 public interface IWVWObjective extends IHasWVWLocation<IWVWObjective>, IHasChannel {
 	static interface IWVWObjectiveBuilder {
 		IWVWObjective build();
+		
+		IWVWObjectiveBuilder label(String label);
 
 		IWVWObjectiveBuilder map(IWVWMap map);
 		
@@ -28,6 +30,7 @@ public interface IWVWObjective extends IHasWVWLocation<IWVWObjective>, IHasChann
 	List<IWVWObjectiveEvent> getEventHistory();
 
 	String getLabel();
+	void updateLabel(String label);
 
 	IWVWObjectiveType getType();
 

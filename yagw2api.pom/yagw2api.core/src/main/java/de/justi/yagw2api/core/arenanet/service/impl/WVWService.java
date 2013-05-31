@@ -149,17 +149,18 @@ class WVWService extends AbstractService implements IWVWService {
 	 */
 	private Cache<Integer, IWorldNameDTO> getOrCreateWorldNameCache(Locale locale) {
 		checkNotNull(locale);
-		if (!this.objectiveNameCaches.containsKey(locale)) {
+		final Locale key = Locale.forLanguageTag(locale.getLanguage());
+		if (!this.objectiveNameCaches.containsKey(key)) {
 			synchronized (this) {
-				if (!this.worldNameCaches.containsKey(locale)) {
+				if (!this.worldNameCaches.containsKey(key)) {
 					final Cache<Integer, IWorldNameDTO> newCache = CacheBuilder.newBuilder()
 							.expireAfterWrite(WOLRD_NAMES_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build();
-					this.worldNameCaches.put(locale, newCache);
+					this.worldNameCaches.put(key, newCache);
 				}
 			}
 		}
-		checkState(this.worldNameCaches.containsKey(locale));
-		return this.worldNameCaches.get(locale);
+		checkState(this.worldNameCaches.containsKey(key));
+		return this.worldNameCaches.get(key);
 	}
 
 	/**
@@ -170,17 +171,18 @@ class WVWService extends AbstractService implements IWVWService {
 	 */
 	private Cache<Integer, IWVWObjectiveNameDTO> getOrCreateObjectiveNameCache(Locale locale) {
 		checkNotNull(locale);
-		if (!this.objectiveNameCaches.containsKey(locale)) {
+		final Locale key = Locale.forLanguageTag(locale.getLanguage());
+		if (!this.objectiveNameCaches.containsKey(key)) {
 			synchronized (this) {
-				if (!this.objectiveNameCaches.containsKey(locale)) {
+				if (!this.objectiveNameCaches.containsKey(key)) {
 					final Cache<Integer, IWVWObjectiveNameDTO> newCache = CacheBuilder.newBuilder()
 							.expireAfterWrite(OBJECTIVE_NAMES_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build();
-					this.objectiveNameCaches.put(locale, newCache);
+					this.objectiveNameCaches.put(key, newCache);
 				}
 			}
 		}
-		checkState(this.objectiveNameCaches.containsKey(locale));
-		return this.objectiveNameCaches.get(locale);
+		checkState(this.objectiveNameCaches.containsKey(key));
+		return this.objectiveNameCaches.get(key);
 	}
 
 	public IWVWMatchesDTO retrieveAllMatches() {
@@ -236,10 +238,11 @@ class WVWService extends AbstractService implements IWVWService {
 
 	public IWVWObjectiveNameDTO[] retrieveAllObjectiveNames(final Locale locale) {
 		checkNotNull(locale);
+		final Locale key = Locale.forLanguageTag(locale.getLanguage());
 		try {
-			return this.objectiveNamesCache.get(locale, new Callable<IWVWObjectiveNameDTO[]>() {
+			return this.objectiveNamesCache.get(key, new Callable<IWVWObjectiveNameDTO[]>() {
 				public IWVWObjectiveNameDTO[] call() throws Exception {
-					final WebResource resource = CLIENT.resource(OBJECTIVE_NAMES_URL.toExternalForm()).queryParam("lang", locale.getLanguage());
+					final WebResource resource = CLIENT.resource(OBJECTIVE_NAMES_URL.toExternalForm()).queryParam("lang", key.getLanguage());
 					resource.addFilter(new RetryClientFilter(RETRY_COUNT));
 					final WebResource.Builder builder = resource.accept(MediaType.APPLICATION_JSON_TYPE);
 					try {
@@ -257,18 +260,19 @@ class WVWService extends AbstractService implements IWVWService {
 				}
 			});
 		} catch (ExecutionException e) {
-			LOGGER.error("Failed to retrieve all " + IWVWObjectiveNameDTO.class.getSimpleName() + " from cache for lang=" + locale, e);
-			throw new IllegalStateException("Failed to retrieve all " + IWVWObjectiveNameDTO.class.getSimpleName() + " from cache for lang=" + locale, e);
+			LOGGER.error("Failed to retrieve all " + IWVWObjectiveNameDTO.class.getSimpleName() + " from cache for lang=" + key, e);
+			throw new IllegalStateException("Failed to retrieve all " + IWVWObjectiveNameDTO.class.getSimpleName() + " from cache for lang=" + key, e);
 		}
 	}
 
 	public IWorldNameDTO[] retrieveAllWorldNames(final Locale locale) {
 		checkNotNull(locale);
+		final Locale key = Locale.forLanguageTag(locale.getLanguage());
 		try {
-			return this.worldNamesCache.get(locale, new Callable<IWorldNameDTO[]>() {
+			return this.worldNamesCache.get( key, new Callable<IWorldNameDTO[]>() {
 				public IWorldNameDTO[] call() throws Exception {
-					checkNotNull(locale);
-					final WebResource resource = CLIENT.resource(WORL_NAMES_URL.toExternalForm()).queryParam("lang", locale.getLanguage());
+					checkNotNull(key);
+					final WebResource resource = CLIENT.resource(WORL_NAMES_URL.toExternalForm()).queryParam("lang",  key.getLanguage());
 					resource.addFilter(new RetryClientFilter(RETRY_COUNT));
 					final WebResource.Builder builder = resource.accept(MediaType.APPLICATION_JSON_TYPE);
 					try {
@@ -294,11 +298,12 @@ class WVWService extends AbstractService implements IWVWService {
 	public Optional<IWorldNameDTO> retrieveWorldName(final Locale locale, final int worldId) {
 		checkNotNull(locale);
 		checkArgument(worldId > 0);
+		final Locale key = Locale.forLanguageTag(locale.getLanguage());
 		try {
 			// retrieve value from cache
-			return Optional.fromNullable(this.getOrCreateWorldNameCache(locale).get(worldId, new Callable<IWorldNameDTO>() {
+			return Optional.fromNullable(this.getOrCreateWorldNameCache(key).get(worldId, new Callable<IWorldNameDTO>() {
 				public IWorldNameDTO call() throws Exception {
-					final IWorldNameDTO[] names = WVWService.this.retrieveAllWorldNames(locale);
+					final IWorldNameDTO[] names = WVWService.this.retrieveAllWorldNames(key);
 					int index = 0;
 					IWorldNameDTO result = null;
 					while (index < names.length && result == null) {
@@ -321,11 +326,12 @@ class WVWService extends AbstractService implements IWVWService {
 	public Optional<IWVWObjectiveNameDTO> retrieveObjectiveName(final Locale locale, final int id) {
 		checkNotNull(locale);
 		checkArgument(id > 0);
+		final Locale key = Locale.forLanguageTag(locale.getLanguage());
 		try {
 			// retrieve value from cache
-			return Optional.fromNullable(this.getOrCreateObjectiveNameCache(locale).get(id, new Callable<IWVWObjectiveNameDTO>() {
+			return Optional.fromNullable(this.getOrCreateObjectiveNameCache(key).get(id, new Callable<IWVWObjectiveNameDTO>() {
 				public IWVWObjectiveNameDTO call() throws Exception {
-					final IWVWObjectiveNameDTO[] names = WVWService.this.retrieveAllObjectiveNames(locale);
+					final IWVWObjectiveNameDTO[] names = WVWService.this.retrieveAllObjectiveNames(key);
 					int index = 0;
 					IWVWObjectiveNameDTO result = null;
 					while (index < names.length && result == null) {
@@ -333,13 +339,13 @@ class WVWService extends AbstractService implements IWVWService {
 						index++;
 					}
 					if (LOGGER.isTraceEnabled()) {
-						LOGGER.trace("Retrieved " + IWVWObjectiveNameDTO.class.getSimpleName() + " for id=" + id + " and lang=" + locale + ": " + result);
+						LOGGER.trace("Retrieved " + IWVWObjectiveNameDTO.class.getSimpleName() + " for id=" + id + " and lang=" + key + ": " + result);
 					}
 					return result;
 				}
 			}));
 		} catch (ExecutionException e) {
-			LOGGER.error("Failed to retrieve " + IWorldNameDTO.class.getSimpleName() + " from cache for id=" + id + " lang=" + locale, e);
+			LOGGER.error("Failed to retrieve " + IWorldNameDTO.class.getSimpleName() + " from cache for id=" + id + " lang=" + key, e);
 			throw new IllegalStateException("Failed to retrieve all " + IWorldNameDTO.class.getSimpleName() + " from cache for worldId=" + id + " lang="
 					+ locale, e);
 		}
