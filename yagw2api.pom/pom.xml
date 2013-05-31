@@ -7,6 +7,23 @@
 	<packaging>pom</packaging>
 	<name>Parent POM for "Yet another GW2 API"</name>
 
+	<url>http://yagw2api.appspot.com</url>
+	<organization>
+		<name>JuSti</name>
+	</organization>
+	<developers>
+		<developer>
+			<id>Lul4n.8497</id>
+			<email>julian.stitz@googlemail.com</email>
+			<name>Julian Stitz</name>
+			<roles>
+				<role>owner</role>
+				<role>architect</role>
+				<role>developer</role>
+			</roles>
+		</developer>
+	</developers>
+
 	<modules>
 		<module>yagw2api.core</module>
 		<module>yagw2api.analyzer</module>
@@ -34,6 +51,11 @@
 		<pluginManagement>
 			<plugins>
 				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>webstart-maven-plugin</artifactId>
+					<version>1.0-beta-3</version>
+				</plugin>
+				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.1</version>
@@ -56,6 +78,28 @@
 						<failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
 						<failIfNoTests>false</failIfNoTests>
 					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>com.github.wvengen</groupId>
+					<artifactId>proguard-maven-plugin</artifactId>
+					<version>2.0.6</version>
+					<configuration>
+						<addMavenDescriptor>false</addMavenDescriptor>
+						<obfuscate>true</obfuscate>
+						<includeDependency>false</includeDependency>
+						<libs>
+							<lib>${java.home}\lib\rt.jar</lib>
+							<lib>${java.home}\lib\jsse.jar</lib>
+						</libs>
+					</configuration>
+					<dependencies>
+						<dependency>
+							<groupId>net.sf.proguard</groupId>
+							<artifactId>proguard-base</artifactId>
+							<version>4.9</version>
+							<scope>runtime</scope>
+						</dependency>
+					</dependencies>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -88,7 +132,7 @@
 				<groupId>de.justi</groupId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>jgrapht</groupId>
 				<artifactId>jgrapht</artifactId>

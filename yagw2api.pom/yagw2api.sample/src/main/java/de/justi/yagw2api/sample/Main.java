@@ -2,22 +2,13 @@ package de.justi.yagw2api.sample;
 
 import static com.google.common.base.Preconditions.checkState;
 
-import java.util.concurrent.ForkJoinPool.ManagedBlocker;
-
 import org.apache.log4j.Logger;
 
 import de.justi.yagw2api.analyzer.IWVWAnalyzer;
 import de.justi.yagw2api.analyzer.YAGW2APIAnalyzer;
 import de.justi.yagw2api.analyzer.entities.YAGW2APIAnalyzerPersistence;
 import de.justi.yagw2api.core.YAGW2APICore;
-import de.justi.yagw2api.core.wrapper.IWVWMapListener;
-import de.justi.yagw2api.core.wrapper.IWVWMatchListener;
 import de.justi.yagw2api.core.wrapper.IWVWWrapper;
-import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMapScoresChangedEvent;
-import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMatchScoresChangedEvent;
-import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveCaptureEvent;
-import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveEndOfBuffEvent;
-import de.justi.yagw2api.sample.view.GraphWindow;
 import de.justi.yagw2api.sample.view.MainWindow;
 
 public class Main {
