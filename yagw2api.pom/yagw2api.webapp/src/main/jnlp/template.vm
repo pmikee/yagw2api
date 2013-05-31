@@ -20,7 +20,7 @@
 
 	<shortcut online="true">
     	<desktop/>
-    	<menu submenu="Webstart Tutorial"/>
+    	<menu submenu="$project.name"/>
   	</shortcut>
   	<!-- 
 	<icon href="icon.png" kind="default" />
@@ -35,7 +35,7 @@
 </security>
 
 <resources>
-    <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se" />
+    <j2se version="1.7+" href="http://java.sun.com/products/autodl/j2se" />
     $dependencies
 </resources>
 <application-desc main-class="$mainClass"/>
