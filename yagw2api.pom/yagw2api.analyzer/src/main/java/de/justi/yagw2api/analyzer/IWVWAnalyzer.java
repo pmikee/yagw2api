@@ -6,5 +6,5 @@ import de.justi.yagw2api.core.wrapper.IWVWMatchListener;
 import de.justi.yagw2api.core.wrapper.model.IWorld;
 
 public interface IWVWAnalyzer extends IWVWMatchListener, IWVWMapListener {
-	IWorldEntity of(IWorld world);
+	IWorldEntity worldEntityOf(IWorld world);
 }
