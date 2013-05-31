@@ -114,6 +114,17 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName()
 					+ " and therefore can not be modified.");
 		}
+
+		@Override
+		public void initializeOwner(IWorld owningWorld) {
+			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName()
+					+ " and therefore can not be modified.");			
+		}
+
+		@Override
+		public Optional<Calendar> getEndOfBuffTimestamp() {
+			return WVWObjective.this.getEndOfBuffTimestamp();
+		}
 	}
 
 	public static class WVWObjectiveBuilder implements IWVWObjective.IWVWObjectiveBuilder {
@@ -131,7 +142,7 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 				result.connectWithMap(map.get());
 			}
 			if (this.owner.isPresent()) {
-				result.capture(this.owner.get());
+				result.initializeOwner(this.owner.get());
 			}
 			if (this.label.isPresent()) {
 				result.updateLabel(this.label.get());
@@ -182,7 +193,7 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 	private final List<IWVWObjectiveEvent> eventHistory = new CopyOnWriteArrayList<IWVWObjectiveEvent>();
 	private Optional<IWorld> owningWorld = Optional.absent();
 	private Optional<Calendar> lastCaptureEventTimestamp = Optional.absent();
-	private boolean postedEndOfBuffEvent = false;
+	private boolean postedEndOfBuffEvent = true;
 	private Optional<IWVWMap> map = Optional.absent();
 	private Optional<String> label = Optional.absent();
 
@@ -222,6 +233,15 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 		this.lastCaptureEventTimestamp = Optional.of(event.getTimestamp());
 		this.postedEndOfBuffEvent = false;
 		this.getChannel().post(event);
+	}
+
+	@Override
+	public void initializeOwner(IWorld owningWorld) {
+		checkNotNull(owningWorld);
+		checkState(!this.owningWorld.isPresent());
+		checkState(!this.lastCaptureEventTimestamp.isPresent());
+		checkState(this.postedEndOfBuffEvent);
+		this.owningWorld = Optional.of(owningWorld);
 	}
 
 	public long getRemainingBuffDuration(TimeUnit unit) {
@@ -279,5 +299,16 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 	public void updateLabel(String label) {
 		checkNotNull(label);
 		this.label = Optional.of(label);
+	}
+
+	@Override
+	public Optional<Calendar> getEndOfBuffTimestamp() {
+		if(this.lastCaptureEventTimestamp.isPresent()) {
+			final Calendar timestamp = Calendar.getInstance();
+			timestamp.setTimeInMillis(this.lastCaptureEventTimestamp.get().getTimeInMillis()+this.getType().getBuffDuration(TimeUnit.MILLISECONDS));
+			return Optional.of(timestamp);
+		}else {
+			return Optional.absent();
+		}
 	}
 }

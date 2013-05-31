@@ -1,5 +1,6 @@
 package de.justi.yagw2api.core.wrapper.model.wvw;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -37,9 +38,11 @@ public interface IWVWObjective extends IHasWVWLocation<IWVWObjective>, IHasChann
 	Optional<IWorld> getOwner();
 
 	void capture(IWorld capturingWorld);
+	void initializeOwner(IWorld owningWorld);
 	void updateOnSynchronization();
 
 	long getRemainingBuffDuration(TimeUnit unit);
+	Optional<Calendar> getEndOfBuffTimestamp();
 	
 
 	Optional<IWVWMap> getMap();
