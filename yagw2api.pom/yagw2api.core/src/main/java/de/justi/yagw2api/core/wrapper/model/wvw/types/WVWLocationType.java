@@ -3,10 +3,11 @@ package de.justi.yagw2api.core.wrapper.model.wvw.types;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
+import java.util.Locale;
 import java.util.Map;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 import java.util.Set;
-
-
 
 import org.apache.log4j.Logger;
 
@@ -185,6 +186,7 @@ public enum WVWLocationType implements IWVWLocationType {
 				+ WVWLocationType.forMapTyp(BLUE_MAPTYPE).get().size() + ")==green(" + WVWLocationType.forMapTyp(GREEN_MAPTYPE).get().size() + ")");
 	}
 
+	
 	private final IWVWMapType mapType;
 	private final Optional<Integer> objectiveId;
 	private final Optional<IWVWObjectiveType> objectiveType;
@@ -200,12 +202,21 @@ public enum WVWLocationType implements IWVWLocationType {
 		this.mapType = type;
 	}
 
+	@Override
 	public Optional<IWVWObjectiveType> getObjectiveType() {
 		return this.objectiveType;
 	}
 
-	public String getLabel() {
-		return this.name();
+	@Override
+	public Optional<String> getLabel(Locale locale) {
+		checkNotNull(locale);
+		final ResourceBundle bundle = ResourceBundle.getBundle("locations", locale);
+		try {
+			return Optional.of(bundle.getString(this.name()));
+		}catch(MissingResourceException e) {
+			LOGGER.error("Missing translation of "+this.name()+" for "+locale,e);
+			return Optional.absent();
+		}
 	}
 
 	public Optional<Integer> getObjectiveId() {
@@ -220,6 +231,7 @@ public enum WVWLocationType implements IWVWLocationType {
 		return Optional.fromNullable(LOCATIONTYPES_MAPPED_BY_MAPTYPE.get(mapType));
 	}
 
+	@Override
 	public IWVWMapType getMapType() {
 		return this.mapType;
 	}
@@ -230,6 +242,6 @@ public enum WVWLocationType implements IWVWLocationType {
 	}
 	
 	public String toString() {
-		return Objects.toStringHelper(this).add("label",this.getLabel()).add("isObjectiveLocation",this.isObjectiveLocation()).add("objectiveId",this.getObjectiveId()).add("objectiveType",this.getObjectiveType()).add("mapType", this.getMapType()).toString();
+		return Objects.toStringHelper(this).add("label",this.getLabel(Locale.getDefault())).add("isObjectiveLocation",this.isObjectiveLocation()).add("objectiveId",this.getObjectiveId()).add("objectiveType",this.getObjectiveType()).add("mapType", this.getMapType()).toString();
 	}
 }

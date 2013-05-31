@@ -20,7 +20,6 @@ import com.google.common.eventbus.EventBus;
 
 import de.justi.yagw2api.core.YAGW2APICore;
 import de.justi.yagw2api.core.arenanet.dto.IWVWObjectiveDTO;
-import de.justi.yagw2api.core.arenanet.dto.IWVWObjectiveNameDTO;
 import de.justi.yagw2api.core.wrapper.model.AbstractHasChannel;
 import de.justi.yagw2api.core.wrapper.model.IUnmodifiable;
 import de.justi.yagw2api.core.wrapper.model.IWorld;
@@ -61,7 +60,7 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 		}
 
 		@Override
-		public String getLabel() {
+		public Optional<String> getLabel() {
 			return WVWObjective.this.getLabel();
 		}
 
@@ -110,12 +109,6 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 		}
 
 		@Override
-		public void updateLabel(String label) {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName()
-					+ " and therefore can not be modified.");
-		}
-
-		@Override
 		public void initializeOwner(IWorld owningWorld) {
 			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName()
 					+ " and therefore can not be modified.");			
@@ -129,7 +122,6 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 
 	public static class WVWObjectiveBuilder implements IWVWObjective.IWVWObjectiveBuilder {
 		private Optional<IWVWLocationType> location = Optional.absent();
-		private Optional<String> label = Optional.absent();
 		private Optional<IWorld> owner = Optional.absent();
 		private Optional<IWVWMap> map = Optional.absent();
 
@@ -144,23 +136,13 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 			if (this.owner.isPresent()) {
 				result.initializeOwner(this.owner.get());
 			}
-			if (this.label.isPresent()) {
-				result.updateLabel(this.label.get());
-			}
 			return result;
 		}
 
 		@Override
 		public IWVWObjective.IWVWObjectiveBuilder fromDTO(IWVWObjectiveDTO dto) {
 			checkNotNull(dto);
-			final String objectiveName;
-			final Optional<IWVWObjectiveNameDTO> nameDTO = dto.getName(Locale.getDefault());
-			if (nameDTO.isPresent()) {
-				objectiveName = nameDTO.get().getName();
-			} else {
-				objectiveName = null;
-			}
-			return this.location(WVWLocationType.forObjectiveId(dto.getId()).get()).label(objectiveName);
+			return this.location(WVWLocationType.forObjectiveId(dto.getId()).get());
 		}
 
 		@Override
@@ -181,12 +163,6 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 			return this;
 		}
 
-		@Override
-		public IWVWObjectiveBuilder label(String label) {
-			this.label = Optional.fromNullable(label);
-			return this;
-		}
-
 	}
 
 	private final IWVWLocationType location;
@@ -195,7 +171,6 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 	private Optional<Calendar> lastCaptureEventTimestamp = Optional.absent();
 	private boolean postedEndOfBuffEvent = true;
 	private Optional<IWVWMap> map = Optional.absent();
-	private Optional<String> label = Optional.absent();
 
 	private WVWObjective(IWVWLocationType location) {
 		checkNotNull(location);
@@ -204,8 +179,8 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 		this.location = location;
 	}
 
-	public String getLabel() {
-		return this.location.getLabel()+" | "+this.label.or("");
+	public Optional<String> getLabel() {
+		return this.location.getLabel(Locale.getDefault());
 	}
 
 	public IWVWObjectiveType getType() {
@@ -294,13 +269,6 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 			LOGGER.trace("Remaining buff duration for " + this.toString() + ": " + remainingBuffMillis + "ms");
 		}
 	}
-
-	@Override
-	public void updateLabel(String label) {
-		checkNotNull(label);
-		this.label = Optional.of(label);
-	}
-
 	@Override
 	public Optional<Calendar> getEndOfBuffTimestamp() {
 		if(this.lastCaptureEventTimestamp.isPresent()) {
