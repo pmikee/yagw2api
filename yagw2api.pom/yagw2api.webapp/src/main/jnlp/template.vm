@@ -31,7 +31,7 @@
 </security>
 
 <resources>
-    <j2se version="1.7+" href="http://java.sun.com/products/autodl/j2se" java-vm-args="-Declipselink.archive.factory=de.justi.yagw2api.analyzer.utils.ArchiveFactoryImpl" />
+    <j2se version="1.7+" href="http://java.sun.com/products/autodl/j2se" />
     $dependencies
 </resources>
 <application-desc main-class="$mainClass"/>

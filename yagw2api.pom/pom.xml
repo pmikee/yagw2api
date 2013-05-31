@@ -127,12 +127,12 @@
 							<dnameC>DE</dnameC>
 							<verify>true</verify>
 							<keystoreConfig>
-								<delete>true</delete>
+								<delete>false</delete>
 								<gen>true</gen>
 							</keystoreConfig>
 						</sign>
-						<pack200>false</pack200>
-						<gzip>false</gzip>
+						<pack200>true</pack200>
+						<gzip>true</gzip>
 						<outputJarVersions>false</outputJarVersions>
 						<verbose>false</verbose>
 					</configuration>
