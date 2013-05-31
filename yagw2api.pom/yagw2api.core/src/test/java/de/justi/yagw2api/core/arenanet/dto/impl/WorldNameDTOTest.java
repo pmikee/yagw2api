@@ -14,30 +14,30 @@ public class WorldNameDTOTest {
 		final WorldNameDTO dto = new WorldNameDTO();
 		dto.id=1;
 		dto.name="Baruch-Bucht [SP]";
-		assertTrue(dto.getServerLocale().isPresent());
-		assertEquals(Locale.forLanguageTag("es"), dto.getServerLocale().get());
+		assertTrue(dto.getWorldLocale().isPresent());
+		assertEquals(Locale.forLanguageTag("es"), dto.getWorldLocale().get());
 		
 		final WorldNameDTO dto2 = new WorldNameDTO();
 		dto2.id=2;
 		dto2.name="Roche de l'Augure [FR]";
-		assertTrue(dto2.getServerLocale().isPresent());
-		assertEquals(Locale.forLanguageTag("fr"), dto2.getServerLocale().get());
+		assertTrue(dto2.getWorldLocale().isPresent());
+		assertEquals(Locale.forLanguageTag("fr"), dto2.getWorldLocale().get());
 
 		final WorldNameDTO dto3 = new WorldNameDTO();
 		dto3.id=3;
 		dto3.name="Miller's Sound [DE]";
-		assertTrue(dto3.getServerLocale().isPresent());
-		assertEquals(Locale.forLanguageTag("de"), dto3.getServerLocale().get());
+		assertTrue(dto3.getWorldLocale().isPresent());
+		assertEquals(Locale.forLanguageTag("de"), dto3.getWorldLocale().get());
 
 		final WorldNameDTO dto4 = new WorldNameDTO();
 		dto4.id=4;
 		dto4.name="Meer des Leids";
-		assertFalse(dto4.getServerLocale().isPresent());
+		assertFalse(dto4.getWorldLocale().isPresent());
 
 		final WorldNameDTO dto5 = new WorldNameDTO();
 		dto5.id=5;
 		dto5.name="Fisura de la Aflicción";
-		assertFalse(dto5.getServerLocale().isPresent());
+		assertFalse(dto5.getWorldLocale().isPresent());
 	}
 	
 

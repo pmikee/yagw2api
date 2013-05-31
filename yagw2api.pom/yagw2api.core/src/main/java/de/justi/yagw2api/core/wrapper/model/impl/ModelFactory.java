@@ -7,11 +7,17 @@ import static com.google.common.base.Preconditions.checkState;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
+import com.google.common.base.Optional;
+
 import de.justi.yagw2api.core.wrapper.model.IGuild;
 import de.justi.yagw2api.core.wrapper.model.IModelFactory;
 import de.justi.yagw2api.core.wrapper.model.IWorld;
+import de.justi.yagw2api.core.wrapper.model.IWorld.IWorldBuilder;
 
 class ModelFactory implements IModelFactory {
+	private static final Logger LOGGER = Logger.getLogger(ModelFactory.class);
 	private final Map<String, IGuild> guildsMappedById = new HashMap<String, IGuild>();
 	private final Map<Integer, IWorld> worldsMappedById = new HashMap<Integer, IWorld>();
 	
@@ -29,20 +35,21 @@ class ModelFactory implements IModelFactory {
 	}
 
 	@Override
-	public IWorld getOrCreateWorld(int id, String name) {
+	public Optional<IWorld> getWorld(int id) {
 		checkArgument(id > 0);
-		checkNotNull(name);
-		if(!this.worldsMappedById.containsKey(id)) {
-			synchronized (this) {
-				if(!this.worldsMappedById.containsKey(id)) {
-					this.worldsMappedById.put(id, new World(id, name));
-				}
-			}
-		}
-		checkState(this.worldsMappedById.containsKey(id));
-		final IWorld world = this.worldsMappedById.get(id);
-		world.setName(name);
-		return world;
+		return Optional.fromNullable(this.worldsMappedById.get(id));
+	}
+
+	@Override
+	public IWorldBuilder newWorldBuilder() {
+		return new World.WorldBuilder();
+	}
+
+	@Override
+	public void clearCache() {
+		LOGGER.warn("Going to clear cache of "+this.toString());
+		this.guildsMappedById.clear();
+		this.worldsMappedById.clear();
 	}
 
 }

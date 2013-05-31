@@ -31,11 +31,11 @@ class WorldNameDTO implements IWorldNameDTO{
 	}
 	
 	public String toString(){
-		return Objects.toStringHelper(this).add("id", this.id).add("name", this.name).add("locale",this.getServerLocale()).add("nameWithoutLocale", this.getNameWithoutLocale()).toString();
+		return Objects.toStringHelper(this).add("id", this.id).add("name", this.name).add("locale",this.getWorldLocale()).add("nameWithoutLocale", this.getNameWithoutLocale()).toString();
 	}
 
 	@Override
-	public Optional<Locale> getServerLocale() {
+	public Optional<Locale> getWorldLocale() {
 		final Matcher matcher = PATTERN.matcher(this.getName());
 		if(matcher.find()) {
 			if(matcher.group(3)!=null) {
@@ -62,5 +62,15 @@ class WorldNameDTO implements IWorldNameDTO{
 		}else {
 			return this.getName();
 		}
+	}
+
+	@Override
+	public boolean isEurope() {
+		return this.id >= 1000 && this.id <= 2000;
+	}
+
+	@Override
+	public boolean isNorthAmerica() {
+		return this.id >= 2000 && this.id <= 3000;
 	}
 }

@@ -60,7 +60,7 @@ class WVWSynchronizer extends AbstractScheduledService implements IHasChannel {
 		
 		final Map<String, IWVWMatch> matchesBuffer = new HashMap<String, IWVWMatch>();
 		for (IWVWMatchDTO matchDTO : matchesDto.getMatches()) {
-			match = WVW_MODEL_FACTORY.newMatchBuilder().fromMatchDTO(matchDTO, Locale.GERMAN).build();
+			match = WVW_MODEL_FACTORY.newMatchBuilder().fromMatchDTO(matchDTO, Locale.getDefault()).build();
 			match.getChannel().register(this);
 			matchesBuffer.put(match.getId(), match);
 			unmodifiableMatchReferencesBuffer.add(match);

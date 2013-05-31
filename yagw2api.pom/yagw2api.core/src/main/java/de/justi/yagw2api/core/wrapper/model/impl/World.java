@@ -2,14 +2,92 @@ package de.justi.yagw2api.core.wrapper.model.impl;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
+
+import java.util.Locale;
 
 import com.google.common.base.Objects;
+import com.google.common.base.Optional;
 
+import de.justi.yagw2api.core.YAGW2APICore;
+import de.justi.yagw2api.core.arenanet.dto.IWorldNameDTO;
+import de.justi.yagw2api.core.wrapper.model.IModelFactory;
 import de.justi.yagw2api.core.wrapper.model.IUnmodifiable;
 import de.justi.yagw2api.core.wrapper.model.IWorld;
+import de.justi.yagw2api.core.wrapper.model.types.IWorldLocationType;
+import de.justi.yagw2api.core.wrapper.model.types.WorldLocationType;
 
 
 class World implements IWorld {
+	private static final IModelFactory MODEL_FACTORY = YAGW2APICore.getInjector().getInstance(IModelFactory.class);
+	static final class WorldBuilder implements IWorld.IWorldBuilder{
+		private Optional<Integer> id = Optional.absent();
+		private Optional<Locale> locale = Optional.absent();
+		private Optional<IWorldLocationType> location = Optional.absent();
+		private Optional<String> name = Optional.absent();
+		
+		@Override
+		public IWorld build() {
+			checkState(this.location.isPresent());
+			checkState(this.id.isPresent());
+			checkState(this.id.get() > 0);
+			final Optional<IWorld> worldOptional = MODEL_FACTORY.getWorld(this.id.get());
+			checkState(!worldOptional.isPresent() || worldOptional.get() instanceof World);
+			final World world; 
+			if(worldOptional.isPresent()) {
+				world = (World) worldOptional.get();
+				checkState(world.getId() == this.id.get());
+				checkState((world.getWorldLocale() == null && !this.locale.isPresent()) || world.getWorldLocale().equals(this.locale.orNull()));
+				checkState(world.getWorldLocation().equals(this.location.get()));
+			}else {
+				world = new World(this.id.get(), this.locale.orNull(), this.location.get());
+			}
+			if(this.name.isPresent()) {
+				world.setName(this.name.get());
+			}
+			return world;
+		}
+
+		@Override
+		public IWorldBuilder fromDTO(IWorldNameDTO dto) {
+			checkArgument(dto.isEurope() ^ dto.isNorthAmerica());
+			if(dto.isEurope()){
+				this.worldLocation(WorldLocationType.EUROPE);
+			}else if(dto.isNorthAmerica()){
+				this.worldLocation(WorldLocationType.NORTH_AMERICA);
+			}
+			this.name(dto.getNameWithoutLocale());
+			this.worldLocale(dto.getWorldLocale().orNull());
+			this.id(dto.getId());
+			return this;
+		}
+
+		@Override
+		public IWorldBuilder worldLocation(IWorldLocationType location) {
+			this.location = Optional.fromNullable(location);
+			return this;
+		}
+
+		@Override
+		public IWorldBuilder name(String name) {			
+			this.name = Optional.fromNullable(name);
+			return this;
+		}
+
+		@Override
+		public IWorldBuilder id(int id) {
+			checkArgument(id > 0);
+			this.id = Optional.of(id);
+			return this;
+		}
+
+		@Override
+		public IWorldBuilder worldLocale(Locale locale) {
+			this.locale = Optional.fromNullable(locale);
+			return this;
+		}
+		
+	}
 	
 	class UnmodifiableWorld implements IUnmodifiable, IWorld{
 
@@ -19,7 +97,7 @@ class World implements IWorld {
 		}
 
 		@Override
-		public String getName() {
+		public Optional<String> getName() {
 			return World.this.getName();
 		}
 
@@ -47,16 +125,28 @@ class World implements IWorld {
 		public boolean equals(Object obj) {
 			return World.this.equals(obj);
 		}
+
+		@Override
+		public Optional<Locale> getWorldLocale() {
+			return World.this.getWorldLocale();
+		}
+
+		@Override
+		public IWorldLocationType getWorldLocation() {
+			return World.this.getWorldLocation();
+		}
 	}
 	
 	private final int id;	
-	private String name;
+	private Optional<String> name = Optional.absent();
+	private final Optional<Locale> locale;
+	private final IWorldLocationType location;
 	
-	public World(int id, String name) {
+	public World(int id, Locale locale, IWorldLocationType location) {
 		checkArgument(id > 0);
-		checkNotNull(name);
 		this.id = id;
-		this.name = name;
+		this.locale = Optional.fromNullable(locale);
+		this.location = location;
 	}
 	
 	@Override
@@ -65,7 +155,7 @@ class World implements IWorld {
 	}
 
 	@Override
-	public String getName() {
+	public Optional<String> getName() {
 		return this.name;
 	}
 	
@@ -75,7 +165,7 @@ class World implements IWorld {
 	@Override
 	public void setName(String name) {
 		checkNotNull(name);
-		this.name = name;
+		this.name = Optional.of(name);
 	}
 	
 
@@ -97,6 +187,16 @@ class World implements IWorld {
 			final IWorld world = (IWorld)obj;
 			return Objects.equal(this.id, world.getId());
 		}
+	}
+
+	@Override
+	public Optional<Locale> getWorldLocale() {
+		return this.locale;
+	}
+
+	@Override
+	public IWorldLocationType getWorldLocation() {
+		return this.location;
 	}
 
 }

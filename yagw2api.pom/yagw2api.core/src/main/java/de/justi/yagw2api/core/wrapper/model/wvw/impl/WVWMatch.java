@@ -153,6 +153,16 @@ class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 
 		@Override
 		public IWVWMatch build() {
+			checkState(this.id.isPresent());
+			checkState(this.centerMap.isPresent());
+			checkState(this.redMap.isPresent());
+			checkState(this.greenMap.isPresent());
+			checkState(this.blueMap.isPresent());
+			checkState(this.redWorld.isPresent());
+			checkState(this.greenWorld.isPresent());
+			checkState(this.blueWorld.isPresent());
+			
+			
 			final IWVWMatch match = new WVWMatch(this.id.get(), this.redWorld.get(), this.greenWorld.get(), this.blueWorld.get(), this.centerMap.get(),
 					this.redMap.get(), this.greenMap.get(), this.blueMap.get());
 			if (this.fromMatchDTO.isPresent()) {
@@ -202,9 +212,22 @@ class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 			checkState(this.greenMap.get().getType().isGreen());
 			this.blueMap = Optional.of(WVW_MODEL_FACTORY.newMapBuilder().fromDTO(dto.getDetails().get().getBlueMap()).build());
 			checkState(this.blueMap.get().getType().isBlue());
-			this.redWorld = Optional.of(MODEL_FACTORY.getOrCreateWorld(dto.getRedWorldId(), dto.getRedWorldName(locale).get().getName()));
-			this.greenWorld = Optional.of(MODEL_FACTORY.getOrCreateWorld(dto.getGreenWorldId(), dto.getGreenWorldName(locale).get().getName()));
-			this.blueWorld = Optional.of(MODEL_FACTORY.getOrCreateWorld(dto.getBlueWorldId(), dto.getBlueWorldName(locale).get().getName()));
+			
+			this.redWorld = MODEL_FACTORY.getWorld(dto.getRedWorldId());
+			if(!this.redWorld.isPresent()) {
+				checkArgument(dto.getRedWorldName(Locale.getDefault()).isPresent());
+				this.redWorld=Optional.of(MODEL_FACTORY.newWorldBuilder().fromDTO(dto.getRedWorldName(Locale.getDefault()).get()).build());
+			}
+			this.greenWorld = MODEL_FACTORY.getWorld(dto.getGreenWorldId());
+			if(!this.greenWorld.isPresent()) {
+				checkArgument(dto.getGreenWorldName(Locale.getDefault()).isPresent());
+				this.greenWorld=Optional.of(MODEL_FACTORY.newWorldBuilder().fromDTO(dto.getGreenWorldName(Locale.getDefault()).get()).build());
+			}
+			this.blueWorld = MODEL_FACTORY.getWorld(dto.getBlueWorldId());
+			if(!this.blueWorld.isPresent()) {
+				checkArgument(dto.getBlueWorldName(Locale.getDefault()).isPresent());
+				this.blueWorld=Optional.of(MODEL_FACTORY.newWorldBuilder().fromDTO(dto.getBlueWorldName(Locale.getDefault()).get()).build());
+			}
 
 			final Optional<IWVWMatchDetailsDTO> details = dto.getDetails();
 			if (details.isPresent()) {
@@ -365,13 +388,13 @@ class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 		checkState(this.greenWorld != null);
 		checkState(this.blueWorld != null);
 		final Set<IWorld> result = new HashSet<IWorld>();
-		if (this.greenWorld.getName().matches(searchPattern.toString())) {
+		if (this.greenWorld.getName().isPresent() && this.greenWorld.getName().get().matches(searchPattern.toString())) {
 			result.add(this.greenWorld);
 		}
-		if (this.blueWorld.getName().matches(searchPattern.toString())) {
+		if (this.blueWorld.getName().isPresent() && this.blueWorld.getName().get().matches(searchPattern.toString())) {
 			result.add(this.blueWorld);
 		}
-		if (this.redWorld.getName().matches(searchPattern.toString())) {
+		if (this.redWorld.getName().isPresent() && this.redWorld.getName().get().matches(searchPattern.toString())) {
 			result.add(this.redWorld);
 		}
 		return ImmutableSet.copyOf(result);

@@ -7,8 +7,9 @@ import com.google.common.base.Optional;
 
 public interface IWorldNameDTO {
 	int getId();
-	
+	boolean isEurope();
+	boolean isNorthAmerica();
 	String getNameWithoutLocale();
 	String getName();
-	Optional<Locale> getServerLocale();
+	Optional<Locale> getWorldLocale();
 }

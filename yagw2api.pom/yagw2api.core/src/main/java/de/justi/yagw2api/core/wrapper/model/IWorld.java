@@ -1,9 +1,29 @@
 package de.justi.yagw2api.core.wrapper.model;
 
+import java.util.Locale;
+
+import com.google.common.base.Optional;
+
+import de.justi.yagw2api.core.arenanet.dto.IWorldNameDTO;
+import de.justi.yagw2api.core.wrapper.model.types.IWorldLocationType;
+
 public interface IWorld {
+	
+	static interface IWorldBuilder {
+		IWorld build();
+		IWorldBuilder fromDTO(IWorldNameDTO dto);
+		IWorldBuilder worldLocation(IWorldLocationType location);
+		IWorldBuilder name(String name);
+		IWorldBuilder id(int id);
+		IWorldBuilder worldLocale(Locale locale);
+	}
+	
 	int getId();
-	String getName();
+	Optional<String> getName();
 	void setName(String name);
+	
+	Optional<Locale> getWorldLocale();
+	IWorldLocationType getWorldLocation();
 	
 	IWorld createUnmodifiableReference();
 }

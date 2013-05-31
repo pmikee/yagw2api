@@ -9,10 +9,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.justi.yagw2api.analyzer.AbstractAnalyzerTest;
-import de.justi.yagw2api.analyzer.entities.IWorldEnityDAO;
 import de.justi.yagw2api.core.YAGW2APICore;
 import de.justi.yagw2api.core.wrapper.model.IModelFactory;
 import de.justi.yagw2api.core.wrapper.model.IWorld;
+import de.justi.yagw2api.core.wrapper.model.types.WorldLocationType;
 
 public class WVWWorldEntityDAOTest extends AbstractAnalyzerTest {
 
@@ -25,10 +25,11 @@ public class WVWWorldEntityDAOTest extends AbstractAnalyzerTest {
 
 	@Before
 	public final void prepareWorlds4Test() {
-		this.world1 = this.modelFactory.getOrCreateWorld(1000, "test");
-		this.world2 = this.modelFactory.getOrCreateWorld(1001, "test2");
-		this.world3 = this.modelFactory.getOrCreateWorld(1002, "test3");
-		this.world4 = this.modelFactory.getOrCreateWorld(2000, "abc");
+		this.modelFactory.clearCache();
+		this.world1 = this.modelFactory.newWorldBuilder().id(1000).name("test").worldLocation(WorldLocationType.EUROPE).build();
+		this.world2 = this.modelFactory.newWorldBuilder().id(1001).name("test2").worldLocation(WorldLocationType.EUROPE).build();
+		this.world3 = this.modelFactory.newWorldBuilder().id(1002).name("test3").worldLocation(WorldLocationType.EUROPE).build();
+		this.world4 = this.modelFactory.newWorldBuilder().id(2000).name("abc").worldLocation(WorldLocationType.NORTH_AMERICA).build();
 	}
 
 	@Test

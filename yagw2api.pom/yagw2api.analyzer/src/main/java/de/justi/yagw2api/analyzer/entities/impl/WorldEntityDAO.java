@@ -103,7 +103,7 @@ class WorldEntityDAO implements IWorldEnityDAO {
 				tx.begin();
 			}
 			newEntity = new WorldEntity();
-			newEntity.setNameDE(world.getName());
+			newEntity.setNameDE(world.getName().get());
 			newEntity.setOriginId(world.getId());
 			YAGW2APIAnalyzerPersistence.getDefaultEM().persist(newEntity);
 			if (isNewTransaction) {
