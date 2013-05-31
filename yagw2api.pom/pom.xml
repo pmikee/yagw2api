@@ -112,11 +112,12 @@
 					<artifactId>webstart-maven-plugin</artifactId>
 					<version>1.0-beta-3</version>
 					<configuration>
+						<codebase>${project.url}/webstart</codebase>
 						<libPath>lib</libPath>
 						<excludeTransitive>false</excludeTransitive>
 						<unsignAlreadySignedJars>true</unsignAlreadySignedJars>
 						<sign>
-							<keystore>yagw2api</keystore>
+							<keystore>${project.basedir}/src/main/jnlp/yagw2api.jks</keystore>
 							<keypass>gwodh!</keypass>
 							<storepass>wvwitb!</storepass>
 							<alias>yagw2api</alias>

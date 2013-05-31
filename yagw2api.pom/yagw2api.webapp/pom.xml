@@ -8,7 +8,7 @@
 	</parent>
 	<artifactId>yagw2api.webapp</artifactId>
 	<packaging>war</packaging>
-	<url>http://yagw2api.appspot.com/webstart</url>
+	<name>yagw2api.sample.jnlp</name>
 	<build>
 		<plugins>
 			<plugin>
@@ -30,6 +30,8 @@
 				<configuration>
 					<jnlpFiles>
 						<jnlpFile>
+							<outputFilename>yagw2api.sample.jnlp</outputFilename>
+							<templateFilename>template.vm</templateFilename>
 							<jarResources>
 								<jarResource>
 									<groupId>de.justi</groupId>
@@ -45,7 +47,8 @@
 		</plugins>
 		<pluginManagement>
 			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
