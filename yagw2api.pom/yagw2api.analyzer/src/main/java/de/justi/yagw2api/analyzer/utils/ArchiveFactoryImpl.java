@@ -2,7 +2,6 @@ package de.justi.yagw2api.analyzer.utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.JarURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -10,9 +9,7 @@ import java.net.URL;
 import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.jar.JarInputStream;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.eclipse.persistence.internal.helper.Helper;
 import org.eclipse.persistence.internal.jpa.deployment.DirectoryArchive;
@@ -25,7 +22,8 @@ import org.eclipse.persistence.jpa.ArchiveFactory;
 
 public class ArchiveFactoryImpl extends org.eclipse.persistence.internal.jpa.deployment.ArchiveFactoryImpl implements ArchiveFactory {
 	private static final org.apache.log4j.Logger LOGGER = org.apache.log4j.Logger.getLogger(ArchiveFactoryImpl.class);
-	public Archive createArchive(URL rootUrl, String descriptorLocation, Map properties) throws URISyntaxException, IOException {
+	@Override
+	public Archive createArchive(URL rootUrl, String descriptorLocation, @SuppressWarnings("rawtypes") Map properties) throws URISyntaxException, IOException {
 		logger.entering("ArchiveFactoryImpl", "createArchive", new Object[] { rootUrl, descriptorLocation });
 
 		if (rootUrl == null) {
@@ -90,7 +88,7 @@ public class ArchiveFactoryImpl extends org.eclipse.persistence.internal.jpa.dep
 			// code in Archive class.
 		} else if ("http".equals(protocol) && rootUrl.toExternalForm().endsWith(".jar") && getClass().getClassLoader().getClass().getName().indexOf("JNLP") != -1) {
 			LOGGER.warn("Injecting "+HTTPClasspathForWebStartArchive.class.getName());
-			result = new HTTPClasspathForWebStartArchive(rootUrl);
+			result = new HTTPClasspathForWebStartArchive(rootUrl,this.logger);
 		} else if (isJarInputStream(rootUrl)) {
 			result = new JarInputStreamURLArchive(rootUrl, descriptorLocation);
 		} else {
