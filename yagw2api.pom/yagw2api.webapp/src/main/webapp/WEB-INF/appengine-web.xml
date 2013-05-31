@@ -6,4 +6,15 @@
 	<system-properties>
 		<property name="java.util.logging.config.file" value="WEB-INF/logging.properties" />
 	</system-properties>
+	<static-files>
+		<include path="/**.jnlp" expiration="1m" />
+		<include path="/**.war" expiration="1m" />
+		<include path="/**.css" />
+		<include path="/**.html" />
+		<include path="/**.js" />
+		<include path="/**.png" />
+		<include path="/**.gif" />
+		<include path="/**.jpg" />
+		<include path="/**.jpeg" />
+	</static-files>
 </appengine-web-app>

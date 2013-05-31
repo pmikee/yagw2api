@@ -1,0 +1,4 @@
+eclipse.preferences.version=1
+jarsExcludedFromWebInfLib=
+warSrcDir=target/yagw2api.webapp-0.0.1-SNAPSHOT
+warSrcDirIsOutput=true
