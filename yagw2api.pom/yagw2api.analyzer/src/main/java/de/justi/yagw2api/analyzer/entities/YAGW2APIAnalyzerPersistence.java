@@ -3,11 +3,15 @@ package de.justi.yagw2api.analyzer.entities;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 import org.apache.log4j.Logger;
+import org.eclipse.persistence.config.PersistenceUnitProperties;
 import org.eclipse.persistence.config.SystemProperties;
 import org.eclipse.persistence.exceptions.PersistenceUnitLoadingException;
 import org.eclipse.persistence.jpa.ArchiveFactory;
@@ -16,7 +20,7 @@ import de.justi.yagw2api.analyzer.YAGW2APIAnalyzer;
 import de.justi.yagw2api.analyzer.utils.ArchiveFactoryImpl;
 
 public enum YAGW2APIAnalyzerPersistence {
-	DEFAULT("de.justi.yagw2api"), TEST("de.justi.yagw2api.test");
+	DEFAULT("yagw2api"), TEST("yagw2api_test");
 
 	private static final Logger LOGGER = Logger.getLogger(YAGW2APIAnalyzerPersistence.class);
 
@@ -49,7 +53,9 @@ public enum YAGW2APIAnalyzerPersistence {
 						LOGGER.info(ArchiveFactory.class.getName() + " to use from vmarg: " + factoryClassName);
 					}
 					try {
-						this.emf = Persistence.createEntityManagerFactory(this.persistenceUnitName);
+						Map<String, String> properties = new HashMap<String, String>();
+						properties.put(PersistenceUnitProperties.ECLIPSELINK_PERSISTENCE_XML, "META-INF/persistence.xml");
+						this.emf = Persistence.createEntityManagerFactory(this.persistenceUnitName, properties);
 					} catch (PersistenceUnitLoadingException e) {
 						LOGGER.fatal("Unexpected Exception thrown during creation of " + EntityManagerFactory.class.getSimpleName() + ". Resource name was " + e.getResourceName(), e);
 						this.emf = null;
