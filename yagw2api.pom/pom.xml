@@ -6,8 +6,6 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Parent POM for "Yet another GW2 API"</name>
-
-	<url>http://yagw2api.appspot.com</url>
 	<organization>
 		<name>Julian Stitz</name>
 	</organization>
@@ -133,8 +131,8 @@
 								<gen>true</gen>
 							</keystoreConfig>
 						</sign>
-						<pack200>true</pack200>
-						<gzip>true</gzip>
+						<pack200>false</pack200>
+						<gzip>false</gzip>
 						<outputJarVersions>false</outputJarVersions>
 						<verbose>false</verbose>
 					</configuration>
@@ -143,23 +141,9 @@
 		</pluginManagement>
 	</build>
 
-	<dependencies>
-		<dependency>
-			<artifactId>junit</artifactId>
-			<groupId>junit</groupId>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-		</dependency>
-	</dependencies>
-
 	<dependencyManagement>
 		<dependencies>
+	
 			<dependency>
 				<artifactId>yagw2api.core</artifactId>
 				<groupId>de.justi</groupId>

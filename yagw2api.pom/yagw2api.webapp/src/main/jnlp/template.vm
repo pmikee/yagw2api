@@ -20,18 +20,14 @@
 
 	<shortcut online="true">
     	<desktop/>
-    	<menu submenu="$project.name"/>
+    	<menu submenu="Yet another GW2 API - Sample Application"/>
   	</shortcut>
-  	<!-- 
-	<icon href="icon.png" kind="default" />
-	<icon href="splash.png" kind="splash" />
-	-->
-
+	
+	<offline-allowed/>
 </information>
 
 <security>
      <all-permissions/>
-     <j2ee-application-client-permissions/>
 </security>
 
 <resources>

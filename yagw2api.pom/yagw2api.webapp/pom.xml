@@ -9,6 +9,7 @@
 	<artifactId>yagw2api.webapp</artifactId>
 	<packaging>war</packaging>
 	<name>yagw2api.sample.jnlp</name>
+	<url>http://yagw2api.appspot.com</url>
 	<build>
 		<plugins>
 			<plugin>
@@ -84,4 +85,11 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+	<dependencies>
+		<dependency>
+			<groupId>org.codehaus.mojo.webstart</groupId>
+			<artifactId>webstart-jnlp-servlet</artifactId>
+			<version>1.0-6.0-02_ea_b02</version>
+		</dependency>
+	</dependencies>
 </project>
