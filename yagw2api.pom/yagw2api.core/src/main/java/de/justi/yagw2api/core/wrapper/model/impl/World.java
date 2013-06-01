@@ -160,7 +160,7 @@ class World implements IWorld {
 	}
 	
 	public String toString() {
-		return Objects.toStringHelper(this).add("id", this.id).add("name", this.name).toString();
+		return Objects.toStringHelper(this).add("id", this.id).add("name", this.name).add("locale", this.locale).add("location", this.location).toString();
 	}
 	@Override
 	public void setName(String name) {
