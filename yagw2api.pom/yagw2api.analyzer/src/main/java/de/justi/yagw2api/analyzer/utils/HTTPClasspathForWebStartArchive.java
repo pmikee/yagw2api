@@ -12,12 +12,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.eclipse.persistence.config.PersistenceUnitProperties;
 import org.eclipse.persistence.internal.jpa.deployment.ArchiveBase;
 import org.eclipse.persistence.jpa.Archive;
 
 public class HTTPClasspathForWebStartArchive extends ArchiveBase implements Archive {
 	private static final org.apache.log4j.Logger LOGGER = org.apache.log4j.Logger.getLogger(HTTPClasspathForWebStartArchive.class);
-	private static final String[] POSSIBLE_ENTRIES = new String[] { "META-INF/persistence.xml" };
+	private static final String[] POSSIBLE_ENTRIES = new String[] { PersistenceUnitProperties.ECLIPSELINK_PERSISTENCE_XML_DEFAULT };
 	
 	private final URL url;
 	private final ClassLoader loader;
@@ -27,7 +28,7 @@ public class HTTPClasspathForWebStartArchive extends ArchiveBase implements Arch
 	private Logger logger;
 
 	public HTTPClasspathForWebStartArchive(URL url, Logger logger, String descriptorLocation) throws IOException {
-		super(checkNotNull(url), checkNotNull(descriptorLocation));
+		super(checkNotNull(url,"URL should not be null."), checkNotNull(descriptorLocation, "DescriptorLocation should not be null"));
 		this.logger = checkNotNull(logger);
 		this.logger.entering("HTTPClasspathForWebStartArchive", "HTTPClasspathForWebStartArchive", // NOI18N
 				new Object[] { url });		
