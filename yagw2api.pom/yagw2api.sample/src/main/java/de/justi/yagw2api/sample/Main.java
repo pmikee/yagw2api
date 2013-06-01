@@ -35,7 +35,8 @@ public class Main {
 					
 
 			final MainWindow mainWindow = new MainWindow();			
-			mainWindow.getModel().wireUp(apiWrapper, apiWrapper.getAllMatches().iterator().next().getCenterMap());
+			//mainWindow.getModel().wireUp(apiWrapper, apiWrapper.getAllMatches().iterator().next().getCenterMap());
+			mainWindow.getModel().wireUp(apiWrapper);
 			mainWindow.setVisible(true);
 		} catch (Exception e) {
 			LOGGER.fatal("Uncought exception while running " + Main.class.getName() + "#main(String[])", e);

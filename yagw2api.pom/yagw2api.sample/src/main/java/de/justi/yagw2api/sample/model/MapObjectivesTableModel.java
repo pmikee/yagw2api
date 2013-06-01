@@ -14,7 +14,8 @@ import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveCaptureEvent
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveEndOfBuffEvent;
 
 public class MapObjectivesTableModel extends AbstractTableModel implements IWVWMapListener{
-
+	private static final long serialVersionUID = -4657108157862724940L;
+	
 	private List<IWVWObjective> content = new CopyOnWriteArrayList<IWVWObjective>();
 	
 	public void wireUp(IWVWWrapper wrapper, IWVWMap map) {
@@ -38,9 +39,9 @@ public class MapObjectivesTableModel extends AbstractTableModel implements IWVWM
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		switch(columnIndex) {
 			case 0:
-				return this.content.get(rowIndex).getLabel();
+				return this.content.get(rowIndex).getLabel().get();
 			case 1:
-				return this.content.get(rowIndex).getOwner();
+				return this.content.get(rowIndex).getOwner().get().getName().get();
 			default:
 				throw new IllegalArgumentException("Unknown column: "+columnIndex);
 		}
