@@ -35,8 +35,22 @@
 		<module>yagw2api.core</module>
 		<module>yagw2api.analyzer</module>
 		<module>yagw2api.sample</module>
-		<module>yagw2api.webapp</module>
 	</modules>
+
+	<profiles>
+		<profile>
+			<id>complete</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<modules>
+				<module>yagw2api.core</module>
+				<module>yagw2api.analyzer</module>
+				<module>yagw2api.sample</module>
+				<module>yagw2api.webapp</module>
+			</modules>
+		</profile>
+	</profiles>
 
 	<build>
 		<plugins>
@@ -143,7 +157,7 @@
 
 	<dependencyManagement>
 		<dependencies>
-	
+
 			<dependency>
 				<artifactId>yagw2api.core</artifactId>
 				<groupId>de.justi</groupId>
