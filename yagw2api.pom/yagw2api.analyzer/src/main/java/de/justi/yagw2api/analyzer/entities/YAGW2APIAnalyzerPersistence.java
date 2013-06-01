@@ -11,7 +11,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 import org.apache.log4j.Logger;
-import org.eclipse.persistence.config.PersistenceUnitProperties;
 import org.eclipse.persistence.config.SystemProperties;
 import org.eclipse.persistence.exceptions.PersistenceUnitLoadingException;
 import org.eclipse.persistence.jpa.ArchiveFactory;
@@ -54,7 +53,6 @@ public enum YAGW2APIAnalyzerPersistence {
 					}
 					try {
 						Map<String, String> properties = new HashMap<String, String>();
-						properties.put(PersistenceUnitProperties.ECLIPSELINK_PERSISTENCE_XML, "META-INF/persistence.xml");
 						this.emf = Persistence.createEntityManagerFactory(this.persistenceUnitName, properties);
 					} catch (PersistenceUnitLoadingException e) {
 						LOGGER.fatal("Unexpected Exception thrown during creation of " + EntityManagerFactory.class.getSimpleName() + ". Resource name was " + e.getResourceName(), e);
