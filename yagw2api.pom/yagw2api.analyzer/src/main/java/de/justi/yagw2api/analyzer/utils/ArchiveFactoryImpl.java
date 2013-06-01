@@ -87,8 +87,8 @@ public class ArchiveFactoryImpl extends org.eclipse.persistence.internal.jpa.dep
 			// whereas needs to load Resource from jar using JNLP classloader -
 			// code in Archive class.
 		} else if ("http".equals(protocol) && rootUrl.toExternalForm().endsWith(".jar") && getClass().getClassLoader().getClass().getName().indexOf("JNLP") != -1) {
-			LOGGER.warn("Injecting "+HTTPClasspathForWebStartArchive.class.getName());
-			result = new HTTPClasspathForWebStartArchive(rootUrl,this.logger);
+			LOGGER.warn("Injecting "+HTTPClasspathForWebStartArchive.class.getName()+" for rootUrl="+rootUrl+" and descriptorLocation="+descriptorLocation);
+			result = new HTTPClasspathForWebStartArchive(rootUrl,this.logger,descriptorLocation);
 		} else if (isJarInputStream(rootUrl)) {
 			result = new JarInputStreamURLArchive(rootUrl, descriptorLocation);
 		} else {
