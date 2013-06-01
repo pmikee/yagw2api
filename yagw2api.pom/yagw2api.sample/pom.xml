@@ -25,6 +25,9 @@
 								<manifest>
 									<mainClass>de.justi.yagw2api.sample.Main</mainClass>
 								</manifest>
+								<manifestEntries>
+									<SplashScreen-Image>yagw2api_splash.jpg</SplashScreen-Image>
+								</manifestEntries>
 							</archive>
 							<descriptorRefs>
 								<descriptorRef>jar-with-dependencies</descriptorRef>

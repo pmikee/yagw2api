@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <jnlp
-    spec="1.0+"
+    spec="6.0+"
     codebase="$jnlpCodebase"
     href="$outputFile">
 
@@ -22,6 +22,9 @@
     	<desktop/>
     	<menu submenu="Yet another GW2 API - Sample Application"/>
   	</shortcut>
+	
+	<icon href="yagw2api_splash.jpg" kind="splash"/>
+	<update check="timeout" policy="always"/>
 	
 	<offline-allowed/>
 </information>
