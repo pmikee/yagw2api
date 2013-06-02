@@ -178,16 +178,16 @@ public class MainWindow extends AbstractWindow {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				final Optional<IWVWMatch> match = MainWindow.this.matchModel.getMatch(MainWindow.this.selectionTable.getSelectedRow());
+				final Optional<IWVWMatch> match = MainWindow.this.matchModel.getMatch(MainWindow.this.selectionTable.convertRowIndexToModel(MainWindow.this.selectionTable.getSelectedRow()));
 				if (match.isPresent()) {
-					getAllMapsModel().wireUp(Main.getWrapper(), match.get().getCenterMap(), match.get().getGreenMap(), match.get().getBlueMap(), match.get().getRedMap());
-					getEternalMapModel().wireUp(Main.getWrapper(), match.get().getCenterMap());
-					getGreenMapModel().wireUp(Main.getWrapper(), match.get().getGreenMap());
-					getBlueMapModel().wireUp(Main.getWrapper(), match.get().getBlueMap());
-					getRedMapModel().wireUp(Main.getWrapper(), match.get().getRedMap());
-					getTabPane().setTitleAt(3, match.get().getGreenWorld().getName().get() + " (grüne Grenzlande)");
-					getTabPane().setTitleAt(4, match.get().getBlueWorld().getName().get() + " (blaue Grenzlande)");
-					getTabPane().setTitleAt(5, match.get().getRedWorld().getName().get() + " (rote Grenzlande)");
+					MainWindow.this.getAllMapsModel().wireUp(Main.getWrapper(), match.get().getCenterMap(), match.get().getGreenMap(), match.get().getBlueMap(), match.get().getRedMap());
+					MainWindow.this.getEternalMapModel().wireUp(Main.getWrapper(), match.get().getCenterMap());
+					MainWindow.this.getGreenMapModel().wireUp(Main.getWrapper(), match.get().getGreenMap());
+					MainWindow.this.getBlueMapModel().wireUp(Main.getWrapper(), match.get().getBlueMap());
+					MainWindow.this.getRedMapModel().wireUp(Main.getWrapper(), match.get().getRedMap());
+					MainWindow.this.getTabPane().setTitleAt(3, match.get().getGreenWorld().getName().get() + " (grüne Grenzlande)");
+					MainWindow.this.getTabPane().setTitleAt(4, match.get().getBlueWorld().getName().get() + " (blaue Grenzlande)");
+					MainWindow.this.getTabPane().setTitleAt(5, match.get().getRedWorld().getName().get() + " (rote Grenzlande)");
 				}
 			}
 		});
