@@ -5,10 +5,13 @@ import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.table.AbstractTableModel;
 
 import com.google.common.base.Optional;
+import com.google.common.util.concurrent.AbstractScheduledService;
+import com.google.common.util.concurrent.Service;
 
 import de.justi.yagw2api.core.wrapper.IWVWMapListener;
 import de.justi.yagw2api.core.wrapper.IWVWWrapper;
@@ -24,6 +27,30 @@ public class MapObjectivesTableModel extends AbstractTableModel implements IWVWM
 	final DateFormat			DF					= DateFormat.getTimeInstance(DateFormat.LONG);
 
 	private List<IWVWObjective>	content				= new CopyOnWriteArrayList<IWVWObjective>();
+	
+	private Service service;
+	
+	public MapObjectivesTableModel() {
+		this.service = new AbstractScheduledService() {
+			@Override
+			protected void runOneIteration() throws Exception {
+				int row = 0;
+				for (IWVWObjective content : MapObjectivesTableModel.this.content) {
+					if(content.getRemainingBuffDuration(TimeUnit.SECONDS) > 0) {
+						MapObjectivesTableModel.this.fireTableRowsUpdated(row, row);
+					}
+					row++;
+				}
+			}
+
+			@Override
+			protected Scheduler scheduler() {
+				return Scheduler.newFixedDelaySchedule(0, 1, TimeUnit.SECONDS);
+			}
+			
+		};
+		this.service.startAndWait();
+	}
 
 	public void wireUp(IWVWWrapper wrapper, IWVWMap map) {
 		this.content.clear();
@@ -71,7 +98,8 @@ public class MapObjectivesTableModel extends AbstractTableModel implements IWVWM
 				} else {
 					return "unknown";
 				}
-
+			case 4:
+				return this.content.get(rowIndex).getRemainingBuffDuration(TimeUnit.SECONDS)+"s";
 			default:
 				throw new IllegalArgumentException("Unknown column: " + columnIndex);
 		}

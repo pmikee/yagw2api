@@ -83,8 +83,11 @@ public class MainWindow extends AbstractWindow {
 		c3.setHeaderValue("Besitzer");
 		tcm.addColumn(c3);
 		final TableColumn c4 = new TableColumn(3);
-		c4.setHeaderValue("Buff");
+		c4.setHeaderValue("Buffende");
 		tcm.addColumn(c4);
+		final TableColumn c5 = new TableColumn(4);
+		c5.setHeaderValue("Verbleibender Buff");
+		tcm.addColumn(c5);
 
 		return tcm;
 	}
