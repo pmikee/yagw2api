@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Comparator;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -152,7 +151,15 @@ public class MainWindow extends AbstractWindow {
 		eternalPanel.setLayout(new BorderLayout());
 		eternalPanel.add(new JLabel("Punkte Ewige Schlachtfelder"), BorderLayout.NORTH);
 
-		eternalTable = new JTable(this.eternalMapModel, this.newMapTCM());
+		this.eternalTable = new JTable(this.eternalMapModel, this.newMapTCM());
+		
+		final TableRowSorter<MapObjectivesTableModel> sorter = new TableRowSorter<MapObjectivesTableModel>(this.eternalMapModel);
+		this.eternalTable.setRowSorter(sorter);
+		sorter.setSortsOnUpdates(true);
+		for(int col = 0; col < this.eternalMapModel.getColumnCount(); col++) {
+			sorter.setComparator(col, this.eternalMapModel.getColumnComparator(col));
+		}
+		
 		eternalPanel.add(new JScrollPane(this.eternalTable), BorderLayout.CENTER);
 		return eternalPanel;
 	}
@@ -162,7 +169,15 @@ public class MainWindow extends AbstractWindow {
 		greenPanel.setLayout(new BorderLayout());
 		greenPanel.add(new JLabel("Punkte Grüne Grenzlande"), BorderLayout.NORTH);
 
-		greenTable = new JTable(this.greenMapModel, this.newMapTCM());
+		this.greenTable = new JTable(this.greenMapModel, this.newMapTCM());
+		
+		final TableRowSorter<MapObjectivesTableModel> sorter = new TableRowSorter<MapObjectivesTableModel>(this.greenMapModel);
+		this.greenTable.setRowSorter(sorter);
+		sorter.setSortsOnUpdates(true);
+		for(int col = 0; col < this.greenMapModel.getColumnCount(); col++) {
+			sorter.setComparator(col, this.greenMapModel.getColumnComparator(col));
+		}
+		
 		greenPanel.add(new JScrollPane(this.greenTable), BorderLayout.CENTER);
 		return greenPanel;
 	}
@@ -172,7 +187,15 @@ public class MainWindow extends AbstractWindow {
 		bluePanel.setLayout(new BorderLayout());
 		bluePanel.add(new JLabel("Punkte Blaue Grenzlande"), BorderLayout.NORTH);
 
-		blueTable = new JTable(this.blueMapModel, this.newMapTCM());
+		this.blueTable = new JTable(this.blueMapModel, this.newMapTCM());
+		
+		final TableRowSorter<MapObjectivesTableModel> sorter = new TableRowSorter<MapObjectivesTableModel>(this.blueMapModel);
+		this.blueTable.setRowSorter(sorter);
+		sorter.setSortsOnUpdates(true);
+		for(int col = 0; col < this.blueMapModel.getColumnCount(); col++) {
+			sorter.setComparator(col, this.blueMapModel.getColumnComparator(col));
+		}
+		
 		bluePanel.add(new JScrollPane(this.blueTable), BorderLayout.CENTER);
 		return bluePanel;
 	}
@@ -182,7 +205,15 @@ public class MainWindow extends AbstractWindow {
 		redPanel.setLayout(new BorderLayout());
 		redPanel.add(new JLabel("Punkte Rote Grenzlande"), BorderLayout.NORTH);
 
-		redTable = new JTable(this.redMapModel, this.newMapTCM());
+		this.redTable = new JTable(this.redMapModel, this.newMapTCM());
+		
+		final TableRowSorter<MapObjectivesTableModel> sorter = new TableRowSorter<MapObjectivesTableModel>(this.redMapModel);
+		this.redTable.setRowSorter(sorter);
+		sorter.setSortsOnUpdates(true);
+		for(int col = 0; col < this.redMapModel.getColumnCount(); col++) {
+			sorter.setComparator(col, this.redMapModel.getColumnComparator(col));
+		}
+		
 		redPanel.add(new JScrollPane(this.redTable), BorderLayout.CENTER);
 		return redPanel;
 	}

@@ -2,6 +2,7 @@ package de.justi.yagw2api.sample.model;
 
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -42,6 +43,18 @@ public class MapObjectivesTableModel extends AbstractTableModel implements IWVWM
 		return this.content.size();
 	}
 
+	public Comparator<?> getColumnComparator(int col){
+		switch(col) {
+			default:
+				return new Comparator<Object>() {
+					@Override
+					public int compare(Object o1, Object o2) {
+						return String.valueOf(o1).compareTo(String.valueOf(o2));
+					}
+				};
+		}	
+	}
+	
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		switch (columnIndex) {
