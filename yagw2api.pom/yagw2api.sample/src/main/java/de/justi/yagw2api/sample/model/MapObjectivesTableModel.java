@@ -64,7 +64,7 @@ public class MapObjectivesTableModel extends AbstractTableModel implements IWVWM
 
 	@Override
 	public int getColumnCount() {
-		return 4;
+		return 6;
 	}
 
 	@Override
@@ -74,6 +74,13 @@ public class MapObjectivesTableModel extends AbstractTableModel implements IWVWM
 
 	public Comparator<?> getColumnComparator(int col){
 		switch(col) {
+			case 3:
+				return new Comparator<Integer>() {
+					@Override
+					public int compare(Integer o1, Integer o2) {
+						return o1.compareTo(o2);
+					}
+				};
 			default:
 				return new Comparator<Object>() {
 					@Override
