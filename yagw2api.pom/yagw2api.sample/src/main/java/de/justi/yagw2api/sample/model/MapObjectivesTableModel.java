@@ -1,11 +1,13 @@
 package de.justi.yagw2api.sample.model;
 
 import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.TimeUnit;
 
 import javax.swing.table.AbstractTableModel;
+
+import com.google.common.base.Optional;
 
 import de.justi.yagw2api.core.wrapper.IWVWMapListener;
 import de.justi.yagw2api.core.wrapper.IWVWWrapper;
@@ -16,11 +18,11 @@ import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveCaptureEvent
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveEndOfBuffEvent;
 
 public class MapObjectivesTableModel extends AbstractTableModel implements IWVWMapListener {
-	private static final long serialVersionUID = -4657108157862724940L;
-	
-	final DateFormat DF = DateFormat.getTimeInstance(DateFormat.LONG);
+	private static final long	serialVersionUID	= -4657108157862724940L;
 
-	private List<IWVWObjective> content = new CopyOnWriteArrayList<IWVWObjective>();
+	final DateFormat			DF					= DateFormat.getTimeInstance(DateFormat.LONG);
+
+	private List<IWVWObjective>	content				= new CopyOnWriteArrayList<IWVWObjective>();
 
 	public void wireUp(IWVWWrapper wrapper, IWVWMap map) {
 		this.content.clear();
@@ -37,28 +39,29 @@ public class MapObjectivesTableModel extends AbstractTableModel implements IWVWM
 
 	@Override
 	public int getRowCount() {
-		return this.content.size() + 1;
+		return this.content.size();
 	}
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		if (rowIndex == 0) {
-			return columnIndex == 0 ? "Objekt" : columnIndex == 1 ? "Objekttyp" : columnIndex == 2 ? "Besitzer" : "Buff";
-		} else {
-			switch (columnIndex) {
+		switch (columnIndex) {
 			case 0:
-				return this.content.get(rowIndex - 1).getLabel().get();
+				return this.content.get(rowIndex).getLabel().get();
 			case 1:
-				return this.content.get(rowIndex - 1).getType().getLabel();
+				return this.content.get(rowIndex).getType().getLabel();
 			case 2:
-				return this.content.get(rowIndex - 1).getOwner().get().getName().get();
+				return this.content.get(rowIndex).getOwner().get().getName().get();
 			case 3:
-				return DF.format(this.content.get(rowIndex - 1).getEndOfBuffTimestamp().get().getTime());
+				final Optional<Calendar> calendar = this.content.get(rowIndex).getEndOfBuffTimestamp();
+				if (calendar.isPresent()) {
+					return DF.format(calendar.get().getTime());
+				} else {
+					return "unknown";
+				}
+
 			default:
 				throw new IllegalArgumentException("Unknown column: " + columnIndex);
-			}
 		}
-
 	}
 
 	@Override
