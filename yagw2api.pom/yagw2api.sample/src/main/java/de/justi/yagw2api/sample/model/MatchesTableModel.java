@@ -42,9 +42,9 @@ public class MatchesTableModel extends AbstractTableModel implements IWVWMatchLi
 	
 	public Comparator<?> getColumnComparator(int col){
 		switch(col) {
-			case 1:
-			case 3:
-			case 5:
+			case 2:
+			case 4:
+			case 6:
 				return new Comparator<String>() {
 					@Override
 					public int compare(String o1, String o2) {
