@@ -66,11 +66,11 @@ class WorldNameDTO implements IWorldNameDTO{
 
 	@Override
 	public boolean isEurope() {
-		return this.id >= 1000 && this.id <= 2000;
+		return this.id >= 2000 && this.id <= 3000;
 	}
 
 	@Override
 	public boolean isNorthAmerica() {
-		return this.id >= 2000 && this.id <= 3000;
+		return this.id >= 1000 && this.id <= 2000;
 	}
 }

@@ -17,16 +17,27 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
 
+import org.jgraph.JGraph;
+import org.jgraph.graph.DefaultEdge;
+import org.jgrapht.ext.JGraphModelAdapter;
+import org.jgrapht.graph.ListenableUndirectedWeightedGraph;
+
 import com.google.common.base.Optional;
+import com.jgraph.layout.JGraphFacade;
+import com.jgraph.layout.JGraphLayout;
+import com.jgraph.layout.tree.JGraphRadialTreeLayout;
 
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
 import de.justi.yagw2api.sample.Main;
+import de.justi.yagw2api.sample.model.GraphicMapModel;
 import de.justi.yagw2api.sample.model.MapObjectivesTableModel;
 import de.justi.yagw2api.sample.model.MatchesTableModel;
 
 public class MainWindow extends AbstractWindow {
 	private static final long serialVersionUID = -6500541020042114865L;
 
+	private final JTabbedPane tabPane;
+	
 	private final MatchesTableModel matchModel;
 	private final MapObjectivesTableModel eternalMapModel;
 	private final MapObjectivesTableModel greenMapModel;
@@ -50,24 +61,28 @@ public class MainWindow extends AbstractWindow {
 		this.greenMapModel = new MapObjectivesTableModel();
 		this.blueMapModel = new MapObjectivesTableModel();
 		this.redMapModel = new MapObjectivesTableModel();
+		
 
 		final JPanel selectionPanel = this.initSelectionPanel();
 		final JPanel eternalPanel = this.initEternalPanel();
 		final JPanel greenPanel = this.initGreenPanel();
 		final JPanel bluePanel = this.initBluePanel();
 		final JPanel redPanel = this.initRedPanel();
+		final JPanel graphicMapTestPanel = this.initGraphicMapTestPanel();
 
-		final JTabbedPane tabPane = new JTabbedPane();
-		tabPane.addTab("Matches", selectionPanel);
-		tabPane.addTab("Ewige", eternalPanel);
-		tabPane.addTab("Grün", greenPanel);
-		tabPane.addTab("Blau", bluePanel);
-		tabPane.addTab("Rot", redPanel);
+		tabPane = new JTabbedPane();
+		getTabPane().addTab("Matches", selectionPanel);
+		getTabPane().addTab("Ewige Schlachtgründe", eternalPanel);
+		getTabPane().addTab("Grüne Grenzlande", greenPanel);
+		getTabPane().addTab("Blaue Grenzlande", bluePanel);
+		getTabPane().addTab("Rote Grenzlande", redPanel);
+		getTabPane().addTab("MapTest", graphicMapTestPanel);
 
-		this.getContentPanel().add(tabPane, BorderLayout.CENTER);
+		this.getContentPanel().add(getTabPane(), BorderLayout.CENTER);
 
 		this.pack();
 	}
+
 
 
 	private TableColumnModel newMapTCM() {
@@ -79,15 +94,15 @@ public class MainWindow extends AbstractWindow {
 		final TableColumn c2 = new TableColumn(1);
 		c2.setHeaderValue("Objekttyp");
 		tcm.addColumn(c2);
-		final TableColumn c3 = new TableColumn(2);
-		c3.setHeaderValue("Besitzer");
-		tcm.addColumn(c3);
+		final TableColumn blueColumn = new TableColumn(2);
+		blueColumn.setHeaderValue("Besitzer");
+		tcm.addColumn(blueColumn);
 		final TableColumn c4 = new TableColumn(3);
 		c4.setHeaderValue("Buffende");
 		tcm.addColumn(c4);
-		final TableColumn c5 = new TableColumn(4);
-		c5.setHeaderValue("Verbleibender Buff");
-		tcm.addColumn(c5);
+		final TableColumn redColumn = new TableColumn(4);
+		redColumn.setHeaderValue("Verbleibender Buff");
+		tcm.addColumn(redColumn);
 
 		return tcm;
 	}
@@ -98,31 +113,33 @@ public class MainWindow extends AbstractWindow {
 		selectionPanel.add(new JLabel("Übersicht und Auswahl des Matches"), BorderLayout.NORTH);
 
 		final TableColumnModel tcm = new DefaultTableColumnModel();
-		final TableColumn c1 = new TableColumn(0);
-		c1.setHeaderValue("Grün");
-		tcm.addColumn(c1);
-		final TableColumn c2 = new TableColumn(1);
-		c2.setHeaderValue("Punkte (Grün)");
-		tcm.addColumn(c2);
-		final TableColumn c3 = new TableColumn(2);
-		c3.setHeaderValue("Blau");
-		tcm.addColumn(c3);
-		final TableColumn c4 = new TableColumn(3);
-		c4.setHeaderValue("Punkte (Blau)");
-		tcm.addColumn(c4);
-		final TableColumn c5 = new TableColumn(4);
-		c5.setHeaderValue("Rot");
-		tcm.addColumn(c5);
-		final TableColumn c6 = new TableColumn(5);
-		c6.setHeaderValue("Punkte (Rot)");
-		tcm.addColumn(c6);
-
-		final TableColumn c7 = new TableColumn(6);
-		c7.setHeaderValue("Start");
-		tcm.addColumn(c7);
-		final TableColumn c8 = new TableColumn(7);
-		c8.setHeaderValue("Ende");
-		tcm.addColumn(c8);
+		final TableColumn regionColumn = new TableColumn(0);
+		regionColumn.setHeaderValue("Region");
+		tcm.addColumn(regionColumn);
+		final TableColumn greenColumn = new TableColumn(1);
+		greenColumn.setHeaderValue("Grün");
+		tcm.addColumn(greenColumn);
+		final TableColumn greenScoreColumn = new TableColumn(2);
+		greenScoreColumn.setHeaderValue("Punkte (Grün)");
+		tcm.addColumn(greenScoreColumn);
+		final TableColumn blueColumn = new TableColumn(3);
+		blueColumn.setHeaderValue("Blau");
+		tcm.addColumn(blueColumn);
+		final TableColumn blueScoreColumn = new TableColumn(4);
+		blueScoreColumn.setHeaderValue("Punkte (Blau)");
+		tcm.addColumn(blueScoreColumn);
+		final TableColumn redColumn = new TableColumn(5);
+		redColumn.setHeaderValue("Rot");
+		tcm.addColumn(redColumn);
+		final TableColumn redScoreColumn = new TableColumn(6);
+		redScoreColumn.setHeaderValue("Punkte (Rot)");
+		tcm.addColumn(redScoreColumn);
+		final TableColumn startColumn = new TableColumn(7);
+		startColumn.setHeaderValue("Start");
+		tcm.addColumn(startColumn);
+		final TableColumn endColumn = new TableColumn(8);
+		endColumn.setHeaderValue("Ende");
+		tcm.addColumn(endColumn);
 		
 		this.selectionTable = new JTable(this.matchModel, tcm);
 		this.selectionTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -146,6 +163,7 @@ public class MainWindow extends AbstractWindow {
 					Main.getMainWindow().getGreenMapModel().wireUp(Main.getWrapper(), match.get().getGreenMap());
 					Main.getMainWindow().getBlueMapModel().wireUp(Main.getWrapper(), match.get().getBlueMap());
 					Main.getMainWindow().getRedMapModel().wireUp(Main.getWrapper(), match.get().getRedMap());
+					Main.getMainWindow().getTabPane().getTabComponentAt(2).setName(match.get().getGreenWorld().getName().get()+" (grüne Grenzlande)");
 				}
 
 			}
@@ -227,6 +245,33 @@ public class MainWindow extends AbstractWindow {
 		redPanel.add(new JScrollPane(this.redTable), BorderLayout.CENTER);
 		return redPanel;
 	}
+	
+	private JPanel initGraphicMapTestPanel() {
+		final JPanel graphicMapTestPanel = new JPanel();
+		graphicMapTestPanel.setLayout(new BorderLayout());
+		
+		final ListenableUndirectedWeightedGraph<String, DefaultEdge> graph = new ListenableUndirectedWeightedGraph<String, DefaultEdge>(DefaultEdge.class);
+		graph.addVertex("TEST");
+		graph.addVertex("TEST1");
+		graph.addVertex("TEST2");
+		graph.addVertex("TEST3");
+		graph.addEdge("TEST", "TEST1");
+		graph.addEdge("TEST", "TEST2");
+		graph.addEdge("TEST", "TEST3");
+		graph.addEdge("TEST3", "TEST2");
+		final JGraphModelAdapter<String, DefaultEdge> graphAdapter = new JGraphModelAdapter<String, DefaultEdge>(graph);
+		final JGraph graphComponent = new JGraph(graphAdapter);
+
+		final JScrollPane graphScrollPane = new JScrollPane(graphComponent);
+
+		graphicMapTestPanel.add(graphScrollPane, BorderLayout.CENTER);
+
+		JGraphFacade jgf = new JGraphFacade(graphComponent);
+		JGraphLayout layout = new JGraphRadialTreeLayout();
+		layout.run(jgf);
+		
+		return graphicMapTestPanel;
+	}
 
 	public MatchesTableModel getMatchModel() {
 		return this.matchModel;
@@ -246,5 +291,11 @@ public class MainWindow extends AbstractWindow {
 
 	public MapObjectivesTableModel getRedMapModel() {
 		return this.redMapModel;
+	}
+
+
+
+	public JTabbedPane getTabPane() {
+		return tabPane;
 	}
 }

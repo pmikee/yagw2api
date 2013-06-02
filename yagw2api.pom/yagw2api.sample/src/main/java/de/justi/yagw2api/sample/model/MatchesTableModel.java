@@ -100,22 +100,23 @@ public class MatchesTableModel extends AbstractTableModel implements IWVWMatchLi
 		checkState(this.matches.get(matchIndex) != null);
 		switch (columnIndex) {
 			case 0:
-				return (this.matches.get(matchIndex).getGreenWorld().getName().get());
+				return (this.matches.get(matchIndex).getGreenWorld().getWorldLocation().toString().equals("EUROPE")?"EU":"NA");
 			case 1:
-				return NF.format(this.matches.get(matchIndex).getScores().getGreenScore());
+				return (this.matches.get(matchIndex).getGreenWorld().getName().get());
 			case 2:
-				return (this.matches.get(matchIndex).getBlueWorld().getName().get());
+				return NF.format(this.matches.get(matchIndex).getScores().getGreenScore());
 			case 3:
-				return NF.format(this.matches.get(matchIndex).getScores().getBlueScore());
+				return (this.matches.get(matchIndex).getBlueWorld().getName().get());
 			case 4:
-				return (this.matches.get(matchIndex).getRedWorld().getName().get());
+				return NF.format(this.matches.get(matchIndex).getScores().getBlueScore());
 			case 5:
-				return NF.format(this.matches.get(matchIndex).getScores().getRedScore());
+				return (this.matches.get(matchIndex).getRedWorld().getName().get());
 			case 6:
-				
+				return NF.format(this.matches.get(matchIndex).getScores().getRedScore());
+			case 7:
 				checkState(this.matches.get(matchIndex).getStartTimestamp() != null);
 				return DF.format(this.matches.get(matchIndex).getStartTimestamp().getTime());
-			case 7:
+			case 8:
 				checkState(this.matches.get(matchIndex).getEndTimestamp() != null);
 				return DF.format(this.matches.get(matchIndex).getEndTimestamp().getTime());
 			default:
