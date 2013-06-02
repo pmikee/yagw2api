@@ -112,6 +112,7 @@ public class MatchesTableModel extends AbstractTableModel implements IWVWMatchLi
 			case 5:
 				return NF.format(this.matches.get(matchIndex).getScores().getRedScore());
 			case 6:
+				
 				checkState(this.matches.get(matchIndex).getStartTimestamp() != null);
 				return DF.format(this.matches.get(matchIndex).getStartTimestamp().getTime());
 			case 7:

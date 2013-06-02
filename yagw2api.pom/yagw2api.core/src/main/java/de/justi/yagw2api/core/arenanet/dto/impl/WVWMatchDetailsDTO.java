@@ -33,6 +33,7 @@ class WVWMatchDetailsDTO implements IWVWMatchDetailsDTO {
 	public String getMatchID() {
 		return this.id;
 	}
+
 	@Override
 	public int getRedScore() {
 		return this.scores[0];
@@ -47,14 +48,14 @@ class WVWMatchDetailsDTO implements IWVWMatchDetailsDTO {
 	public int getBlueScore() {
 		return this.scores[1];
 	}
-	
+
 	public IWVWMapDTO[] getMaps() {
 		return this.maps;
 	}
 
 	public String toString() {
-		return Objects.toStringHelper(this).add("id", this.id).add("redScore", this.getRedScore()).add("greenScore", this.getGreenScore()).add("blueScore", this.getBlueScore()).add("maps", Arrays.deepToString(this.maps))
-				.add("match", this.getMatch()).toString();
+		return Objects.toStringHelper(this).add("id", this.id).add("redScore", this.getRedScore()).add("greenScore", this.getGreenScore()).add("blueScore", this.getBlueScore())
+				.add("maps", Arrays.deepToString(this.maps)).add("match", this.getMatch()).toString();
 	}
 
 	public Optional<IWVWMatchDTO> getMatch() {

@@ -464,13 +464,11 @@ class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 
 	@Override
 	public Calendar getStartTimestamp() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.startTime;
 	}
 
 	@Override
 	public Calendar getEndTimestamp() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.endTime;
 	}
 }
