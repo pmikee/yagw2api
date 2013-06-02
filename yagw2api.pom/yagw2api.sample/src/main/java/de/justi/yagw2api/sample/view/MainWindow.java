@@ -87,11 +87,11 @@ public class MainWindow extends AbstractWindow {
 		getTabPane().addTab("Übersicht", generalPanel);
 		this.getTabPane().addTab("Ewige Schlachtgründe", eternalPanel);
 		this.getTabPane().addTab("Grüne Grenzlande", greenPanel);
-		this.getTabPane().setForegroundAt(2, GREEN_WORLD_FG);
+		this.getTabPane().setForegroundAt(3, GREEN_WORLD_FG);
 		this.getTabPane().addTab("Blaue Grenzlande", bluePanel);
-		this.getTabPane().setForegroundAt(3, BLUE_WORLD_FG);
+		this.getTabPane().setForegroundAt(4, BLUE_WORLD_FG);
 		this.getTabPane().addTab("Rote Grenzlande", redPanel);
-		this.getTabPane().setForegroundAt(4, RED_WORLD_FG);
+		this.getTabPane().setForegroundAt(5, RED_WORLD_FG);
 		this.getTabPane().addTab("MapTest", graphicMapTestPanel);
 
 		this.getContentPanel().add(getTabPane(), BorderLayout.CENTER);
@@ -181,11 +181,10 @@ public class MainWindow extends AbstractWindow {
 					getGreenMapModel().wireUp(Main.getWrapper(), match.get().getGreenMap());
 					getBlueMapModel().wireUp(Main.getWrapper(), match.get().getBlueMap());
 					getRedMapModel().wireUp(Main.getWrapper(), match.get().getRedMap());
-					getTabPane().setTitleAt(2, match.get().getGreenWorld().getName().get() + " (grüne Grenzlande)");
-					getTabPane().setTitleAt(3, match.get().getBlueWorld().getName().get() + " (blaue Grenzlande)");
-					getTabPane().setTitleAt(4, match.get().getRedWorld().getName().get() + " (rote Grenzlande)");
+					getTabPane().setTitleAt(3, match.get().getGreenWorld().getName().get() + " (grüne Grenzlande)");
+					getTabPane().setTitleAt(4, match.get().getBlueWorld().getName().get() + " (blaue Grenzlande)");
+					getTabPane().setTitleAt(5, match.get().getRedWorld().getName().get() + " (rote Grenzlande)");
 				}
-
 			}
 		});
 
