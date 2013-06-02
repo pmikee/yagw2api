@@ -134,24 +134,28 @@ public class MainWindow extends AbstractWindow {
 		regionColumn.setHeaderValue("Region");
 		tcm.addColumn(regionColumn);
 		final TableColumn greenColumn = new TableColumn(1);
+		
 		greenColumn.setHeaderValue("Grün");
 		tcm.addColumn(greenColumn);
 		final TableColumn greenScoreColumn = new TableColumn(2);
 		greenScoreColumn.setHeaderValue("Punkte (Grün)");
 		tcm.addColumn(greenScoreColumn);
 		final TableColumn blueColumn = new TableColumn(3);
+		
 		blueColumn.setHeaderValue("Blau");
 		tcm.addColumn(blueColumn);
 		final TableColumn blueScoreColumn = new TableColumn(4);
 		blueScoreColumn.setHeaderValue("Punkte (Blau)");
 		tcm.addColumn(blueScoreColumn);
 		final TableColumn redColumn = new TableColumn(5);
+		
 		redColumn.setHeaderValue("Rot");
 		tcm.addColumn(redColumn);
 		final TableColumn redScoreColumn = new TableColumn(6);
 		redScoreColumn.setHeaderValue("Punkte (Rot)");
 		tcm.addColumn(redScoreColumn);
 		final TableColumn startColumn = new TableColumn(7);
+		
 		startColumn.setHeaderValue("Start");
 		tcm.addColumn(startColumn);
 		final TableColumn endColumn = new TableColumn(8);
