@@ -1,5 +1,7 @@
 package de.justi.yagw2api.sample.model;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Comparator;
@@ -52,17 +54,21 @@ public class MapObjectivesTableModel extends AbstractTableModel implements IWVWM
 		this.service.startAndWait();
 	}
 
-	public void wireUp(IWVWWrapper wrapper, IWVWMap map) {
+	public void wireUp(IWVWWrapper wrapper, IWVWMap map, IWVWMap... maps) {
 		this.content.clear();
 		this.content.addAll(map.getObjectives());
 		this.fireTableDataChanged();
 		wrapper.unregisterWVWMapListener(this);
 		wrapper.registerWVWMapListener(map, this);
+		for (IWVWMap additionalMap : maps) {
+			this.content.addAll(additionalMap.getObjectives());
+			wrapper.registerWVWMapListener(additionalMap, this);
+		}
 	}
 
 	@Override
 	public int getColumnCount() {
-		return 4;
+		return 6;
 	}
 
 	@Override
@@ -72,6 +78,13 @@ public class MapObjectivesTableModel extends AbstractTableModel implements IWVWM
 
 	public Comparator<?> getColumnComparator(int col){
 		switch(col) {
+			case 3:
+				return new Comparator<Integer>() {
+					@Override
+					public int compare(Integer o1, Integer o2) {
+						return o1.compareTo(o2);
+					}
+				};
 			default:
 				return new Comparator<Object>() {
 					@Override
@@ -82,27 +95,36 @@ public class MapObjectivesTableModel extends AbstractTableModel implements IWVWM
 		}	
 	}
 	
+	public Optional<IWVWObjective> getObjectiveForRow(int row){
+		if(row < 0 || row >= this.content.size()) {
+			return Optional.absent();
+		}else{
+			return Optional.fromNullable(this.content.get(row));
+		}
+	}
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
+		final Optional<IWVWObjective> objective = this.getObjectiveForRow(rowIndex);
+		checkArgument(objective.isPresent());
 		switch (columnIndex) {
 			case 0:
-				return this.content.get(rowIndex).getLabel().get();
+				return objective.get().getLabel().get();
 			case 1:
-				return this.content.get(rowIndex).getType().getLabel();
+				return objective.get().getType().getLabel();
 			case 2:
-				return this.content.get(rowIndex).getOwner().get().getName().get();
+				return objective.get().getOwner().get().getName().get();
 			case 3:
-				return this.content.get(rowIndex).getType().getPoints();
+				return objective.get().getType().getPoints();
 			case 4:
-				final Optional<Calendar> calendar = this.content.get(rowIndex).getEndOfBuffTimestamp();
+				final Optional<Calendar> calendar = objective.get().getEndOfBuffTimestamp();
 				if (calendar.isPresent()) {
 					return DF.format(calendar.get().getTime());
 				} else {
 					return "";
 				}
 			case 5:
-				if(this.content.get(rowIndex).getEndOfBuffTimestamp().isPresent()) {
-					return this.content.get(rowIndex).getRemainingBuffDuration(TimeUnit.SECONDS)+"s";
+				if(objective.get().getEndOfBuffTimestamp().isPresent()) {
+					return objective.get().getRemainingBuffDuration(TimeUnit.SECONDS)+"s";
 				}else {
 					return "";
 				}
