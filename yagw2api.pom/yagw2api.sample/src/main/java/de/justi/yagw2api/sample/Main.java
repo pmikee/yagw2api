@@ -17,11 +17,14 @@ public class Main {
 	/**
 	 * @param args
 	 */
+	private static MainWindow mainWindow;
+	private static IWVWWrapper apiWrapper;
+	
 	public static void main(String[] args) {	
 		
 		try {
 			checkState(YAGW2APIAnalyzerPersistence.getDefaultEM().isOpen());
-			final IWVWWrapper apiWrapper = YAGW2APICore.getWVWWrapper();
+			apiWrapper = YAGW2APICore.getWVWWrapper();
 			final IWVWAnalyzer analyzer = YAGW2APIAnalyzer.getAnalyzer();
 
 			// start the api wrapper
@@ -34,13 +37,23 @@ public class Main {
 			apiWrapper.registerWVWMatchListener(analyzer);
 					
 
-			final MainWindow mainWindow = new MainWindow();			
-			//mainWindow.getModel().wireUp(apiWrapper, apiWrapper.getAllMatches().iterator().next().getCenterMap());
-			mainWindow.getModel().wireUp(apiWrapper);
+			mainWindow = new MainWindow();	
+			//random init for now
+			//mainWindow.getEternalMapModel().wireUp(apiWrapper, apiWrapper.getAllMatches().iterator().next().getCenterMap());
+			
+			mainWindow.getMatchModel().wireUp(apiWrapper);
 			mainWindow.setVisible(true);
 		} catch (Exception e) {
 			LOGGER.fatal("Uncought exception while running " + Main.class.getName() + "#main(String[])", e);
 		}
+	}
+	
+	public static MainWindow getMainWindow() {
+		return mainWindow;
+	}
+	
+	public static IWVWWrapper getWrapper() {
+		return apiWrapper;
 	}
 
 }

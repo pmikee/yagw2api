@@ -149,11 +149,9 @@ class WVWWrapper implements IWVWWrapper {
 		checkNotNull(listener);
 
 		// remove listener references
-		if (this.singleMatchListeners.containsValue(listener)) {
-			for (IWVWMatch key : this.singleMatchListeners.keySet()) {
-				if (this.singleMatchListeners.get(key).contains(listener)) {
-					this.singleMatchListeners.get(key).remove(listener);
-				}
+		for (IWVWMatch key : this.singleMatchListeners.keySet()) {
+			if (this.singleMatchListeners.get(key).contains(listener)) {
+				this.singleMatchListeners.get(key).remove(listener);
 			}
 		}
 		this.allMatchesListeners.remove(listener);
@@ -164,20 +162,16 @@ class WVWWrapper implements IWVWWrapper {
 		checkNotNull(listener);
 		
 		// remove listener references
-		if(this.singleMapListeners.containsValue(listener)) {
-			for (IWVWMap key : this.singleMapListeners.keySet()) {
-				if(this.singleMapListeners.get(key).contains(listener)) {
-					this.singleMapListeners.get(key).remove(listener);
-				}
+		for (IWVWMap key : this.singleMapListeners.keySet()) {
+			if(this.singleMapListeners.get(key).contains(listener)) {
+				this.singleMapListeners.get(key).remove(listener);
 			}
-		}		
-		if(this.allMapsOfSingleMatchListeners.containsValue(listener)) {
-			for (IWVWMatch key : this.allMapsOfSingleMatchListeners.keySet()) {
-				if(this.allMapsOfSingleMatchListeners.get(key).contains(listener)) {
-					this.allMapsOfSingleMatchListeners.get(key).remove(listener);
-				}
+		}
+		for (IWVWMatch key : this.allMapsOfSingleMatchListeners.keySet()) {
+			if(this.allMapsOfSingleMatchListeners.get(key).contains(listener)) {
+				this.allMapsOfSingleMatchListeners.get(key).remove(listener);
 			}
-		}		
+		}	
 		this.allMapsOfAllMatchesListeners.remove(listener);
 	}
 
