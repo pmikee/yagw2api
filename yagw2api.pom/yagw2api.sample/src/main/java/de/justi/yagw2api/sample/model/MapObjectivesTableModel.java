@@ -92,13 +92,15 @@ public class MapObjectivesTableModel extends AbstractTableModel implements IWVWM
 			case 2:
 				return this.content.get(rowIndex).getOwner().get().getName().get();
 			case 3:
+				return this.content.get(rowIndex).getType().getPoints();
+			case 4:
 				final Optional<Calendar> calendar = this.content.get(rowIndex).getEndOfBuffTimestamp();
 				if (calendar.isPresent()) {
 					return DF.format(calendar.get().getTime());
 				} else {
 					return "";
 				}
-			case 4:
+			case 5:
 				if(this.content.get(rowIndex).getEndOfBuffTimestamp().isPresent()) {
 					return this.content.get(rowIndex).getRemainingBuffDuration(TimeUnit.SECONDS)+"s";
 				}else {

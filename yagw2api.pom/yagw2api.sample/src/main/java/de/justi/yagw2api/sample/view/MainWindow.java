@@ -88,21 +88,24 @@ public class MainWindow extends AbstractWindow {
 	private TableColumnModel newMapTCM() {
 
 		final TableColumnModel tcm = new DefaultTableColumnModel();
-		final TableColumn c1 = new TableColumn(0);
-		c1.setHeaderValue("Objekt");
-		tcm.addColumn(c1);
-		final TableColumn c2 = new TableColumn(1);
-		c2.setHeaderValue("Objekttyp");
-		tcm.addColumn(c2);
-		final TableColumn blueColumn = new TableColumn(2);
-		blueColumn.setHeaderValue("Besitzer");
-		tcm.addColumn(blueColumn);
-		final TableColumn c4 = new TableColumn(3);
-		c4.setHeaderValue("Buffende");
-		tcm.addColumn(c4);
-		final TableColumn redColumn = new TableColumn(4);
-		redColumn.setHeaderValue("Verbleibender Buff");
-		tcm.addColumn(redColumn);
+		final TableColumn objectiveColumn = new TableColumn(0);
+		objectiveColumn.setHeaderValue("Objekt");
+		tcm.addColumn(objectiveColumn);
+		final TableColumn objectiveTypeColumn = new TableColumn(1);
+		objectiveTypeColumn.setHeaderValue("Objekttyp");
+		tcm.addColumn(objectiveTypeColumn);
+		final TableColumn ownerColumn = new TableColumn(2);
+		ownerColumn.setHeaderValue("Besitzer");
+		tcm.addColumn(ownerColumn);
+		final TableColumn valueColumn = new TableColumn(3);
+		valueColumn.setHeaderValue("Wert");
+		tcm.addColumn(valueColumn);
+		final TableColumn buffEndColumn = new TableColumn(4);
+		buffEndColumn.setHeaderValue("Buffende");
+		tcm.addColumn(buffEndColumn);
+		final TableColumn remainingBuffColumn = new TableColumn(5);
+		remainingBuffColumn.setHeaderValue("Verbleibender Buff");
+		tcm.addColumn(remainingBuffColumn);
 
 		return tcm;
 	}
@@ -163,7 +166,9 @@ public class MainWindow extends AbstractWindow {
 					Main.getMainWindow().getGreenMapModel().wireUp(Main.getWrapper(), match.get().getGreenMap());
 					Main.getMainWindow().getBlueMapModel().wireUp(Main.getWrapper(), match.get().getBlueMap());
 					Main.getMainWindow().getRedMapModel().wireUp(Main.getWrapper(), match.get().getRedMap());
-					Main.getMainWindow().getTabPane().getTabComponentAt(2).setName(match.get().getGreenWorld().getName().get()+" (grüne Grenzlande)");
+					Main.getMainWindow().getTabPane().setTitleAt(2,match.get().getGreenWorld().getName().get()+" (grüne Grenzlande)");
+					Main.getMainWindow().getTabPane().setTitleAt(3,match.get().getBlueWorld().getName().get()+" (blaue Grenzlande)");
+					Main.getMainWindow().getTabPane().setTitleAt(4,match.get().getRedWorld().getName().get()+" (rote Grenzlande)");
 				}
 
 			}
