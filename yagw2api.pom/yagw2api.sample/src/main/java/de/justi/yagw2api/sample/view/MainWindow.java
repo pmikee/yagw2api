@@ -185,6 +185,7 @@ public class MainWindow extends AbstractWindow {
 		eternalPanel.add(new JLabel("Punkte Ewige Schlachtfelder"), BorderLayout.NORTH);
 
 		this.eternalTable = new JTable(this.eternalMapModel, this.newMapTCM());
+		this.eternalTable.setDefaultRenderer(Object.class, new ObjectiveTableCellRenderer());
 		
 		final TableRowSorter<MapObjectivesTableModel> sorter = new TableRowSorter<MapObjectivesTableModel>(this.eternalMapModel);
 		this.eternalTable.setRowSorter(sorter);
@@ -203,6 +204,7 @@ public class MainWindow extends AbstractWindow {
 		greenPanel.add(new JLabel("Punkte Grüne Grenzlande"), BorderLayout.NORTH);
 
 		this.greenTable = new JTable(this.greenMapModel, this.newMapTCM());
+		this.greenTable.setDefaultRenderer(Object.class, new ObjectiveTableCellRenderer());
 		
 		final TableRowSorter<MapObjectivesTableModel> sorter = new TableRowSorter<MapObjectivesTableModel>(this.greenMapModel);
 		this.greenTable.setRowSorter(sorter);
@@ -221,6 +223,7 @@ public class MainWindow extends AbstractWindow {
 		bluePanel.add(new JLabel("Punkte Blaue Grenzlande"), BorderLayout.NORTH);
 
 		this.blueTable = new JTable(this.blueMapModel, this.newMapTCM());
+		this.blueTable.setDefaultRenderer(Object.class, new ObjectiveTableCellRenderer());
 		
 		final TableRowSorter<MapObjectivesTableModel> sorter = new TableRowSorter<MapObjectivesTableModel>(this.blueMapModel);
 		this.blueTable.setRowSorter(sorter);
@@ -239,6 +242,7 @@ public class MainWindow extends AbstractWindow {
 		redPanel.add(new JLabel("Punkte Rote Grenzlande"), BorderLayout.NORTH);
 
 		this.redTable = new JTable(this.redMapModel, this.newMapTCM());
+		this.redTable.setDefaultRenderer(Object.class, new ObjectiveTableCellRenderer());
 		
 		final TableRowSorter<MapObjectivesTableModel> sorter = new TableRowSorter<MapObjectivesTableModel>(this.redMapModel);
 		this.redTable.setRowSorter(sorter);
