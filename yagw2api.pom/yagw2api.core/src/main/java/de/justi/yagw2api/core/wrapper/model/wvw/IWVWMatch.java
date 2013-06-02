@@ -1,5 +1,7 @@
 package de.justi.yagw2api.core.wrapper.model.wvw;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -18,6 +20,8 @@ public interface IWVWMatch extends IHasChannel {
 		IWVWMatchBuilder redScore(int score);
 		IWVWMatchBuilder blueScore(int score);
 		IWVWMatchBuilder greenScore(int score);
+		IWVWMatchBuilder start(Date date);
+		IWVWMatchBuilder end(Date date);
 	}
 	
 	Set<IWorld> searchWorldsByNamePattern(Pattern searchPattern);
@@ -32,6 +36,8 @@ public interface IWVWMatch extends IHasChannel {
 	IWVWMap getRedMap();
 	IWVWMap getGreenMap();
 	IWVWScores getScores();
+	Calendar getStartTimestamp();
+	Calendar getEndTimestamp();
 	
 	IWVWMatch createUnmodifiableReference();
 }

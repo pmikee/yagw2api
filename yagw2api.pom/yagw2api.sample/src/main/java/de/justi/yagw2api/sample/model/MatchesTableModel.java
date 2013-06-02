@@ -3,6 +3,7 @@ package de.justi.yagw2api.sample.model;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -26,6 +27,7 @@ public class MatchesTableModel extends AbstractTableModel implements IWVWMatchLi
 	private static final Logger	LOGGER				= Logger.getLogger(MatchesTableModel.class);
 	private static final long	serialVersionUID	= 267092039654136315L;
 	private static final NumberFormat NF = new DecimalFormat("#,###,##0");
+	private static final DateFormat DF = DateFormat.getDateTimeInstance();
 
 	private List<IWVWMatch>		matches				= Collections.synchronizedList(new CopyOnWriteArrayList<IWVWMatch>());
 
@@ -65,7 +67,7 @@ public class MatchesTableModel extends AbstractTableModel implements IWVWMatchLi
 	
 	@Override
 	public int getColumnCount() {
-		return 6;
+		return 8;
 	}
 
 	@Override
@@ -94,21 +96,27 @@ public class MatchesTableModel extends AbstractTableModel implements IWVWMatchLi
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-
 		final int matchIndex = this.getMatchIndexForRow(rowIndex);
+		checkState(this.matches.get(matchIndex) != null);
 		switch (columnIndex) {
 			case 0:
 				return (this.matches.get(matchIndex).getGreenWorld().getName().get());
-			case 2:
-				return (this.matches.get(matchIndex).getBlueWorld().getName().get());
-			case 4:
-				return (this.matches.get(matchIndex).getRedWorld().getName().get());
 			case 1:
 				return NF.format(this.matches.get(matchIndex).getScores().getGreenScore());
+			case 2:
+				return (this.matches.get(matchIndex).getBlueWorld().getName().get());
 			case 3:
 				return NF.format(this.matches.get(matchIndex).getScores().getBlueScore());
+			case 4:
+				return (this.matches.get(matchIndex).getRedWorld().getName().get());
 			case 5:
 				return NF.format(this.matches.get(matchIndex).getScores().getRedScore());
+			case 6:
+				checkState(this.matches.get(matchIndex).getStartTimestamp() != null);
+				return DF.format(this.matches.get(matchIndex).getStartTimestamp().getTime());
+			case 7:
+				checkState(this.matches.get(matchIndex).getEndTimestamp() != null);
+				return DF.format(this.matches.get(matchIndex).getEndTimestamp().getTime());
 			default:
 				throw new IllegalArgumentException("Unknown column: " + columnIndex);
 		}

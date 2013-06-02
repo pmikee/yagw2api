@@ -3,7 +3,14 @@ package de.justi.yagw2api.core.arenanet.dto.impl;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
+
+import org.apache.log4j.Logger;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
@@ -17,7 +24,12 @@ import de.justi.yagw2api.core.arenanet.dto.IWorldNameDTO;
 import de.justi.yagw2api.core.arenanet.service.IWVWService;
 
 class WVWMatchDTO implements IWVWMatchDTO {
-	private static final transient IWVWService SERVICE = YAGW2APICore.getInjector().getInstance(IWVWService.class);
+	static final transient Logger LOGGER = Logger.getLogger(WVWMapDTO.class);
+	static final transient IWVWService SERVICE = YAGW2APICore.getInjector().getInstance(IWVWService.class);
+	static final transient DateFormat DF = new SimpleDateFormat("yyyy-MM-DD'T'HH:mm:ss'Z'", Locale.US);
+	static {
+		DF.setTimeZone(TimeZone.getTimeZone("Zulu"));
+	}
 
 	@Since(1.0)
 	@SerializedName("wvw_match_id")
@@ -31,11 +43,17 @@ class WVWMatchDTO implements IWVWMatchDTO {
 	@Since(1.0)
 	@SerializedName("green_world_id")
 	private int greenWorldId;
+	@Since(1.0)
+	@SerializedName("start_time")
+	private String startTimeString;
+	@Since(1.0)
+	@SerializedName("end_time")
+	private String endTimeString;
 	
 	public String toString() {
 		return Objects.toStringHelper(this).add("id", this.id).add("redWorldId", this.redWorldId).add("redWorld", this.getRedWorldName(Locale.getDefault()))
 				.add("blueWorldId", this.blueWorldId).add("blueWorld", this.getBlueWorldName(Locale.getDefault())).add("greenWorldId", this.greenWorldId)
-				.add("greenWorld", this.getGreenWorldName(Locale.getDefault())).toString();
+				.add("greenWorld", this.getGreenWorldName(Locale.getDefault())).add("start", this.getStartTime()).add("end", this.getEndTime()).toString();
 	}
 
 	public int getRedWorldId() {
@@ -76,5 +94,25 @@ class WVWMatchDTO implements IWVWMatchDTO {
 	public Optional<IWVWMatchDetailsDTO> getDetails() {
 		checkState(this.id != null);
 		return Optional.fromNullable(SERVICE.retrieveMatchDetails(this.id));
+	}
+
+	@Override
+	public Date getStartTime() {
+		try {
+			return DF.parse(this.startTimeString);
+		} catch (ParseException e) {
+			LOGGER.fatal("Failed to parse "+this.startTimeString+" using "+DF,e);
+			return null;
+		}
+	}
+
+	@Override
+	public Date getEndTime() {
+		try {
+			return DF.parse(this.endTimeString);
+		} catch (ParseException e) {
+			LOGGER.fatal("Failed to parse "+this.endTimeString+" using "+DF,e);
+			return null;
+		}
 	}
 }

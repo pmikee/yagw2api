@@ -96,10 +96,14 @@ public class MapObjectivesTableModel extends AbstractTableModel implements IWVWM
 				if (calendar.isPresent()) {
 					return DF.format(calendar.get().getTime());
 				} else {
-					return "unknown";
+					return "";
 				}
 			case 4:
-				return this.content.get(rowIndex).getRemainingBuffDuration(TimeUnit.SECONDS)+"s";
+				if(this.content.get(rowIndex).getEndOfBuffTimestamp().isPresent()) {
+					return this.content.get(rowIndex).getRemainingBuffDuration(TimeUnit.SECONDS)+"s";
+				}else {
+					return "";
+				}
 			default:
 				throw new IllegalArgumentException("Unknown column: " + columnIndex);
 		}

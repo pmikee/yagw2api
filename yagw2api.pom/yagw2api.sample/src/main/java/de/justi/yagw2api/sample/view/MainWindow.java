@@ -117,6 +117,13 @@ public class MainWindow extends AbstractWindow {
 		c6.setHeaderValue("Punkte (Rot)");
 		tcm.addColumn(c6);
 
+		final TableColumn c7 = new TableColumn(6);
+		c7.setHeaderValue("Start");
+		tcm.addColumn(c7);
+		final TableColumn c8 = new TableColumn(7);
+		c8.setHeaderValue("Ende");
+		tcm.addColumn(c8);
+		
 		this.selectionTable = new JTable(this.matchModel, tcm);
 		this.selectionTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		selectionPanel.add(new JScrollPane(this.selectionTable), BorderLayout.CENTER);
