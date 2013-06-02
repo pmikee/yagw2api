@@ -22,6 +22,7 @@ import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMap;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWObjective;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMapScoresChangedEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveCaptureEvent;
+import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveClaimedEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveEndOfBuffEvent;
 
 public class MapObjectivesTableModel extends AbstractTableModel implements IWVWMapListener {
@@ -155,6 +156,10 @@ public class MapObjectivesTableModel extends AbstractTableModel implements IWVWM
 		final int row = this.content.indexOf(event.getObjective());
 		checkState(this.content.contains(event.getObjective()));
 		this.fireTableRowsUpdated(row, row);
+	}
+
+	@Override
+	public void notifyAboutObjectiveClaimedEvent(IWVWObjectiveClaimedEvent event) {
 	}
 
 }

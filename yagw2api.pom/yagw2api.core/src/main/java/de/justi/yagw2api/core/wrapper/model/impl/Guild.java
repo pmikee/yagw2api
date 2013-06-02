@@ -10,8 +10,12 @@ import de.justi.yagw2api.core.wrapper.model.IUnmodifiable;
 
 class Guild implements IGuild, IUnmodifiable{
 	private final String id;
-	public Guild(String id) {
+	private final String name;
+	private final String tag;
+	public Guild(String id, String name, String tag) {
 		this.id = checkNotNull(id);
+		this.name = checkNotNull(name);
+		this.tag = checkNotNull(tag);
 	}
 	public String getId() {
 		return this.id;
@@ -35,5 +39,13 @@ class Guild implements IGuild, IUnmodifiable{
 			final IGuild guild = (IGuild)obj;
 			return Objects.equal(this.id, guild.getId());
 		}
+	}
+	@Override
+	public String getName() {
+		return this.name;
+	}
+	@Override
+	public String getTag() {
+		return this.tag;
 	}
 }

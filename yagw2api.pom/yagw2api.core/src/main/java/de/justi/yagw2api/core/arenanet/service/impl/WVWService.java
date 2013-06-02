@@ -30,6 +30,7 @@ import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.WebResource;
 
+import de.justi.yagw2api.core.arenanet.dto.IGuildDetailsDTO;
 import de.justi.yagw2api.core.arenanet.dto.IWVWDTOFactory;
 import de.justi.yagw2api.core.arenanet.dto.IWVWMatchDTO;
 import de.justi.yagw2api.core.arenanet.dto.IWVWMatchDetailsDTO;
@@ -41,6 +42,7 @@ import de.justi.yagw2api.core.arenanet.service.IWVWService;
 class WVWService extends AbstractService implements IWVWService {
 	private static final int RETRY_COUNT = 10;
 	private static final long MATCH_CACHE_EXPIRE_MILLIS = 1000 * 60 * 10; // 10m
+	private static final long GUILD_DETAILS_CACHE_EXPIRE_MILLIS = 1000 * 60 * 5; // 5m
 	private static final long MATCH_DETAILS_CACHE_EXPIRE_MILLIS = 1000 * 3; // 3s
 	private static final long WOLRD_NAMES_CACHE_EXPIRE_MILLIS = 1000 * 60 * 60 * 12; // 12h
 	private static final long OBJECTIVE_NAMES_CACHE_EXPIRE_MILLIS = 1000 * 60 * 60 * 12; // 12h
@@ -56,12 +58,14 @@ class WVWService extends AbstractService implements IWVWService {
 	private static final URL MATCH_DETAILS_URL;
 	private static final URL OBJECTIVE_NAMES_URL;
 	private static final URL WORL_NAMES_URL;
+	private static final URL GUILD_DETAILS_URL;
 	static {
 		try {
 			MATCHES_URL = new URL("https://api.guildwars2.com/" + API_VERSION + "/wvw/matches.json");
 			MATCH_DETAILS_URL = new URL("https://api.guildwars2.com/" + API_VERSION + "/wvw/match_details.json");
 			OBJECTIVE_NAMES_URL = new URL("https://api.guildwars2.com/" + API_VERSION + "/wvw/objective_names.json");
 			WORL_NAMES_URL = new URL("https://api.guildwars2.com/" + API_VERSION + "/world_names.json");
+			GUILD_DETAILS_URL = new URL("https://api.guildwars2.com/"+API_VERSION+"/guild_details.json");
 		} catch (MalformedURLException e) {
 			throw new IllegalStateException("Failed to initialize URLs.", e);
 		}
@@ -96,6 +100,7 @@ class WVWService extends AbstractService implements IWVWService {
 				}
 			}).build();
 	private final Map<Locale, Cache<Integer, IWVWObjectiveNameDTO>> objectiveNameCaches = new HashMap<Locale, Cache<Integer, IWVWObjectiveNameDTO>>();
+	private final Cache<String, IGuildDetailsDTO> guildDetailsCache = CacheBuilder.newBuilder().expireAfterWrite(GUILD_DETAILS_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build();
 	private final Cache<String, IWVWMatchDetailsDTO> matchDetailsCache = CacheBuilder.newBuilder().expireAfterWrite(MATCH_DETAILS_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build();
 	private final Cache<String, IWVWMatchesDTO> matchesCache = CacheBuilder.newBuilder().initialCapacity(1).maximumSize(1).expireAfterWrite(MATCH_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS)
 			.removalListener(new RemovalListener<String, IWVWMatchesDTO>() {
@@ -168,7 +173,7 @@ class WVWService extends AbstractService implements IWVWService {
 					try {
 						final String response = builder.get(String.class);
 						LOGGER.trace("Retrieved response=" + response);
-						final IWVWMatchesDTO result = WVWService.this.wvwDTOFactory.newMatchesOf(response, WVWService.this);
+						final IWVWMatchesDTO result = WVWService.this.wvwDTOFactory.newMatchesOf(response);
 						LOGGER.debug("Built result=" + result);
 						return result;
 					} catch (ClientHandlerException e) {
@@ -183,10 +188,10 @@ class WVWService extends AbstractService implements IWVWService {
 		}
 	}
 
-	public IWVWMatchDetailsDTO retrieveMatchDetails(final String id) {
+	public Optional<IWVWMatchDetailsDTO> retrieveMatchDetails(final String id) {
 		checkNotNull(id);
 		try {
-			return this.matchDetailsCache.get(id, new Callable<IWVWMatchDetailsDTO>() {
+			return Optional.fromNullable(this.matchDetailsCache.get(id, new Callable<IWVWMatchDetailsDTO>() {
 				public IWVWMatchDetailsDTO call() throws Exception {
 					final WebResource resource = CLIENT.resource(MATCH_DETAILS_URL.toExternalForm()).queryParam("match_id", id);
 					resource.addFilter(new RetryClientFilter(RETRY_COUNT));
@@ -194,7 +199,7 @@ class WVWService extends AbstractService implements IWVWService {
 					try {
 						final String response = builder.get(String.class);
 						LOGGER.trace("Retrieved response=" + response);
-						final IWVWMatchDetailsDTO result = WVWService.this.wvwDTOFactory.newMatchDetailsOf(response, WVWService.this);
+						final IWVWMatchDetailsDTO result = WVWService.this.wvwDTOFactory.newMatchDetailsOf(response);
 						LOGGER.debug("Built result=" + result);
 						return result;
 					} catch (ClientHandlerException e) {
@@ -202,10 +207,10 @@ class WVWService extends AbstractService implements IWVWService {
 						return null;
 					}
 				}
-			});
+			}));
 		} catch (ExecutionException e) {
-			LOGGER.error("Failed to retrieve all " + IWVWMatchDetailsDTO.class.getSimpleName() + " from cache for id=" + id, e);
-			throw new IllegalStateException("Failed to retrieve all " + IWVWMatchDetailsDTO.class.getSimpleName() + " from cache for id=" + id, e);
+			LOGGER.error("Failed to retrieve " + IWVWMatchDetailsDTO.class.getSimpleName() + " from cache for id=" + id, e);
+			throw new IllegalStateException("Failed to retrieve " + IWVWMatchDetailsDTO.class.getSimpleName() + " from cache for id=" + id, e);
 		}
 	}
 
@@ -221,7 +226,7 @@ class WVWService extends AbstractService implements IWVWService {
 					try {
 						final String response = builder.get(String.class);
 						LOGGER.trace("Retrieved response=" + response);
-						final IWVWObjectiveNameDTO[] result = WVWService.this.wvwDTOFactory.newObjectiveNamesOf(response, WVWService.this);
+						final IWVWObjectiveNameDTO[] result = WVWService.this.wvwDTOFactory.newObjectiveNamesOf(response);
 						if (LOGGER.isDebugEnabled()) {
 							LOGGER.debug("Built result=" + Arrays.deepToString(result));
 						}
@@ -251,7 +256,7 @@ class WVWService extends AbstractService implements IWVWService {
 					try {
 						final String response = builder.get(String.class);
 						LOGGER.trace("Retrieved response=" + response);
-						final IWorldNameDTO[] result = WVWService.this.wvwDTOFactory.newWorldNamesOf(response, WVWService.this);
+						final IWorldNameDTO[] result = WVWService.this.wvwDTOFactory.newWorldNamesOf(response);
 						if (LOGGER.isDebugEnabled()) {
 							LOGGER.debug("Built result=" + Arrays.deepToString(result));
 						}
@@ -351,6 +356,33 @@ class WVWService extends AbstractService implements IWVWService {
 	@Override
 	public DateFormat getZuluDateFormat() {
 		return DF;
+	}
+
+	@Override
+	public Optional<IGuildDetailsDTO> retrieveGuildDetails(final String id) {
+		checkNotNull(id);
+		try {
+			return Optional.fromNullable(this.guildDetailsCache.get(id, new Callable<IGuildDetailsDTO>() {
+				public IGuildDetailsDTO call() throws Exception {
+					final WebResource resource = CLIENT.resource(GUILD_DETAILS_URL.toExternalForm()).queryParam("guild_id", id);
+					resource.addFilter(new RetryClientFilter(RETRY_COUNT));
+					final WebResource.Builder builder = resource.accept(MediaType.APPLICATION_JSON_TYPE);
+					try {
+						final String response = builder.get(String.class);
+						LOGGER.trace("Retrieved response=" + response);
+						final IGuildDetailsDTO result = WVWService.this.wvwDTOFactory.newGuildDetailsOf(response);
+						LOGGER.debug("Built result=" + result);
+						return result;
+					} catch (ClientHandlerException e) {
+						LOGGER.fatal("Exception thrown while quering " + resource.getURI(), e);
+						return null;
+					}
+				}
+			}));
+		} catch (ExecutionException e) {
+			LOGGER.error("Failed to retrieve " + IGuildDetailsDTO.class.getSimpleName() + " from cache for id=" + id, e);
+			throw new IllegalStateException("Failed to retrieve " + IGuildDetailsDTO.class.getSimpleName() + " from cache for id=" + id, e);
+		}
 	}
 
 }

@@ -27,6 +27,7 @@ import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMapScoresChangedEvent
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMatchEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMatchScoresChangedEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveCaptureEvent;
+import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveClaimedEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveEndOfBuffEvent;
 
 class WVWWrapper implements IWVWWrapper {
@@ -122,6 +123,8 @@ class WVWWrapper implements IWVWWrapper {
 			listener.notifyAboutObjectiveCapturedEvent((IWVWObjectiveCaptureEvent) event);
 		} else if (event instanceof IWVWObjectiveEndOfBuffEvent) {
 			listener.notifyAboutObjectiveEndOfBuffEvent((IWVWObjectiveEndOfBuffEvent) event);
+		} else if (event instanceof IWVWObjectiveClaimedEvent) {
+			listener.notifyAboutObjectiveClaimedEvent((IWVWObjectiveClaimedEvent) event);
 		}
 	}
 

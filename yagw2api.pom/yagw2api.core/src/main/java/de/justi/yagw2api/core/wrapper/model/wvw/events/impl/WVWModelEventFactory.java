@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.Optional;
 
+import de.justi.yagw2api.core.wrapper.model.IGuild;
 import de.justi.yagw2api.core.wrapper.model.IWorld;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMap;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
@@ -13,6 +14,7 @@ import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMapScoresChangedEvent
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMatchScoresChangedEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWModelEventFactory;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveCaptureEvent;
+import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveClaimedEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveEndOfBuffEvent;
 
 class WVWModelEventFactory implements IWVWModelEventFactory {
@@ -43,6 +45,14 @@ class WVWModelEventFactory implements IWVWModelEventFactory {
 	public IWVWObjectiveEndOfBuffEvent newObjectiveEndOfBuffEvent(IWVWObjective source) {
 		checkNotNull(source);
 		return new WVWObjectiveEndOfBuffEvent(source);
+	}
+
+	@Override
+	public IWVWObjectiveClaimedEvent newObjectiveClaimedEvent(IWVWObjective source, IGuild claimingGuild, Optional<IGuild> previousClaimedByGuild) {
+		checkNotNull(source);
+		checkNotNull(claimingGuild);
+		checkNotNull(previousClaimedByGuild);
+		return new WVWObjectiveClaimedEvent(source, claimingGuild, previousClaimedByGuild.orNull());
 	}
 
 }

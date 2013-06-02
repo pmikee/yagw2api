@@ -5,10 +5,8 @@ import static com.google.common.base.Preconditions.checkState;
 
 import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.TimeZone;
 
 import org.apache.log4j.Logger;
 
@@ -89,7 +87,7 @@ class WVWMatchDTO implements IWVWMatchDTO {
 	@Override
 	public Optional<IWVWMatchDetailsDTO> getDetails() {
 		checkState(this.id != null);
-		return Optional.fromNullable(SERVICE.retrieveMatchDetails(this.id));
+		return SERVICE.retrieveMatchDetails(this.id);
 	}
 
 	@Override

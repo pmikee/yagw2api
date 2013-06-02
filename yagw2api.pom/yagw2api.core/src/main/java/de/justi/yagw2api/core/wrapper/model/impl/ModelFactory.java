@@ -21,12 +21,12 @@ class ModelFactory implements IModelFactory {
 	private final Map<String, IGuild> guildsMappedById = new HashMap<String, IGuild>();
 	private final Map<Integer, IWorld> worldsMappedById = new HashMap<Integer, IWorld>();
 	
-	public IGuild getOrCreateGuild(String id) {
+	public IGuild getOrCreateGuild(String id, String name, String tag) {
 		checkNotNull(id);
 		if(!this.guildsMappedById.containsKey(id)) {
 			synchronized (this) {
 				if(!this.guildsMappedById.containsKey(id)) {
-					this.guildsMappedById.put(id, new Guild(id));
+					this.guildsMappedById.put(id, new Guild(id, name, tag));
 				}
 			}
 		}

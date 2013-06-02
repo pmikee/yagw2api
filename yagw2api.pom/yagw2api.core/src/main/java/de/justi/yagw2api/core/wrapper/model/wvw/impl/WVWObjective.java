@@ -21,12 +21,14 @@ import com.google.common.eventbus.EventBus;
 import de.justi.yagw2api.core.YAGW2APICore;
 import de.justi.yagw2api.core.arenanet.dto.IWVWObjectiveDTO;
 import de.justi.yagw2api.core.wrapper.model.AbstractHasChannel;
+import de.justi.yagw2api.core.wrapper.model.IGuild;
 import de.justi.yagw2api.core.wrapper.model.IUnmodifiable;
 import de.justi.yagw2api.core.wrapper.model.IWorld;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMap;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWObjective;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWModelEventFactory;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveCaptureEvent;
+import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveClaimedEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.types.IWVWLocationType;
 import de.justi.yagw2api.core.wrapper.model.wvw.types.IWVWObjectiveType;
@@ -123,6 +125,21 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 		public boolean equals(Object obj) {
 			return WVWObjective.this.equals(obj);
 		}
+
+		@Override
+		public Optional<IGuild> getClaimedByGuild() {
+			return WVWObjective.this.getClaimedByGuild();
+		}
+
+		@Override
+		public void claim(IGuild guild) {
+			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName() + " and therefore can not be modified.");
+		}
+
+		@Override
+		public void initializeClaimedByGuild(IGuild guild) {
+			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName() + " and therefore can not be modified.");
+		}
 	}
 
 	public static class WVWObjectiveBuilder implements IWVWObjective.IWVWObjectiveBuilder {
@@ -174,6 +191,7 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 	private Optional<IWorld> owningWorld = Optional.absent();
 	private Optional<Calendar> lastCaptureEventTimestamp = Optional.absent();
 	private boolean postedEndOfBuffEvent = true;
+	private Optional<IGuild> claimedByGuild = Optional.absent();
 	private Optional<IWVWMap> map = Optional.absent();
 
 	private WVWObjective(IWVWLocationType location) {
@@ -205,6 +223,7 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 
 	public void capture(IWorld capturingWorld) {
 		checkNotNull(capturingWorld);
+		checkState(!this.owningWorld.isPresent() || !this.owningWorld.get().equals(capturingWorld));
 		final IWVWObjectiveCaptureEvent event = WVW_MODEL_EVENTS_FACTORY.newObjectiveCapturedEvent(this, capturingWorld, this.owningWorld);
 		LOGGER.debug(capturingWorld + " has captured " + this + " when expected remaining buff duration was " + this.getRemainingBuffDuration(TimeUnit.SECONDS) + "s");
 		this.owningWorld = Optional.of(capturingWorld);
@@ -294,6 +313,26 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 			final IWVWObjective objective = (IWVWObjective) obj;
 			return Objects.equal(this.getLocation().getObjectiveId().orNull(), objective.getLocation().getObjectiveId().orNull());
 		}
+	}
+
+	@Override
+	public Optional<IGuild> getClaimedByGuild() {
+		return this.claimedByGuild;
+	}
+
+	@Override
+	public void claim(IGuild guild) {
+		checkNotNull(guild);
+		checkState(!this.claimedByGuild.isPresent() || !this.claimedByGuild.get().equals(guild));
+		final IWVWObjectiveClaimedEvent event = WVW_MODEL_EVENTS_FACTORY.newObjectiveClaimedEvent(this, guild, this.claimedByGuild);
+		LOGGER.debug(guild + " has claimed " + this);
+		this.claimedByGuild = Optional.of(guild);
+		this.getChannel().post(event);
+	}
+
+	@Override
+	public void initializeClaimedByGuild(IGuild guild) {
+		this.claimedByGuild = Optional.of(guild);
 	}
 
 }

@@ -7,16 +7,15 @@ import java.util.Arrays;
 
 import org.apache.log4j.Logger;
 
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import de.justi.yagw2api.core.arenanet.dto.IGuildDetailsDTO;
 import de.justi.yagw2api.core.arenanet.dto.IWVWDTOFactory;
 import de.justi.yagw2api.core.arenanet.dto.IWVWMatchDetailsDTO;
 import de.justi.yagw2api.core.arenanet.dto.IWVWMatchesDTO;
 import de.justi.yagw2api.core.arenanet.dto.IWVWObjectiveNameDTO;
 import de.justi.yagw2api.core.arenanet.dto.IWorldNameDTO;
-import de.justi.yagw2api.core.arenanet.service.IWVWService;
 
 class WVWDTOFactory implements IWVWDTOFactory {
 	private static final Logger LOGGER = Logger.getLogger(WVWDTOFactory.class);
@@ -25,32 +24,29 @@ class WVWDTOFactory implements IWVWDTOFactory {
 
 	}
 
-	private Gson createGSON(final IWVWService service) {
+	private Gson createGSON() {
 		return new GsonBuilder().excludeFieldsWithModifiers(java.lang.reflect.Modifier.TRANSIENT).setVersion(1.0).create();
 	}
 
-	public IWVWMatchesDTO newMatchesOf(String json, IWVWService service) {
-		checkNotNull(service);
-		LOGGER.trace("Going to built " + IWVWMatchesDTO.class.getSimpleName() + " using service=" + service);
-		final WVWMatchesDTO result = this.createGSON(service).fromJson(checkNotNull(json), WVWMatchesDTO.class);
+	public IWVWMatchesDTO newMatchesOf(String json) {
+		LOGGER.trace("Going to built " + IWVWMatchesDTO.class.getSimpleName());
+		final WVWMatchesDTO result = this.createGSON().fromJson(checkNotNull(json), WVWMatchesDTO.class);
 		checkState(result != null);
 		LOGGER.debug("Built " + result);
 		return result;
 	}
 
-	public IWVWMatchDetailsDTO newMatchDetailsOf(String json, IWVWService service) {
-		checkNotNull(service);
-		LOGGER.trace("Going to built " + IWVWMatchDetailsDTO.class.getSimpleName() + " using service=" + service);
-		final WVWMatchDetailsDTO result = this.createGSON(service).fromJson(checkNotNull(json), WVWMatchDetailsDTO.class);
+	public IWVWMatchDetailsDTO newMatchDetailsOf(String json) {
+		LOGGER.trace("Going to built " + IWVWMatchDetailsDTO.class.getSimpleName());
+		final WVWMatchDetailsDTO result = this.createGSON().fromJson(checkNotNull(json), WVWMatchDetailsDTO.class);
 		checkState(result != null);
 		LOGGER.debug("Built " + result);
 		return result;
 	}
 
-	public IWVWObjectiveNameDTO[] newObjectiveNamesOf(String json, IWVWService service) {
-		checkNotNull(service);
-		LOGGER.trace("Going to built all " + IWVWObjectiveNameDTO.class.getSimpleName() + " using service=" + service);
-		final WVWObjectiveNameDTO[] result = this.createGSON(service).fromJson(checkNotNull(json), WVWObjectiveNameDTO[].class);
+	public IWVWObjectiveNameDTO[] newObjectiveNamesOf(String json) {
+		LOGGER.trace("Going to built all " + IWVWObjectiveNameDTO.class.getSimpleName());
+		final WVWObjectiveNameDTO[] result = this.createGSON().fromJson(checkNotNull(json), WVWObjectiveNameDTO[].class);
 		checkState(result != null);
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Built " + Arrays.deepToString(result));
@@ -58,14 +54,22 @@ class WVWDTOFactory implements IWVWDTOFactory {
 		return result;
 	}
 
-	public IWorldNameDTO[] newWorldNamesOf(String json, IWVWService service) {
-		checkNotNull(service);
-		LOGGER.trace("Going to built " + IWorldNameDTO.class.getSimpleName() + " using service=" + service);
-		final WorldNameDTO[] result = this.createGSON(service).fromJson(checkNotNull(json), WorldNameDTO[].class);
+	public IWorldNameDTO[] newWorldNamesOf(String json) {
+		LOGGER.trace("Going to built " + IWorldNameDTO.class.getSimpleName());
+		final WorldNameDTO[] result = this.createGSON().fromJson(checkNotNull(json), WorldNameDTO[].class);
 		checkState(result != null);
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Built " + Arrays.deepToString(result));
 		}
+		return result;
+	}
+
+	@Override
+	public IGuildDetailsDTO newGuildDetailsOf(String json) {
+		LOGGER.trace("Going to built " + IGuildDetailsDTO.class.getSimpleName());
+		final GuildDetailsDTO result = this.createGSON().fromJson(checkNotNull(json), GuildDetailsDTO.class);
+		checkState(result != null);
+		LOGGER.debug("Built " + result);
 		return result;
 	}
 }

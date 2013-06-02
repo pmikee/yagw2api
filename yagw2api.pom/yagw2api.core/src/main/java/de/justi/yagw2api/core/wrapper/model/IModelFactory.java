@@ -7,7 +7,7 @@ import de.justi.yagw2api.core.wrapper.model.IWorld.IWorldBuilder;
 
 public interface IModelFactory {
 	void clearCache();
-	IGuild getOrCreateGuild(String id);
+	IGuild getOrCreateGuild(String id, String name, String tag);
 	
 	IWorldBuilder newWorldBuilder();
 	Optional<IWorld> getWorld(int id);

@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 import com.google.common.base.Optional;
 
 import de.justi.yagw2api.core.arenanet.dto.IWVWObjectiveDTO;
+import de.justi.yagw2api.core.wrapper.model.IGuild;
 import de.justi.yagw2api.core.wrapper.model.IHasChannel;
 import de.justi.yagw2api.core.wrapper.model.IWorld;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveEvent;
@@ -29,6 +30,7 @@ public interface IWVWObjective extends IHasWVWLocation<IWVWObjective>, IHasChann
 	List<IWVWObjectiveEvent> getEventHistory();
 
 	Optional<String> getLabel();
+	Optional<IGuild> getClaimedByGuild();
 
 	IWVWObjectiveType getType();
 
@@ -36,6 +38,10 @@ public interface IWVWObjective extends IHasWVWLocation<IWVWObjective>, IHasChann
 
 	void capture(IWorld capturingWorld);
 	void initializeOwner(IWorld owningWorld);
+	
+	void claim(IGuild guild);
+	void initializeClaimedByGuild(IGuild guild);
+	
 	void updateOnSynchronization();
 
 	long getRemainingBuffDuration(TimeUnit unit);

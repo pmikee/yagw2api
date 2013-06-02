@@ -12,4 +12,5 @@ public interface IWVWObjectiveDTO {
 	Optional<IWVWObjectiveNameDTO> getName(Locale locale); 
 	String getOwner();
 	String getGuildId();
+	Optional<IGuildDetailsDTO> getGuildDetails();
 }

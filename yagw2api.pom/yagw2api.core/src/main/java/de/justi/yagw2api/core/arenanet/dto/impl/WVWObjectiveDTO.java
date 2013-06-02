@@ -11,6 +11,7 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 
 import de.justi.yagw2api.core.YAGW2APICore;
+import de.justi.yagw2api.core.arenanet.dto.IGuildDetailsDTO;
 import de.justi.yagw2api.core.arenanet.dto.IWVWObjectiveDTO;
 import de.justi.yagw2api.core.arenanet.dto.IWVWObjectiveNameDTO;
 import de.justi.yagw2api.core.arenanet.service.IWVWService;
@@ -48,5 +49,14 @@ class WVWObjectiveDTO implements IWVWObjectiveDTO {
 		checkNotNull(locale);
 		checkState(this.getId() > 0);
 		return SERVICE.retrieveObjectiveName(locale, this.getId());
+	}
+
+	@Override
+	public Optional<IGuildDetailsDTO> getGuildDetails(){ 
+		if(this.guildId == null) {
+			return Optional.absent();
+		}else {
+			return SERVICE.retrieveGuildDetails(this.guildId);
+		}
 	}
 }
