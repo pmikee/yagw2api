@@ -193,7 +193,7 @@ class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 					owner = match.getWorldByDTOOwnerString(objectiveDTO.getOwner()).get();
 					objective = map.getByObjectiveId(objectiveDTO.getId());
 					checkState(objective.isPresent());
-					objective.get().capture(owner);
+					objective.get().initializeOwner(owner);
 				}
 			}
 		}
