@@ -31,7 +31,7 @@ import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveEndOfBuffEve
 
 class WVWWrapper implements IWVWWrapper {
 	private static final Logger LOGGER = Logger.getLogger(WVWWrapper.class);
-	private final WVWSynchronizer deamon;
+	private WVWSynchronizer deamon = null;
 	private final Map<IWVWMatch, Collection<IWVWMatchListener>> singleMatchListeners = new CopyOnWriteHashMap<IWVWMatch, Collection<IWVWMatchListener>>();
 	private final Collection<IWVWMatchListener> allMatchesListeners = new CopyOnWriteArrayList<IWVWMatchListener>();
 	private final Map<IWVWMap, Collection<IWVWMapListener>> singleMapListeners = new CopyOnWriteHashMap<IWVWMap, Collection<IWVWMapListener>>();
@@ -39,32 +39,40 @@ class WVWWrapper implements IWVWWrapper {
 	private final Collection<IWVWMapListener> allMapsOfAllMatchesListeners = new CopyOnWriteArrayList<IWVWMapListener>();
 
 	public WVWWrapper() {
-		this.deamon = new WVWSynchronizer();
-		this.deamon.getChannel().register(this);
 	}
 
 	public void start() {
+		if (this.deamon == null) {
+			synchronized (this) {
+				if (this.deamon == null) {
+					this.deamon = new WVWSynchronizer();
+					this.deamon.getChannel().register(this);
+				}
+			}
+		}
+		checkState(this.deamon != null);
 		checkState(!this.deamon.isRunning());
 		this.deamon.startAndWait();
 	}
 
 	public void stop() {
+		checkState(this.deamon != null);
 		checkState(this.deamon.isRunning());
 		this.deamon.stopAndWait();
 	}
 
 	@Override
 	public boolean isRunning() {
-		return this.deamon.isRunning();
+		return this.deamon != null && this.deamon.isRunning();
 	}
 
 	@Subscribe
 	public void onWVWMatchEvent(IWVWMatchEvent event) {
 		checkNotNull(event);
-		LOGGER.debug(this+" will now inform it's registered listeners about "+event);
+		LOGGER.debug(this + " will now inform it's registered listeners about " + event);
 		final IWVWMatch match = event.getMatch();
 
-		for (IWVWMatchListener listener : this.allMatchesListeners) {			
+		for (IWVWMatchListener listener : this.allMatchesListeners) {
 			this.notifyWVWMatchListener(listener, event);
 		}
 		if (this.singleMatchListeners.containsKey(match)) {
@@ -73,12 +81,12 @@ class WVWWrapper implements IWVWWrapper {
 			}
 		}
 	}
-	
+
 	private void notifyWVWMatchListener(IWVWMatchListener listener, IWVWMatchEvent event) {
 		checkNotNull(listener);
 		checkNotNull(event);
-		if(event instanceof IWVWMatchScoresChangedEvent) {
-			listener.notifyAboutMatchScoreChangedEvent((IWVWMatchScoresChangedEvent)event);
+		if (event instanceof IWVWMatchScoresChangedEvent) {
+			listener.notifyAboutMatchScoreChangedEvent((IWVWMatchScoresChangedEvent) event);
 		}
 	}
 
@@ -86,7 +94,7 @@ class WVWWrapper implements IWVWWrapper {
 	public void onWVWMapScoreChangedEvent(IWVWMapEvent event) {
 		checkNotNull(event);
 		checkArgument(event.getMap().getMatch().isPresent());
-		LOGGER.debug(this+" will now inform it's registered listeners about "+event);
+		LOGGER.debug(this + " will now inform it's registered listeners about " + event);
 		final IWVWMap map = event.getMap();
 		final IWVWMatch match = map.getMatch().get();
 
@@ -104,16 +112,16 @@ class WVWWrapper implements IWVWWrapper {
 			}
 		}
 	}
-	
+
 	private void notifyWVWMapListener(IWVWMapListener listener, IWVWMapEvent event) {
 		checkNotNull(listener);
 		checkNotNull(event);
-		if(event instanceof IWVWMapScoresChangedEvent) {
-			listener.notifyAboutChangedMapScoreEvent((IWVWMapScoresChangedEvent)event);
-		}else if(event instanceof IWVWObjectiveCaptureEvent) {
-			listener.notifyAboutObjectiveCapturedEvent((IWVWObjectiveCaptureEvent)event);
-		}else if(event instanceof IWVWObjectiveEndOfBuffEvent) {
-			listener.notifyAboutObjectiveEndOfBuffEvent((IWVWObjectiveEndOfBuffEvent)event);
+		if (event instanceof IWVWMapScoresChangedEvent) {
+			listener.notifyAboutChangedMapScoreEvent((IWVWMapScoresChangedEvent) event);
+		} else if (event instanceof IWVWObjectiveCaptureEvent) {
+			listener.notifyAboutObjectiveCapturedEvent((IWVWObjectiveCaptureEvent) event);
+		} else if (event instanceof IWVWObjectiveEndOfBuffEvent) {
+			listener.notifyAboutObjectiveEndOfBuffEvent((IWVWObjectiveEndOfBuffEvent) event);
 		}
 	}
 
@@ -160,18 +168,18 @@ class WVWWrapper implements IWVWWrapper {
 	@Override
 	public void unregisterWVWMapListener(IWVWMapListener listener) {
 		checkNotNull(listener);
-		
+
 		// remove listener references
 		for (IWVWMap key : this.singleMapListeners.keySet()) {
-			if(this.singleMapListeners.get(key).contains(listener)) {
+			if (this.singleMapListeners.get(key).contains(listener)) {
 				this.singleMapListeners.get(key).remove(listener);
 			}
 		}
 		for (IWVWMatch key : this.allMapsOfSingleMatchListeners.keySet()) {
-			if(this.allMapsOfSingleMatchListeners.get(key).contains(listener)) {
+			if (this.allMapsOfSingleMatchListeners.get(key).contains(listener)) {
 				this.allMapsOfSingleMatchListeners.get(key).remove(listener);
 			}
-		}	
+		}
 		this.allMapsOfAllMatchesListeners.remove(listener);
 	}
 
