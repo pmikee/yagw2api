@@ -55,7 +55,7 @@ class WVWMatchDetailsDTO implements IWVWMatchDetailsDTO {
 
 	public String toString() {
 		return Objects.toStringHelper(this).add("id", this.id).add("redScore", this.getRedScore()).add("greenScore", this.getGreenScore()).add("blueScore", this.getBlueScore())
-				.add("maps", Arrays.deepToString(this.maps)).add("match", this.getMatch()).toString();
+				.add("maps", Arrays.deepToString(this.maps)).toString();
 	}
 
 	public Optional<IWVWMatchDTO> getMatch() {

@@ -6,10 +6,13 @@ import static com.google.common.base.Preconditions.checkState;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -44,7 +47,11 @@ class WVWService extends AbstractService implements IWVWService {
 
 	private static final String API_VERSION = "v1";
 	private static final Logger LOGGER = Logger.getLogger(WVWService.class);
-
+	
+	static final transient DateFormat DF = new SimpleDateFormat("yyyy-MM-DD'T'HH:mm:ss'Z'", Locale.US);
+	static {
+		DF.setTimeZone(TimeZone.getTimeZone("Zulu"));
+	}
 	private static final URL MATCHES_URL;
 	private static final URL MATCH_DETAILS_URL;
 	private static final URL OBJECTIVE_NAMES_URL;
@@ -339,6 +346,11 @@ class WVWService extends AbstractService implements IWVWService {
 			LOGGER.error("Failed to retrieve " + IWVWMatchDTO.class.getSimpleName() + " from cache for matchId=" + matchId, e);
 			throw new IllegalStateException("Failed to retrieve all " + IWVWMatchDTO.class.getSimpleName() + " from cache for matchId=" + matchId, e);
 		}
+	}
+
+	@Override
+	public DateFormat getZuluDateFormat() {
+		return DF;
 	}
 
 }

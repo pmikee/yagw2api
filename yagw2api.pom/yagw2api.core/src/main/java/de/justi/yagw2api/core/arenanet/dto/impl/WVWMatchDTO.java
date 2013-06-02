@@ -26,10 +26,6 @@ import de.justi.yagw2api.core.arenanet.service.IWVWService;
 class WVWMatchDTO implements IWVWMatchDTO {
 	static final transient Logger LOGGER = Logger.getLogger(WVWMapDTO.class);
 	static final transient IWVWService SERVICE = YAGW2APICore.getInjector().getInstance(IWVWService.class);
-	static final transient DateFormat DF = new SimpleDateFormat("yyyy-MM-DD'T'HH:mm:ss'Z'", Locale.US);
-	static {
-		DF.setTimeZone(TimeZone.getTimeZone("Zulu"));
-	}
 
 	@Since(1.0)
 	@SerializedName("wvw_match_id")
@@ -45,10 +41,10 @@ class WVWMatchDTO implements IWVWMatchDTO {
 	private int greenWorldId;
 	@Since(1.0)
 	@SerializedName("start_time")
-	private String startTimeString;
+	private String startTimeString = "";
 	@Since(1.0)
 	@SerializedName("end_time")
-	private String endTimeString;
+	private String endTimeString = "";
 	
 	public String toString() {
 		return Objects.toStringHelper(this).add("id", this.id).add("redWorldId", this.redWorldId).add("redWorld", this.getRedWorldName(Locale.getDefault()))
@@ -98,20 +94,22 @@ class WVWMatchDTO implements IWVWMatchDTO {
 
 	@Override
 	public Date getStartTime() {
+		final DateFormat df = SERVICE.getZuluDateFormat();
 		try {
-			return DF.parse(this.startTimeString);
-		} catch (ParseException e) {
-			LOGGER.fatal("Failed to parse "+this.startTimeString+" using "+DF,e);
+			return df.parse(this.startTimeString);
+		} catch (NumberFormatException | ParseException e) {
+			LOGGER.fatal("Failed to parse "+this.startTimeString+" using "+df +" of "+WVWMatchDTO.class.getSimpleName()+" with id="+this.id,e);
 			return null;
 		}
 	}
 
 	@Override
 	public Date getEndTime() {
+		final DateFormat df = SERVICE.getZuluDateFormat();
 		try {
-			return DF.parse(this.endTimeString);
-		} catch (ParseException e) {
-			LOGGER.fatal("Failed to parse "+this.endTimeString+" using "+DF,e);
+			return df.parse(this.endTimeString);
+		} catch (NumberFormatException | ParseException e) {
+			LOGGER.fatal("Failed to parse "+this.endTimeString+" using "+df +" of "+WVWMatchDTO.class.getSimpleName()+" with id="+this.id,e);
 			return null;
 		}
 	}
