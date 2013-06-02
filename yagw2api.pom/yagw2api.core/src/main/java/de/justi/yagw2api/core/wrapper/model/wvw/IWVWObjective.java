@@ -25,6 +25,7 @@ public interface IWVWObjective extends IHasWVWLocation<IWVWObjective>, IHasChann
 		IWVWObjectiveBuilder fromDTO(IWVWObjectiveDTO dto);
 
 		IWVWObjectiveBuilder owner(IWorld world);
+		IWVWObjectiveBuilder claimedBy(IGuild guild);
 	}
 
 	List<IWVWObjectiveEvent> getEventHistory();

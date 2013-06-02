@@ -14,11 +14,14 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 import de.justi.yagw2api.core.YAGW2APICore;
+import de.justi.yagw2api.core.arenanet.dto.IGuildDetailsDTO;
 import de.justi.yagw2api.core.arenanet.dto.IWVWMapDTO;
 import de.justi.yagw2api.core.arenanet.dto.IWVWMatchDTO;
 import de.justi.yagw2api.core.arenanet.dto.IWVWMatchDetailsDTO;
 import de.justi.yagw2api.core.arenanet.dto.IWVWObjectiveDTO;
 import de.justi.yagw2api.core.arenanet.service.IWVWService;
+import de.justi.yagw2api.core.wrapper.model.IGuild;
+import de.justi.yagw2api.core.wrapper.model.IModelFactory;
 import de.justi.yagw2api.core.wrapper.model.IWorld;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMap;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
@@ -30,6 +33,7 @@ class WVWSynchronizerAction extends RecursiveAction{
 	private static final int MAX_CHUNK_SIZE = 1;
 	private static final Logger LOGGER = Logger.getLogger(WVWSynchronizerAction.class);
 	private static final IWVWService SERVICE = YAGW2APICore.getInjector().getInstance(IWVWService.class);
+	private static final IModelFactory MODEL_FACTORY = YAGW2APICore.getInjector().getInstance(IModelFactory.class);
 
 	private final int chunkSize;
 	private final List<String> matchIds;
@@ -117,7 +121,8 @@ class WVWSynchronizerAction extends RecursiveAction{
 		// 1. synchronize objectives
 		Optional<IWVWObjective> optionalObjectiveModel;
 		IWVWObjective objectiveModel;
-		IWorld potentialNewOwner;
+		Optional<IWorld> potentialNewOwner;
+		Optional<IGuildDetailsDTO> claimedByGuildDTO;
 		for (IWVWObjectiveDTO objectiveDTO : mapDTO.getObjectives()) {
 			optionalObjectiveModel = mapModel.getByObjectiveId(objectiveDTO.getId());
 			if (optionalObjectiveModel.isPresent()) {
@@ -126,39 +131,18 @@ class WVWSynchronizerAction extends RecursiveAction{
 				if (LOGGER.isTraceEnabled()) {
 					LOGGER.trace("Going to synchronize model=" + objectiveModel + " with dto=" + objectiveDTO);
 				}
-				if (objectiveDTO.getOwner() != null) {
-					potentialNewOwner = match.getWorldByDTOOwnerString(objectiveDTO.getOwner()).get();
-					if (objectiveModel.getOwner().isPresent()) {
-						// check for owner change
-						if (!potentialNewOwner.equals(objectiveModel.getOwner().get())) {
-							// -> owner change
-							if(LOGGER.isDebugEnabled()) {
-								LOGGER.debug("Detected an owner change of " + objectiveModel + " from " + objectiveModel.getOwner() + " to " + potentialNewOwner);
-							}
-							objectiveModel.capture(potentialNewOwner);
-						}else{
-							// -> no owner change at all
-							if(LOGGER.isTraceEnabled()) {
-								LOGGER.trace("Owner of " + objectiveModel + " has not changed.");
-							}
-						}
-					} else {
-						// first capture
-						if(LOGGER.isDebugEnabled()) {
-							LOGGER.debug("Detected first capture of " + objectiveModel + " by " + potentialNewOwner);
-						}
-						objectiveModel.capture(potentialNewOwner);
-					}
-				} else {
-					// no owner
-					if(objectiveModel.getOwner().isPresent()) {
-						// TODO unset owner of objective -> can happen after reset!?
-					}else {
-						// still not captured --> nothing to do
-						if(LOGGER.isTraceEnabled()) {
-							LOGGER.trace(objectiveModel + " has still been not captured yet.");
-						}
-					}
+				
+				// 1.1 synchronize owner
+				potentialNewOwner = match.getWorldByDTOOwnerString(objectiveDTO.getOwner());
+				objectiveModel.capture(potentialNewOwner.orNull());
+				// 1.2 synchronize claiming guild
+				claimedByGuildDTO = objectiveDTO.getGuildDetails();
+				if(claimedByGuildDTO.isPresent()) {
+					//TODO refactor this to make use of a builde --> see IWorld
+					final IGuild guild = MODEL_FACTORY.getOrCreateGuild(claimedByGuildDTO.get().getId(), claimedByGuildDTO.get().getName(), claimedByGuildDTO.get().getTag());
+					objectiveModel.claim(guild);
+				}else {
+					objectiveModel.claim(null);
 				}
 			} else {
 				LOGGER.error("Missing " + IWVWObjective.class.getSimpleName() + " for objectiveId=" + objectiveDTO.getId());
