@@ -1,11 +1,8 @@
 package de.justi.yagw2api.core.wrapper.impl;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Locale;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ForkJoinPool;
@@ -20,19 +17,17 @@ import com.google.common.eventbus.Subscribe;
 import com.google.common.util.concurrent.AbstractScheduledService;
 
 import de.justi.yagw2api.core.YAGW2APICore;
-import de.justi.yagw2api.core.arenanet.dto.IWVWMatchDTO;
 import de.justi.yagw2api.core.arenanet.dto.IWVWMatchesDTO;
 import de.justi.yagw2api.core.arenanet.service.IWVWService;
 import de.justi.yagw2api.core.wrapper.model.IEvent;
 import de.justi.yagw2api.core.wrapper.model.IHasChannel;
 import de.justi.yagw2api.core.wrapper.model.IWorld;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
-import de.justi.yagw2api.core.wrapper.model.wvw.IWVWModelFactory;
 
 class WVWSynchronizer extends AbstractScheduledService implements IHasChannel {
 	private static final IWVWService SERVICE = YAGW2APICore.getLowLevelWVWService();
-	private static final IWVWModelFactory WVW_MODEL_FACTORY = YAGW2APICore.getInjector().getInstance(IWVWModelFactory.class);
 	private static final long DELAY_MILLIS = 50;
+	private static final int POOL_THREADS_PER_PROCESSOR = 2;
 	private static final Logger LOGGER = Logger.getLogger(WVWSynchronizer.class);
 
 	private final Map<String, IWVWMatch> matchesMappedById;
@@ -40,7 +35,7 @@ class WVWSynchronizer extends AbstractScheduledService implements IHasChannel {
 	private final Set<IWVWMatch> unmodifiableMatchReferences;
 	private final Set<IWorld> unmodifiableWorldReferences;
 	
-	private final ForkJoinPool pool = new ForkJoinPool(Runtime.getRuntime().availableProcessors(), ForkJoinPool.defaultForkJoinWorkerThreadFactory,
+	private final ForkJoinPool pool = new ForkJoinPool(Runtime.getRuntime().availableProcessors()*POOL_THREADS_PER_PROCESSOR, ForkJoinPool.defaultForkJoinWorkerThreadFactory,
 			new Thread.UncaughtExceptionHandler() {
 				public void uncaughtException(Thread t, Throwable e) {
 					LOGGER.fatal("Uncought exception thrown in " + t.getName(), e);
@@ -53,27 +48,12 @@ class WVWSynchronizer extends AbstractScheduledService implements IHasChannel {
 	 */
 	public WVWSynchronizer() {
 		final IWVWMatchesDTO matchesDto = SERVICE.retrieveAllMatches();
-		IWVWMatch match;
-		
-		final Set<IWVWMatch> unmodifiableMatchReferencesBuffer = new HashSet<IWVWMatch>();
-		final Set<IWorld> unmodifiableWorldReferencesBuffer = new HashSet<IWorld>();
-		
-		final Map<String, IWVWMatch> matchesBuffer = new HashMap<String, IWVWMatch>();
-		for (IWVWMatchDTO matchDTO : matchesDto.getMatches()) {
-			match = WVW_MODEL_FACTORY.newMatchBuilder().fromMatchDTO(matchDTO, Locale.getDefault()).build();
-			match.getChannel().register(this);
-			matchesBuffer.put(match.getId(), match);
-			unmodifiableMatchReferencesBuffer.add(match);
-			checkState(!unmodifiableWorldReferencesBuffer.contains(match.getBlueWorld()));
-			checkState(!unmodifiableWorldReferencesBuffer.contains(match.getRedWorld()));
-			checkState(!unmodifiableWorldReferencesBuffer.contains(match.getGreenWorld()));
-			unmodifiableWorldReferencesBuffer.add(match.getBlueWorld());
-			unmodifiableWorldReferencesBuffer.add(match.getRedWorld());
-			unmodifiableWorldReferencesBuffer.add(match.getGreenWorld());
-		}
-		this.matchesMappedById = ImmutableMap.copyOf(matchesBuffer);
-		this.unmodifiableMatchReferences = ImmutableSet.copyOf(unmodifiableMatchReferencesBuffer);
-		this.unmodifiableWorldReferences = ImmutableSet.copyOf(unmodifiableWorldReferencesBuffer);
+
+		final WVWSynchronizerInitAction initAction = new WVWSynchronizerInitAction(Arrays.asList(matchesDto.getMatches()));
+		this.pool.invoke(initAction);
+		this.matchesMappedById = ImmutableMap.copyOf(initAction.getMatchesBuffer());
+		this.unmodifiableMatchReferences = ImmutableSet.copyOf(initAction.getMatchReferencesBuffer());
+		this.unmodifiableWorldReferences = ImmutableSet.copyOf(initAction.getWorldReferencesBuffer());
 	}
 
 	public Set<IWVWMatch> getAllMatches(){

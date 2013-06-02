@@ -327,7 +327,7 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 
 	@Override
 	public void claim(IGuild guild) {
-		if (!this.claimedByGuild.isPresent() || !this.claimedByGuild.get().equals(guild)) {
+		if (guild != null && (!this.claimedByGuild.isPresent() || !this.claimedByGuild.get().equals(guild))) {
 			// changed claiming guild
 			final IWVWObjectiveClaimedEvent event = WVW_MODEL_EVENTS_FACTORY.newObjectiveClaimedEvent(this, guild, this.claimedByGuild);
 			LOGGER.info(this + " has been claimed by: " + this.claimedByGuild + " | previous claimed by " + this.claimedByGuild);
@@ -340,7 +340,7 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 	}
 
 	public void capture(IWorld capturingWorld) {
-		if (!this.owningWorld.isPresent() || !this.owningWorld.get().equals(capturingWorld)) {
+		if (capturingWorld != null && (!this.owningWorld.isPresent() || !this.owningWorld.get().equals(capturingWorld))) {
 			// changed owning world
 			final IWVWObjectiveCaptureEvent event = WVW_MODEL_EVENTS_FACTORY.newObjectiveCapturedEvent(this, capturingWorld, this.owningWorld);
 			LOGGER.debug(capturingWorld + " has captured " + this + " when expected remaining buff duration was " + this.getRemainingBuffDuration(TimeUnit.SECONDS) + "s");
