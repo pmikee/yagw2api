@@ -35,7 +35,7 @@ class WVWMatchDetailsDTO implements IWVWMatchDetailsDTO {
 	}
 	@Override
 	public int getRedScore() {
-		return this.scores[2];
+		return this.scores[1];
 	}
 
 	@Override
@@ -45,7 +45,7 @@ class WVWMatchDetailsDTO implements IWVWMatchDetailsDTO {
 
 	@Override
 	public int getBlueScore() {
-		return this.scores[1];
+		return this.scores[2];
 	}
 	
 	public IWVWMapDTO[] getMaps() {
