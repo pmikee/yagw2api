@@ -50,8 +50,7 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 
 		@Override
 		public EventBus getChannel() {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName()
-					+ " and therefore can not be modified.");
+			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName() + " and therefore can not be modified.");
 		}
 
 		@Override
@@ -77,8 +76,7 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 
 		@Override
 		public void capture(IWorld capturingWorld) {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName()
-					+ " and therefore can not be modified.");
+			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName() + " and therefore can not be modified.");
 		}
 
 		@Override
@@ -94,8 +92,7 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 
 		@Override
 		public void connectWithMap(IWVWMap map) {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName()
-					+ " and therefore can not be modified.");
+			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName() + " and therefore can not be modified.");
 		}
 
 		public String toString() {
@@ -104,19 +101,27 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 
 		@Override
 		public void updateOnSynchronization() {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName()
-					+ " and therefore can not be modified.");
+			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName() + " and therefore can not be modified.");
 		}
 
 		@Override
 		public void initializeOwner(IWorld owningWorld) {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName()
-					+ " and therefore can not be modified.");			
+			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName() + " and therefore can not be modified.");
 		}
 
 		@Override
 		public Optional<Calendar> getEndOfBuffTimestamp() {
 			return WVWObjective.this.getEndOfBuffTimestamp();
+		}
+
+		@Override
+		public int hashCode() {
+			return WVWObjective.this.hashCode();
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			return WVWObjective.this.equals(obj);
 		}
 	}
 
@@ -162,7 +167,6 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 			this.map = Optional.fromNullable(map);
 			return this;
 		}
-
 	}
 
 	private final IWVWLocationType location;
@@ -202,8 +206,7 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 	public void capture(IWorld capturingWorld) {
 		checkNotNull(capturingWorld);
 		final IWVWObjectiveCaptureEvent event = WVW_MODEL_EVENTS_FACTORY.newObjectiveCapturedEvent(this, capturingWorld, this.owningWorld);
-		LOGGER.debug(capturingWorld + " has captured " + this + " when expected remaining buff duration was " + this.getRemainingBuffDuration(TimeUnit.SECONDS)
-				+ "s");
+		LOGGER.debug(capturingWorld + " has captured " + this + " when expected remaining buff duration was " + this.getRemainingBuffDuration(TimeUnit.SECONDS) + "s");
 		this.owningWorld = Optional.of(capturingWorld);
 		this.lastCaptureEventTimestamp = Optional.of(event.getTimestamp());
 		this.postedEndOfBuffEvent = false;
@@ -222,11 +225,8 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 	public long getRemainingBuffDuration(TimeUnit unit) {
 		if (this.lastCaptureEventTimestamp.isPresent()) {
 			final Calendar now = Calendar.getInstance();
-			return unit.convert(
-					Math.max(
-							0,
-							this.getType().getBuffDuration(TimeUnit.MILLISECONDS)
-									- Math.max(0, now.getTimeInMillis() - this.lastCaptureEventTimestamp.get().getTimeInMillis())), TimeUnit.MILLISECONDS);
+			return unit.convert(Math.max(0, this.getType().getBuffDuration(TimeUnit.MILLISECONDS) - Math.max(0, now.getTimeInMillis() - this.lastCaptureEventTimestamp.get().getTimeInMillis())),
+					TimeUnit.MILLISECONDS);
 		} else {
 			// not capture yet
 			return 0;
@@ -269,14 +269,31 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 			LOGGER.trace("Remaining buff duration for " + this.toString() + ": " + remainingBuffMillis + "ms");
 		}
 	}
+
 	@Override
 	public Optional<Calendar> getEndOfBuffTimestamp() {
-		if(this.lastCaptureEventTimestamp.isPresent()) {
+		if (this.lastCaptureEventTimestamp.isPresent()) {
 			final Calendar timestamp = Calendar.getInstance();
-			timestamp.setTimeInMillis(this.lastCaptureEventTimestamp.get().getTimeInMillis()+this.getType().getBuffDuration(TimeUnit.MILLISECONDS));
+			timestamp.setTimeInMillis(this.lastCaptureEventTimestamp.get().getTimeInMillis() + this.getType().getBuffDuration(TimeUnit.MILLISECONDS));
 			return Optional.of(timestamp);
-		}else {
+		} else {
 			return Optional.absent();
 		}
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(this.getClass().getName(), this.getLocation().getObjectiveId().orNull());
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null || !(obj instanceof IWVWObjective)) {
+			return false;
+		} else {
+			final IWVWObjective objective = (IWVWObjective) obj;
+			return Objects.equal(this.getLocation().getObjectiveId().orNull(), objective.getLocation().getObjectiveId().orNull());
+		}
+	}
+
 }

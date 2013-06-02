@@ -1,6 +1,7 @@
 package de.justi.yagw2api.sample.model;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkState;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -57,13 +58,13 @@ public class MapObjectivesTableModel extends AbstractTableModel implements IWVWM
 	public void wireUp(IWVWWrapper wrapper, IWVWMap map, IWVWMap... maps) {
 		this.content.clear();
 		this.content.addAll(map.getObjectives());
-		this.fireTableDataChanged();
 		wrapper.unregisterWVWMapListener(this);
 		wrapper.registerWVWMapListener(map, this);
 		for (IWVWMap additionalMap : maps) {
 			this.content.addAll(additionalMap.getObjectives());
 			wrapper.registerWVWMapListener(additionalMap, this);
 		}
+		this.fireTableDataChanged();
 	}
 
 	@Override
@@ -139,12 +140,21 @@ public class MapObjectivesTableModel extends AbstractTableModel implements IWVWM
 
 	@Override
 	public void notifyAboutObjectiveCapturedEvent(IWVWObjectiveCaptureEvent event) {
-		this.fireTableCellUpdated(this.content.indexOf(event.getObjective()), 1);
+		checkState(this.content.contains(event.getObjective()));
+		final int row = this.content.indexOf(event.getObjective());
+		checkState(this.content.contains(event.getObjective()));
+		checkState(row >= 0, row + " should be greater than or equal to 0");
+		checkState(row < this.content.size(), row +" should be smaller than "+this.content.size());
+		checkState(row < this.getRowCount(), row +" should be smaller than "+this.getRowCount());
+		this.fireTableRowsUpdated(row, row);
 	}
 
 	@Override
 	public void notifyAboutObjectiveEndOfBuffEvent(IWVWObjectiveEndOfBuffEvent event) {
-		this.fireTableCellUpdated(this.content.indexOf(event.getObjective()), 0);
+		checkState(this.content.contains(event.getObjective()));
+		final int row = this.content.indexOf(event.getObjective());
+		checkState(this.content.contains(event.getObjective()));
+		this.fireTableRowsUpdated(row, row);
 	}
 
 }
