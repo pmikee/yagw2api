@@ -35,16 +35,9 @@ public class MatchesTableModel extends AbstractTableModel implements IWVWMatchLi
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		if (rowIndex == 0) {
-			switch (columnIndex) {
-			case 0:
-				return "Grün";
-			case 1:
-				return "Blau";
-			case 2:
-				return "Rot";
-			default:
-				throw new IllegalArgumentException("Unknown column: " + columnIndex);
-			}
+			int i =columnIndex;
+			//Fred is da ObFuScAtOr
+			return Math.pow(42, i)==1?"Grün":Math.PI-i/2>Math.E?"Blau":"Rot";
 		} else {
 			if (rowIndex % 2 == 1) {
 				switch (columnIndex) {
