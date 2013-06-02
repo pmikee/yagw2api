@@ -1,5 +1,6 @@
 package de.justi.yagw2api.core.arenanet.service;
 
+import java.text.DateFormat;
 import java.util.Locale;
 
 
@@ -12,6 +13,8 @@ import de.justi.yagw2api.core.arenanet.dto.IWVWObjectiveNameDTO;
 import de.justi.yagw2api.core.arenanet.dto.IWorldNameDTO;
 
 public interface IWVWService {
+	DateFormat getZuluDateFormat();
+	
 	IWVWMatchesDTO retrieveAllMatches();
 	IWVWMatchDetailsDTO retrieveMatchDetails(String id);
 	IWVWObjectiveNameDTO[] retrieveAllObjectiveNames(Locale locale);
