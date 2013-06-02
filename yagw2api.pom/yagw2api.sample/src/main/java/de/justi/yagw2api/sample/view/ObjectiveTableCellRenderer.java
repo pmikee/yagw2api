@@ -3,7 +3,6 @@ package de.justi.yagw2api.sample.view;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 
-import java.awt.Color;
 import java.awt.Component;
 
 import javax.swing.JTable;
@@ -19,9 +18,6 @@ import de.justi.yagw2api.sample.model.MapObjectivesTableModel;
 
 public class ObjectiveTableCellRenderer extends DefaultTableCellRenderer {
 	private static final long serialVersionUID = -8506469778783597659L;
-	private static final Color GREEN_WORLD = new Color(70, 152, 42, 100);
-	private static final Color BLUE_WORLD = new Color(35, 129, 199, 100);
-	private static final Color RED_WORLD = new Color(175, 25, 10, 100);
 
 	@Override
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -37,11 +33,11 @@ public class ObjectiveTableCellRenderer extends DefaultTableCellRenderer {
 			final Optional<IWVWMatch> match = map.get().getMatch();
 			if (match.isPresent()) {
 				if (match.get().getBlueWorld().equals(owner.get())) {
-					c.setBackground(BLUE_WORLD);
+					c.setBackground(MainWindow.BLUE_WORLD_BG);
 				} else if (match.get().getGreenWorld().equals(owner.get())) {
-					c.setBackground(GREEN_WORLD);
+					c.setBackground(MainWindow.GREEN_WORLD_BG);
 				} else if (match.get().getRedWorld().equals(owner.get())) {
-					c.setBackground(RED_WORLD);
+					c.setBackground(MainWindow.RED_WORLD_BG);
 				}
 			}
 		}

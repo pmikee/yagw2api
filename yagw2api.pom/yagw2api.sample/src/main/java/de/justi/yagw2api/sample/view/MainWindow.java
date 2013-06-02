@@ -1,6 +1,7 @@
 package de.justi.yagw2api.sample.view;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,12 +30,17 @@ import com.jgraph.layout.tree.JGraphRadialTreeLayout;
 
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
 import de.justi.yagw2api.sample.Main;
-import de.justi.yagw2api.sample.model.GraphicMapModel;
 import de.justi.yagw2api.sample.model.MapObjectivesTableModel;
 import de.justi.yagw2api.sample.model.MatchesTableModel;
 
 public class MainWindow extends AbstractWindow {
 	private static final long serialVersionUID = -6500541020042114865L;
+	public static final Color GREEN_WORLD_FG = new Color(70, 152, 42);
+	public static final Color GREEN_WORLD_BG = new Color(70, 152, 42, 100);
+	public static final Color BLUE_WORLD_FG = new Color(35, 129, 199);
+	public static final Color BLUE_WORLD_BG = new Color(35, 129, 199, 100);
+	public static final Color RED_WORLD_FG = new Color(175, 25, 10);
+	public static final Color RED_WORLD_BG = new Color(175, 25, 10, 100);
 
 	private final JTabbedPane tabPane;
 	
@@ -70,13 +76,16 @@ public class MainWindow extends AbstractWindow {
 		final JPanel redPanel = this.initRedPanel();
 		final JPanel graphicMapTestPanel = this.initGraphicMapTestPanel();
 
-		tabPane = new JTabbedPane();
-		getTabPane().addTab("Matches", selectionPanel);
-		getTabPane().addTab("Ewige Schlachtgründe", eternalPanel);
-		getTabPane().addTab("Grüne Grenzlande", greenPanel);
-		getTabPane().addTab("Blaue Grenzlande", bluePanel);
-		getTabPane().addTab("Rote Grenzlande", redPanel);
-		getTabPane().addTab("MapTest", graphicMapTestPanel);
+		this.tabPane = new JTabbedPane();
+		this.getTabPane().addTab("Matches", selectionPanel);
+		this.getTabPane().addTab("Ewige Schlachtgründe", eternalPanel);
+		this.getTabPane().addTab("Grüne Grenzlande", greenPanel);
+		this.getTabPane().setForegroundAt(2, GREEN_WORLD_FG);
+		this.getTabPane().addTab("Blaue Grenzlande", bluePanel);
+		this.getTabPane().setForegroundAt(3, BLUE_WORLD_FG);
+		this.getTabPane().addTab("Rote Grenzlande", redPanel);
+		this.getTabPane().setForegroundAt(4, RED_WORLD_FG);
+		this.getTabPane().addTab("MapTest", graphicMapTestPanel);
 
 		this.getContentPanel().add(getTabPane(), BorderLayout.CENTER);
 
