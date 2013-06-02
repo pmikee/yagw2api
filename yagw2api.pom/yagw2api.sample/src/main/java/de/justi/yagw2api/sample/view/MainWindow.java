@@ -1,51 +1,44 @@
 package de.justi.yagw2api.sample.view;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.EventObject;
+import java.util.Comparator;
 
-import javax.swing.CellEditor;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import javax.swing.event.CellEditorListener;
 import javax.swing.table.DefaultTableColumnModel;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableRowSorter;
 
 import com.google.common.base.Optional;
 
-import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMap;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
 import de.justi.yagw2api.sample.Main;
 import de.justi.yagw2api.sample.model.MapObjectivesTableModel;
 import de.justi.yagw2api.sample.model.MatchesTableModel;
 
 public class MainWindow extends AbstractWindow {
-	private static final long				serialVersionUID	= -6500541020042114865L;
+	private static final long serialVersionUID = -6500541020042114865L;
 
-	private final MatchesTableModel			matchModel;
-	private final MapObjectivesTableModel	eternalMapModel;
-	private final MapObjectivesTableModel	greenMapModel;
-	private final MapObjectivesTableModel	blueMapModel;
-	private final MapObjectivesTableModel	redMapModel;
+	private final MatchesTableModel matchModel;
+	private final MapObjectivesTableModel eternalMapModel;
+	private final MapObjectivesTableModel greenMapModel;
+	private final MapObjectivesTableModel blueMapModel;
+	private final MapObjectivesTableModel redMapModel;
 
-	private JTable							selectionTable;
-	private JTable							eternalTable;
-	private JTable							greenTable;
-	private JTable							blueTable;
-	private JTable							redTable;
+	private JTable selectionTable;
+	private JTable eternalTable;
+	private JTable greenTable;
+	private JTable blueTable;
+	private JTable redTable;
 
 	public MainWindow() {
 		super();
@@ -76,6 +69,7 @@ public class MainWindow extends AbstractWindow {
 
 		this.pack();
 	}
+
 
 	private TableColumnModel newMapTCM() {
 
@@ -124,6 +118,13 @@ public class MainWindow extends AbstractWindow {
 		this.selectionTable = new JTable(this.matchModel, tcm);
 		this.selectionTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		selectionPanel.add(new JScrollPane(this.selectionTable), BorderLayout.CENTER);
+
+		final TableRowSorter<MatchesTableModel> sorter = new TableRowSorter<MatchesTableModel>(this.matchModel);
+		this.selectionTable.setRowSorter(sorter);
+		sorter.setSortsOnUpdates(true);
+		for(int col = 0; col < this.matchModel.getColumnCount(); col++) {
+			sorter.setComparator(col, this.matchModel.getColumnComparator(col));
+		}
 
 		JButton selectionButton = new JButton("auswählen");
 		selectionButton.addActionListener(new ActionListener() {

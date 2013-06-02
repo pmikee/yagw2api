@@ -3,13 +3,14 @@ package de.justi.yagw2api.sample.model;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import javax.swing.JButton;
 import javax.swing.table.AbstractTableModel;
 
 import org.apache.log4j.Logger;
@@ -20,11 +21,11 @@ import de.justi.yagw2api.core.wrapper.IWVWMatchListener;
 import de.justi.yagw2api.core.wrapper.IWVWWrapper;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMatchScoresChangedEvent;
-import de.justi.yagw2api.sample.Main;
 
 public class MatchesTableModel extends AbstractTableModel implements IWVWMatchListener {
 	private static final Logger	LOGGER				= Logger.getLogger(MatchesTableModel.class);
 	private static final long	serialVersionUID	= 267092039654136315L;
+	private static final NumberFormat NF = new DecimalFormat("#,###,##0");
 
 	private List<IWVWMatch>		matches				= Collections.synchronizedList(new CopyOnWriteArrayList<IWVWMatch>());
 
@@ -36,6 +37,32 @@ public class MatchesTableModel extends AbstractTableModel implements IWVWMatchLi
 		wrapper.registerWVWMatchListener(this);
 	}
 
+	
+	public Comparator<?> getColumnComparator(int col){
+		switch(col) {
+			case 1:
+			case 3:
+			case 5:
+				return new Comparator<String>() {
+					@Override
+					public int compare(String o1, String o2) {
+						try {
+							return new Integer(NF.parse(o1).intValue()).compareTo(NF.parse(o2).intValue());
+						} catch (ParseException e) {
+							return -1;
+						}
+					}
+				};
+			default:
+				return new Comparator<Object>() {
+					@Override
+					public int compare(Object o1, Object o2) {
+						return String.valueOf(o1).compareTo(String.valueOf(o2));
+					}
+				};
+		}
+	}
+	
 	@Override
 	public int getColumnCount() {
 		return 6;
@@ -77,11 +104,11 @@ public class MatchesTableModel extends AbstractTableModel implements IWVWMatchLi
 			case 4:
 				return (this.matches.get(matchIndex).getRedWorld().getName().get());
 			case 1:
-				return this.matches.get(matchIndex).getScores().getGreenScore();
+				return NF.format(this.matches.get(matchIndex).getScores().getGreenScore());
 			case 3:
-				return this.matches.get(matchIndex).getScores().getBlueScore();
+				return NF.format(this.matches.get(matchIndex).getScores().getBlueScore());
 			case 5:
-				return this.matches.get(matchIndex).getScores().getRedScore();
+				return NF.format(this.matches.get(matchIndex).getScores().getRedScore());
 			default:
 				throw new IllegalArgumentException("Unknown column: " + columnIndex);
 		}
