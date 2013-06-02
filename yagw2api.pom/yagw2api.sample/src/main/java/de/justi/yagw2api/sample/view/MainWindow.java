@@ -39,12 +39,14 @@ public class MainWindow extends AbstractWindow {
 	private final JTabbedPane tabPane;
 	
 	private final MatchesTableModel matchModel;
+	private final GeneralTableModel generalModel;
 	private final MapObjectivesTableModel eternalMapModel;
 	private final MapObjectivesTableModel greenMapModel;
 	private final MapObjectivesTableModel blueMapModel;
 	private final MapObjectivesTableModel redMapModel;
 
 	private JTable selectionTable;
+	private JTable generalTable;
 	private JTable eternalTable;
 	private JTable greenTable;
 	private JTable blueTable;
@@ -57,6 +59,7 @@ public class MainWindow extends AbstractWindow {
 		this.setPreferredSize(new Dimension(1024, 768));
 
 		this.matchModel = new MatchesTableModel();
+		this.generalModel = new GeneralTableModel();
 		this.eternalMapModel = new MapObjectivesTableModel();
 		this.greenMapModel = new MapObjectivesTableModel();
 		this.blueMapModel = new MapObjectivesTableModel();
@@ -179,6 +182,12 @@ public class MainWindow extends AbstractWindow {
 		selectionPanel.add(selectionButton, BorderLayout.SOUTH);
 
 		return selectionPanel;
+	}
+	
+
+	private JPanel initGeneralPanel() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	private JPanel initEternalPanel() {
