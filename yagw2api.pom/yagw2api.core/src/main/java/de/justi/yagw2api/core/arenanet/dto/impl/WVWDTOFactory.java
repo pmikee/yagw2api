@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 
 import de.justi.yagw2api.core.arenanet.dto.IGuildDetailsDTO;
 import de.justi.yagw2api.core.arenanet.dto.IWVWDTOFactory;
@@ -30,7 +31,13 @@ class WVWDTOFactory implements IWVWDTOFactory {
 
 	public IWVWMatchesDTO newMatchesOf(String json) {
 		LOGGER.trace("Going to built " + IWVWMatchesDTO.class.getSimpleName());
-		final WVWMatchesDTO result = this.createGSON().fromJson(checkNotNull(json), WVWMatchesDTO.class);
+		WVWMatchesDTO result;
+		try {
+			result = this.createGSON().fromJson(checkNotNull(json), WVWMatchesDTO.class);
+		}catch(JsonSyntaxException e) {
+			result = null;
+			LOGGER.fatal("Invalid response: "+json, e);
+		}
 		checkState(result != null);
 		LOGGER.debug("Built " + result);
 		return result;
@@ -38,7 +45,13 @@ class WVWDTOFactory implements IWVWDTOFactory {
 
 	public IWVWMatchDetailsDTO newMatchDetailsOf(String json) {
 		LOGGER.trace("Going to built " + IWVWMatchDetailsDTO.class.getSimpleName());
-		final WVWMatchDetailsDTO result = this.createGSON().fromJson(checkNotNull(json), WVWMatchDetailsDTO.class);
+		WVWMatchDetailsDTO result;
+		try {
+			result = this.createGSON().fromJson(checkNotNull(json), WVWMatchDetailsDTO.class);
+		}catch(JsonSyntaxException e) {
+			result = null;
+			LOGGER.fatal("Invalid response: "+json, e);
+		}
 		checkState(result != null);
 		LOGGER.debug("Built " + result);
 		return result;
@@ -46,7 +59,13 @@ class WVWDTOFactory implements IWVWDTOFactory {
 
 	public IWVWObjectiveNameDTO[] newObjectiveNamesOf(String json) {
 		LOGGER.trace("Going to built all " + IWVWObjectiveNameDTO.class.getSimpleName());
-		final WVWObjectiveNameDTO[] result = this.createGSON().fromJson(checkNotNull(json), WVWObjectiveNameDTO[].class);
+		WVWObjectiveNameDTO[] result;
+		try {
+			result = this.createGSON().fromJson(checkNotNull(json), WVWObjectiveNameDTO[].class);
+		}catch(JsonSyntaxException e) {
+			result = null;
+			LOGGER.fatal("Invalid response: "+json, e);
+		} 
 		checkState(result != null);
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Built " + Arrays.deepToString(result));
@@ -56,7 +75,13 @@ class WVWDTOFactory implements IWVWDTOFactory {
 
 	public IWorldNameDTO[] newWorldNamesOf(String json) {
 		LOGGER.trace("Going to built " + IWorldNameDTO.class.getSimpleName());
-		final WorldNameDTO[] result = this.createGSON().fromJson(checkNotNull(json), WorldNameDTO[].class);
+		WorldNameDTO[] result;
+		try {
+			result = this.createGSON().fromJson(checkNotNull(json), WorldNameDTO[].class);
+		}catch(JsonSyntaxException e) {
+			result = null;
+			LOGGER.fatal("Invalid response: "+json, e);
+		}
 		checkState(result != null);
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Built " + Arrays.deepToString(result));
@@ -67,7 +92,13 @@ class WVWDTOFactory implements IWVWDTOFactory {
 	@Override
 	public IGuildDetailsDTO newGuildDetailsOf(String json) {
 		LOGGER.trace("Going to built " + IGuildDetailsDTO.class.getSimpleName());
-		final GuildDetailsDTO result = this.createGSON().fromJson(checkNotNull(json), GuildDetailsDTO.class);
+		GuildDetailsDTO result;
+		try {
+			result = this.createGSON().fromJson(checkNotNull(json), GuildDetailsDTO.class);
+		}catch(JsonSyntaxException e) {
+			result = null;
+			LOGGER.fatal("Invalid response: "+json, e);
+		}
 		checkState(result != null);
 		LOGGER.debug("Built " + result);
 		return result;

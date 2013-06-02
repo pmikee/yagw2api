@@ -6,5 +6,5 @@ public interface IGuildEmblemDTO {
 	int getBackgroundColorId();
 	int getForegroundPrimaryColorId();
 	int getForegroundSecondaryColorId();
-	int[] getFlags();	
+	String[] getFlags();	
 }

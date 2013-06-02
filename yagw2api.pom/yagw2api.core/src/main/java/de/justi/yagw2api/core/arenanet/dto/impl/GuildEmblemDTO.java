@@ -18,7 +18,7 @@ public class GuildEmblemDTO implements IGuildEmblemDTO {
 
 	@SerializedName("flags")
 	@Since(1.0)
-	private int[] flags;
+	private String[] flags;
 
 	@SerializedName("background_color_id")
 	@Since(1.0)
@@ -58,7 +58,7 @@ public class GuildEmblemDTO implements IGuildEmblemDTO {
 	}
 
 	@Override
-	public int[] getFlags() {
+	public String[] getFlags() {
 		return this.flags;
 	}
 

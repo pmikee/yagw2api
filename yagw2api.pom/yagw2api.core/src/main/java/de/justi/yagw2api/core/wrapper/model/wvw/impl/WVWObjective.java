@@ -157,8 +157,9 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 			checkState(this.map != null);
 
 			final IWVWObjective result = new WVWObjective(this.location.get());
-
-			result.connectWithMap(this.map.get());
+			if(this.map.isPresent()) {
+				result.connectWithMap(this.map.get());
+			}
 			result.initializeOwner(this.owner.orNull());
 			result.initializeClaimedByGuild(this.claimedByGuild.orNull());
 			return result;
@@ -355,7 +356,7 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 
 	@Override
 	public void initializeClaimedByGuild(IGuild guild) {
-		this.claimedByGuild = Optional.of(guild);
+		this.claimedByGuild = Optional.fromNullable(guild);
 	}
 
 }
