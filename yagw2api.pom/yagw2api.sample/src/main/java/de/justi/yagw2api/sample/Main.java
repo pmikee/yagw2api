@@ -41,26 +41,22 @@ public class Main {
 	public static void main(String[] args) {
 
 		try {
+
+			mainWindow = new MainWindow();
+
+			mainWindow.setVisible(true);
+			
 			checkState(YAGW2APIAnalyzerPersistence.getDefaultEM().isOpen());
 			apiWrapper = YAGW2APICore.getWVWWrapper();
 			final IWVWAnalyzer analyzer = YAGW2APIAnalyzer.getAnalyzer();
 
 			// start the api wrapper
 			apiWrapper.start();
-
-			apiWrapper.getAllMatches();
-
+			mainWindow.getMatchModel().wireUp(apiWrapper);
+			
 			// wire everything up
 			apiWrapper.registerWVWMapListener(analyzer);
 			apiWrapper.registerWVWMatchListener(analyzer);
-
-			mainWindow = new MainWindow();
-			// random init for now
-			// mainWindow.getEternalMapModel().wireUp(apiWrapper,
-			// apiWrapper.getAllMatches().iterator().next().getCenterMap());
-
-			mainWindow.getMatchModel().wireUp(apiWrapper);
-			mainWindow.setVisible(true);
 		} catch (Exception e) {
 			LOGGER.fatal("Uncought exception while running " + Main.class.getName() + "#main(String[])", e);
 		}
