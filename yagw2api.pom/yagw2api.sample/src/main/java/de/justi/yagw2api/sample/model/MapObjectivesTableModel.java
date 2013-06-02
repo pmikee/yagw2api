@@ -54,12 +54,16 @@ public class MapObjectivesTableModel extends AbstractTableModel implements IWVWM
 		this.service.startAndWait();
 	}
 
-	public void wireUp(IWVWWrapper wrapper, IWVWMap map) {
+	public void wireUp(IWVWWrapper wrapper, IWVWMap map, IWVWMap... maps) {
 		this.content.clear();
 		this.content.addAll(map.getObjectives());
 		this.fireTableDataChanged();
 		wrapper.unregisterWVWMapListener(this);
 		wrapper.registerWVWMapListener(map, this);
+		for (IWVWMap additionalMap : maps) {
+			this.content.addAll(additionalMap.getObjectives());
+			wrapper.registerWVWMapListener(additionalMap, this);
+		}
 	}
 
 	@Override
