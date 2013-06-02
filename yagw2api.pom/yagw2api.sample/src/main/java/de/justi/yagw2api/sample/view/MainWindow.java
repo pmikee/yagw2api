@@ -64,6 +64,7 @@ public class MainWindow extends AbstractWindow {
 		
 
 		final JPanel selectionPanel = this.initSelectionPanel();
+		final JPanel generalPanel = this.initGeneralPanel();
 		final JPanel eternalPanel = this.initEternalPanel();
 		final JPanel greenPanel = this.initGreenPanel();
 		final JPanel bluePanel = this.initBluePanel();
@@ -72,6 +73,7 @@ public class MainWindow extends AbstractWindow {
 
 		tabPane = new JTabbedPane();
 		getTabPane().addTab("Matches", selectionPanel);
+		getTabPane().addTab("Übersicht", generalPanel);
 		getTabPane().addTab("Ewige Schlachtgründe", eternalPanel);
 		getTabPane().addTab("Grüne Grenzlande", greenPanel);
 		getTabPane().addTab("Blaue Grenzlande", bluePanel);
