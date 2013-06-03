@@ -1,6 +1,6 @@
 package de.justi.yagw2api.core.wrapper.model.wvw;
 
-import de.justi.yagw2api.core.wrapper.model.IHasChannel;
+import de.justi.yagw2api.core.IHasChannel;
 
 public interface IWVWScores extends IHasChannel {
 	int getRedScore();

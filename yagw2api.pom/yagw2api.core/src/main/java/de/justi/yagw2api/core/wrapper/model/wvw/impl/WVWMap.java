@@ -25,11 +25,11 @@ import com.google.common.collect.Iterables;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
+import de.justi.yagw2api.core.AbstractHasChannel;
+import de.justi.yagw2api.core.IHasChannel;
 import de.justi.yagw2api.core.YAGW2APICore;
 import de.justi.yagw2api.core.arenanet.dto.IWVWMapDTO;
 import de.justi.yagw2api.core.arenanet.dto.IWVWObjectiveDTO;
-import de.justi.yagw2api.core.wrapper.model.AbstractHasChannel;
-import de.justi.yagw2api.core.wrapper.model.IHasChannel;
 import de.justi.yagw2api.core.wrapper.model.IUnmodifiable;
 import de.justi.yagw2api.core.wrapper.model.wvw.IHasWVWLocation;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMap;

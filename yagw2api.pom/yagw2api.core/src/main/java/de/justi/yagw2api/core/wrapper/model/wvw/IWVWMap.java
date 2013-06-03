@@ -7,8 +7,8 @@ import java.util.Set;
 
 import com.google.common.base.Optional;
 
+import de.justi.yagw2api.core.IHasChannel;
 import de.justi.yagw2api.core.arenanet.dto.IWVWMapDTO;
-import de.justi.yagw2api.core.wrapper.model.IHasChannel;
 import de.justi.yagw2api.core.wrapper.model.wvw.types.IWVWLocationType;
 import de.justi.yagw2api.core.wrapper.model.wvw.types.IWVWMapType;
 

@@ -6,9 +6,9 @@ import java.util.concurrent.TimeUnit;
 
 import com.google.common.base.Optional;
 
+import de.justi.yagw2api.core.IHasChannel;
 import de.justi.yagw2api.core.arenanet.dto.IWVWObjectiveDTO;
 import de.justi.yagw2api.core.wrapper.model.IGuild;
-import de.justi.yagw2api.core.wrapper.model.IHasChannel;
 import de.justi.yagw2api.core.wrapper.model.IWorld;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.types.IWVWLocationType;

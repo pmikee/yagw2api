@@ -15,11 +15,11 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.common.util.concurrent.AbstractScheduledService;
 
+import de.justi.yagw2api.core.IEvent;
+import de.justi.yagw2api.core.IHasChannel;
 import de.justi.yagw2api.core.YAGW2APICore;
 import de.justi.yagw2api.core.arenanet.dto.IWVWMatchesDTO;
 import de.justi.yagw2api.core.arenanet.service.IWVWService;
-import de.justi.yagw2api.core.wrapper.model.IEvent;
-import de.justi.yagw2api.core.wrapper.model.IHasChannel;
 import de.justi.yagw2api.core.wrapper.model.IWorld;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
 

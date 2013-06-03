@@ -1,7 +1,8 @@
-package de.justi.yagw2api.core.wrapper.model;
+package de.justi.yagw2api.core;
 
 
 import com.google.common.eventbus.EventBus;
+
 
 
 public abstract class AbstractHasChannel implements IHasChannel {

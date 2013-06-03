@@ -1,9 +1,10 @@
-package de.justi.yagw2api.core.wrapper.model;
+package de.justi.yagw2api.core;
 
 import java.text.DateFormat;
 import java.util.Calendar;
 
 import com.google.common.base.Objects;
+
 
 public abstract class AbstractEvent implements IEvent {
 	private final Calendar timestamp;

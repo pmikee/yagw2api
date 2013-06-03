@@ -18,10 +18,10 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.eventbus.EventBus;
 
+import de.justi.yagw2api.core.AbstractHasChannel;
 import de.justi.yagw2api.core.YAGW2APICore;
 import de.justi.yagw2api.core.arenanet.dto.IGuildDetailsDTO;
 import de.justi.yagw2api.core.arenanet.dto.IWVWObjectiveDTO;
-import de.justi.yagw2api.core.wrapper.model.AbstractHasChannel;
 import de.justi.yagw2api.core.wrapper.model.IGuild;
 import de.justi.yagw2api.core.wrapper.model.IModelFactory;
 import de.justi.yagw2api.core.wrapper.model.IUnmodifiable;
@@ -170,7 +170,7 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 			checkNotNull(dto);
 			final Optional<IGuildDetailsDTO> guildDetails = dto.getGuildDetails();
 			if (guildDetails.isPresent()) {
-				// TODO refactor this to make use of a builde --> see IWorld
+				// TODO refactor this to make use of a builder --> see IWorld
 				final IGuild guild = MODEL_FACTORY.getOrCreateGuild(guildDetails.get().getId(), guildDetails.get().getName(), guildDetails.get().getTag());
 				checkState(guild != null);
 				this.claimedBy(guild);

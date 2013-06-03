@@ -2,7 +2,7 @@ package de.justi.yagw2api.core.wrapper.model.wvw.events.impl;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-import de.justi.yagw2api.core.wrapper.model.AbstractEvent;
+import de.justi.yagw2api.core.AbstractEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWScores;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWScoresChangedEvent;
 

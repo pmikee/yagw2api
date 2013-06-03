@@ -7,7 +7,7 @@ import org.apache.log4j.Logger;
 import com.google.common.base.Objects;
 import com.google.common.eventbus.EventBus;
 
-import de.justi.yagw2api.core.wrapper.model.AbstractHasChannel;
+import de.justi.yagw2api.core.AbstractHasChannel;
 import de.justi.yagw2api.core.wrapper.model.IUnmodifiable;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWScores;
 
