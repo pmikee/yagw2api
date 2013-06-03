@@ -5,7 +5,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
@@ -27,33 +26,29 @@ import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
 class WVWSynchronizer extends AbstractScheduledService implements IHasChannel {
 	private static final IWVWService SERVICE = YAGW2APICore.getLowLevelWVWService();
 	private static final long DELAY_MILLIS = 50;
-	private static final int POOL_THREADS_PER_PROCESSOR = 2;
 	private static final Logger LOGGER = Logger.getLogger(WVWSynchronizer.class);
 
 	private final Map<String, IWVWMatch> matchesMappedById;
 	
 	private final Set<IWVWMatch> unmodifiableMatchReferences;
 	private final Set<IWorld> unmodifiableWorldReferences;
-	
-	private final ForkJoinPool pool = new ForkJoinPool(Runtime.getRuntime().availableProcessors()*POOL_THREADS_PER_PROCESSOR, ForkJoinPool.defaultForkJoinWorkerThreadFactory,
-			new Thread.UncaughtExceptionHandler() {
-				public void uncaughtException(Thread t, Throwable e) {
-					LOGGER.fatal("Uncought exception thrown in " + t.getName(), e);
-				}
-			}, false);
+
 	private final EventBus channel = new EventBus(this.getClass().getName());
 
 	/**
 	 * constructor
 	 */
 	public WVWSynchronizer() {
-		final IWVWMatchesDTO matchesDto = SERVICE.retrieveAllMatches();
-
+		final long startTimestamp = System.currentTimeMillis();
+		LOGGER.debug("Will now initialize new "+this.getClass().getSimpleName());
+		final IWVWMatchesDTO matchesDto = SERVICE.retrieveAllMatches();	
 		final WVWSynchronizerInitAction initAction = new WVWSynchronizerInitAction(Arrays.asList(matchesDto.getMatches()));
-		this.pool.invoke(initAction);
+		YAGW2APICore.getForkJoinPool().invoke(initAction);
 		this.matchesMappedById = ImmutableMap.copyOf(initAction.getMatchesBuffer());
 		this.unmodifiableMatchReferences = ImmutableSet.copyOf(initAction.getMatchReferencesBuffer());
 		this.unmodifiableWorldReferences = ImmutableSet.copyOf(initAction.getWorldReferencesBuffer());
+		final long endTimestamp = System.currentTimeMillis();
+		LOGGER.info("Initialized "+this.getClass().getSimpleName()+" in "+(endTimestamp-startTimestamp)+"ms");
 	}
 
 	public Set<IWVWMatch> getAllMatches(){
@@ -74,7 +69,7 @@ class WVWSynchronizer extends AbstractScheduledService implements IHasChannel {
 	protected void runOneIteration() throws Exception {
 		final long startTimestamp = System.currentTimeMillis();
 
-		this.pool.invoke(new WVWSynchronizerAction(this.matchesMappedById));
+		YAGW2APICore.getForkJoinPool().invoke(new WVWSynchronizerAction(this.matchesMappedById));
 
 		final long endTime = System.currentTimeMillis();
 		final long executionTime = endTime - startTimestamp;

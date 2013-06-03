@@ -9,6 +9,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import com.google.common.collect.ImmutableList;
 
 import de.justi.yagw2api.core.YAGW2APICore;
@@ -19,6 +21,7 @@ import de.justi.yagw2api.core.wrapper.model.wvw.IWVWModelFactory;
 
 
 public class WVWSynchronizerInitAction extends AbstractSynchronizerAction<IWVWMatchDTO, WVWSynchronizerInitAction> {
+	private static final Logger LOGGER = Logger.getLogger(WVWSynchronizerInitAction.class);
 	private static final long serialVersionUID = 2446713690087630720L;
 	private static final int MAX_CHUNK_SIZE = 1;
 	private static final IWVWModelFactory WVW_MODEL_FACTORY = YAGW2APICore.getInjector().getInstance(IWVWModelFactory.class);
@@ -44,7 +47,15 @@ public class WVWSynchronizerInitAction extends AbstractSynchronizerAction<IWVWMa
 
 	@Override
 	protected void perform(IWVWMatchDTO content) {
-		final IWVWMatch match = WVW_MODEL_FACTORY.newMatchBuilder().fromMatchDTO(content, Locale.getDefault()).build();		
+		final long startTimestamp = System.currentTimeMillis();
+		if(LOGGER.isTraceEnabled()) {
+			LOGGER.trace("Going to perform "+this.getClass().getSimpleName()+" using content="+content);
+		}
+		final IWVWMatch match = WVW_MODEL_FACTORY.newMatchBuilder().fromMatchDTO(content, Locale.getDefault()).build();
+		final long completedMatchModelBuildTimestamp = System.currentTimeMillis();
+		if(LOGGER.isTraceEnabled()) {
+			LOGGER.trace("Done with build of "+IWVWMatch.class.getSimpleName()+" for content="+content+" after "+(completedMatchModelBuildTimestamp-startTimestamp)+"ms");
+		}
 		match.getChannel().register(this);
 		this.matchesBuffer.put(match.getId(), match);
 		this.matchReferencesBuffer.add(match);

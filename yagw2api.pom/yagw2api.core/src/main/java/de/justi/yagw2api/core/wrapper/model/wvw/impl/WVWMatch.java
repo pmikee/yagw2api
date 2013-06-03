@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
+import java.util.concurrent.Callable;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
@@ -19,6 +20,7 @@ import org.apache.log4j.Logger;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
@@ -27,6 +29,7 @@ import de.justi.yagw2api.core.arenanet.dto.IWVWMapDTO;
 import de.justi.yagw2api.core.arenanet.dto.IWVWMatchDTO;
 import de.justi.yagw2api.core.arenanet.dto.IWVWMatchDetailsDTO;
 import de.justi.yagw2api.core.arenanet.dto.IWVWObjectiveDTO;
+import de.justi.yagw2api.core.arenanet.dto.IWorldNameDTO;
 import de.justi.yagw2api.core.wrapper.model.AbstractHasChannel;
 import de.justi.yagw2api.core.wrapper.model.IEvent;
 import de.justi.yagw2api.core.wrapper.model.IModelFactory;
@@ -39,6 +42,9 @@ import de.justi.yagw2api.core.wrapper.model.wvw.IWVWObjective;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWScores;
 
 class WVWMatch extends AbstractHasChannel implements IWVWMatch {
+	private static final Logger LOGGER = Logger.getLogger(WVWMatch.class);
+	private static final IWVWModelFactory WVW_MODEL_FACTORY = YAGW2APICore.getInjector().getInstance(IWVWModelFactory.class);
+	private static final IModelFactory MODEL_FACTORY = YAGW2APICore.getInjector().getInstance(IModelFactory.class);
 	private static final DateFormat DF = DateFormat.getDateTimeInstance();
 
 	final class UnmodifiableWVWMatch implements IWVWMatch, IUnmodifiable {
@@ -147,9 +153,6 @@ class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 		}
 	}
 
-	private static final Logger LOGGER = Logger.getLogger(WVWMatch.class);
-	private static final IWVWModelFactory WVW_MODEL_FACTORY = YAGW2APICore.getInjector().getInstance(IWVWModelFactory.class);
-	private static final IModelFactory MODEL_FACTORY = YAGW2APICore.getInjector().getInstance(IModelFactory.class);
 
 	public static class WVWMatchBuilder implements IWVWMatch.IWVWMatchBuilder {
 		private Optional<IWVWMatchDTO> fromMatchDTO = Optional.absent();
@@ -216,36 +219,73 @@ class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 			}
 		}
 
+		private static final class BuildMatchFromDTOAction implements Callable<Void>{
+			private final IWVWMapDTO dto;
+			private Optional<IWVWMap> result;
+			
+			public BuildMatchFromDTOAction(IWVWMapDTO dto) {
+				this.dto = checkNotNull(dto);
+			}
+			
+			public Optional<IWVWMap> getResult(){
+				return this.result;
+			}
+
+			@Override
+			public Void call() throws Exception {
+				this.result = Optional.of(WVW_MODEL_FACTORY.newMapBuilder().fromDTO(this.dto).build());
+				return null;
+			}
+		}
+		
+		private static final class BuildWorldFromDTOAction implements Callable<Void>{
+			private final IWorldNameDTO dto;
+			private Optional<IWorld> result;
+			public BuildWorldFromDTOAction(IWorldNameDTO dto) {
+				this.dto = checkNotNull(dto);
+			}
+			@Override
+			public Void call() throws Exception {
+				this.result = Optional.of(MODEL_FACTORY.newWorldBuilder().fromDTO(this.dto).build());
+				return null;
+			}
+			public Optional<IWorld> getResult(){
+				return this.result;
+			}
+		}
+		
+		@SuppressWarnings("unchecked")
 		@Override
 		public IWVWMatch.IWVWMatchBuilder fromMatchDTO(IWVWMatchDTO dto, Locale locale) {
 			checkNotNull(locale);
 			checkState(!this.fromMatchDTO.isPresent());
+			
+			final long startTimestamp = System.currentTimeMillis();
+			if(LOGGER.isTraceEnabled()) {
+				LOGGER.trace("Going to fill "+this.getClass().getSimpleName()+" with data from dto="+dto+" and locale="+locale);
+			}
+			
 			this.fromMatchDTO = Optional.of(dto);
 			this.id = Optional.of(dto.getId());
-			this.centerMap = Optional.of(WVW_MODEL_FACTORY.newMapBuilder().fromDTO(dto.getDetails().get().getCenterMap()).build());
-			checkState(this.centerMap.get().getType().isCenter());
-			this.redMap = Optional.of(WVW_MODEL_FACTORY.newMapBuilder().fromDTO(dto.getDetails().get().getRedMap()).build());
-			checkState(this.redMap.get().getType().isRed());
-			this.greenMap = Optional.of(WVW_MODEL_FACTORY.newMapBuilder().fromDTO(dto.getDetails().get().getGreenMap()).build());
-			checkState(this.greenMap.get().getType().isGreen());
-			this.blueMap = Optional.of(WVW_MODEL_FACTORY.newMapBuilder().fromDTO(dto.getDetails().get().getBlueMap()).build());
-			checkState(this.blueMap.get().getType().isBlue());
 			
-			this.redWorld = MODEL_FACTORY.getWorld(dto.getRedWorldId());
-			if(!this.redWorld.isPresent()) {
-				checkArgument(dto.getRedWorldName(Locale.getDefault()).isPresent());
-				this.redWorld=Optional.of(MODEL_FACTORY.newWorldBuilder().fromDTO(dto.getRedWorldName(Locale.getDefault()).get()).build());
-			}
-			this.greenWorld = MODEL_FACTORY.getWorld(dto.getGreenWorldId());
-			if(!this.greenWorld.isPresent()) {
-				checkArgument(dto.getGreenWorldName(Locale.getDefault()).isPresent());
-				this.greenWorld=Optional.of(MODEL_FACTORY.newWorldBuilder().fromDTO(dto.getGreenWorldName(Locale.getDefault()).get()).build());
-			}
-			this.blueWorld = MODEL_FACTORY.getWorld(dto.getBlueWorldId());
-			if(!this.blueWorld.isPresent()) {
-				checkArgument(dto.getBlueWorldName(Locale.getDefault()).isPresent());
-				this.blueWorld=Optional.of(MODEL_FACTORY.newWorldBuilder().fromDTO(dto.getBlueWorldName(Locale.getDefault()).get()).build());
-			}
+			final BuildMatchFromDTOAction buildCenterMapAction = new BuildMatchFromDTOAction(dto.getDetails().get().getCenterMap());
+			final BuildMatchFromDTOAction buildRedMapAction = new BuildMatchFromDTOAction(dto.getDetails().get().getRedMap());
+			final BuildMatchFromDTOAction buildGreenMapAction = new BuildMatchFromDTOAction(dto.getDetails().get().getGreenMap());
+			final BuildMatchFromDTOAction buildBlueMapAction = new BuildMatchFromDTOAction(dto.getDetails().get().getBlueMap());
+			final BuildWorldFromDTOAction buildRedWorldAction = new BuildWorldFromDTOAction(dto.getRedWorldName(Locale.getDefault()).get());
+			final BuildWorldFromDTOAction buildGreenWorldAction = new BuildWorldFromDTOAction(dto.getGreenWorldName(Locale.getDefault()).get());
+			final BuildWorldFromDTOAction buildBlueWorldAction = new BuildWorldFromDTOAction(dto.getBlueWorldName(Locale.getDefault()).get());
+			
+			YAGW2APICore.getForkJoinPool().invokeAll(Lists.newArrayList(buildCenterMapAction, buildRedMapAction, buildGreenMapAction, buildBlueMapAction, buildRedWorldAction, buildGreenWorldAction, buildBlueWorldAction));
+
+			this.centerMap = buildCenterMapAction.getResult();
+			this.blueMap = buildBlueMapAction.getResult();
+			this.greenMap = buildGreenMapAction.getResult();
+			this.redMap = buildRedMapAction.getResult();
+			
+			this.redWorld = buildRedWorldAction.getResult();
+			this.greenWorld = buildGreenWorldAction.getResult();
+			this.blueWorld = buildBlueWorldAction.getResult();
 
 			this.start(dto.getStartTime());
 			this.end(dto.getEndTime());
@@ -256,6 +296,13 @@ class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 				this.blueScore(details.get().getBlueScore());
 				this.greenScore(details.get().getGreenScore());
 			}
+			
+
+			final long endTimestamp = System.currentTimeMillis();
+			if(LOGGER.isTraceEnabled()) {
+				LOGGER.trace("Done with filling "+this.getClass().getSimpleName()+" with data from dto="+dto+" and locale="+locale+" in "+(endTimestamp-startTimestamp)+"ms");
+			}
+			
 			return this;
 		}
 

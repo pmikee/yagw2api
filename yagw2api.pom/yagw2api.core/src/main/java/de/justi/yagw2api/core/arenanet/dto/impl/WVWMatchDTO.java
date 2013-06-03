@@ -43,11 +43,11 @@ class WVWMatchDTO implements IWVWMatchDTO {
 	@Since(1.0)
 	@SerializedName("end_time")
 	private String endTimeString = "";
-	
+
 	public String toString() {
-		return Objects.toStringHelper(this).add("id", this.id).add("redWorldId", this.redWorldId).add("redWorld", this.getRedWorldName(Locale.getDefault()))
-				.add("blueWorldId", this.blueWorldId).add("blueWorld", this.getBlueWorldName(Locale.getDefault())).add("greenWorldId", this.greenWorldId)
-				.add("greenWorld", this.getGreenWorldName(Locale.getDefault())).add("start", this.getStartTime()).add("end", this.getEndTime()).toString();
+		return Objects.toStringHelper(this).add("id", this.id).add("redWorldId", this.redWorldId).add("redWorld", this.getRedWorldName(Locale.getDefault())).add("blueWorldId", this.blueWorldId)
+				.add("blueWorld", this.getBlueWorldName(Locale.getDefault())).add("greenWorldId", this.greenWorldId).add("greenWorld", this.getGreenWorldName(Locale.getDefault()))
+				.add("start", this.getStartTime()).add("end", this.getEndTime()).toString();
 	}
 
 	public int getRedWorldId() {
@@ -92,22 +92,32 @@ class WVWMatchDTO implements IWVWMatchDTO {
 
 	@Override
 	public Date getStartTime() {
-		final DateFormat df = SERVICE.getZuluDateFormat();
-		try {
-			return df.parse(this.startTimeString);
-		} catch (NumberFormatException | ParseException e) {
-			LOGGER.fatal("Failed to parse "+this.startTimeString+" using "+df +" of "+WVWMatchDTO.class.getSimpleName()+" with id="+this.id,e);
+		if (this.startTimeString != null) {
+			final DateFormat df = SERVICE.getZuluDateFormat();
+			try {
+				return df.parse(this.startTimeString);
+			} catch (NumberFormatException | ParseException e) {
+				LOGGER.debug("Failed to parse " + this.startTimeString + " using " + df + " of " + WVWMatchDTO.class.getSimpleName() + " with id=" + this.id, e);
+				return null;
+			}
+		} else {
+			LOGGER.debug("Starttime has not been initialized yet.");
 			return null;
 		}
 	}
 
 	@Override
 	public Date getEndTime() {
-		final DateFormat df = SERVICE.getZuluDateFormat();
-		try {
-			return df.parse(this.endTimeString);
-		} catch (NumberFormatException | ParseException e) {
-			LOGGER.fatal("Failed to parse "+this.endTimeString+" using "+df +" of "+WVWMatchDTO.class.getSimpleName()+" with id="+this.id,e);
+		if (this.endTimeString != null) {
+			final DateFormat df = SERVICE.getZuluDateFormat();
+			try {
+				return df.parse(this.endTimeString);
+			} catch (NumberFormatException | ParseException e) {
+				LOGGER.debug("Failed to parse " + this.endTimeString + " using " + df + " of " + WVWMatchDTO.class.getSimpleName() + " with id=" + this.id, e);
+				return null;
+			}
+		} else {
+			LOGGER.debug("Endtime has not been initialized yet.");
 			return null;
 		}
 	}
