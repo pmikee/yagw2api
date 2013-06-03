@@ -5,9 +5,10 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -29,6 +30,8 @@ import com.jgraph.layout.JGraphLayout;
 import com.jgraph.layout.tree.JGraphRadialTreeLayout;
 
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
+import de.justi.yagw2api.core.wrapper.model.wvw.types.IWVWMapType;
+import de.justi.yagw2api.core.wrapper.model.wvw.types.WVWMapType;
 import de.justi.yagw2api.sample.Main;
 import de.justi.yagw2api.sample.model.MapObjectivesTableModel;
 import de.justi.yagw2api.sample.model.MatchesTableModel;
@@ -76,10 +79,15 @@ public class MainWindow extends AbstractWindow {
 
 		final JPanel selectionPanel = this.initSelectionPanel();
 		final JPanel generalPanel = this.initGeneralPanel();
-		final JPanel eternalPanel = this.initEternalPanel();
-		final JPanel greenPanel = this.initGreenPanel();
-		final JPanel bluePanel = this.initBluePanel();
-		final JPanel redPanel = this.initRedPanel();
+		
+		final JPanel eternalPanel = new JPanel();
+		this.initMapPanel(eternalPanel, eternalMapModel, eternalTable, WVWMapType.CENTER);
+		final JPanel greenPanel = new JPanel(); 
+		this.initMapPanel(greenPanel, greenMapModel, greenTable, WVWMapType.GREEN);
+		final JPanel bluePanel = new JPanel(); 
+		this.initMapPanel(bluePanel, blueMapModel, blueTable, WVWMapType.BLUE);
+		final JPanel redPanel = new JPanel(); 
+		this.initMapPanel(redPanel, redMapModel, redTable, WVWMapType.RED);
 		final JPanel graphicMapTestPanel = this.initGraphicMapTestPanel();
 
 		this.tabPane = new JTabbedPane();
@@ -99,70 +107,30 @@ public class MainWindow extends AbstractWindow {
 		this.pack();
 	}
 
-	private TableColumnModel newMapTCM() {
+	private TableColumnModel newTCM(String[] header) {
 
 		final TableColumnModel tcm = new DefaultTableColumnModel();
-		final TableColumn objectiveColumn = new TableColumn(0);
-		objectiveColumn.setHeaderValue("Objekt");
-		tcm.addColumn(objectiveColumn);
-		final TableColumn objectiveTypeColumn = new TableColumn(1);
-		objectiveTypeColumn.setHeaderValue("Objekttyp");
-		tcm.addColumn(objectiveTypeColumn);
-		final TableColumn ownerColumn = new TableColumn(2);
-		ownerColumn.setHeaderValue("Besitzer");
-		tcm.addColumn(ownerColumn);
-		final TableColumn valueColumn = new TableColumn(3);
-		valueColumn.setHeaderValue("Wert");
-		tcm.addColumn(valueColumn);
-		final TableColumn buffEndColumn = new TableColumn(4);
-		buffEndColumn.setHeaderValue("Buffende");
-		tcm.addColumn(buffEndColumn);
-		final TableColumn remainingBuffColumn = new TableColumn(5);
-		remainingBuffColumn.setHeaderValue("Verbleibender Buff");
-		tcm.addColumn(remainingBuffColumn);
+		List<TableColumn> tcl = new ArrayList<>();
+		for (int i = 0; i < header.length; i++) {
+			tcl.add(new TableColumn(i));
+			tcl.get(i).setHeaderValue(header[i]);
+			tcm.addColumn(tcl.get(i));
+		}
 
 		return tcm;
+	}
+
+	private TableColumnModel newMapTCM() {
+		final String[] header = { "Objekt", "Objekttyp", "Besitzer", "Buffende", "Verbleibender Buff", "Gilde" };
+		return newTCM(header);
 	}
 
 	private JPanel initSelectionPanel() {
 		final JPanel selectionPanel = new JPanel();
 		selectionPanel.setLayout(new BorderLayout());
-		selectionPanel.add(new JLabel("Übersicht und Auswahl des Matches"), BorderLayout.NORTH);
 
-		final TableColumnModel tcm = new DefaultTableColumnModel();
-		final TableColumn regionColumn = new TableColumn(0);
-		regionColumn.setHeaderValue("Region");
-		tcm.addColumn(regionColumn);
-		final TableColumn greenColumn = new TableColumn(1);
-		
-		greenColumn.setHeaderValue("Grün");
-		tcm.addColumn(greenColumn);
-		final TableColumn greenScoreColumn = new TableColumn(2);
-		greenScoreColumn.setHeaderValue("Punkte (Grün)");
-		tcm.addColumn(greenScoreColumn);
-		final TableColumn blueColumn = new TableColumn(3);
-		
-		blueColumn.setHeaderValue("Blau");
-		tcm.addColumn(blueColumn);
-		final TableColumn blueScoreColumn = new TableColumn(4);
-		blueScoreColumn.setHeaderValue("Punkte (Blau)");
-		tcm.addColumn(blueScoreColumn);
-		final TableColumn redColumn = new TableColumn(5);
-		
-		redColumn.setHeaderValue("Rot");
-		tcm.addColumn(redColumn);
-		final TableColumn redScoreColumn = new TableColumn(6);
-		redScoreColumn.setHeaderValue("Punkte (Rot)");
-		tcm.addColumn(redScoreColumn);
-		final TableColumn startColumn = new TableColumn(7);
-		
-		startColumn.setHeaderValue("Start");
-		tcm.addColumn(startColumn);
-		final TableColumn endColumn = new TableColumn(8);
-		endColumn.setHeaderValue("Ende");
-		tcm.addColumn(endColumn);
-
-		this.selectionTable = new JTable(this.matchModel, tcm);
+		final String[] header = { "Region", "Grün", "Punkte (Grün)", "Blau", "Punkte (Blau)", "Rot", "Punkte (Rot)", "Start", "Ende" };
+		this.selectionTable = new JTable(this.matchModel, newTCM(header));
 		this.selectionTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		selectionPanel.add(new JScrollPane(this.selectionTable), BorderLayout.CENTER);
 
@@ -181,6 +149,7 @@ public class MainWindow extends AbstractWindow {
 				final Optional<IWVWMatch> match = MainWindow.this.matchModel.getMatch(MainWindow.this.selectionTable.convertRowIndexToModel(MainWindow.this.selectionTable.getSelectedRow()));
 				if (match.isPresent()) {
 					MainWindow.this.getAllMapsModel().wireUp(Main.getWrapper(), match.get().getCenterMap(), match.get().getGreenMap(), match.get().getBlueMap(), match.get().getRedMap());
+					MainWindow.this.getGeneralModel().wireUp(Main.getWrapper(), match.get());				
 					MainWindow.this.getEternalMapModel().wireUp(Main.getWrapper(), match.get().getCenterMap());
 					MainWindow.this.getGreenMapModel().wireUp(Main.getWrapper(), match.get().getGreenMap());
 					MainWindow.this.getBlueMapModel().wireUp(Main.getWrapper(), match.get().getBlueMap());
@@ -200,96 +169,39 @@ public class MainWindow extends AbstractWindow {
 	private JPanel initGeneralPanel() {
 		final JPanel generalPanel = new JPanel();
 		generalPanel.setLayout(new BorderLayout());
-		generalPanel.add(new JLabel("Punkte Ewige Schlachtfelder"), BorderLayout.NORTH);
 
-		this.generalTable = new JTable(this.getAllMapsModel(), this.newMapTCM());
-		this.generalTable.setDefaultRenderer(Object.class, new ObjectiveTableCellRenderer());
+		String[] generalHeader = {"","Grün","Blau","Rot"};
+		this.generalTable = new JTable(this.getGeneralModel(), this.newTCM(generalHeader));
+		this.allMapsTable = new JTable(this.getAllMapsModel(), this.newMapTCM());
+		this.allMapsTable.setDefaultRenderer(Object.class, new ObjectiveTableCellRenderer());
 
 		final TableRowSorter<MapObjectivesTableModel> sorter = new TableRowSorter<MapObjectivesTableModel>(this.getAllMapsModel());
-		this.generalTable.setRowSorter(sorter);
+		this.allMapsTable.setRowSorter(sorter);
 		sorter.setSortsOnUpdates(true);
 		for (int col = 0; col < this.getAllMapsModel().getColumnCount(); col++) {
 			sorter.setComparator(col, this.getAllMapsModel().getColumnComparator(col));
 		}
 
-		generalPanel.add(new JScrollPane(this.generalTable), BorderLayout.CENTER);
+		generalPanel.add(new JScrollPane(this.generalTable), BorderLayout.WEST);
+		generalPanel.add(new JScrollPane(this.allMapsTable), BorderLayout.CENTER);
 		return generalPanel;
 	}
 
-	private JPanel initEternalPanel() {
-		final JPanel eternalPanel = new JPanel();
-		eternalPanel.setLayout(new BorderLayout());
-		eternalPanel.add(new JLabel("Punkte Ewige Schlachtfelder"), BorderLayout.NORTH);
+	private JPanel initMapPanel(JPanel mapPanel, MapObjectivesTableModel mapTableModel, JTable mapTable, IWVWMapType mapType) {
+		mapPanel.setLayout(new BorderLayout());
 
-		this.eternalTable = new JTable(this.eternalMapModel, this.newMapTCM());
-		this.eternalTable.setDefaultRenderer(Object.class, new ObjectiveTableCellRenderer());
+		mapTable = new JTable(mapTableModel, this.newMapTCM());
+		mapTable.setDefaultRenderer(Object.class, new ObjectiveTableCellRenderer());
 
-		final TableRowSorter<MapObjectivesTableModel> sorter = new TableRowSorter<MapObjectivesTableModel>(this.eternalMapModel);
-		this.eternalTable.setRowSorter(sorter);
+		final TableRowSorter<MapObjectivesTableModel> sorter = new TableRowSorter<MapObjectivesTableModel>(mapTableModel);
+		mapTable.setRowSorter(sorter);
 		sorter.setSortsOnUpdates(true);
-		for (int col = 0; col < this.eternalMapModel.getColumnCount(); col++) {
-			sorter.setComparator(col, this.eternalMapModel.getColumnComparator(col));
+		for (int col = 0; col < mapTableModel.getColumnCount(); col++) {
+			sorter.setComparator(col, mapTableModel.getColumnComparator(col));
 		}
 
-		eternalPanel.add(new JScrollPane(this.eternalTable), BorderLayout.CENTER);
-		return eternalPanel;
-	}
-
-	private JPanel initGreenPanel() {
-		final JPanel greenPanel = new JPanel();
-		greenPanel.setLayout(new BorderLayout());
-		greenPanel.add(new JLabel("Punkte Grüne Grenzlande"), BorderLayout.NORTH);
-
-		this.greenTable = new JTable(this.greenMapModel, this.newMapTCM());
-		this.greenTable.setDefaultRenderer(Object.class, new ObjectiveTableCellRenderer());
-
-		final TableRowSorter<MapObjectivesTableModel> sorter = new TableRowSorter<MapObjectivesTableModel>(this.greenMapModel);
-		this.greenTable.setRowSorter(sorter);
-		sorter.setSortsOnUpdates(true);
-		for (int col = 0; col < this.greenMapModel.getColumnCount(); col++) {
-			sorter.setComparator(col, this.greenMapModel.getColumnComparator(col));
-		}
-
-		greenPanel.add(new JScrollPane(this.greenTable), BorderLayout.CENTER);
-		return greenPanel;
-	}
-
-	private JPanel initBluePanel() {
-		final JPanel bluePanel = new JPanel();
-		bluePanel.setLayout(new BorderLayout());
-		bluePanel.add(new JLabel("Punkte Blaue Grenzlande"), BorderLayout.NORTH);
-
-		this.blueTable = new JTable(this.blueMapModel, this.newMapTCM());
-		this.blueTable.setDefaultRenderer(Object.class, new ObjectiveTableCellRenderer());
-
-		final TableRowSorter<MapObjectivesTableModel> sorter = new TableRowSorter<MapObjectivesTableModel>(this.blueMapModel);
-		this.blueTable.setRowSorter(sorter);
-		sorter.setSortsOnUpdates(true);
-		for (int col = 0; col < this.blueMapModel.getColumnCount(); col++) {
-			sorter.setComparator(col, this.blueMapModel.getColumnComparator(col));
-		}
-
-		bluePanel.add(new JScrollPane(this.blueTable), BorderLayout.CENTER);
-		return bluePanel;
-	}
-
-	private JPanel initRedPanel() {
-		final JPanel redPanel = new JPanel();
-		redPanel.setLayout(new BorderLayout());
-		redPanel.add(new JLabel("Punkte Rote Grenzlande"), BorderLayout.NORTH);
-
-		this.redTable = new JTable(this.redMapModel, this.newMapTCM());
-		this.redTable.setDefaultRenderer(Object.class, new ObjectiveTableCellRenderer());
-
-		final TableRowSorter<MapObjectivesTableModel> sorter = new TableRowSorter<MapObjectivesTableModel>(this.redMapModel);
-		this.redTable.setRowSorter(sorter);
-		sorter.setSortsOnUpdates(true);
-		for (int col = 0; col < this.redMapModel.getColumnCount(); col++) {
-			sorter.setComparator(col, this.redMapModel.getColumnComparator(col));
-		}
-
-		redPanel.add(new JScrollPane(this.redTable), BorderLayout.CENTER);
-		return redPanel;
+		mapPanel.add(new JScrollPane(mapTable), BorderLayout.CENTER);
+		return mapPanel;
 	}
 
 	private JPanel initGraphicMapTestPanel() {
@@ -345,5 +257,9 @@ public class MainWindow extends AbstractWindow {
 
 	public MapObjectivesTableModel getAllMapsModel() {
 		return allMapsModel;
+	}
+
+	public GeneralTableModel getGeneralModel() {
+		return generalModel;
 	}
 }

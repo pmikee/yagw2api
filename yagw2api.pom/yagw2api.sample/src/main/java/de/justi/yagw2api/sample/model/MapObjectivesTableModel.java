@@ -80,13 +80,13 @@ public class MapObjectivesTableModel extends AbstractTableModel implements IWVWM
 
 	public Comparator<?> getColumnComparator(int col){
 		switch(col) {
-			case 3:
-				return new Comparator<Integer>() {
-					@Override
-					public int compare(Integer o1, Integer o2) {
-						return o1.compareTo(o2);
-					}
-				};
+//			case 3:
+//				return new Comparator<Integer>() {
+//					@Override
+//					public int compare(Integer o1, Integer o2) {
+//						return o1.compareTo(o2);
+//					}
+//				};
 			default:
 				return new Comparator<Object>() {
 					@Override
@@ -112,22 +112,26 @@ public class MapObjectivesTableModel extends AbstractTableModel implements IWVWM
 			case 0:
 				return objective.get().getLabel().get();
 			case 1:
-				return objective.get().getType().getLabel();
+				return (objective.get().getType().getLabel() + "(" + objective.get().getType().getPoints() + ")");
 			case 2:
 				return objective.get().getOwner().get().getName().get();
 			case 3:
-				return objective.get().getType().getPoints();
-			case 4:
 				final Optional<Calendar> calendar = objective.get().getEndOfBuffTimestamp();
 				if (calendar.isPresent()) {
 					return DF.format(calendar.get().getTime());
 				} else {
 					return "";
 				}
-			case 5:
+			case 4:
 				if(objective.get().getEndOfBuffTimestamp().isPresent()) {
 					return objective.get().getRemainingBuffDuration(TimeUnit.SECONDS)+"s";
 				}else {
+					return "";
+				}
+			case 5:
+				if (objective.get().getClaimedByGuild().isPresent()) {
+					return objective.get().getClaimedByGuild().get().getName();
+				} else {
 					return "";
 				}
 			default:

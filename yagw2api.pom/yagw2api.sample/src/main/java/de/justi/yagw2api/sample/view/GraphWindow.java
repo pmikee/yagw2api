@@ -14,8 +14,7 @@ import com.jgraph.layout.JGraphLayout;
 import com.jgraph.layout.tree.JGraphRadialTreeLayout;
 
 public class GraphWindow extends AbstractWindow {
-	private static final long serialVersionUID = -8583440059587749181L;
-
+	private static final long	serialVersionUID	= -8583440059587749181L;
 
 	public GraphWindow() {
 		super();
