@@ -22,12 +22,13 @@ import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMatchScoresChangedEvent;
 
 public class MatchesTableModel extends AbstractTableModel implements IWVWMatchListener {
-//	private static final Logger	LOGGER				= Logger.getLogger(MatchesTableModel.class);
-	private static final long	serialVersionUID	= 267092039654136315L;
-	private static final NumberFormat NF = new DecimalFormat("#,###,##0");
-	private static final DateFormat DF = DateFormat.getDateTimeInstance();
+	// private static final Logger LOGGER =
+	// Logger.getLogger(MatchesTableModel.class);
+	private static final long			serialVersionUID	= 267092039654136315L;
+	private static final NumberFormat	NF					= new DecimalFormat("#,###,##0");
+	private static final DateFormat		DF					= DateFormat.getDateTimeInstance();
 
-	private List<IWVWMatch>		matches				= Collections.synchronizedList(new CopyOnWriteArrayList<IWVWMatch>());
+	private List<IWVWMatch>				matches				= Collections.synchronizedList(new CopyOnWriteArrayList<IWVWMatch>());
 
 	public void wireUp(IWVWWrapper wrapper) {
 		this.matches.clear();
@@ -37,9 +38,8 @@ public class MatchesTableModel extends AbstractTableModel implements IWVWMatchLi
 		wrapper.registerWVWMatchListener(this);
 	}
 
-	
-	public Comparator<?> getColumnComparator(int col){
-		switch(col) {
+	public Comparator<?> getColumnComparator(int col) {
+		switch (col) {
 			case 2:
 			case 4:
 			case 6:
@@ -62,7 +62,7 @@ public class MatchesTableModel extends AbstractTableModel implements IWVWMatchLi
 				};
 		}
 	}
-	
+
 	@Override
 	public int getColumnCount() {
 		return 8;
@@ -98,7 +98,7 @@ public class MatchesTableModel extends AbstractTableModel implements IWVWMatchLi
 		checkState(this.matches.get(matchIndex) != null);
 		switch (columnIndex) {
 			case 0:
-				return (this.matches.get(matchIndex).getGreenWorld().getWorldLocation().toString().equals("EUROPE")?"EU":"NA");
+				return (this.matches.get(matchIndex).getGreenWorld().getWorldLocation().toString().equals("EUROPE") ? "EU" : "NA");
 			case 1:
 				return (this.matches.get(matchIndex).getGreenWorld().getName().get());
 			case 2:
