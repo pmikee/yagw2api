@@ -30,7 +30,11 @@ public class GeneralTableModel extends AbstractTableModel implements IWVWMatchLi
 
 	@Override
 	public int getRowCount() {
+		if (match != null) {
 		return 11;
+		} else {
+			return 0;
+		}
 	}
 
 	@Override
