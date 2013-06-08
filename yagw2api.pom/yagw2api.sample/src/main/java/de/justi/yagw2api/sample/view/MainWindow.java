@@ -3,12 +3,9 @@ package de.justi.yagw2api.sample.view;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -148,7 +145,7 @@ public class MainWindow extends AbstractWindow {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 				if (!e.getValueIsAdjusting()) {
-					final Optional<IWVWMatch> match = MainWindow.this.matchModel.getMatch(e.getFirstIndex());
+					final Optional<IWVWMatch> match = MainWindow.this.matchModel.getMatch(selectionTable.convertRowIndexToModel(e.getFirstIndex()));
 					if (match.isPresent()) {
 						MainWindow.this.getAllMapsModel().wireUp(Main.getWrapper(), match.get().getCenterMap(), match.get().getGreenMap(), match.get().getBlueMap(), match.get().getRedMap());
 						MainWindow.this.getGeneralModel().wireUp(Main.getWrapper(), match.get());
@@ -156,9 +153,10 @@ public class MainWindow extends AbstractWindow {
 						MainWindow.this.getGreenMapModel().wireUp(Main.getWrapper(), match.get().getGreenMap());
 						MainWindow.this.getBlueMapModel().wireUp(Main.getWrapper(), match.get().getBlueMap());
 						MainWindow.this.getRedMapModel().wireUp(Main.getWrapper(), match.get().getRedMap());
-						MainWindow.this.getTabPane().setTitleAt(3, match.get().getGreenWorld().getName().get() + " (grüne Grenzlande)");
-						MainWindow.this.getTabPane().setTitleAt(4, match.get().getBlueWorld().getName().get() + " (blaue Grenzlande)");
-						MainWindow.this.getTabPane().setTitleAt(5, match.get().getRedWorld().getName().get() + " (rote Grenzlande)");
+						MainWindow.this.getTabPane().setTitleAt(3, match.get().getGreenWorld().getName().get()+" Grenzlande");
+						MainWindow.this.getTabPane().setTitleAt(4, match.get().getBlueWorld().getName().get()+" Grenzlande");
+						MainWindow.this.getTabPane().setTitleAt(5, match.get().getRedWorld().getName().get()+" Grenzlande");
+						MainWindow.this.getTabPane().repaint();
 					}
 				}
 			}

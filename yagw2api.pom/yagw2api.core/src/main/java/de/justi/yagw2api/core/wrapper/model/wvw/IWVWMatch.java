@@ -39,5 +39,9 @@ public interface IWVWMatch extends IHasChannel {
 	Calendar getStartTimestamp();
 	Calendar getEndTimestamp();
 	
+	int calculateGreenTick();
+	int calculateBlueTick();
+	int calculateRedTick();
+	
 	IWVWMatch createUnmodifiableReference();
 }

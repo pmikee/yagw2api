@@ -151,6 +151,21 @@ class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 		public Calendar getEndTimestamp() {
 			return WVWMatch.this.getEndTimestamp();
 		}
+
+		@Override
+		public int calculateGreenTick() {
+			return WVWMatch.this.calculateGreenTick();
+		}
+
+		@Override
+		public int calculateBlueTick() {
+			return WVWMatch.this.calculateBlueTick();
+		}
+
+		@Override
+		public int calculateRedTick() {
+			return WVWMatch.this.calculateRedTick();
+		}
 	}
 
 
@@ -517,5 +532,20 @@ class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 	@Override
 	public Calendar getEndTimestamp() {
 		return this.endTime;
+	}
+
+	@Override
+	public int calculateGreenTick() {
+		return this.getGreenMap().calculateGreenTick()+this.getBlueMap().calculateGreenTick()+this.getRedMap().calculateGreenTick()+this.getCenterMap().calculateGreenTick();
+	}
+
+	@Override
+	public int calculateBlueTick() {
+		return this.getGreenMap().calculateBlueTick()+this.getBlueMap().calculateBlueTick()+this.getRedMap().calculateBlueTick()+this.getCenterMap().calculateBlueTick();
+	}
+
+	@Override
+	public int calculateRedTick() {
+		return this.getGreenMap().calculateRedTick()+this.getBlueMap().calculateRedTick()+this.getRedMap().calculateRedTick()+this.getCenterMap().calculateRedTick();
 	}
 }

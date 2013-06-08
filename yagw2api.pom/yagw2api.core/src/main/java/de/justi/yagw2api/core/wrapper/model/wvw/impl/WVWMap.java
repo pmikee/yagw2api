@@ -31,6 +31,7 @@ import de.justi.yagw2api.core.YAGW2APICore;
 import de.justi.yagw2api.core.arenanet.dto.IWVWMapDTO;
 import de.justi.yagw2api.core.arenanet.dto.IWVWObjectiveDTO;
 import de.justi.yagw2api.core.wrapper.model.IUnmodifiable;
+import de.justi.yagw2api.core.wrapper.model.IWorld;
 import de.justi.yagw2api.core.wrapper.model.wvw.IHasWVWLocation;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMap;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
@@ -126,6 +127,21 @@ class WVWMap extends AbstractHasChannel implements IWVWMap {
 
 		public String toString() {
 			return Objects.toStringHelper(this).addValue(WVWMap.this.toString()).toString();
+		}
+
+		@Override
+		public int calculateGreenTick() {
+			return WVWMap.this.calculateGreenTick();
+		}
+
+		@Override
+		public int calculateBlueTick() {
+			return WVWMap.this.calculateBlueTick();
+		}
+
+		@Override
+		public int calculateRedTick() {
+			return WVWMap.this.calculateRedTick();
 		}
 
 	}
@@ -374,6 +390,46 @@ class WVWMap extends AbstractHasChannel implements IWVWMap {
 		checkNotNull(match);
 		checkState(!this.match.isPresent(), "Connect with map can only be called once.");
 		this.match = Optional.of(match);
+	}
+	
+	private int calculateTickOfWorld(IWorld world) {
+		int tick = 0;
+		for (IWVWObjective objective : this.getObjectives()) {
+			if (objective.getOwner().equals(world)) {
+				tick += objective.getType().getPoints();
+			}
+		}
+		return tick;
+	}
+
+	@Override
+	public int calculateGreenTick() {
+		int tick = 0;
+		final Optional<IWVWMatch> match = this.getMatch();
+		if (match.isPresent()) {
+			tick = this.calculateTickOfWorld(match.get().getGreenWorld());
+		}
+		return tick;
+	}
+
+	@Override
+	public int calculateBlueTick() {
+		int tick = 0;
+		final Optional<IWVWMatch> match = this.getMatch();
+		if (match.isPresent()) {
+			tick = this.calculateTickOfWorld(match.get().getBlueWorld());
+		}
+		return tick;
+	}
+
+	@Override
+	public int calculateRedTick() {
+		int tick = 0;
+		final Optional<IWVWMatch> match = this.getMatch();
+		if (match.isPresent()) {
+			tick = this.calculateTickOfWorld(match.get().getRedWorld());
+		}
+		return tick;
 	}
 
 }

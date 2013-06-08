@@ -34,6 +34,10 @@ public interface IWVWMap extends IHasChannel {
 	Optional<IHasWVWLocation<?>> getByLocation(IWVWLocationType location);
 	IWVWScores getScores();
 	
+	int calculateGreenTick();
+	int calculateBlueTick();
+	int calculateRedTick();
+	
 	IWVWMap createUnmodifiableReference();
 	/**
 	 * can only be called once
