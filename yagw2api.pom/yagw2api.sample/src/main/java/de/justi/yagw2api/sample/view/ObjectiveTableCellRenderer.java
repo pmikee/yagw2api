@@ -33,11 +33,11 @@ public class ObjectiveTableCellRenderer extends DefaultTableCellRenderer {
 			final Optional<IWVWMatch> match = map.get().getMatch();
 			if (match.isPresent()) {
 				if (match.get().getBlueWorld().equals(owner.get())) {
-					c.setBackground(MainWindow.BLUE_WORLD_BG);
+					c.setBackground(isSelected? MainWindow.BLUE_WORLD_FG : MainWindow.BLUE_WORLD_BG);
 				} else if (match.get().getGreenWorld().equals(owner.get())) {
-					c.setBackground(MainWindow.GREEN_WORLD_BG);
+					c.setBackground(isSelected? MainWindow.GREEN_WORLD_FG : MainWindow.GREEN_WORLD_BG);
 				} else if (match.get().getRedWorld().equals(owner.get())) {
-					c.setBackground(MainWindow.RED_WORLD_BG);
+					c.setBackground(isSelected? MainWindow.RED_WORLD_FG : MainWindow.RED_WORLD_BG);
 				}
 			}
 		}
