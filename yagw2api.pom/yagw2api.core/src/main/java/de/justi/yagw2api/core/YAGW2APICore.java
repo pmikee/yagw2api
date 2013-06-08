@@ -21,6 +21,7 @@ import de.justi.yagw2api.core.wrapper.model.wvw.impl.WVWModelModule;
 public enum YAGW2APICore {
 	INSTANCE;
 	private static final Logger LOGGER = Logger.getLogger(YAGW2APICore.class);
+	private static final int THREAD_COUNT_PER_PROCESSOR = 2;
 
 	public static ForkJoinPool getForkJoinPool() {
 		checkState(INSTANCE != null);
@@ -65,7 +66,7 @@ public enum YAGW2APICore {
 
 	private YAGW2APICore() {
 		this.injector = Guice.createInjector(new APIDTOModule(), new ModelModule(), new WVWModelModule(), new WVWModelEventsModule(), new APIServiceModule(), new WrapperModule());
-		this.forkJoinPool = new ForkJoinPool(50, ForkJoinPool.defaultForkJoinWorkerThreadFactory,
+		this.forkJoinPool = new ForkJoinPool(Runtime.getRuntime().availableProcessors() * THREAD_COUNT_PER_PROCESSOR, ForkJoinPool.defaultForkJoinWorkerThreadFactory,
 				new Thread.UncaughtExceptionHandler() {
 					public void uncaughtException(Thread t, Throwable e) {
 						LOGGER.fatal("Uncought exception thrown in " + t.getName(), e);

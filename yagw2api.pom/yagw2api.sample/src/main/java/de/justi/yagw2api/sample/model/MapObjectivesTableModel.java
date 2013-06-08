@@ -140,11 +140,11 @@ public class MapObjectivesTableModel extends AbstractTableModel implements IWVWM
 	}
 
 	@Override
-	public void notifyAboutChangedMapScoreEvent(IWVWMapScoresChangedEvent event) {
+	public void onChangedMapScoreEvent(IWVWMapScoresChangedEvent event) {
 	}
 
 	@Override
-	public void notifyAboutObjectiveCapturedEvent(IWVWObjectiveCaptureEvent event) {
+	public void onObjectiveCapturedEvent(IWVWObjectiveCaptureEvent event) {
 		checkState(this.content.contains(event.getObjective()));
 		final int row = this.content.indexOf(event.getObjective());
 		checkState(this.content.contains(event.getObjective()));
@@ -155,7 +155,7 @@ public class MapObjectivesTableModel extends AbstractTableModel implements IWVWM
 	}
 
 	@Override
-	public void notifyAboutObjectiveEndOfBuffEvent(IWVWObjectiveEndOfBuffEvent event) {
+	public void onObjectiveEndOfBuffEvent(IWVWObjectiveEndOfBuffEvent event) {
 		checkState(this.content.contains(event.getObjective()));
 		final int row = this.content.indexOf(event.getObjective());
 		checkState(this.content.contains(event.getObjective()));
@@ -163,7 +163,7 @@ public class MapObjectivesTableModel extends AbstractTableModel implements IWVWM
 	}
 
 	@Override
-	public void notifyAboutObjectiveClaimedEvent(IWVWObjectiveClaimedEvent event) {
+	public void onObjectiveClaimedEvent(IWVWObjectiveClaimedEvent event) {
 	}
 
 }

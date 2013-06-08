@@ -10,9 +10,26 @@ import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
 
 public interface IWVWWrapper{
 	/**
-	 * start the arenanet api sync deamon
+	 * <p>start the arenanet api sync deamon</p>
+	 * <p>initialization is performed asynchronously</p>
 	 */
 	void start();	
+	
+	/**
+	 * <p>start the arenanet api sync deamon</p>
+	 * <p>initialization is performed synchronously</p>
+	 */
+	void startAndWait();
+	/**
+	 * <p>stop the arenanet api sync deamon</p>
+	 * <p>shutdown is performed asynchronously</p>
+	 */
+	void stop();
+	/**
+	 * <p>stop the arenanet api sync deamon</p>
+	 * <p>shutdown is performed synchronously</p>
+	 */
+	void stopAndWait();
 	
 	/**
 	 * check if the arenanet api sync deamon is running

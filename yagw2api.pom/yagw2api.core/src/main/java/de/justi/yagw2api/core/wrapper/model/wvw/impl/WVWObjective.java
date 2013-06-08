@@ -330,7 +330,7 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 		if (guild != null && (!this.claimedByGuild.isPresent() || !this.claimedByGuild.get().equals(guild))) {
 			// changed claiming guild
 			final IWVWObjectiveClaimedEvent event = WVW_MODEL_EVENTS_FACTORY.newObjectiveClaimedEvent(this, guild, this.claimedByGuild);
-			LOGGER.info(this + " has been claimed by: " + this.claimedByGuild + " | previous claimed by " + this.claimedByGuild);
+			LOGGER.info(this.getLocation().getLabel(Locale.getDefault()) + " has been claimed by: " + guild.getName() + " | previous claimed by " + this.claimedByGuild);
 			this.claimedByGuild = Optional.of(guild);
 			this.getChannel().post(event);
 		} else {

@@ -14,16 +14,19 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
+import org.apache.log4j.Logger;
+
 import com.google.common.base.Optional;
 
 import de.justi.yagw2api.core.wrapper.IWVWMatchListener;
 import de.justi.yagw2api.core.wrapper.IWVWWrapper;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
+import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWInitializedMatchEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMatchScoresChangedEvent;
 
 public class MatchesTableModel extends AbstractTableModel implements IWVWMatchListener {
-	// private static final Logger LOGGER =
-	// Logger.getLogger(MatchesTableModel.class);
+	@SuppressWarnings("unused")
+	private static final Logger LOGGER = Logger.getLogger(MatchesTableModel.class);
 	private static final long			serialVersionUID	= 267092039654136315L;
 	private static final NumberFormat	NF					= new DecimalFormat("#,###,##0");
 	private static final DateFormat		DF					= DateFormat.getDateTimeInstance();
@@ -32,7 +35,6 @@ public class MatchesTableModel extends AbstractTableModel implements IWVWMatchLi
 
 	public void wireUp(IWVWWrapper wrapper) {
 		this.matches.clear();
-		this.matches.addAll(wrapper.getAllMatches());
 		this.fireTableDataChanged();
 		wrapper.unregisterWVWMatchListener(this);
 		wrapper.registerWVWMatchListener(this);
@@ -123,9 +125,20 @@ public class MatchesTableModel extends AbstractTableModel implements IWVWMatchLi
 	}
 
 	@Override
-	public void notifyAboutMatchScoreChangedEvent(IWVWMatchScoresChangedEvent event) {
+	public void onMatchScoreChangedEvent(IWVWMatchScoresChangedEvent event) {
 		final int rowIndex = this.matches.indexOf(event.getMatch());
 		this.fireTableRowsUpdated(rowIndex, rowIndex);
+	}
+
+	@Override
+	public void onInitializedMatchForWrapper(IWVWInitializedMatchEvent event) {
+		if(this.matches.contains(event.getMatch())) {
+			final int rowIndex = this.matches.indexOf(event.getMatch());
+			this.fireTableRowsUpdated(rowIndex, rowIndex);	
+		}else {
+			this.matches.add(event.getMatch());
+			this.fireTableDataChanged();
+		}
 	}
 
 }

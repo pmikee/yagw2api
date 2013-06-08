@@ -10,6 +10,7 @@ import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMap;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWObjective;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWScores;
+import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWInitializedMatchEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMapScoresChangedEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMatchScoresChangedEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWModelEventFactory;
@@ -28,31 +29,37 @@ class WVWModelEventFactory implements IWVWModelEventFactory {
 	}
 
 	@Override
-	public IWVWMapScoresChangedEvent newMapScoresChangedEvent(IWVWScores source, int deltaRed, int deltaGreen, int deltaBlue, IWVWMap map) {
-		checkNotNull(source);
+	public IWVWMapScoresChangedEvent newMapScoresChangedEvent(IWVWScores scores, int deltaRed, int deltaGreen, int deltaBlue, IWVWMap map) {
+		checkNotNull(scores);
 		checkNotNull(map);
-		return new WVWMapScoresChangedEvent(source, deltaRed, deltaGreen, deltaBlue, map);
+		return new WVWMapScoresChangedEvent(scores, deltaRed, deltaGreen, deltaBlue, map);
 	}
 
 	@Override
-	public IWVWMatchScoresChangedEvent newMatchScoresChangedEvent(IWVWScores source, int deltaRed, int deltaGreen, int deltaBlue, IWVWMatch match) {
-		checkNotNull(source);
+	public IWVWMatchScoresChangedEvent newMatchScoresChangedEvent(IWVWScores scores, int deltaRed, int deltaGreen, int deltaBlue, IWVWMatch match) {
+		checkNotNull(scores);
 		checkNotNull(match);
-		return new WVWMatchScoresChanged(source, deltaRed, deltaGreen, deltaBlue, match);
+		return new WVWMatchScoresChanged(scores, deltaRed, deltaGreen, deltaBlue, match);
 	}
 
 	@Override
-	public IWVWObjectiveEndOfBuffEvent newObjectiveEndOfBuffEvent(IWVWObjective source) {
-		checkNotNull(source);
-		return new WVWObjectiveEndOfBuffEvent(source);
+	public IWVWObjectiveEndOfBuffEvent newObjectiveEndOfBuffEvent(IWVWObjective objective) {
+		checkNotNull(objective);
+		return new WVWObjectiveEndOfBuffEvent(objective);
 	}
 
 	@Override
-	public IWVWObjectiveClaimedEvent newObjectiveClaimedEvent(IWVWObjective source, IGuild claimingGuild, Optional<IGuild> previousClaimedByGuild) {
-		checkNotNull(source);
+	public IWVWObjectiveClaimedEvent newObjectiveClaimedEvent(IWVWObjective objective, IGuild claimingGuild, Optional<IGuild> previousClaimedByGuild) {
+		checkNotNull(objective);
 		checkNotNull(claimingGuild);
 		checkNotNull(previousClaimedByGuild);
-		return new WVWObjectiveClaimedEvent(source, claimingGuild, previousClaimedByGuild.orNull());
+		return new WVWObjectiveClaimedEvent(objective, claimingGuild, previousClaimedByGuild.orNull());
+	}
+
+	@Override
+	public IWVWInitializedMatchEvent newInitializedMatchEvent(IWVWMatch match) {
+		checkNotNull(match);
+		return new WVWInitializedMatchEvent(match);
 	}
 
 }

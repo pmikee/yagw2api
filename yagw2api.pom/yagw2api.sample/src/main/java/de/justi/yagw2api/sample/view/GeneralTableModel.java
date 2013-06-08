@@ -8,6 +8,7 @@ import de.justi.yagw2api.core.wrapper.IWVWMatchListener;
 import de.justi.yagw2api.core.wrapper.IWVWWrapper;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWObjective;
+import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWInitializedMatchEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMatchScoresChangedEvent;
 
 public class GeneralTableModel extends AbstractTableModel implements IWVWMatchListener {
@@ -246,7 +247,11 @@ public class GeneralTableModel extends AbstractTableModel implements IWVWMatchLi
 	}
 
 	@Override
-	public void notifyAboutMatchScoreChangedEvent(IWVWMatchScoresChangedEvent event) {
+	public void onMatchScoreChangedEvent(IWVWMatchScoresChangedEvent event) {
 		this.fireTableDataChanged();
+	}
+
+	@Override
+	public void onInitializedMatchForWrapper(IWVWInitializedMatchEvent event) {
 	}
 }

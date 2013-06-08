@@ -10,11 +10,10 @@ import de.justi.yagw2api.core.wrapper.model.wvw.IWVWObjective;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWScores;
 
 public interface IWVWModelEventFactory {
-	IWVWObjectiveClaimedEvent newObjectiveClaimedEvent(IWVWObjective source, IGuild claimingGuild, Optional<IGuild> previousClaimedByGuild);
-	IWVWObjectiveCaptureEvent newObjectiveCapturedEvent(IWVWObjective source, IWorld newOwner, Optional<IWorld> previousOwner);
-	IWVWObjectiveEndOfBuffEvent newObjectiveEndOfBuffEvent(IWVWObjective source);
-	
-	IWVWMapScoresChangedEvent newMapScoresChangedEvent(IWVWScores source, int deltaRed, int deltaGreen, int deltaBlue, IWVWMap map);
-
-	IWVWMatchScoresChangedEvent newMatchScoresChangedEvent(IWVWScores source, int deltaRed, int deltaGreen, int deltaBlue, IWVWMatch match);	
+	IWVWObjectiveClaimedEvent newObjectiveClaimedEvent(IWVWObjective objective, IGuild claimingGuild, Optional<IGuild> previousClaimedByGuild);
+	IWVWObjectiveCaptureEvent newObjectiveCapturedEvent(IWVWObjective objective, IWorld newOwner, Optional<IWorld> previousOwner);
+	IWVWObjectiveEndOfBuffEvent newObjectiveEndOfBuffEvent(IWVWObjective source);	
+	IWVWMapScoresChangedEvent newMapScoresChangedEvent(IWVWScores scores, int deltaRed, int deltaGreen, int deltaBlue, IWVWMap map);
+	IWVWMatchScoresChangedEvent newMatchScoresChangedEvent(IWVWScores scores, int deltaRed, int deltaGreen, int deltaBlue, IWVWMatch match);
+	IWVWInitializedMatchEvent newInitializedMatchEvent(IWVWMatch match);
 }

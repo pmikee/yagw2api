@@ -3,17 +3,18 @@ package de.justi.yagw2api.core.wrapper.impl;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.common.util.concurrent.AbstractScheduledService;
+import com.sun.jersey.client.impl.CopyOnWriteHashMap;
 
 import de.justi.yagw2api.core.IEvent;
 import de.justi.yagw2api.core.IHasChannel;
@@ -22,16 +23,17 @@ import de.justi.yagw2api.core.arenanet.dto.IWVWMatchesDTO;
 import de.justi.yagw2api.core.arenanet.service.IWVWService;
 import de.justi.yagw2api.core.wrapper.model.IWorld;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
+import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWInitializedMatchEvent;
 
 class WVWSynchronizer extends AbstractScheduledService implements IHasChannel {
 	private static final IWVWService SERVICE = YAGW2APICore.getLowLevelWVWService();
-	private static final long DELAY_MILLIS = 50;
+	private static final long DELAY_MILLIS = 500;
 	private static final Logger LOGGER = Logger.getLogger(WVWSynchronizer.class);
 
-	private final Map<String, IWVWMatch> matchesMappedById;
+	private Map<String, IWVWMatch> matchesMappedById = new CopyOnWriteHashMap<String, IWVWMatch>();
 	
-	private final Set<IWVWMatch> unmodifiableMatchReferences;
-	private final Set<IWorld> unmodifiableWorldReferences;
+	private Set<IWVWMatch> matches = new CopyOnWriteArraySet<IWVWMatch>();
+	private Set<IWorld> worlds =  new CopyOnWriteArraySet<IWorld>();
 
 	private final EventBus channel = new EventBus(this.getClass().getName());
 
@@ -39,37 +41,73 @@ class WVWSynchronizer extends AbstractScheduledService implements IHasChannel {
 	 * constructor
 	 */
 	public WVWSynchronizer() {
+
+	}
+	
+	@Override
+	public void startUp() {
 		final long startTimestamp = System.currentTimeMillis();
-		LOGGER.debug("Will now initialize new "+this.getClass().getSimpleName());
-		final IWVWMatchesDTO matchesDto = SERVICE.retrieveAllMatches();	
+		if(LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Will now initialize new "+this.getClass().getSimpleName());
+		}
+		final IWVWMatchesDTO matchesDto = SERVICE.retrieveAllMatches();
+		if(LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Retrieved "+IWVWMatchesDTO.class.getSimpleName()+" after "+(System.currentTimeMillis()-startTimestamp)+"ms");
+			LOGGER.debug("Going to initialize new "+this.getClass().getSimpleName()+" for "+matchesDto);
+		}
 		final WVWSynchronizerInitAction initAction = new WVWSynchronizerInitAction(Arrays.asList(matchesDto.getMatches()));
-		YAGW2APICore.getForkJoinPool().invoke(initAction);
-		this.matchesMappedById = ImmutableMap.copyOf(initAction.getMatchesBuffer());
-		this.unmodifiableMatchReferences = ImmutableSet.copyOf(initAction.getMatchReferencesBuffer());
-		this.unmodifiableWorldReferences = ImmutableSet.copyOf(initAction.getWorldReferencesBuffer());
-		final long endTimestamp = System.currentTimeMillis();
-		LOGGER.info("Initialized "+this.getClass().getSimpleName()+" in "+(endTimestamp-startTimestamp)+"ms");
+		initAction.getChannel().register(this);
+		Thread asyncStartup = new Thread() {
+			public void run() {
+				YAGW2APICore.getForkJoinPool().invoke(initAction);
+				final long endTimestamp = System.currentTimeMillis();
+				if(LOGGER.isInfoEnabled()) {
+					LOGGER.info("Initialized "+this.getClass().getSimpleName()+" in "+(endTimestamp-startTimestamp)+"ms");
+				}
+			}
+		};
+		asyncStartup.setDaemon(true);
+		asyncStartup.start();
 	}
 
 	public Set<IWVWMatch> getAllMatches(){
-		return this.unmodifiableMatchReferences;
+		return Collections.unmodifiableSet(this.matches);
 	}
 	
 	public Set<IWorld> getAllWorlds(){
-		return this.unmodifiableWorldReferences;
+		return Collections.unmodifiableSet(this.worlds);
 	}
+	
+	public Map<String, IWVWMatch> getMatchesMappedById(){
+		return Collections.unmodifiableMap(this.matchesMappedById);
+	}
+
 	
 	@Subscribe
 	public void onEvent(IEvent event) {
 		checkNotNull(event);
+		if(event instanceof IWVWInitializedMatchEvent) {
+			final IWVWInitializedMatchEvent initializeEvent = (IWVWInitializedMatchEvent)event;
+			this.matchesMappedById.put(initializeEvent.getMatch().getId(), initializeEvent.getMatch());
+			this.matches.add(initializeEvent.getMatch());
+			this.worlds.add(initializeEvent.getMatch().getRedWorld());
+			this.worlds.add(initializeEvent.getMatch().getBlueWorld());
+			this.worlds.add(initializeEvent.getMatch().getGreenWorld());
+			if(LOGGER.isInfoEnabled()) {
+				LOGGER.info("Added match with id="+initializeEvent.getMatch().getId()+" to matches to synchronize.");	
+			}
+		}
 		this.channel.post(event);
 	}
 
 	@Override
 	protected void runOneIteration() throws Exception {
+		if(LOGGER.isInfoEnabled()) {
+			LOGGER.info("Going to synchronize "+this.getMatchesMappedById().keySet());
+		}
 		final long startTimestamp = System.currentTimeMillis();
 
-		YAGW2APICore.getForkJoinPool().invoke(new WVWSynchronizerAction(this.matchesMappedById));
+		YAGW2APICore.getForkJoinPool().invoke(new WVWSynchronizerAction(this.getMatchesMappedById()));
 
 		final long endTime = System.currentTimeMillis();
 		final long executionTime = endTime - startTimestamp;

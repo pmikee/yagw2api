@@ -8,6 +8,7 @@ import de.justi.yagw2api.analyzer.IWVWAnalyzer;
 import de.justi.yagw2api.analyzer.entities.IWorldEnityDAO;
 import de.justi.yagw2api.analyzer.entities.IWorldEntity;
 import de.justi.yagw2api.core.wrapper.model.IWorld;
+import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWInitializedMatchEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMapScoresChangedEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMatchScoresChangedEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveCaptureEvent;
@@ -20,7 +21,7 @@ class WVWAnalyzer implements IWVWAnalyzer {
 	private IWorldEnityDAO worldEntityDAO;
 	
 	@Override
-	public void notifyAboutMatchScoreChangedEvent(IWVWMatchScoresChangedEvent event) {
+	public void onMatchScoreChangedEvent(IWVWMatchScoresChangedEvent event) {
 		LOGGER.debug(event);
 		this.worldEntityOf(event.getMatch().getBlueWorld());
 		this.worldEntityOf(event.getMatch().getRedWorld());
@@ -28,7 +29,7 @@ class WVWAnalyzer implements IWVWAnalyzer {
 	}
 
 	@Override
-	public void notifyAboutObjectiveCapturedEvent(IWVWObjectiveCaptureEvent event) {
+	public void onObjectiveCapturedEvent(IWVWObjectiveCaptureEvent event) {
 		LOGGER.debug(event);
 		this.worldEntityOf(event.getMap().getMatch().get().getBlueWorld());
 		this.worldEntityOf(event.getMap().getMatch().get().getRedWorld());
@@ -36,7 +37,7 @@ class WVWAnalyzer implements IWVWAnalyzer {
 	}
 
 	@Override
-	public void notifyAboutObjectiveEndOfBuffEvent(IWVWObjectiveEndOfBuffEvent event) {
+	public void onObjectiveEndOfBuffEvent(IWVWObjectiveEndOfBuffEvent event) {
 		LOGGER.debug(event);
 		this.worldEntityOf(event.getMap().getMatch().get().getBlueWorld());
 		this.worldEntityOf(event.getMap().getMatch().get().getRedWorld());
@@ -44,7 +45,7 @@ class WVWAnalyzer implements IWVWAnalyzer {
 	}
 
 	@Override
-	public void notifyAboutChangedMapScoreEvent(IWVWMapScoresChangedEvent event) {
+	public void onChangedMapScoreEvent(IWVWMapScoresChangedEvent event) {
 		LOGGER.debug(event);
 		this.worldEntityOf(event.getMap().getMatch().get().getBlueWorld());
 		this.worldEntityOf(event.getMap().getMatch().get().getRedWorld());
@@ -57,7 +58,11 @@ class WVWAnalyzer implements IWVWAnalyzer {
 	}
 
 	@Override
-	public void notifyAboutObjectiveClaimedEvent(IWVWObjectiveClaimedEvent event) {
+	public void onObjectiveClaimedEvent(IWVWObjectiveClaimedEvent event) {
+	}
+
+	@Override
+	public void onInitializedMatchForWrapper(IWVWInitializedMatchEvent event) {
 	}
 
 }

@@ -22,6 +22,7 @@ import de.justi.yagw2api.core.wrapper.IWVWWrapper;
 import de.justi.yagw2api.core.wrapper.model.IWorld;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMap;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
+import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWInitializedMatchEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMapEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMapScoresChangedEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMatchEvent;
@@ -42,7 +43,7 @@ class WVWWrapper implements IWVWWrapper {
 	public WVWWrapper() {
 	}
 
-	public void start() {
+	private void initDemaonIfRequired() {
 		if (this.deamon == null) {
 			synchronized (this) {
 				if (this.deamon == null) {
@@ -51,15 +52,39 @@ class WVWWrapper implements IWVWWrapper {
 				}
 			}
 		}
+	}
+	
+	@Override
+	public void start() {
+		this.initDemaonIfRequired();
 		checkState(this.deamon != null);
 		checkState(!this.deamon.isRunning());
-		this.deamon.startAndWait();
+		this.deamon.start();
 	}
+	
 
-	public void stop() {
+
+	@Override
+	public void startAndWait() {
+		this.initDemaonIfRequired();
+		checkState(this.deamon != null);
+		checkState(!this.deamon.isRunning());
+		this.deamon.startAndWait();		
+	}
+	
+
+
+	@Override
+	public void stopAndWait() {
 		checkState(this.deamon != null);
 		checkState(this.deamon.isRunning());
 		this.deamon.stopAndWait();
+	}
+	@Override
+	public void stop() {
+		checkState(this.deamon != null);
+		checkState(this.deamon.isRunning());
+		this.deamon.stop();
 	}
 
 	@Override
@@ -87,7 +112,9 @@ class WVWWrapper implements IWVWWrapper {
 		checkNotNull(listener);
 		checkNotNull(event);
 		if (event instanceof IWVWMatchScoresChangedEvent) {
-			listener.notifyAboutMatchScoreChangedEvent((IWVWMatchScoresChangedEvent) event);
+			listener.onMatchScoreChangedEvent((IWVWMatchScoresChangedEvent) event);
+		}else if (event instanceof IWVWInitializedMatchEvent) {
+			listener.onInitializedMatchForWrapper((IWVWInitializedMatchEvent) event);
 		}
 	}
 
@@ -118,13 +145,13 @@ class WVWWrapper implements IWVWWrapper {
 		checkNotNull(listener);
 		checkNotNull(event);
 		if (event instanceof IWVWMapScoresChangedEvent) {
-			listener.notifyAboutChangedMapScoreEvent((IWVWMapScoresChangedEvent) event);
+			listener.onChangedMapScoreEvent((IWVWMapScoresChangedEvent) event);
 		} else if (event instanceof IWVWObjectiveCaptureEvent) {
-			listener.notifyAboutObjectiveCapturedEvent((IWVWObjectiveCaptureEvent) event);
+			listener.onObjectiveCapturedEvent((IWVWObjectiveCaptureEvent) event);
 		} else if (event instanceof IWVWObjectiveEndOfBuffEvent) {
-			listener.notifyAboutObjectiveEndOfBuffEvent((IWVWObjectiveEndOfBuffEvent) event);
+			listener.onObjectiveEndOfBuffEvent((IWVWObjectiveEndOfBuffEvent) event);
 		} else if (event instanceof IWVWObjectiveClaimedEvent) {
-			listener.notifyAboutObjectiveClaimedEvent((IWVWObjectiveClaimedEvent) event);
+			listener.onObjectiveClaimedEvent((IWVWObjectiveClaimedEvent) event);
 		}
 	}
 
