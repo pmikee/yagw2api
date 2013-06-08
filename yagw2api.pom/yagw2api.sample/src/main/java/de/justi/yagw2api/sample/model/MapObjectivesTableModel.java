@@ -28,7 +28,7 @@ import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveEndOfBuffEve
 public class MapObjectivesTableModel extends AbstractTableModel implements IWVWMapListener {
 	private static final long	serialVersionUID	= -4657108157862724940L;
 
-	final DateFormat			DF					= DateFormat.getTimeInstance(DateFormat.LONG);
+	final DateFormat			DF					= DateFormat.getTimeInstance(DateFormat.MEDIUM);
 
 	private List<IWVWObjective>	content				= new CopyOnWriteArrayList<IWVWObjective>();
 	
@@ -80,13 +80,13 @@ public class MapObjectivesTableModel extends AbstractTableModel implements IWVWM
 
 	public Comparator<?> getColumnComparator(int col){
 		switch(col) {
-//			case 3:
-//				return new Comparator<Integer>() {
-//					@Override
-//					public int compare(Integer o1, Integer o2) {
-//						return o1.compareTo(o2);
-//					}
-//				};
+			case 4:
+				return new Comparator<Integer>() {
+					@Override
+					public int compare(Integer o1, Integer o2) {
+						return o1.compareTo(o2);
+					}
+				};
 			default:
 				return new Comparator<Object>() {
 					@Override
@@ -124,13 +124,13 @@ public class MapObjectivesTableModel extends AbstractTableModel implements IWVWM
 				}
 			case 4:
 				if(objective.get().getEndOfBuffTimestamp().isPresent()) {
-					return objective.get().getRemainingBuffDuration(TimeUnit.SECONDS)+"s";
+					return objective.get().getRemainingBuffDuration(TimeUnit.SECONDS);
 				}else {
 					return "";
 				}
 			case 5:
 				if (objective.get().getClaimedByGuild().isPresent()) {
-					return objective.get().getClaimedByGuild().get().getName();
+					return "["+objective.get().getClaimedByGuild().get().getTag()+"] "+objective.get().getClaimedByGuild().get().getName();
 				} else {
 					return "";
 				}

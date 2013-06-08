@@ -14,6 +14,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableColumnModel;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
@@ -102,6 +103,15 @@ public class MainWindow extends AbstractWindow {
 		this.getTabPane().addTab("MapTest", graphicMapTestPanel);
 
 		this.getContentPanel().add(getTabPane(), BorderLayout.CENTER);
+		
+
+		final JPanel bottomPanel = new JPanel(new BorderLayout());
+		String[] generalHeader = { "", "Punkte (Grün)", "Punkte (Blau)", "Punkte (Rot)", "Punktezuwachs (Grün)", "Punktezuwachs (Blau)", "Punktezuwachs (Rot)" };
+		final TableColumnModel tcm = this.newTCM(generalHeader);
+		this.generalTable = new JTable(this.getGeneralModel(), tcm);
+		bottomPanel.add(new JTableHeader(tcm), BorderLayout.NORTH);
+		bottomPanel.add(this.generalTable, BorderLayout.CENTER);
+		this.getContentPanel().add(bottomPanel, BorderLayout.SOUTH);
 
 		this.pack();
 	}
@@ -168,8 +178,6 @@ public class MainWindow extends AbstractWindow {
 		final JPanel generalPanel = new JPanel();
 		generalPanel.setLayout(new BorderLayout());
 
-		String[] generalHeader = { "", "Grün", "Blau", "Rot" };
-		this.generalTable = new JTable(this.getGeneralModel(), this.newTCM(generalHeader));
 		this.allMapsTable = new JTable(this.getAllMapsModel(), this.newMapTCM());
 		this.allMapsTable.setDefaultRenderer(Object.class, new ObjectiveTableCellRenderer());
 
@@ -179,8 +187,6 @@ public class MainWindow extends AbstractWindow {
 		for (int col = 0; col < this.getAllMapsModel().getColumnCount(); col++) {
 			sorter.setComparator(col, this.getAllMapsModel().getColumnComparator(col));
 		}
-
-		generalPanel.add(new JScrollPane(this.generalTable), BorderLayout.WEST);
 		generalPanel.add(new JScrollPane(this.allMapsTable), BorderLayout.CENTER);
 		return generalPanel;
 	}
