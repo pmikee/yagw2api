@@ -14,6 +14,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -37,31 +39,31 @@ import de.justi.yagw2api.sample.model.MapObjectivesTableModel;
 import de.justi.yagw2api.sample.model.MatchesTableModel;
 
 public class MainWindow extends AbstractWindow {
-	private static final long				serialVersionUID	= -6500541020042114865L;
-	public static final Color				GREEN_WORLD_FG		= new Color(70, 152, 42);
-	public static final Color				GREEN_WORLD_BG		= new Color(70, 152, 42, 100);
-	public static final Color				BLUE_WORLD_FG		= new Color(35, 129, 199);
-	public static final Color				BLUE_WORLD_BG		= new Color(35, 129, 199, 100);
-	public static final Color				RED_WORLD_FG		= new Color(175, 25, 10);
-	public static final Color				RED_WORLD_BG		= new Color(175, 25, 10, 100);
+	private static final long serialVersionUID = -6500541020042114865L;
+	public static final Color GREEN_WORLD_FG = new Color(70, 152, 42);
+	public static final Color GREEN_WORLD_BG = new Color(70, 152, 42, 100);
+	public static final Color BLUE_WORLD_FG = new Color(35, 129, 199);
+	public static final Color BLUE_WORLD_BG = new Color(35, 129, 199, 100);
+	public static final Color RED_WORLD_FG = new Color(175, 25, 10);
+	public static final Color RED_WORLD_BG = new Color(175, 25, 10, 100);
 
-	private final JTabbedPane				tabPane;
+	private final JTabbedPane tabPane;
 
-	private final MatchesTableModel			matchModel;
-	private final GeneralTableModel			generalModel;
-	private final MapObjectivesTableModel	allMapsModel;
-	private final MapObjectivesTableModel	eternalMapModel;
-	private final MapObjectivesTableModel	greenMapModel;
-	private final MapObjectivesTableModel	blueMapModel;
-	private final MapObjectivesTableModel	redMapModel;
+	private final MatchesTableModel matchModel;
+	private final GeneralTableModel generalModel;
+	private final MapObjectivesTableModel allMapsModel;
+	private final MapObjectivesTableModel eternalMapModel;
+	private final MapObjectivesTableModel greenMapModel;
+	private final MapObjectivesTableModel blueMapModel;
+	private final MapObjectivesTableModel redMapModel;
 
-	private JTable							selectionTable;
-	private JTable							generalTable;
-	private JTable							allMapsTable;
-	private JTable							eternalTable;
-	private JTable							greenTable;
-	private JTable							blueTable;
-	private JTable							redTable;
+	private JTable selectionTable;
+	private JTable generalTable;
+	private JTable allMapsTable;
+	private JTable eternalTable;
+	private JTable greenTable;
+	private JTable blueTable;
+	private JTable redTable;
 
 	public MainWindow() {
 		super();
@@ -79,14 +81,14 @@ public class MainWindow extends AbstractWindow {
 
 		final JPanel selectionPanel = this.initSelectionPanel();
 		final JPanel generalPanel = this.initGeneralPanel();
-		
+
 		final JPanel eternalPanel = new JPanel();
 		this.initMapPanel(eternalPanel, eternalMapModel, eternalTable, WVWMapType.CENTER);
-		final JPanel greenPanel = new JPanel(); 
+		final JPanel greenPanel = new JPanel();
 		this.initMapPanel(greenPanel, greenMapModel, greenTable, WVWMapType.GREEN);
-		final JPanel bluePanel = new JPanel(); 
+		final JPanel bluePanel = new JPanel();
 		this.initMapPanel(bluePanel, blueMapModel, blueTable, WVWMapType.BLUE);
-		final JPanel redPanel = new JPanel(); 
+		final JPanel redPanel = new JPanel();
 		this.initMapPanel(redPanel, redMapModel, redTable, WVWMapType.RED);
 		final JPanel graphicMapTestPanel = this.initGraphicMapTestPanel();
 
@@ -141,28 +143,26 @@ public class MainWindow extends AbstractWindow {
 			sorter.setComparator(col, this.matchModel.getColumnComparator(col));
 		}
 
-		JButton selectionButton = new JButton("auswählen");
-		selectionButton.addActionListener(new ActionListener() {
+		this.selectionTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				final Optional<IWVWMatch> match = MainWindow.this.matchModel.getMatch(MainWindow.this.selectionTable.convertRowIndexToModel(MainWindow.this.selectionTable.getSelectedRow()));
-				if (match.isPresent()) {
-					MainWindow.this.getAllMapsModel().wireUp(Main.getWrapper(), match.get().getCenterMap(), match.get().getGreenMap(), match.get().getBlueMap(), match.get().getRedMap());
-					MainWindow.this.getGeneralModel().wireUp(Main.getWrapper(), match.get());				
-					MainWindow.this.getEternalMapModel().wireUp(Main.getWrapper(), match.get().getCenterMap());
-					MainWindow.this.getGreenMapModel().wireUp(Main.getWrapper(), match.get().getGreenMap());
-					MainWindow.this.getBlueMapModel().wireUp(Main.getWrapper(), match.get().getBlueMap());
-					MainWindow.this.getRedMapModel().wireUp(Main.getWrapper(), match.get().getRedMap());
-					MainWindow.this.getTabPane().setTitleAt(3, match.get().getGreenWorld().getName().get() + " (grüne Grenzlande)");
-					MainWindow.this.getTabPane().setTitleAt(4, match.get().getBlueWorld().getName().get() + " (blaue Grenzlande)");
-					MainWindow.this.getTabPane().setTitleAt(5, match.get().getRedWorld().getName().get() + " (rote Grenzlande)");
+			public void valueChanged(ListSelectionEvent e) {
+				if (!e.getValueIsAdjusting()) {
+					final Optional<IWVWMatch> match = MainWindow.this.matchModel.getMatch(e.getFirstIndex());
+					if (match.isPresent()) {
+						MainWindow.this.getAllMapsModel().wireUp(Main.getWrapper(), match.get().getCenterMap(), match.get().getGreenMap(), match.get().getBlueMap(), match.get().getRedMap());
+						MainWindow.this.getGeneralModel().wireUp(Main.getWrapper(), match.get());
+						MainWindow.this.getEternalMapModel().wireUp(Main.getWrapper(), match.get().getCenterMap());
+						MainWindow.this.getGreenMapModel().wireUp(Main.getWrapper(), match.get().getGreenMap());
+						MainWindow.this.getBlueMapModel().wireUp(Main.getWrapper(), match.get().getBlueMap());
+						MainWindow.this.getRedMapModel().wireUp(Main.getWrapper(), match.get().getRedMap());
+						MainWindow.this.getTabPane().setTitleAt(3, match.get().getGreenWorld().getName().get() + " (grüne Grenzlande)");
+						MainWindow.this.getTabPane().setTitleAt(4, match.get().getBlueWorld().getName().get() + " (blaue Grenzlande)");
+						MainWindow.this.getTabPane().setTitleAt(5, match.get().getRedWorld().getName().get() + " (rote Grenzlande)");
+					}
 				}
 			}
 		});
-
-		selectionPanel.add(selectionButton, BorderLayout.SOUTH);
-
 		return selectionPanel;
 	}
 
@@ -170,7 +170,7 @@ public class MainWindow extends AbstractWindow {
 		final JPanel generalPanel = new JPanel();
 		generalPanel.setLayout(new BorderLayout());
 
-		String[] generalHeader = {"","Grün","Blau","Rot"};
+		String[] generalHeader = { "", "Grün", "Blau", "Rot" };
 		this.generalTable = new JTable(this.getGeneralModel(), this.newTCM(generalHeader));
 		this.allMapsTable = new JTable(this.getAllMapsModel(), this.newMapTCM());
 		this.allMapsTable.setDefaultRenderer(Object.class, new ObjectiveTableCellRenderer());
@@ -213,7 +213,7 @@ public class MainWindow extends AbstractWindow {
 		graph.addVertex("TEST1");
 		graph.addVertex("TEST2");
 		graph.addVertex("TEST3");
-//		graph.addEdge("TEST", "TEST1");
+		// graph.addEdge("TEST", "TEST1");
 		final JGraphModelAdapter<String, DefaultEdge> graphAdapter = new JGraphModelAdapter<String, DefaultEdge>(graph);
 		final JGraph graphComponent = new JGraph(graphAdapter);
 

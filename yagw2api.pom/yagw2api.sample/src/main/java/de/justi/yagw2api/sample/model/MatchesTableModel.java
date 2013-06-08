@@ -27,11 +27,11 @@ import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMatchScoresChangedEve
 public class MatchesTableModel extends AbstractTableModel implements IWVWMatchListener {
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(MatchesTableModel.class);
-	private static final long			serialVersionUID	= 267092039654136315L;
-	private static final NumberFormat	NF					= new DecimalFormat("#,###,##0");
-	private static final DateFormat		DF					= DateFormat.getDateTimeInstance();
+	private static final long serialVersionUID = 267092039654136315L;
+	private static final NumberFormat NF = new DecimalFormat("#,###,##0");
+	private static final DateFormat DF = DateFormat.getDateTimeInstance();
 
-	private List<IWVWMatch>				matches				= Collections.synchronizedList(new CopyOnWriteArrayList<IWVWMatch>());
+	private List<IWVWMatch> matches = Collections.synchronizedList(new CopyOnWriteArrayList<IWVWMatch>());
 
 	public void wireUp(IWVWWrapper wrapper) {
 		this.matches.clear();
@@ -126,16 +126,15 @@ public class MatchesTableModel extends AbstractTableModel implements IWVWMatchLi
 
 	@Override
 	public void onMatchScoreChangedEvent(IWVWMatchScoresChangedEvent event) {
-		final int rowIndex = this.matches.indexOf(event.getMatch());
-		this.fireTableRowsUpdated(rowIndex, rowIndex);
+		if (this.matches.contains(event.getMatch())) {
+			final int rowIndex = this.matches.indexOf(event.getMatch());
+			this.fireTableRowsUpdated(rowIndex, rowIndex);
+		}
 	}
 
 	@Override
 	public void onInitializedMatchForWrapper(IWVWInitializedMatchEvent event) {
-		if(this.matches.contains(event.getMatch())) {
-			final int rowIndex = this.matches.indexOf(event.getMatch());
-			this.fireTableRowsUpdated(rowIndex, rowIndex);	
-		}else {
+		if (!this.matches.contains(event.getMatch())) {
 			this.matches.add(event.getMatch());
 			this.fireTableDataChanged();
 		}
