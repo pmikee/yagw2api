@@ -395,7 +395,7 @@ class WVWMap extends AbstractHasChannel implements IWVWMap {
 	private int calculateTickOfWorld(IWorld world) {
 		int tick = 0;
 		for (IWVWObjective objective : this.getObjectives()) {
-			if (objective.getOwner().equals(world)) {
+			if (objective.getOwner().get().equals(world)) {
 				tick += objective.getType().getPoints();
 			}
 		}

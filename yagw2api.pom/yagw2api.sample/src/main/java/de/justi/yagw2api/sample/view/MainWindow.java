@@ -90,9 +90,9 @@ public class MainWindow extends AbstractWindow {
 		final JPanel graphicMapTestPanel = this.initGraphicMapTestPanel();
 
 		this.tabPane = new JTabbedPane();
-		this.getTabPane().addTab("Matches", selectionPanel);
+		this.getTabPane().addTab("Spielpartien", selectionPanel);
 		getTabPane().addTab("Übersicht", generalPanel);
-		this.getTabPane().addTab("Ewige Schlachtgründe", eternalPanel);
+		this.getTabPane().addTab("Ewige Schlachtfelder", eternalPanel);
 		this.getTabPane().addTab("Grüne Grenzlande", greenPanel);
 		this.getTabPane().setForegroundAt(3, GREEN_WORLD_FG);
 		this.getTabPane().addTab("Blaue Grenzlande", bluePanel);
