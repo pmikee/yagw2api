@@ -70,7 +70,7 @@ public class MapObjectivesTableModel extends AbstractTableModel implements IWVWM
 
 	@Override
 	public int getColumnCount() {
-		return 6;
+		return 7;
 	}
 
 	@Override
@@ -80,7 +80,8 @@ public class MapObjectivesTableModel extends AbstractTableModel implements IWVWM
 
 	public Comparator<?> getColumnComparator(int col){
 		switch(col) {
-			case 4:
+			case 3: // objective points
+			case 6: // remaining buff duration
 				return new Comparator<Integer>() {
 					@Override
 					public int compare(Integer o1, Integer o2) {
@@ -110,27 +111,37 @@ public class MapObjectivesTableModel extends AbstractTableModel implements IWVWM
 		checkArgument(objective.isPresent());
 		switch (columnIndex) {
 			case 0:
-				return objective.get().getLabel().get();
+				return objective.get().getMap().get().getType().getLabel();
 			case 1:
-				return (objective.get().getType().getLabel() + "(" + objective.get().getType().getPoints() + ")");
+				return objective.get().getLabel().get();
 			case 2:
-				return objective.get().getOwner().get().getName().get();
+				return objective.get().getType().getLabel();
 			case 3:
+				return objective.get().getType().getPoints();
+			case 4:
+				return objective.get().getOwner().get().getName().get();
+			case 5:
 				final Optional<Calendar> calendar = objective.get().getEndOfBuffTimestamp();
 				if (calendar.isPresent()) {
 					return DF.format(calendar.get().getTime());
 				} else {
 					return "";
 				}
-			case 4:
+			case 6:
 				if(objective.get().getEndOfBuffTimestamp().isPresent()) {
 					return objective.get().getRemainingBuffDuration(TimeUnit.SECONDS);
 				}else {
 					return "";
 				}
-			case 5:
+			case 7:
 				if (objective.get().getClaimedByGuild().isPresent()) {
-					return "["+objective.get().getClaimedByGuild().get().getTag()+"] "+objective.get().getClaimedByGuild().get().getName();
+					return objective.get().getClaimedByGuild().get().getName();
+				} else {
+					return "";
+				}
+			case 8:
+				if (objective.get().getClaimedByGuild().isPresent()) {
+					return objective.get().getClaimedByGuild().get().getTag();
 				} else {
 					return "";
 				}

@@ -2,22 +2,32 @@ package de.justi.yagw2api.sample.view;
 
 import javax.swing.table.AbstractTableModel;
 
+import de.justi.yagw2api.core.wrapper.IWVWMapListener;
 import de.justi.yagw2api.core.wrapper.IWVWMatchListener;
 import de.justi.yagw2api.core.wrapper.IWVWWrapper;
+import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMap;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWInitializedMatchEvent;
+import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMapScoresChangedEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMatchScoresChangedEvent;
+import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveCaptureEvent;
+import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveClaimedEvent;
+import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveEndOfBuffEvent;
 
-public class GeneralTableModel extends AbstractTableModel implements IWVWMatchListener {
+public class GeneralTableModel extends AbstractTableModel implements IWVWMatchListener, IWVWMapListener {
 
 	static final long serialVersionUID = -8573658641105845856L;
 
 	private IWVWMatch match;
 
-	public void wireUp(IWVWWrapper wrapper, IWVWMatch match) {
+	public void wireUp(IWVWWrapper wrapper, IWVWMatch match, IWVWMap...wvwMaps) {
 		this.match = match;
 		wrapper.unregisterWVWMatchListener(this);
 		wrapper.registerWVWMatchListener(match, this);
+		wrapper.unregisterWVWMapListener(this);
+		for (IWVWMap map : wvwMaps) {
+			wrapper.registerWVWMapListener(map, this);
+		}
 		this.fireTableDataChanged();
 	}
 
@@ -28,119 +38,110 @@ public class GeneralTableModel extends AbstractTableModel implements IWVWMatchLi
 
 	@Override
 	public int getRowCount() {
-		if (this.match != null) {
-			return 5;
-		} else {
-			return 0;
-		}
+		return 5;
 	}
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		if (this.match != null) {
-			switch (rowIndex) {
-				case 0:
-					switch (columnIndex) {
-						case 0:
-							return "Ewige Schlachtfelder";
-						case 1:
-							return this.match.getCenterMap().getScores().getGreenScore();
-						case 2:
-							return this.match.getCenterMap().getScores().getBlueScore();
-						case 3:
-							return this.match.getCenterMap().getScores().getRedScore();
-						case 4:
-							return this.match.getCenterMap().calculateGreenTick();
-						case 5:
-							return this.match.getCenterMap().calculateBlueTick();
-						case 6:
-							return this.match.getCenterMap().calculateRedTick();
-						default:
-							return "";
-					}
-				case 1:
-					switch (columnIndex) {
-						case 0:
-							return this.match.getGreenWorld().getName().get() + " Grenzlande";
-						case 1:
-							return this.match.getGreenMap().getScores().getGreenScore();
-						case 2:
-							return this.match.getGreenMap().getScores().getBlueScore();
-						case 3:
-							return this.match.getGreenMap().getScores().getRedScore();
-						case 4:
-							return this.match.getGreenMap().calculateGreenTick();
-						case 5:
-							return this.match.getGreenMap().calculateBlueTick();
-						case 6:
-							return this.match.getGreenMap().calculateRedTick();
-						default:
-							return "";
-					}
-				case 2:
-					switch (columnIndex) {
-						case 0:
-							return this.match.getBlueWorld().getName().get() + " Grenzlande";
-						case 1:
-							return this.match.getBlueMap().getScores().getGreenScore();
-						case 2:
-							return this.match.getBlueMap().getScores().getBlueScore();
-						case 3:
-							return this.match.getBlueMap().getScores().getRedScore();
-						case 4:
-							return this.match.getBlueMap().calculateGreenTick();
-						case 5:
-							return this.match.getBlueMap().calculateBlueTick();
-						case 6:
-							return this.match.getBlueMap().calculateRedTick();
-						default:
-							return "";
-					}
-				case 3:
-					switch (columnIndex) {
-						case 0:
-							return this.match.getRedWorld().getName().get() + " Grenzlande";
-						case 1:
-							return this.match.getRedMap().getScores().getGreenScore();
-						case 2:
-							return this.match.getRedMap().getScores().getBlueScore();
-						case 3:
-							return this.match.getRedMap().getScores().getRedScore();
-						case 4:
-							return this.match.getRedMap().calculateGreenTick();
-						case 5:
-							return this.match.getRedMap().calculateBlueTick();
-						case 6:
-							return this.match.getRedMap().calculateRedTick();
-						default:
-							return "";
-					}
-				case 4:
-					switch (columnIndex) {
-						case 0:
-							return "Gesamt";
-						case 1:
-							return this.match.getScores().getGreenScore();
-						case 2:
-							return this.match.getScores().getBlueScore();
-						case 3:
-							return this.match.getScores().getRedScore();
-						case 4:
-							return this.match.calculateGreenTick();
-						case 5:
-							return this.match.calculateBlueTick();
-						case 6:
-							return this.match.calculateRedTick();
-						default:
-							return "";
-					}
-				default:
-					return "";
-			}
-		} else {
-			return "";
+		switch (rowIndex) {
+			case 0:
+				switch (columnIndex) {
+					case 0:
+						return "Ewige Schlachtfelder";
+					case 1:
+						return this.match != null ? this.match.getCenterMap().getScores().getGreenScore() : "";
+					case 2:
+						return this.match != null ? this.match.getCenterMap().calculateGreenTick() : "";
+					case 3:
+						return this.match != null ? this.match.getCenterMap().getScores().getBlueScore() : "";
+					case 4:
+						return this.match != null ? this.match.getCenterMap().calculateBlueTick() : "";
+					case 5:
+						return this.match != null ? this.match.getCenterMap().getScores().getRedScore() : "";
+					case 6:
+						return this.match != null ? this.match.getCenterMap().calculateRedTick() : "";
+					default:
+						return "";
+				}
+			case 1:
+				switch (columnIndex) {
+					case 0:
+						return this.match != null ? this.match.getGreenWorld().getName().get() + " Grenzlande" : "";
+					case 1:
+						return this.match != null ? this.match.getGreenMap().getScores().getGreenScore() : "";
+					case 2:
+						return this.match != null ? this.match.getGreenMap().calculateGreenTick() : "";
+					case 3:
+						return this.match != null ? this.match.getGreenMap().getScores().getBlueScore() : "";
+					case 4:
+						return this.match != null ? this.match.getGreenMap().calculateBlueTick() : "";
+					case 5:
+						return this.match != null ? this.match.getGreenMap().getScores().getRedScore() : "";
+					case 6:
+						return this.match != null ? this.match.getGreenMap().calculateRedTick() : "";
+					default:
+						return "";
+				}
+			case 2:
+				switch (columnIndex) {
+					case 0:
+						return this.match != null ? this.match.getBlueWorld().getName().get() + " Grenzlande" : "";
+					case 1:
+						return this.match != null ? this.match.getBlueMap().getScores().getGreenScore() : "";
+					case 2:
+						return this.match != null ? this.match.getBlueMap().calculateGreenTick() : "";
+					case 3:
+						return this.match != null ? this.match.getBlueMap().getScores().getBlueScore() : "";
+					case 4:
+						return this.match != null ? this.match.getBlueMap().calculateBlueTick() : "";
+					case 5:
+						return this.match != null ? this.match.getBlueMap().getScores().getRedScore() : "";
+					case 6:
+						return this.match != null ? this.match.getBlueMap().calculateRedTick() : "";
+					default:
+						return "";
+				}
+			case 3:
+				switch (columnIndex) {
+					case 0:
+						return this.match != null ? this.match.getRedWorld().getName().get() + " Grenzlande" : "";
+					case 1:
+						return this.match != null ? this.match.getRedMap().getScores().getGreenScore() : "";
+					case 2:
+						return this.match != null ? this.match.getRedMap().calculateGreenTick() : "";
+					case 3:
+						return this.match != null ? this.match.getRedMap().getScores().getBlueScore() : "";
+					case 4:
+						return this.match != null ? this.match.getRedMap().calculateBlueTick() : "";
+					case 5:
+						return this.match != null ? this.match.getRedMap().getScores().getRedScore() : "";
+					case 6:
+						return this.match != null ? this.match.getRedMap().calculateRedTick() : "";
+					default:
+						return "";
+				}
+			case 4:
+				switch (columnIndex) {
+					case 0:
+						return "Gesamt";
+					case 1:
+						return this.match != null ? this.match.getScores().getGreenScore() : "";
+					case 2:
+						return this.match != null ? this.match.calculateGreenTick() : "";
+					case 3:
+						return this.match != null ? this.match.getScores().getBlueScore() : "";
+					case 4:
+						return this.match != null ? this.match.calculateBlueTick() : "";
+					case 5:
+						return this.match != null ? this.match.getScores().getRedScore() : "";
+					case 6:
+						return this.match != null ? this.match.calculateRedTick() : "";
+					default:
+						return "";
+				}
+			default:
+				return "";
 		}
-
 	}
 
 	@Override
@@ -150,5 +151,23 @@ public class GeneralTableModel extends AbstractTableModel implements IWVWMatchLi
 
 	@Override
 	public void onInitializedMatchForWrapper(IWVWInitializedMatchEvent event) {
+	}
+
+	@Override
+	public void onChangedMapScoreEvent(IWVWMapScoresChangedEvent event) {
+		this.fireTableDataChanged();
+	}
+
+	@Override
+	public void onObjectiveCapturedEvent(IWVWObjectiveCaptureEvent event) {
+		this.fireTableDataChanged();
+	}
+
+	@Override
+	public void onObjectiveEndOfBuffEvent(IWVWObjectiveEndOfBuffEvent event) {
+	}
+
+	@Override
+	public void onObjectiveClaimedEvent(IWVWObjectiveClaimedEvent event) {
 	}
 }

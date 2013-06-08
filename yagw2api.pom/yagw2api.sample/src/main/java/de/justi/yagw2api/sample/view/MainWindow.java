@@ -14,7 +14,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableColumnModel;
-import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
@@ -92,7 +91,7 @@ public class MainWindow extends AbstractWindow {
 
 		this.tabPane = new JTabbedPane();
 		this.getTabPane().addTab("Spielpartien", selectionPanel);
-		getTabPane().addTab("Übersicht", generalPanel);
+		getTabPane().addTab("Alle Karten", generalPanel);
 		this.getTabPane().addTab("Ewige Schlachtfelder", eternalPanel);
 		this.getTabPane().addTab("Grüne Grenzlande", greenPanel);
 		this.getTabPane().setForegroundAt(3, GREEN_WORLD_FG);
@@ -103,13 +102,14 @@ public class MainWindow extends AbstractWindow {
 		this.getTabPane().addTab("MapTest", graphicMapTestPanel);
 
 		this.getContentPanel().add(getTabPane(), BorderLayout.CENTER);
-		
 
 		final JPanel bottomPanel = new JPanel(new BorderLayout());
-		String[] generalHeader = { "", "Punkte (Grün)", "Punkte (Blau)", "Punkte (Rot)", "Punktezuwachs (Grün)", "Punktezuwachs (Blau)", "Punktezuwachs (Rot)" };
+		String[] generalHeader = { "", "Punkte (Grün)", "Punktezuwachs (Grün)", "Punkte (Blau)", "Punktezuwachs (Blau)", "Punkte (Rot)", "Punktezuwachs (Rot)" };
 		final TableColumnModel tcm = this.newTCM(generalHeader);
 		this.generalTable = new JTable(this.getGeneralModel(), tcm);
-		bottomPanel.add(new JTableHeader(tcm), BorderLayout.NORTH);
+		this.generalTable.getTableHeader().setReorderingAllowed(false);
+		this.generalTable.setEnabled(false);
+		bottomPanel.add(this.generalTable.getTableHeader(), BorderLayout.NORTH);
 		bottomPanel.add(this.generalTable, BorderLayout.CENTER);
 		this.getContentPanel().add(bottomPanel, BorderLayout.SOUTH);
 
@@ -130,7 +130,7 @@ public class MainWindow extends AbstractWindow {
 	}
 
 	private TableColumnModel newMapTCM() {
-		final String[] header = { "Objekt", "Objekttyp", "Besitzer", "Buffende", "Verbleibender Buff", "Gilde" };
+		final String[] header = { "Karte", "Objekt", "Objekttyp", "Wert", "Besitzer", "Buffende", "Verbleibender Buff", "Gilde", "Gildentag" };
 		return newTCM(header);
 	}
 
@@ -158,14 +158,15 @@ public class MainWindow extends AbstractWindow {
 					final Optional<IWVWMatch> match = MainWindow.this.matchModel.getMatch(selectionTable.convertRowIndexToModel(e.getFirstIndex()));
 					if (match.isPresent()) {
 						MainWindow.this.getAllMapsModel().wireUp(Main.getWrapper(), match.get().getCenterMap(), match.get().getGreenMap(), match.get().getBlueMap(), match.get().getRedMap());
-						MainWindow.this.getGeneralModel().wireUp(Main.getWrapper(), match.get());
+						MainWindow.this.getGeneralModel().wireUp(Main.getWrapper(), match.get(), match.get().getCenterMap(), match.get().getGreenMap(), match.get().getBlueMap(),
+								match.get().getRedMap());
 						MainWindow.this.getEternalMapModel().wireUp(Main.getWrapper(), match.get().getCenterMap());
 						MainWindow.this.getGreenMapModel().wireUp(Main.getWrapper(), match.get().getGreenMap());
 						MainWindow.this.getBlueMapModel().wireUp(Main.getWrapper(), match.get().getBlueMap());
 						MainWindow.this.getRedMapModel().wireUp(Main.getWrapper(), match.get().getRedMap());
-						MainWindow.this.getTabPane().setTitleAt(3, match.get().getGreenWorld().getName().get()+" Grenzlande");
-						MainWindow.this.getTabPane().setTitleAt(4, match.get().getBlueWorld().getName().get()+" Grenzlande");
-						MainWindow.this.getTabPane().setTitleAt(5, match.get().getRedWorld().getName().get()+" Grenzlande");
+						MainWindow.this.getTabPane().setTitleAt(3, match.get().getGreenWorld().getName().get() + " Grenzlande");
+						MainWindow.this.getTabPane().setTitleAt(4, match.get().getBlueWorld().getName().get() + " Grenzlande");
+						MainWindow.this.getTabPane().setTitleAt(5, match.get().getRedWorld().getName().get() + " Grenzlande");
 						MainWindow.this.getTabPane().repaint();
 					}
 				}
