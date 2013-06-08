@@ -37,7 +37,7 @@ public class MatchesTableModel extends AbstractTableModel implements IWVWMatchLi
 		this.matches.clear();
 		this.fireTableDataChanged();
 		wrapper.unregisterWVWMatchListener(this);
-		wrapper.registerWVWMatchListener(this);
+		wrapper.registerWVWMatchListener(this);		
 	}
 
 	public Comparator<?> getColumnComparator(int col) {

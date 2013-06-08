@@ -70,7 +70,7 @@ public class MapObjectivesTableModel extends AbstractTableModel implements IWVWM
 
 	@Override
 	public int getColumnCount() {
-		return 7;
+		return 9;
 	}
 
 	@Override
@@ -81,11 +81,19 @@ public class MapObjectivesTableModel extends AbstractTableModel implements IWVWM
 	public Comparator<?> getColumnComparator(int col){
 		switch(col) {
 			case 3: // objective points
-			case 6: // remaining buff duration
 				return new Comparator<Integer>() {
 					@Override
 					public int compare(Integer o1, Integer o2) {
 						return o1.compareTo(o2);
+					}
+				};
+			case 6: // remaining buff duration
+				return new Comparator<String>() {
+					@Override
+					public int compare(String o1, String o2) {
+						final String o1b = "".equals(o1) ? "-1" : o1;
+						final String o2b = "".equals(o2) ? "-1" : o2;
+						return Integer.valueOf(o1b).compareTo(Integer.valueOf(o2b));
 					}
 				};
 			default:

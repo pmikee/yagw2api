@@ -32,6 +32,7 @@ import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
 import de.justi.yagw2api.core.wrapper.model.wvw.types.IWVWMapType;
 import de.justi.yagw2api.core.wrapper.model.wvw.types.WVWMapType;
 import de.justi.yagw2api.sample.Main;
+import de.justi.yagw2api.sample.model.GeneralTableModel;
 import de.justi.yagw2api.sample.model.MapObjectivesTableModel;
 import de.justi.yagw2api.sample.model.MatchesTableModel;
 
@@ -167,7 +168,7 @@ public class MainWindow extends AbstractWindow {
 						MainWindow.this.getTabPane().setTitleAt(3, match.get().getGreenWorld().getName().get() + " Grenzlande");
 						MainWindow.this.getTabPane().setTitleAt(4, match.get().getBlueWorld().getName().get() + " Grenzlande");
 						MainWindow.this.getTabPane().setTitleAt(5, match.get().getRedWorld().getName().get() + " Grenzlande");
-						MainWindow.this.getTabPane().repaint();
+						MainWindow.this.repaint();
 					}
 				}
 			}
