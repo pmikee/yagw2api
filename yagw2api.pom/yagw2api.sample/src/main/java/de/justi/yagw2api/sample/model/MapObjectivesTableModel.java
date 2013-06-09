@@ -41,7 +41,7 @@ public class MapObjectivesTableModel extends AbstractTableModel implements IWVWM
 				int row = 0;
 				for (IWVWObjective content : MapObjectivesTableModel.this.content) {
 					if(content.getRemainingBuffDuration(TimeUnit.SECONDS) > 0) {
-						MapObjectivesTableModel.this.fireTableRowsUpdated(row, row);
+						MapObjectivesTableModel.this.fireTableCellUpdated(row, 6);
 					}
 					row++;
 				}

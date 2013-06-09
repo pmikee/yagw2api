@@ -151,23 +151,50 @@ public class GeneralTableModel extends AbstractTableModel implements IWVWMatchLi
 
 	@Override
 	public void onInitializedMatchForWrapper(IWVWInitializedMatchEvent event) {
+		// nothing to do		
 	}
 
 	@Override
 	public void onChangedMapScoreEvent(IWVWMapScoresChangedEvent event) {
-		this.fireTableDataChanged();
+		if(this.match.getCenterMap().equals(event.getMap())) {
+			this.fireTableRowsUpdated(0, 0);
+			this.fireTableRowsUpdated(4, 4);
+		}else if(this.match.getGreenMap().equals(event.getMap())){
+			this.fireTableRowsUpdated(1, 1);
+			this.fireTableRowsUpdated(4, 4);
+		}else if(this.match.getBlueMap().equals(event.getMap())){
+			this.fireTableRowsUpdated(2, 2);
+			this.fireTableRowsUpdated(4, 4);
+		}else if(this.match.getRedMap().equals(event.getMap())){
+			this.fireTableRowsUpdated(3, 3);
+			this.fireTableRowsUpdated(4, 4);
+		}
 	}
 
 	@Override
 	public void onObjectiveCapturedEvent(IWVWObjectiveCaptureEvent event) {
-		this.fireTableDataChanged();
+		if(this.match.getCenterMap().equals(event.getMap())) {
+			this.fireTableRowsUpdated(0, 0);
+			this.fireTableRowsUpdated(4, 4);
+		}else if(this.match.getGreenMap().equals(event.getMap())){
+			this.fireTableRowsUpdated(1, 1);
+			this.fireTableRowsUpdated(4, 4);
+		}else if(this.match.getBlueMap().equals(event.getMap())){
+			this.fireTableRowsUpdated(2, 2);
+			this.fireTableRowsUpdated(4, 4);
+		}else if(this.match.getRedMap().equals(event.getMap())){
+			this.fireTableRowsUpdated(3, 3);
+			this.fireTableRowsUpdated(4, 4);
+		}
 	}
 
 	@Override
 	public void onObjectiveEndOfBuffEvent(IWVWObjectiveEndOfBuffEvent event) {
+		// nothing to do
 	}
 
 	@Override
 	public void onObjectiveClaimedEvent(IWVWObjectiveClaimedEvent event) {
+		// nothing to do
 	}
 }

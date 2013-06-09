@@ -100,6 +100,7 @@
 			<groupId>com.miglayout</groupId>
 			<artifactId>miglayout</artifactId>
 		</dependency>
+		<!-- 
 		<dependency>
 			<groupId>jgrapht</groupId>
 			<artifactId>jgrapht</artifactId>
@@ -108,6 +109,7 @@
 			<groupId>jgraph</groupId>
 			<artifactId>jgraph</artifactId>
 		</dependency>
+		 -->
 		<dependency>
 			<artifactId>yagw2api.core</artifactId>
 			<groupId>de.justi</groupId>

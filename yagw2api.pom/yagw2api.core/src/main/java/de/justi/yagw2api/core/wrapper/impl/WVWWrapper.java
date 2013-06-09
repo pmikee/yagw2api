@@ -119,7 +119,7 @@ class WVWWrapper implements IWVWWrapper {
 	}
 
 	@Subscribe
-	public void onWVWMapScoreChangedEvent(IWVWMapEvent event) {
+	public void onWVWMapEvent(IWVWMapEvent event) {
 		checkNotNull(event);
 		checkArgument(event.getMap().getMatch().isPresent());
 		LOGGER.debug(this + " will now inform it's registered listeners about " + event);

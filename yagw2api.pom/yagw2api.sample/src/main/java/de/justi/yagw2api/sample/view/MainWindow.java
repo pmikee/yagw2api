@@ -11,6 +11,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableColumnModel;
@@ -18,15 +19,9 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
 
-import org.jgraph.JGraph;
-import org.jgraph.graph.DefaultEdge;
-import org.jgrapht.ext.JGraphModelAdapter;
-import org.jgrapht.graph.ListenableUndirectedWeightedGraph;
+import org.apache.log4j.Logger;
 
 import com.google.common.base.Optional;
-import com.jgraph.layout.JGraphFacade;
-import com.jgraph.layout.JGraphLayout;
-import com.jgraph.layout.tree.JGraphRadialTreeLayout;
 
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
 import de.justi.yagw2api.core.wrapper.model.wvw.types.IWVWMapType;
@@ -40,6 +35,7 @@ import de.justi.yagw2api.sample.renderer.ObjectiveTableCellRenderer;
 
 public class MainWindow extends AbstractWindow {
 	private static final long serialVersionUID = -6500541020042114865L;
+	private static final Logger LOGGER = Logger.getLogger(MainWindow.class);
 	public static final Color ETERNAL_BATTLEGROUNDS_FG = new Color(200, 130, 0);
 	public static final Color ETERNAL_BATTLEGROUNDS_BG = new Color(200, 130, 0, 100);
 	public static final Color GREEN_WORLD_FG = new Color(70, 152, 42);
@@ -58,6 +54,8 @@ public class MainWindow extends AbstractWindow {
 	private final MapObjectivesTableModel greenMapModel;
 	private final MapObjectivesTableModel blueMapModel;
 	private final MapObjectivesTableModel redMapModel;
+
+	private Optional<IWVWMatch> selectedMatch = Optional.absent();
 
 	private JTable selectionTable;
 	private JTable generalTable;
@@ -92,7 +90,6 @@ public class MainWindow extends AbstractWindow {
 		this.initMapPanel(bluePanel, blueMapModel, blueTable, WVWMapType.BLUE);
 		final JPanel redPanel = new JPanel();
 		this.initMapPanel(redPanel, redMapModel, redTable, WVWMapType.RED);
-		final JPanel graphicMapTestPanel = this.initGraphicMapTestPanel();
 
 		this.tabPane = new JTabbedPane();
 		this.getTabPane().addTab("Spielpartien", selectionPanel);
@@ -105,7 +102,6 @@ public class MainWindow extends AbstractWindow {
 		this.getTabPane().setForegroundAt(4, BLUE_WORLD_FG);
 		this.getTabPane().addTab("Rote Grenzlande", redPanel);
 		this.getTabPane().setForegroundAt(5, RED_WORLD_FG);
-		this.getTabPane().addTab("MapTest", graphicMapTestPanel);
 
 		this.getContentPanel().add(getTabPane(), BorderLayout.CENTER);
 
@@ -160,20 +156,48 @@ public class MainWindow extends AbstractWindow {
 		this.selectionTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
 			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				final Optional<IWVWMatch> match = MainWindow.this.matchModel.getMatch(selectionTable.convertRowIndexToModel(e.getFirstIndex()));
-				if (match.isPresent()) {
-					MainWindow.this.getAllMapsModel().wireUp(Main.getWrapper(), match.get().getCenterMap(), match.get().getGreenMap(), match.get().getBlueMap(), match.get().getRedMap());
-					MainWindow.this.getGeneralModel().wireUp(Main.getWrapper(), match.get(), match.get().getCenterMap(), match.get().getGreenMap(), match.get().getBlueMap(), match.get().getRedMap());
-					MainWindow.this.getEternalMapModel().wireUp(Main.getWrapper(), match.get().getCenterMap());
-					MainWindow.this.getGreenMapModel().wireUp(Main.getWrapper(), match.get().getGreenMap());
-					MainWindow.this.getBlueMapModel().wireUp(Main.getWrapper(), match.get().getBlueMap());
-					MainWindow.this.getRedMapModel().wireUp(Main.getWrapper(), match.get().getRedMap());
-					MainWindow.this.getTabPane().setTitleAt(3, match.get().getGreenWorld().getName().get() + " Grenzlande");
-					MainWindow.this.getTabPane().setTitleAt(4, match.get().getBlueWorld().getName().get() + " Grenzlande");
-					MainWindow.this.getTabPane().setTitleAt(5, match.get().getRedWorld().getName().get() + " Grenzlande");
-					MainWindow.this.repaint(50);
-				}
+			public void valueChanged(final ListSelectionEvent e) {
+				SwingUtilities.invokeLater(new Runnable() { 
+					@Override
+					public void run() {
+						final int index = selectionTable.getSelectedRow();
+						final Optional<IWVWMatch> matchOptional = MainWindow.this.matchModel.getMatch(index);
+						if (matchOptional.isPresent()) {
+							LOGGER.debug("Incoming selection event [" + index + "] -> match=" + matchOptional.get().getId());
+							if (!selectedMatch.equals(matchOptional)) {
+								selectedMatch = matchOptional;
+								final IWVWMatch match = matchOptional.get();
+								LOGGER.info("NEW selected match=" + match.getId());
+								MainWindow.this.getAllMapsModel().wireUp(Main.getWrapper(), match.getCenterMap(), match.getGreenMap(), match.getBlueMap(), match.getRedMap());
+								MainWindow.this.getGeneralModel().wireUp(Main.getWrapper(), match, match.getCenterMap(), match.getGreenMap(), match.getBlueMap(), match.getRedMap());
+								MainWindow.this.getEternalMapModel().wireUp(Main.getWrapper(), match.getCenterMap());
+								MainWindow.this.getGreenMapModel().wireUp(Main.getWrapper(), match.getGreenMap());
+								MainWindow.this.getBlueMapModel().wireUp(Main.getWrapper(), match.getBlueMap());
+								MainWindow.this.getRedMapModel().wireUp(Main.getWrapper(), match.getRedMap());
+
+								if (match.getGreenWorld().getName().isPresent()) {
+									MainWindow.this.getTabPane().setTitleAt(3, match.getGreenWorld().getName().get() + " Grenzlande");
+								} else {
+									MainWindow.this.getTabPane().setTitleAt(3, "Grüne Grenzlande");
+								}
+								if (match.getBlueWorld().getName().isPresent()) {
+									MainWindow.this.getTabPane().setTitleAt(4, match.getBlueWorld().getName().get() + " Grenzlande");
+								} else {
+									MainWindow.this.getTabPane().setTitleAt(4, "Blaue Grenzlande");
+								}
+								if (match.getRedWorld().getName().isPresent()) {
+									MainWindow.this.getTabPane().setTitleAt(5, match.getRedWorld().getName().get() + " Grenzlande");
+								} else {
+									MainWindow.this.getTabPane().setTitleAt(5, "Rote Grenzlande");
+								}
+								LOGGER.debug("Wired everything up for new selected match=" + match.getId());
+							} else {
+								LOGGER.debug("Already selected match=" + matchOptional.get().getId());
+							}
+						}
+					}
+				});
+
 			}
 		});
 		return selectionPanel;
@@ -211,30 +235,6 @@ public class MainWindow extends AbstractWindow {
 
 		mapPanel.add(new JScrollPane(mapTable), BorderLayout.CENTER);
 		return mapPanel;
-	}
-
-	private JPanel initGraphicMapTestPanel() {
-		final JPanel graphicMapTestPanel = new JPanel();
-		graphicMapTestPanel.setLayout(new BorderLayout());
-
-		final ListenableUndirectedWeightedGraph<String, DefaultEdge> graph = new ListenableUndirectedWeightedGraph<String, DefaultEdge>(DefaultEdge.class);
-		graph.addVertex("TEST");
-		graph.addVertex("TEST1");
-		graph.addVertex("TEST2");
-		graph.addVertex("TEST3");
-		// graph.addEdge("TEST", "TEST1");
-		final JGraphModelAdapter<String, DefaultEdge> graphAdapter = new JGraphModelAdapter<String, DefaultEdge>(graph);
-		final JGraph graphComponent = new JGraph(graphAdapter);
-
-		final JScrollPane graphScrollPane = new JScrollPane(graphComponent);
-
-		graphicMapTestPanel.add(graphScrollPane, BorderLayout.CENTER);
-
-		JGraphFacade jgf = new JGraphFacade(graphComponent);
-		JGraphLayout layout = new JGraphRadialTreeLayout();
-		layout.run(jgf);
-
-		return graphicMapTestPanel;
 	}
 
 	public MatchesTableModel getMatchModel() {

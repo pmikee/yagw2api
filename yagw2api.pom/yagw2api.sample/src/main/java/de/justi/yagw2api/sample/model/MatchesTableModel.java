@@ -126,18 +126,16 @@ public class MatchesTableModel extends AbstractTableModel implements IWVWMatchLi
 
 	@Override
 	public void onMatchScoreChangedEvent(IWVWMatchScoresChangedEvent event) {
-		if (this.matches.contains(event.getMatch())) {
-			final int rowIndex = this.matches.indexOf(event.getMatch());
-			this.fireTableRowsUpdated(rowIndex, rowIndex);
-		}
+		final int rowIndex = this.matches.indexOf(event.getMatch());
+		this.fireTableRowsUpdated(rowIndex, rowIndex);
 	}
 
 	@Override
 	public void onInitializedMatchForWrapper(IWVWInitializedMatchEvent event) {
 		if (!this.matches.contains(event.getMatch())) {
 			this.matches.add(event.getMatch());
-			this.fireTableDataChanged();
 		}
+		this.fireTableRowsInserted(this.matches.size()-1, this.matches.size()-1);
 	}
 
 }
