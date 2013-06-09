@@ -29,7 +29,7 @@ public class MatchesTableModel extends AbstractTableModel implements IWVWMatchLi
 	private static final Logger LOGGER = Logger.getLogger(MatchesTableModel.class);
 	private static final long serialVersionUID = 267092039654136315L;
 	private static final NumberFormat NF = new DecimalFormat("#,###,##0");
-	private static final DateFormat DF = DateFormat.getDateTimeInstance();
+	private static final DateFormat DF = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT);
 
 	private List<IWVWMatch> matches = Collections.synchronizedList(new CopyOnWriteArrayList<IWVWMatch>());
 

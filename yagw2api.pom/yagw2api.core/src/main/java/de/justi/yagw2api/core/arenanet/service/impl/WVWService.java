@@ -49,8 +49,8 @@ class WVWService extends AbstractService implements IWVWService {
 
 	private static final String API_VERSION = "v1";
 	private static final Logger LOGGER = Logger.getLogger(WVWService.class);
-	
-	static final transient DateFormat DF = new SimpleDateFormat("yyyy-MM-DD'T'HH:mm:ss'Z'", Locale.US);
+	//															 2013-06-08T01:00:00Z
+	static final transient DateFormat DF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
 	static {
 		DF.setTimeZone(TimeZone.getTimeZone("Zulu"));
 	}
