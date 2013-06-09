@@ -2,10 +2,15 @@ package de.justi.yagw2api.sample.model;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+
 import javax.swing.table.AbstractTableModel;
 
 import org.apache.log4j.Logger;
 
+import de.justi.yagw2api.core.YAGW2APICore;
 import de.justi.yagw2api.core.wrapper.IWVWMapListener;
 import de.justi.yagw2api.core.wrapper.IWVWMatchListener;
 import de.justi.yagw2api.core.wrapper.IWVWWrapper;
@@ -20,6 +25,7 @@ import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveEndOfBuffEve
 
 public class GeneralTableModel extends AbstractTableModel implements IWVWMatchListener, IWVWMapListener {
 	private static final Logger LOGGER = Logger.getLogger(GeneralTableModel.class);
+	private static NumberFormat NF = new DecimalFormat("###,###,##0", DecimalFormatSymbols.getInstance(YAGW2APICore.getCurrentLocale()));
 	static final long serialVersionUID = -8573658641105845856L;
 
 	private IWVWMatch match;
@@ -57,15 +63,15 @@ public class GeneralTableModel extends AbstractTableModel implements IWVWMatchLi
 					case 0:
 						return "Ewige Schlachtfelder";
 					case 1:
-						return this.match != null ? this.match.getCenterMap().getScores().getGreenScore() : "";
+						return this.match != null ? NF.format(this.match.getCenterMap().getScores().getGreenScore()) : "";
 					case 2:
 						return this.match != null ? this.match.getCenterMap().calculateGreenTick() : "";
 					case 3:
-						return this.match != null ? this.match.getCenterMap().getScores().getBlueScore() : "";
+						return this.match != null ? NF.format(this.match.getCenterMap().getScores().getBlueScore()) : "";
 					case 4:
 						return this.match != null ? this.match.getCenterMap().calculateBlueTick() : "";
 					case 5:
-						return this.match != null ? this.match.getCenterMap().getScores().getRedScore() : "";
+						return this.match != null ? NF.format(this.match.getCenterMap().getScores().getRedScore()) : "";
 					case 6:
 						return this.match != null ? this.match.getCenterMap().calculateRedTick() : "";
 					default:
@@ -76,15 +82,15 @@ public class GeneralTableModel extends AbstractTableModel implements IWVWMatchLi
 					case 0:
 						return this.match != null ? this.match.getGreenWorld().getName().get() + " Grenzlande" : "Grüne Grenzlande";
 					case 1:
-						return this.match != null ? this.match.getGreenMap().getScores().getGreenScore() : "";
+						return this.match != null ? NF.format(this.match.getGreenMap().getScores().getGreenScore()) : "";
 					case 2:
 						return this.match != null ? this.match.getGreenMap().calculateGreenTick() : "";
 					case 3:
-						return this.match != null ? this.match.getGreenMap().getScores().getBlueScore() : "";
+						return this.match != null ? NF.format(this.match.getGreenMap().getScores().getBlueScore()) : "";
 					case 4:
 						return this.match != null ? this.match.getGreenMap().calculateBlueTick() : "";
 					case 5:
-						return this.match != null ? this.match.getGreenMap().getScores().getRedScore() : "";
+						return this.match != null ? NF.format(this.match.getGreenMap().getScores().getRedScore()) : "";
 					case 6:
 						return this.match != null ? this.match.getGreenMap().calculateRedTick() : "";
 					default:
@@ -95,15 +101,15 @@ public class GeneralTableModel extends AbstractTableModel implements IWVWMatchLi
 					case 0:
 						return this.match != null ? this.match.getBlueWorld().getName().get() + " Grenzlande" : "Blaue Grenzlande";
 					case 1:
-						return this.match != null ? this.match.getBlueMap().getScores().getGreenScore() : "";
+						return this.match != null ? NF.format(this.match.getBlueMap().getScores().getGreenScore()) : "";
 					case 2:
 						return this.match != null ? this.match.getBlueMap().calculateGreenTick() : "";
 					case 3:
-						return this.match != null ? this.match.getBlueMap().getScores().getBlueScore() : "";
+						return this.match != null ? NF.format(this.match.getBlueMap().getScores().getBlueScore()) : "";
 					case 4:
 						return this.match != null ? this.match.getBlueMap().calculateBlueTick() : "";
 					case 5:
-						return this.match != null ? this.match.getBlueMap().getScores().getRedScore() : "";
+						return this.match != null ? NF.format(this.match.getBlueMap().getScores().getRedScore()) : "";
 					case 6:
 						return this.match != null ? this.match.getBlueMap().calculateRedTick() : "";
 					default:
@@ -114,15 +120,15 @@ public class GeneralTableModel extends AbstractTableModel implements IWVWMatchLi
 					case 0:
 						return this.match != null ? this.match.getRedWorld().getName().get() + " Grenzlande" : "Rote Grenzlande";
 					case 1:
-						return this.match != null ? this.match.getRedMap().getScores().getGreenScore() : "";
+						return this.match != null ? NF.format(this.match.getRedMap().getScores().getGreenScore()) : "";
 					case 2:
 						return this.match != null ? this.match.getRedMap().calculateGreenTick() : "";
 					case 3:
-						return this.match != null ? this.match.getRedMap().getScores().getBlueScore() : "";
+						return this.match != null ? NF.format(this.match.getRedMap().getScores().getBlueScore()) : "";
 					case 4:
 						return this.match != null ? this.match.getRedMap().calculateBlueTick() : "";
 					case 5:
-						return this.match != null ? this.match.getRedMap().getScores().getRedScore() : "";
+						return this.match != null ? NF.format(this.match.getRedMap().getScores().getRedScore()) : "";
 					case 6:
 						return this.match != null ? this.match.getRedMap().calculateRedTick() : "";
 					default:
@@ -133,15 +139,15 @@ public class GeneralTableModel extends AbstractTableModel implements IWVWMatchLi
 					case 0:
 						return "Gesamt";
 					case 1:
-						return this.match != null ? this.match.getScores().getGreenScore() : "";
+						return this.match != null ? NF.format(this.match.getScores().getGreenScore()) : "";
 					case 2:
 						return this.match != null ? this.match.calculateGreenTick() : "";
 					case 3:
-						return this.match != null ? this.match.getScores().getBlueScore() : "";
+						return this.match != null ? NF.format(this.match.getScores().getBlueScore()) : "";
 					case 4:
 						return this.match != null ? this.match.calculateBlueTick() : "";
 					case 5:
-						return this.match != null ? this.match.getScores().getRedScore() : "";
+						return this.match != null ? NF.format(this.match.getScores().getRedScore()) : "";
 					case 6:
 						return this.match != null ? this.match.calculateRedTick() : "";
 					default:

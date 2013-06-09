@@ -42,9 +42,9 @@ public class MatchesTableModel extends AbstractTableModel implements IWVWMatchLi
 
 	public Comparator<?> getColumnComparator(int col) {
 		switch (col) {
-			case 2:
-			case 4:
-			case 6:
+			case 3:
+			case 5:
+			case 7:
 				return new Comparator<String>() {
 					@Override
 					public int compare(String o1, String o2) {
@@ -67,7 +67,7 @@ public class MatchesTableModel extends AbstractTableModel implements IWVWMatchLi
 
 	@Override
 	public int getColumnCount() {
-		return 8;
+		return 9;
 	}
 
 	@Override
@@ -100,23 +100,25 @@ public class MatchesTableModel extends AbstractTableModel implements IWVWMatchLi
 		checkState(this.matches.get(matchIndex) != null);
 		switch (columnIndex) {
 			case 0:
-				return (this.matches.get(matchIndex).getGreenWorld().getWorldLocation().toString().equals("EUROPE") ? "EU" : "NA");
+				return this.matches.get(matchIndex).getId();
 			case 1:
-				return (this.matches.get(matchIndex).getGreenWorld().getName().get());
+				return (this.matches.get(matchIndex).getGreenWorld().getWorldLocation().toString().equals("EUROPE") ? "EU" : "NA");
 			case 2:
-				return NF.format(this.matches.get(matchIndex).getScores().getGreenScore());
+				return (this.matches.get(matchIndex).getGreenWorld().getName().get());
 			case 3:
-				return (this.matches.get(matchIndex).getBlueWorld().getName().get());
+				return NF.format(this.matches.get(matchIndex).getScores().getGreenScore());
 			case 4:
-				return NF.format(this.matches.get(matchIndex).getScores().getBlueScore());
+				return (this.matches.get(matchIndex).getBlueWorld().getName().get());
 			case 5:
-				return (this.matches.get(matchIndex).getRedWorld().getName().get());
+				return NF.format(this.matches.get(matchIndex).getScores().getBlueScore());
 			case 6:
-				return NF.format(this.matches.get(matchIndex).getScores().getRedScore());
+				return (this.matches.get(matchIndex).getRedWorld().getName().get());
 			case 7:
+				return NF.format(this.matches.get(matchIndex).getScores().getRedScore());
+			case 8:
 				checkState(this.matches.get(matchIndex).getStartTimestamp() != null);
 				return DF.format(this.matches.get(matchIndex).getStartTimestamp().getTime());
-			case 8:
+			case 9:
 				checkState(this.matches.get(matchIndex).getEndTimestamp() != null);
 				return DF.format(this.matches.get(matchIndex).getEndTimestamp().getTime());
 			default:

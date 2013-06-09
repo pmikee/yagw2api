@@ -170,7 +170,7 @@ public class MapObjectivesTableModel extends AbstractTableModel implements IWVWM
 		checkState(row >= 0, row + " should be greater than or equal to 0");
 		checkState(row < this.content.size(), row +" should be smaller than "+this.content.size());
 		checkState(row < this.getRowCount(), row +" should be smaller than "+this.getRowCount());
-		this.fireTableRowsUpdated(row, row);
+		this.fireTableDataChanged();
 	}
 
 	@Override

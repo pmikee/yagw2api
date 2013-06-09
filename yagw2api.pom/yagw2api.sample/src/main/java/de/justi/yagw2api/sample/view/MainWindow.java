@@ -141,7 +141,7 @@ public class MainWindow extends AbstractWindow {
 		final JPanel selectionPanel = new JPanel();
 		selectionPanel.setLayout(new BorderLayout());
 
-		final String[] header = { "Region", "Grün", "Punkte (Grün)", "Blau", "Punkte (Blau)", "Rot", "Punkte (Rot)", "Start", "Ende" };
+		final String[] header = { "ID","Region", "Grün", "Punkte (Grün)", "Blau", "Punkte (Blau)", "Rot", "Punkte (Rot)", "Start", "Ende" };
 		this.selectionTable = new JTable(this.matchModel, newTCM(header));
 		this.selectionTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		selectionPanel.add(new JScrollPane(this.selectionTable), BorderLayout.CENTER);
