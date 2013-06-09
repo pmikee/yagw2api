@@ -16,6 +16,8 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
+import de.justi.yagw2api.core.YAGW2APICore;
+
 
 public enum WVWLocationType implements IWVWLocationType {
 	// eternal battlegrounds -> spawns
@@ -242,6 +244,6 @@ public enum WVWLocationType implements IWVWLocationType {
 	}
 	
 	public String toString() {
-		return Objects.toStringHelper(this).add("label",this.getLabel(Locale.getDefault())).add("isObjectiveLocation",this.isObjectiveLocation()).add("objectiveId",this.getObjectiveId()).add("objectiveType",this.getObjectiveType()).add("mapType", this.getMapType()).toString();
+		return Objects.toStringHelper(this).add("label",this.getLabel(YAGW2APICore.getCurrentLocale())).add("isObjectiveLocation",this.isObjectiveLocation()).add("objectiveId",this.getObjectiveId()).add("objectiveType",this.getObjectiveType()).add("mapType", this.getMapType()).toString();
 	}
 }

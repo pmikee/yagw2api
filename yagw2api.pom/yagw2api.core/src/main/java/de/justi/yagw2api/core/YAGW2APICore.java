@@ -1,7 +1,9 @@
 package de.justi.yagw2api.core;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
+import java.util.Locale;
 import java.util.concurrent.ForkJoinPool;
 
 import org.apache.log4j.Logger;
@@ -60,9 +62,18 @@ public enum YAGW2APICore {
 		checkState(INSTANCE.injector != null);
 		return getInjector().getInstance(IWVWWrapper.class);
 	}
+	
+	public static Locale getCurrentLocale() {
+		return INSTANCE.currentLocale;
+	}
+	
+	public static void setCurrentLocale(Locale locale) {
+		INSTANCE.currentLocale = checkNotNull(locale);
+	}
 
 	private final ForkJoinPool forkJoinPool;
 	private final Injector injector;
+	private Locale currentLocale = Locale.getDefault();
 
 	private YAGW2APICore() {
 		this.injector = Guice.createInjector(new APIDTOModule(), new ModelModule(), new WVWModelModule(), new WVWModelEventsModule(), new APIServiceModule(), new WrapperModule());

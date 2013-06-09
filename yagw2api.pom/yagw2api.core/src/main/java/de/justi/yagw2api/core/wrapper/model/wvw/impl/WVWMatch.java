@@ -287,9 +287,9 @@ class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 			final BuildMatchFromDTOAction buildRedMapAction = new BuildMatchFromDTOAction(dto.getDetails().get().getRedMap());
 			final BuildMatchFromDTOAction buildGreenMapAction = new BuildMatchFromDTOAction(dto.getDetails().get().getGreenMap());
 			final BuildMatchFromDTOAction buildBlueMapAction = new BuildMatchFromDTOAction(dto.getDetails().get().getBlueMap());
-			final BuildWorldFromDTOAction buildRedWorldAction = new BuildWorldFromDTOAction(dto.getRedWorldName(Locale.getDefault()).get());
-			final BuildWorldFromDTOAction buildGreenWorldAction = new BuildWorldFromDTOAction(dto.getGreenWorldName(Locale.getDefault()).get());
-			final BuildWorldFromDTOAction buildBlueWorldAction = new BuildWorldFromDTOAction(dto.getBlueWorldName(Locale.getDefault()).get());
+			final BuildWorldFromDTOAction buildRedWorldAction = new BuildWorldFromDTOAction(dto.getRedWorldName(YAGW2APICore.getCurrentLocale()).get());
+			final BuildWorldFromDTOAction buildGreenWorldAction = new BuildWorldFromDTOAction(dto.getGreenWorldName(YAGW2APICore.getCurrentLocale()).get());
+			final BuildWorldFromDTOAction buildBlueWorldAction = new BuildWorldFromDTOAction(dto.getBlueWorldName(YAGW2APICore.getCurrentLocale()).get());
 			
 			YAGW2APICore.getForkJoinPool().invokeAll(Lists.newArrayList(buildCenterMapAction, buildRedMapAction, buildGreenMapAction, buildBlueMapAction, buildRedWorldAction, buildGreenWorldAction, buildBlueWorldAction));
 

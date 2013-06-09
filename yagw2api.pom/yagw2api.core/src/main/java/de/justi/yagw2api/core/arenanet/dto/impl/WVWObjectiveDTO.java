@@ -42,7 +42,7 @@ class WVWObjectiveDTO implements IWVWObjectiveDTO {
 	}
 
 	public String toString() {
-		return Objects.toStringHelper(this).add("id", this.id).add("name", this.getName(Locale.getDefault())).add("owner", this.owner).add("guildId", this.guildId).toString();
+		return Objects.toStringHelper(this).add("id", this.id).add("name", this.getName(YAGW2APICore.getCurrentLocale())).add("owner", this.owner).add("guildId", this.guildId).toString();
 	}
 
 	public Optional<IWVWObjectiveNameDTO> getName(Locale locale) {

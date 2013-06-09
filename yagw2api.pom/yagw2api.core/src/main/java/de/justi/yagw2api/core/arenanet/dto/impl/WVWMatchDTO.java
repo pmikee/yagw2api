@@ -45,7 +45,7 @@ class WVWMatchDTO implements IWVWMatchDTO {
 	private String endTimeString = "";
 
 	public String toString() {
-		return Objects.toStringHelper(this).add("id", this.id).add("redWorldId", this.redWorldId).add("redWorld", this.getRedWorldName(Locale.getDefault())).add("blueWorldId", this.blueWorldId)
+		return Objects.toStringHelper(this).add("id", this.id).add("redWorldId", this.redWorldId).add("redWorld", this.getRedWorldName(YAGW2APICore.getCurrentLocale())).add("blueWorldId", this.blueWorldId)
 				.add("blueWorld", this.getBlueWorldName(Locale.getDefault())).add("greenWorldId", this.greenWorldId).add("greenWorld", this.getGreenWorldName(Locale.getDefault()))
 				.add("start", this.getStartTime()).add("end", this.getEndTime()).toString();
 	}

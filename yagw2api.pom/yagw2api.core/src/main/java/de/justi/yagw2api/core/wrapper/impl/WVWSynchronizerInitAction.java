@@ -6,7 +6,6 @@ import static com.google.common.base.Preconditions.checkState;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -64,7 +63,7 @@ public class WVWSynchronizerInitAction extends AbstractSynchronizerAction<IWVWMa
 		if (LOGGER.isTraceEnabled()) {
 			LOGGER.trace("Going to perform " + this.getClass().getSimpleName() + " using content=" + content);
 		}
-		final IWVWMatch match = WVW_MODEL_FACTORY.newMatchBuilder().fromMatchDTO(content, Locale.getDefault()).build();
+		final IWVWMatch match = WVW_MODEL_FACTORY.newMatchBuilder().fromMatchDTO(content, YAGW2APICore.getCurrentLocale()).build();
 		final long completedMatchModelBuildTimestamp = System.currentTimeMillis();
 		if (LOGGER.isTraceEnabled()) {
 			LOGGER.trace("Done with build of " + IWVWMatch.class.getSimpleName() + " for content=" + content + " after " + (completedMatchModelBuildTimestamp - startTimestamp) + "ms");

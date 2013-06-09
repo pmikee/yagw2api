@@ -7,7 +7,6 @@ import static com.google.common.base.Preconditions.checkState;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -219,7 +218,7 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 	}
 
 	public Optional<String> getLabel() {
-		return this.location.getLabel(Locale.getDefault());
+		return this.location.getLabel(YAGW2APICore.getCurrentLocale());
 	}
 
 	public IWVWObjectiveType getType() {
@@ -330,7 +329,7 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 		if (guild != null && (!this.claimedByGuild.isPresent() || !this.claimedByGuild.get().equals(guild))) {
 			// changed claiming guild
 			final IWVWObjectiveClaimedEvent event = WVW_MODEL_EVENTS_FACTORY.newObjectiveClaimedEvent(this, guild, this.claimedByGuild);
-			LOGGER.info(this.getLocation().getLabel(Locale.getDefault()) + " has been claimed by: " + guild.getName() + " | previous claimed by " + this.claimedByGuild);
+			LOGGER.info(this.getLocation().getLabel(YAGW2APICore.getCurrentLocale()) + " has been claimed by: " + guild.getName() + " | previous claimed by " + this.claimedByGuild);
 			this.claimedByGuild = Optional.of(guild);
 			this.getChannel().post(event);
 		} else {
