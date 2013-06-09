@@ -35,9 +35,13 @@ import de.justi.yagw2api.sample.Main;
 import de.justi.yagw2api.sample.model.GeneralTableModel;
 import de.justi.yagw2api.sample.model.MapObjectivesTableModel;
 import de.justi.yagw2api.sample.model.MatchesTableModel;
+import de.justi.yagw2api.sample.renderer.GeneralTableCellRenderer;
+import de.justi.yagw2api.sample.renderer.ObjectiveTableCellRenderer;
 
 public class MainWindow extends AbstractWindow {
 	private static final long serialVersionUID = -6500541020042114865L;
+	public static final Color ETERNAL_BATTLEGROUNDS_FG = new Color(200, 130, 0);
+	public static final Color ETERNAL_BATTLEGROUNDS_BG = new Color(200, 130, 0, 100);
 	public static final Color GREEN_WORLD_FG = new Color(70, 152, 42);
 	public static final Color GREEN_WORLD_BG = new Color(70, 152, 42, 100);
 	public static final Color BLUE_WORLD_FG = new Color(35, 129, 199);
@@ -94,6 +98,7 @@ public class MainWindow extends AbstractWindow {
 		this.getTabPane().addTab("Spielpartien", selectionPanel);
 		getTabPane().addTab("Alle Karten", generalPanel);
 		this.getTabPane().addTab("Ewige Schlachtfelder", eternalPanel);
+		this.getTabPane().setForegroundAt(2, ETERNAL_BATTLEGROUNDS_FG);
 		this.getTabPane().addTab("Grüne Grenzlande", greenPanel);
 		this.getTabPane().setForegroundAt(3, GREEN_WORLD_FG);
 		this.getTabPane().addTab("Blaue Grenzlande", bluePanel);
@@ -108,6 +113,7 @@ public class MainWindow extends AbstractWindow {
 		String[] generalHeader = { "", "Punkte (Grün)", "Punktezuwachs (Grün)", "Punkte (Blau)", "Punktezuwachs (Blau)", "Punkte (Rot)", "Punktezuwachs (Rot)" };
 		final TableColumnModel tcm = this.newTCM(generalHeader);
 		this.generalTable = new JTable(this.getGeneralModel(), tcm);
+		this.generalTable.setDefaultRenderer(Object.class, new GeneralTableCellRenderer());
 		this.generalTable.getTableHeader().setReorderingAllowed(false);
 		this.generalTable.setEnabled(false);
 		bottomPanel.add(this.generalTable.getTableHeader(), BorderLayout.NORTH);
@@ -155,21 +161,18 @@ public class MainWindow extends AbstractWindow {
 
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				if (!e.getValueIsAdjusting()) {
-					final Optional<IWVWMatch> match = MainWindow.this.matchModel.getMatch(selectionTable.convertRowIndexToModel(e.getFirstIndex()));
-					if (match.isPresent()) {
-						MainWindow.this.getAllMapsModel().wireUp(Main.getWrapper(), match.get().getCenterMap(), match.get().getGreenMap(), match.get().getBlueMap(), match.get().getRedMap());
-						MainWindow.this.getGeneralModel().wireUp(Main.getWrapper(), match.get(), match.get().getCenterMap(), match.get().getGreenMap(), match.get().getBlueMap(),
-								match.get().getRedMap());
-						MainWindow.this.getEternalMapModel().wireUp(Main.getWrapper(), match.get().getCenterMap());
-						MainWindow.this.getGreenMapModel().wireUp(Main.getWrapper(), match.get().getGreenMap());
-						MainWindow.this.getBlueMapModel().wireUp(Main.getWrapper(), match.get().getBlueMap());
-						MainWindow.this.getRedMapModel().wireUp(Main.getWrapper(), match.get().getRedMap());
-						MainWindow.this.getTabPane().setTitleAt(3, match.get().getGreenWorld().getName().get() + " Grenzlande");
-						MainWindow.this.getTabPane().setTitleAt(4, match.get().getBlueWorld().getName().get() + " Grenzlande");
-						MainWindow.this.getTabPane().setTitleAt(5, match.get().getRedWorld().getName().get() + " Grenzlande");
-						MainWindow.this.repaint();
-					}
+				final Optional<IWVWMatch> match = MainWindow.this.matchModel.getMatch(selectionTable.convertRowIndexToModel(e.getFirstIndex()));
+				if (match.isPresent()) {
+					MainWindow.this.getAllMapsModel().wireUp(Main.getWrapper(), match.get().getCenterMap(), match.get().getGreenMap(), match.get().getBlueMap(), match.get().getRedMap());
+					MainWindow.this.getGeneralModel().wireUp(Main.getWrapper(), match.get(), match.get().getCenterMap(), match.get().getGreenMap(), match.get().getBlueMap(), match.get().getRedMap());
+					MainWindow.this.getEternalMapModel().wireUp(Main.getWrapper(), match.get().getCenterMap());
+					MainWindow.this.getGreenMapModel().wireUp(Main.getWrapper(), match.get().getGreenMap());
+					MainWindow.this.getBlueMapModel().wireUp(Main.getWrapper(), match.get().getBlueMap());
+					MainWindow.this.getRedMapModel().wireUp(Main.getWrapper(), match.get().getRedMap());
+					MainWindow.this.getTabPane().setTitleAt(3, match.get().getGreenWorld().getName().get() + " Grenzlande");
+					MainWindow.this.getTabPane().setTitleAt(4, match.get().getBlueWorld().getName().get() + " Grenzlande");
+					MainWindow.this.getTabPane().setTitleAt(5, match.get().getRedWorld().getName().get() + " Grenzlande");
+					MainWindow.this.repaint(50);
 				}
 			}
 		});

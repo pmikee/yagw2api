@@ -1,4 +1,4 @@
-package de.justi.yagw2api.sample.view;
+package de.justi.yagw2api.sample.renderer;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
@@ -15,6 +15,7 @@ import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMap;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWObjective;
 import de.justi.yagw2api.sample.model.MapObjectivesTableModel;
+import de.justi.yagw2api.sample.view.MainWindow;
 
 public class ObjectiveTableCellRenderer extends DefaultTableCellRenderer {
 	private static final long serialVersionUID = -8506469778783597659L;

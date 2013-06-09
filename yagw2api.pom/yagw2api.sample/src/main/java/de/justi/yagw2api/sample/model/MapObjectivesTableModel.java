@@ -88,11 +88,11 @@ public class MapObjectivesTableModel extends AbstractTableModel implements IWVWM
 					}
 				};
 			case 6: // remaining buff duration
-				return new Comparator<String>() {
+				return new Comparator<Object>() {
 					@Override
-					public int compare(String o1, String o2) {
-						final String o1b = "".equals(o1) ? "-1" : o1;
-						final String o2b = "".equals(o2) ? "-1" : o2;
+					public int compare(Object o1, Object o2) {
+						final String o1b = "".equals(o1.toString()) ? "-1" : o1.toString();
+						final String o2b = "".equals(o2.toString()) ? "-1" : o2.toString();
 						return Integer.valueOf(o1b).compareTo(Integer.valueOf(o2b));
 					}
 				};

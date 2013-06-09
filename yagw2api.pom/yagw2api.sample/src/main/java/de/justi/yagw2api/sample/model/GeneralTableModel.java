@@ -66,7 +66,7 @@ public class GeneralTableModel extends AbstractTableModel implements IWVWMatchLi
 			case 1:
 				switch (columnIndex) {
 					case 0:
-						return this.match != null ? this.match.getGreenWorld().getName().get() + " Grenzlande" : "";
+						return this.match != null ? this.match.getGreenWorld().getName().get() + " Grenzlande" : "Grüne Grenzlande";
 					case 1:
 						return this.match != null ? this.match.getGreenMap().getScores().getGreenScore() : "";
 					case 2:
@@ -85,7 +85,7 @@ public class GeneralTableModel extends AbstractTableModel implements IWVWMatchLi
 			case 2:
 				switch (columnIndex) {
 					case 0:
-						return this.match != null ? this.match.getBlueWorld().getName().get() + " Grenzlande" : "";
+						return this.match != null ? this.match.getBlueWorld().getName().get() + " Grenzlande" : "Blaue Grenzlande";
 					case 1:
 						return this.match != null ? this.match.getBlueMap().getScores().getGreenScore() : "";
 					case 2:
@@ -104,7 +104,7 @@ public class GeneralTableModel extends AbstractTableModel implements IWVWMatchLi
 			case 3:
 				switch (columnIndex) {
 					case 0:
-						return this.match != null ? this.match.getRedWorld().getName().get() + " Grenzlande" : "";
+						return this.match != null ? this.match.getRedWorld().getName().get() + " Grenzlande" : "Rote Grenzlande";
 					case 1:
 						return this.match != null ? this.match.getRedMap().getScores().getGreenScore() : "";
 					case 2:
