@@ -1,6 +1,10 @@
 package de.justi.yagw2api.sample.model;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import javax.swing.table.AbstractTableModel;
+
+import org.apache.log4j.Logger;
 
 import de.justi.yagw2api.core.wrapper.IWVWMapListener;
 import de.justi.yagw2api.core.wrapper.IWVWMatchListener;
@@ -15,17 +19,21 @@ import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveClaimedEvent
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveEndOfBuffEvent;
 
 public class GeneralTableModel extends AbstractTableModel implements IWVWMatchListener, IWVWMapListener {
-
+	private static final Logger LOGGER = Logger.getLogger(GeneralTableModel.class);
 	static final long serialVersionUID = -8573658641105845856L;
 
 	private IWVWMatch match;
 
-	public void wireUp(IWVWWrapper wrapper, IWVWMatch match, IWVWMap...wvwMaps) {
+	public void wireUp(IWVWWrapper wrapper, IWVWMatch match, IWVWMap...maps) {
+		checkNotNull(wrapper);
+		checkNotNull(match);
+		checkNotNull(maps);
+		LOGGER.trace("Going to wire "+this+" up using wrapper="+wrapper+" match="+match.getId()+" maps="+maps.length);
 		this.match = match;
 		wrapper.unregisterWVWMatchListener(this);
-		wrapper.registerWVWMatchListener(match, this);
 		wrapper.unregisterWVWMapListener(this);
-		for (IWVWMap map : wvwMaps) {
+		wrapper.registerWVWMatchListener(match, this);
+		for (IWVWMap map : maps) {
 			wrapper.registerWVWMapListener(map, this);
 		}
 		this.fireTableDataChanged();

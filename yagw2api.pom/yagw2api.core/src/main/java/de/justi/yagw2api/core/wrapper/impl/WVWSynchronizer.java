@@ -88,6 +88,7 @@ class WVWSynchronizer extends AbstractScheduledService implements IHasChannel {
 		checkNotNull(event);
 		if(event instanceof IWVWInitializedMatchEvent) {
 			final IWVWInitializedMatchEvent initializeEvent = (IWVWInitializedMatchEvent)event;
+			initializeEvent.getMatch().getChannel().register(this);
 			this.matchesMappedById.put(initializeEvent.getMatch().getId(), initializeEvent.getMatch());
 			this.matches.add(initializeEvent.getMatch());
 			this.worlds.add(initializeEvent.getMatch().getRedWorld());

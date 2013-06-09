@@ -111,6 +111,7 @@ class WVWWrapper implements IWVWWrapper {
 	private void notifyWVWMatchListener(IWVWMatchListener listener, IWVWMatchEvent event) {
 		checkNotNull(listener);
 		checkNotNull(event);
+		LOGGER.trace("Going to notify "+listener+" about "+event);
 		if (event instanceof IWVWMatchScoresChangedEvent) {
 			listener.onMatchScoreChangedEvent((IWVWMatchScoresChangedEvent) event);
 		}else if (event instanceof IWVWInitializedMatchEvent) {
@@ -144,12 +145,16 @@ class WVWWrapper implements IWVWWrapper {
 	private void notifyWVWMapListener(IWVWMapListener listener, IWVWMapEvent event) {
 		checkNotNull(listener);
 		checkNotNull(event);
+		LOGGER.trace("Going to notify "+listener+" about "+event);
 		if (event instanceof IWVWMapScoresChangedEvent) {
 			listener.onChangedMapScoreEvent((IWVWMapScoresChangedEvent) event);
+			
 		} else if (event instanceof IWVWObjectiveCaptureEvent) {
 			listener.onObjectiveCapturedEvent((IWVWObjectiveCaptureEvent) event);
+			
 		} else if (event instanceof IWVWObjectiveEndOfBuffEvent) {
 			listener.onObjectiveEndOfBuffEvent((IWVWObjectiveEndOfBuffEvent) event);
+			
 		} else if (event instanceof IWVWObjectiveClaimedEvent) {
 			listener.onObjectiveClaimedEvent((IWVWObjectiveClaimedEvent) event);
 		}
