@@ -5,7 +5,7 @@
 	<artifactId>yagw2api.pom</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>Parent POM for "Yet another GW2 API"</name>
+	<name>YAGW2API</name>
 	<organization>
 		<name>Julian Stitz</name>
 	</organization>
