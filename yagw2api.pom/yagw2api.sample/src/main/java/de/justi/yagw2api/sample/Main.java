@@ -1,11 +1,18 @@
 package de.justi.yagw2api.sample;
 
+import java.awt.BorderLayout;
 import java.util.Locale;
 
+import javax.swing.Icon;
+import javax.swing.JLabel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import org.apache.log4j.Logger;
+import org.noos.xing.mydoggy.ToolWindow;
+import org.noos.xing.mydoggy.ToolWindowAnchor;
+import org.noos.xing.mydoggy.ToolWindowManager;
+import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 
 import de.justi.yagw2api.analyzer.IWVWAnalyzer;
 import de.justi.yagw2api.analyzer.YAGW2APIAnalyzer;
@@ -38,11 +45,11 @@ public class Main {
 	private static IWVWWrapper apiWrapper;
 
 	public static void main(String[] args) {
-
+			          
+		
 		try {
 
 			mainWindow = new MainWindow();
-
 			mainWindow.setVisible(true);
 			
 			YAGW2APICore.setCurrentLocale(Locale.GERMANY);
@@ -51,7 +58,7 @@ public class Main {
 
 			// start the api wrapper
 			apiWrapper.start();
-			mainWindow.getMatchModel().wireUp(apiWrapper);
+			mainWindow.wireUp(apiWrapper);
 			
 			// wire everything up
 			apiWrapper.registerWVWMapListener(analyzer);

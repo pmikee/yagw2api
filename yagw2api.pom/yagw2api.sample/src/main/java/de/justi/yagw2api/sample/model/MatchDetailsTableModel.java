@@ -23,8 +23,8 @@ import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveCaptureEvent
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveClaimedEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveEndOfBuffEvent;
 
-public class GeneralTableModel extends AbstractTableModel implements IWVWMatchListener, IWVWMapListener {
-	private static final Logger LOGGER = Logger.getLogger(GeneralTableModel.class);
+public class MatchDetailsTableModel extends AbstractTableModel implements IWVWMatchListener, IWVWMapListener {
+	private static final Logger LOGGER = Logger.getLogger(MatchDetailsTableModel.class);
 	private static NumberFormat NF = new DecimalFormat("###,###,##0", DecimalFormatSymbols.getInstance(YAGW2APICore.getCurrentLocale()));
 	static final long serialVersionUID = -8573658641105845856L;
 

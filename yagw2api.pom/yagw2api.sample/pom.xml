@@ -100,16 +100,21 @@
 			<groupId>com.miglayout</groupId>
 			<artifactId>miglayout</artifactId>
 		</dependency>
-		<!-- 
 		<dependency>
-			<groupId>jgrapht</groupId>
-			<artifactId>jgrapht</artifactId>
+			<groupId>net.sourceforge.mydoggy</groupId>
+			<artifactId>mydoggy-plaf</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>jgraph</groupId>
-			<artifactId>jgraph</artifactId>
+			<groupId>net.sourceforge.mydoggy</groupId>
+			<artifactId>mydoggy-res</artifactId>
 		</dependency>
-		 -->
+		<dependency>
+			<groupId>net.sourceforge.mydoggy</groupId>
+			<artifactId>mydoggy-api</artifactId>
+		</dependency>
+		<!-- <dependency> <groupId>jgrapht</groupId> <artifactId>jgrapht</artifactId> 
+			</dependency> <dependency> <groupId>jgraph</groupId> <artifactId>jgraph</artifactId> 
+			</dependency> -->
 		<dependency>
 			<artifactId>yagw2api.core</artifactId>
 			<groupId>de.justi</groupId>

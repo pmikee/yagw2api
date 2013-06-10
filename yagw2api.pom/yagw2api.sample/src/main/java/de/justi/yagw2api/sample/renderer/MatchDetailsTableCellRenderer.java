@@ -8,15 +8,15 @@ import java.awt.Component;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import de.justi.yagw2api.sample.model.GeneralTableModel;
+import de.justi.yagw2api.sample.model.MatchDetailsTableModel;
 import de.justi.yagw2api.sample.view.MainWindow;
 
-public class GeneralTableCellRenderer extends DefaultTableCellRenderer {
+public class MatchDetailsTableCellRenderer extends DefaultTableCellRenderer {
 	private static final long serialVersionUID = -7631435914940282639L;
 
 	@Override
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-		checkState(table.getModel() instanceof GeneralTableModel);
+		checkState(table.getModel() instanceof MatchDetailsTableModel);
 		final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 		c.setBackground(Color.WHITE);
 		c.setForeground(Color.BLACK);

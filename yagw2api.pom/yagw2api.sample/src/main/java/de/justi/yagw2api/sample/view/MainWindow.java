@@ -1,14 +1,14 @@
 package de.justi.yagw2api.sample.view;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
@@ -20,17 +20,22 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
 
 import org.apache.log4j.Logger;
+import org.noos.xing.mydoggy.DockedTypeDescriptor;
+import org.noos.xing.mydoggy.PushAwayMode;
+import org.noos.xing.mydoggy.ToolWindow;
+import org.noos.xing.mydoggy.ToolWindowAnchor;
+import org.noos.xing.mydoggy.ToolWindowManagerDescriptor;
+import org.noos.xing.mydoggy.ToolWindowType;
+import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 
 import com.google.common.base.Optional;
 
+import de.justi.yagw2api.core.wrapper.IWVWWrapper;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
-import de.justi.yagw2api.core.wrapper.model.wvw.types.IWVWMapType;
-import de.justi.yagw2api.core.wrapper.model.wvw.types.WVWMapType;
-import de.justi.yagw2api.sample.Main;
-import de.justi.yagw2api.sample.model.GeneralTableModel;
 import de.justi.yagw2api.sample.model.MapObjectivesTableModel;
+import de.justi.yagw2api.sample.model.MatchDetailsTableModel;
 import de.justi.yagw2api.sample.model.MatchesTableModel;
-import de.justi.yagw2api.sample.renderer.GeneralTableCellRenderer;
+import de.justi.yagw2api.sample.renderer.MatchDetailsTableCellRenderer;
 import de.justi.yagw2api.sample.renderer.ObjectiveTableCellRenderer;
 
 public class MainWindow extends AbstractWindow {
@@ -45,77 +50,101 @@ public class MainWindow extends AbstractWindow {
 	public static final Color RED_WORLD_FG = new Color(175, 25, 10);
 	public static final Color RED_WORLD_BG = new Color(175, 25, 10, 100);
 
-	private final JTabbedPane tabPane;
-
-	private final MatchesTableModel matchModel;
-	private final GeneralTableModel generalModel;
-	private final MapObjectivesTableModel allMapsModel;
-	private final MapObjectivesTableModel eternalMapModel;
-	private final MapObjectivesTableModel greenMapModel;
-	private final MapObjectivesTableModel blueMapModel;
-	private final MapObjectivesTableModel redMapModel;
-
+	private final JTable matchesTable;
+	private final MatchesTableModel matchesTableModel;
 	private Optional<IWVWMatch> selectedMatch = Optional.absent();
+	private Optional<IWVWWrapper> wrapper = Optional.absent();
 
-	private JTable selectionTable;
-	private JTable generalTable;
+	private final JTable eternalTable;
+	private final MapObjectivesTableModel eternalMapModel;
+
+	private final JTable matchDetailslTable;
+	private final MatchDetailsTableModel matchDetailsTableModel;
+
 	private JTable allMapsTable;
-	private JTable eternalTable;
+	private final MapObjectivesTableModel allMapsModel;
+
 	private JTable greenTable;
+	private final MapObjectivesTableModel greenMapModel;
 	private JTable blueTable;
+	private final MapObjectivesTableModel blueMapModel;
 	private JTable redTable;
+	private final MapObjectivesTableModel redMapModel;
+	private final ToolWindow matchesToolWindow;
+	private final ToolWindow allMapsToolWindow;
+	private ToolWindow eternalMapToolWindow;
+	private final ToolWindow blueMapToolWindow;
+	private final ToolWindow greenMapToolWindow;
+	private final ToolWindow redMapToolWindow;
+	private final ToolWindow matchDetailsToolWindow;
+	private final MyDoggyToolWindowManager toolWindowManager;
 
 	public MainWindow() {
 		super();
+		this.setTitle("Yet Another GW2 API - Sample Application");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setMinimumSize(new Dimension(640, 480));
 		this.setPreferredSize(new Dimension(1024, 768));
 
-		this.matchModel = new MatchesTableModel();
-		this.generalModel = new GeneralTableModel();
-		this.allMapsModel = new MapObjectivesTableModel();
+		this.matchesTableModel = new MatchesTableModel();
 		this.eternalMapModel = new MapObjectivesTableModel();
 		this.greenMapModel = new MapObjectivesTableModel();
 		this.blueMapModel = new MapObjectivesTableModel();
 		this.redMapModel = new MapObjectivesTableModel();
+		this.allMapsModel = new MapObjectivesTableModel();
+		this.matchDetailsTableModel = new MatchDetailsTableModel();
 
-		final JPanel selectionPanel = this.initSelectionPanel();
-		final JPanel generalPanel = this.initGeneralPanel();
+		this.toolWindowManager = new MyDoggyToolWindowManager();
+		this.toolWindowManager.setDockableMainContentMode(true);
+		this.toolWindowManager.setBarsTemporarilyVisible(true);
+		this.getContentPanel().add(this.toolWindowManager, BorderLayout.CENTER);
+		final ToolWindowManagerDescriptor toolWindowManagerDesc = this.toolWindowManager.getToolWindowManagerDescriptor();
+		toolWindowManagerDesc.setNumberingEnabled(false);
+		toolWindowManagerDesc.setPushAwayMode(PushAwayMode.MOST_RECENT);
 
-		final JPanel eternalPanel = new JPanel();
-		this.initMapPanel(eternalPanel, eternalMapModel, eternalTable, WVWMapType.CENTER);
-		final JPanel greenPanel = new JPanel();
-		this.initMapPanel(greenPanel, greenMapModel, greenTable, WVWMapType.GREEN);
-		final JPanel bluePanel = new JPanel();
-		this.initMapPanel(bluePanel, blueMapModel, blueTable, WVWMapType.BLUE);
-		final JPanel redPanel = new JPanel();
-		this.initMapPanel(redPanel, redMapModel, redTable, WVWMapType.RED);
+		this.matchesTable = this.initMatchesTable(this.matchesTableModel);
+		this.matchesToolWindow = this.toolWindowManager.registerToolWindow("Matches Overview", "Matches Overview", null, new JScrollPane(this.matchesTable), ToolWindowAnchor.LEFT);
+		this.matchesToolWindow.setVisible(true);
+		final DockedTypeDescriptor matchesToolWindowDescriptor = (DockedTypeDescriptor) this.matchesToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
+		matchesToolWindowDescriptor.setIdVisibleOnTitleBar(false);		
 
-		this.tabPane = new JTabbedPane();
-		this.getTabPane().addTab("Spielpartien", selectionPanel);
-		getTabPane().addTab("Alle Karten", generalPanel);
-		this.getTabPane().addTab("Ewige Schlachtfelder", eternalPanel);
-		this.getTabPane().setForegroundAt(2, ETERNAL_BATTLEGROUNDS_FG);
-		this.getTabPane().addTab("Grüne Grenzlande", greenPanel);
-		this.getTabPane().setForegroundAt(3, GREEN_WORLD_FG);
-		this.getTabPane().addTab("Blaue Grenzlande", bluePanel);
-		this.getTabPane().setForegroundAt(4, BLUE_WORLD_FG);
-		this.getTabPane().addTab("Rote Grenzlande", redPanel);
-		this.getTabPane().setForegroundAt(5, RED_WORLD_FG);
+		this.allMapsTable = this.initMapTable(this.allMapsModel);
+		this.allMapsToolWindow = this.toolWindowManager.registerToolWindow("All Maps", "All Maps", null, new JScrollPane(this.allMapsTable), ToolWindowAnchor.RIGHT);
+		this.allMapsToolWindow.setVisible(true);
+		final DockedTypeDescriptor allMapsToolWindowDescriptor = (DockedTypeDescriptor) this.allMapsToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
+		allMapsToolWindowDescriptor.setIdVisibleOnTitleBar(false);
 
-		this.getContentPanel().add(getTabPane(), BorderLayout.CENTER);
+		this.eternalTable = this.initMapTable(this.eternalMapModel);
+		this.eternalMapToolWindow = this.toolWindowManager.registerToolWindow("Enternal Battlegrounds", "Enternal Battlegrounds", null, new JScrollPane(this.eternalTable), ToolWindowAnchor.RIGHT);
+		this.eternalMapToolWindow.setVisible(true);
+		final DockedTypeDescriptor eternalMapToolWindowDescriptor = (DockedTypeDescriptor) this.eternalMapToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
+		eternalMapToolWindowDescriptor.setIdVisibleOnTitleBar(false);
 
-		final JPanel bottomPanel = new JPanel(new BorderLayout());
-		String[] generalHeader = { "", "Punkte (Grün)", "Punktezuwachs (Grün)", "Punkte (Blau)", "Punktezuwachs (Blau)", "Punkte (Rot)", "Punktezuwachs (Rot)" };
-		final TableColumnModel tcm = this.newTCM(generalHeader);
-		this.generalTable = new JTable(this.getGeneralModel(), tcm);
-		this.generalTable.setDefaultRenderer(Object.class, new GeneralTableCellRenderer());
-		this.generalTable.getTableHeader().setReorderingAllowed(false);
-		this.generalTable.setEnabled(false);
-		bottomPanel.add(this.generalTable.getTableHeader(), BorderLayout.NORTH);
-		bottomPanel.add(this.generalTable, BorderLayout.CENTER);
-		this.getContentPanel().add(bottomPanel, BorderLayout.SOUTH);
+		this.blueTable = this.initMapTable(this.blueMapModel);
+		this.blueMapToolWindow = this.toolWindowManager.registerToolWindow("Blue Borderlands", "Blue Borderlands", null, new JScrollPane(this.blueTable), ToolWindowAnchor.RIGHT);
+		this.blueMapToolWindow.setVisible(true);
+		final DockedTypeDescriptor blueMapToolWindowDescriptor = (DockedTypeDescriptor) this.blueMapToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
+		blueMapToolWindowDescriptor.setIdVisibleOnTitleBar(false);
 
+		this.greenTable = this.initMapTable(this.greenMapModel);
+		this.greenMapToolWindow = this.toolWindowManager.registerToolWindow("Green Borderlands", "Green Borderlands", null, new JScrollPane(this.greenTable), ToolWindowAnchor.RIGHT);
+		this.greenMapToolWindow.setVisible(true);
+		final DockedTypeDescriptor greenMapToolWindowDescriptor = (DockedTypeDescriptor) this.greenMapToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
+		greenMapToolWindowDescriptor.setIdVisibleOnTitleBar(false);
+
+		this.redTable = this.initMapTable(this.redMapModel);
+		this.redMapToolWindow = this.toolWindowManager.registerToolWindow("Red Borderlands", "Red Borderlands", null, new JScrollPane(this.redTable), ToolWindowAnchor.RIGHT);
+		this.redMapToolWindow.setVisible(true);
+		final DockedTypeDescriptor redMapToolWindowDescriptor = (DockedTypeDescriptor) this.redMapToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
+		redMapToolWindowDescriptor.setIdVisibleOnTitleBar(false);
+
+		this.matchDetailslTable = this.initMatchDetailsTable(this.matchDetailsTableModel);
+		this.matchDetailsToolWindow = this.toolWindowManager.registerToolWindow("Match Details", "Match Details", null, new JScrollPane(this.matchDetailslTable), ToolWindowAnchor.BOTTOM);
+		this.matchDetailsToolWindow.setVisible(true);
+		final DockedTypeDescriptor matchDetailsToolWindowDescriptor = (DockedTypeDescriptor) this.matchDetailsToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
+		matchDetailsToolWindowDescriptor.setIdVisibleOnTitleBar(false);
+		matchDetailsToolWindowDescriptor.setTitleBarButtonsVisible(false);
+		matchDetailsToolWindowDescriptor.setTitleBarVisible(false);
 		this.pack();
 	}
 
@@ -132,63 +161,61 @@ public class MainWindow extends AbstractWindow {
 		return tcm;
 	}
 
-	private TableColumnModel newMapTCM() {
-		final String[] header = { "Karte", "Objekt", "Objekttyp", "Wert", "Besitzer", "Buffende", "Verbleibender Buff", "Gilde", "Gildentag" };
-		return newTCM(header);
+	public void wireUp(IWVWWrapper wrapper) {
+		checkNotNull(wrapper);
+		this.wrapper = Optional.of(wrapper);
+		wrapper.registerWVWMatchListener(this.matchesTableModel);
 	}
 
-	private JPanel initSelectionPanel() {
-		final JPanel selectionPanel = new JPanel();
-		selectionPanel.setLayout(new BorderLayout());
-
-		final String[] header = { "ID","Region", "Grün", "Punkte (Grün)", "Blau", "Punkte (Blau)", "Rot", "Punkte (Rot)", "Start", "Ende" };
-		this.selectionTable = new JTable(this.matchModel, newTCM(header));
-		this.selectionTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		selectionPanel.add(new JScrollPane(this.selectionTable), BorderLayout.CENTER);
-
-		final TableRowSorter<MatchesTableModel> sorter = new TableRowSorter<MatchesTableModel>(this.matchModel);
-		this.selectionTable.setRowSorter(sorter);
+	private JTable initMatchesTable(final MatchesTableModel tableModel) {
+		final String[] header = { "ID", "Region", "Grün", "Punkte (Grün)", "Blau", "Punkte (Blau)", "Rot", "Punkte (Rot)", "Start", "Ende" };
+		final JTable matchesTable = new JTable(this.matchesTableModel, newTCM(header));
+		matchesTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		final TableRowSorter<MatchesTableModel> sorter = new TableRowSorter<MatchesTableModel>(this.matchesTableModel);
+		matchesTable.setRowSorter(sorter);
 		sorter.setSortsOnUpdates(true);
-		for (int col = 0; col < this.matchModel.getColumnCount(); col++) {
-			sorter.setComparator(col, this.matchModel.getColumnComparator(col));
+		for (int col = 0; col < tableModel.getColumnCount(); col++) {
+			sorter.setComparator(col, tableModel.getColumnComparator(col));
 		}
 
-		this.selectionTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-
+		matchesTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(final ListSelectionEvent e) {
-				SwingUtilities.invokeLater(new Runnable() { 
+				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {
-						final int index = selectionTable.getSelectedRow();
-						final Optional<IWVWMatch> matchOptional = MainWindow.this.matchModel.getMatch(index);
+						final int index = matchesTable.getSelectedRow();
+						final Optional<IWVWMatch> matchOptional = MainWindow.this.matchesTableModel.getMatch(index);
 						if (matchOptional.isPresent()) {
 							LOGGER.debug("Incoming selection event [" + index + "] -> match=" + matchOptional.get().getId());
 							if (!selectedMatch.equals(matchOptional)) {
 								selectedMatch = matchOptional;
 								final IWVWMatch match = matchOptional.get();
 								LOGGER.info("NEW selected match=" + match.getId());
-								MainWindow.this.getAllMapsModel().wireUp(Main.getWrapper(), match.getCenterMap(), match.getGreenMap(), match.getBlueMap(), match.getRedMap());
-								MainWindow.this.getGeneralModel().wireUp(Main.getWrapper(), match, match.getCenterMap(), match.getGreenMap(), match.getBlueMap(), match.getRedMap());
-								MainWindow.this.getEternalMapModel().wireUp(Main.getWrapper(), match.getCenterMap());
-								MainWindow.this.getGreenMapModel().wireUp(Main.getWrapper(), match.getGreenMap());
-								MainWindow.this.getBlueMapModel().wireUp(Main.getWrapper(), match.getBlueMap());
-								MainWindow.this.getRedMapModel().wireUp(Main.getWrapper(), match.getRedMap());
+								if (wrapper.isPresent()) {
+									MainWindow.this.allMapsModel.wireUp(MainWindow.this.wrapper.get(), match.getCenterMap(), match.getGreenMap(), match.getBlueMap(), match.getRedMap());
+									MainWindow.this.matchDetailsTableModel.wireUp(MainWindow.this.wrapper.get(), match, match.getCenterMap(), match.getGreenMap(), match.getBlueMap(),
+											match.getRedMap());
+									MainWindow.this.eternalMapModel.wireUp(MainWindow.this.wrapper.get(), match.getCenterMap());
+									MainWindow.this.greenMapModel.wireUp(MainWindow.this.wrapper.get(), match.getGreenMap());
+									MainWindow.this.blueMapModel.wireUp(MainWindow.this.wrapper.get(), match.getBlueMap());
+									MainWindow.this.redMapModel.wireUp(MainWindow.this.wrapper.get(), match.getRedMap());
+								}
 
 								if (match.getGreenWorld().getName().isPresent()) {
-									MainWindow.this.getTabPane().setTitleAt(3, match.getGreenWorld().getName().get() + " Grenzlande");
+									MainWindow.this.greenMapToolWindow.setTitle(match.getGreenWorld().getName().get() + " Borderlands");
 								} else {
-									MainWindow.this.getTabPane().setTitleAt(3, "Grüne Grenzlande");
+									MainWindow.this.greenMapToolWindow.setTitle("Green Borderlands");
 								}
 								if (match.getBlueWorld().getName().isPresent()) {
-									MainWindow.this.getTabPane().setTitleAt(4, match.getBlueWorld().getName().get() + " Grenzlande");
+									MainWindow.this.blueMapToolWindow.setTitle(match.getBlueWorld().getName().get() + " Borderlands");
 								} else {
-									MainWindow.this.getTabPane().setTitleAt(4, "Blaue Grenzlande");
+									MainWindow.this.blueMapToolWindow.setTitle("Blue Borderlands");
 								}
 								if (match.getRedWorld().getName().isPresent()) {
-									MainWindow.this.getTabPane().setTitleAt(5, match.getRedWorld().getName().get() + " Grenzlande");
+									MainWindow.this.redMapToolWindow.setTitle(match.getRedWorld().getName().get() + " Borderlands");
 								} else {
-									MainWindow.this.getTabPane().setTitleAt(5, "Rote Grenzlande");
+									MainWindow.this.redMapToolWindow.setTitle("Red Borderlands");
 								}
 								LOGGER.debug("Wired everything up for new selected match=" + match.getId());
 							} else {
@@ -200,72 +227,33 @@ public class MainWindow extends AbstractWindow {
 
 			}
 		});
-		return selectionPanel;
+		return matchesTable;
 	}
 
-	private JPanel initGeneralPanel() {
-		final JPanel generalPanel = new JPanel();
-		generalPanel.setLayout(new BorderLayout());
+	private JTable initMatchDetailsTable(MatchDetailsTableModel tableModel) {
+		checkNotNull(tableModel);
+		final String[] header = { "", "Punkte (Grün)", "Punktezuwachs (Grün)", "Punkte (Blau)", "Punktezuwachs (Blau)", "Punkte (Rot)", "Punktezuwachs (Rot)" };
+		final TableColumnModel tcm = this.newTCM(header);
+		final JTable matchDetailsTable = new JTable(tableModel, tcm);
+		matchDetailsTable.setDefaultRenderer(Object.class, new MatchDetailsTableCellRenderer());
+		matchDetailsTable.getTableHeader().setReorderingAllowed(false);
+		matchDetailsTable.setEnabled(false);
 
-		this.allMapsTable = new JTable(this.getAllMapsModel(), this.newMapTCM());
-		this.allMapsTable.setDefaultRenderer(Object.class, new ObjectiveTableCellRenderer());
-
-		final TableRowSorter<MapObjectivesTableModel> sorter = new TableRowSorter<MapObjectivesTableModel>(this.getAllMapsModel());
-		this.allMapsTable.setRowSorter(sorter);
-		sorter.setSortsOnUpdates(true);
-		for (int col = 0; col < this.getAllMapsModel().getColumnCount(); col++) {
-			sorter.setComparator(col, this.getAllMapsModel().getColumnComparator(col));
-		}
-		generalPanel.add(new JScrollPane(this.allMapsTable), BorderLayout.CENTER);
-		return generalPanel;
+		return matchDetailsTable;
 	}
 
-	private JPanel initMapPanel(JPanel mapPanel, MapObjectivesTableModel mapTableModel, JTable mapTable, IWVWMapType mapType) {
-		mapPanel.setLayout(new BorderLayout());
-
-		mapTable = new JTable(mapTableModel, this.newMapTCM());
+	private JTable initMapTable(MapObjectivesTableModel tableModel) {
+		checkNotNull(tableModel);
+		final String[] header = { "Karte", "Objekt", "Objekttyp", "Wert", "Besitzer", "Buffende", "Verbleibender Buff", "Gilde", "Gildentag" };
+		final JTable mapTable = new JTable(tableModel, this.newTCM(header));
 		mapTable.setDefaultRenderer(Object.class, new ObjectiveTableCellRenderer());
-
-		final TableRowSorter<MapObjectivesTableModel> sorter = new TableRowSorter<MapObjectivesTableModel>(mapTableModel);
+		final TableRowSorter<MapObjectivesTableModel> sorter = new TableRowSorter<MapObjectivesTableModel>(tableModel);
 		mapTable.setRowSorter(sorter);
 		sorter.setSortsOnUpdates(true);
-		for (int col = 0; col < mapTableModel.getColumnCount(); col++) {
-			sorter.setComparator(col, mapTableModel.getColumnComparator(col));
+		for (int col = 0; col < tableModel.getColumnCount(); col++) {
+			sorter.setComparator(col, tableModel.getColumnComparator(col));
 		}
-
-		mapPanel.add(new JScrollPane(mapTable), BorderLayout.CENTER);
-		return mapPanel;
+		return mapTable;
 	}
 
-	public MatchesTableModel getMatchModel() {
-		return this.matchModel;
-	}
-
-	public MapObjectivesTableModel getEternalMapModel() {
-		return this.eternalMapModel;
-	}
-
-	public MapObjectivesTableModel getGreenMapModel() {
-		return this.greenMapModel;
-	}
-
-	public MapObjectivesTableModel getBlueMapModel() {
-		return this.blueMapModel;
-	}
-
-	public MapObjectivesTableModel getRedMapModel() {
-		return this.redMapModel;
-	}
-
-	public JTabbedPane getTabPane() {
-		return tabPane;
-	}
-
-	public MapObjectivesTableModel getAllMapsModel() {
-		return allMapsModel;
-	}
-
-	public GeneralTableModel getGeneralModel() {
-		return generalModel;
-	}
 }
