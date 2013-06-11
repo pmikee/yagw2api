@@ -45,6 +45,21 @@ class WVWAnalyzer implements IWVWAnalyzer {
 		}
 	}
 
+
+	@Override
+	public void onObjectiveClaimedEvent(IWVWObjectiveClaimedEvent event) {
+		LOGGER.debug(event);
+		if (event.getMap().getMatch().isPresent()) {
+			this.synchronizeWorldsOfMatch(event.getMap().getMatch().get());
+		}
+	}
+
+	@Override
+	public void onInitializedMatchForWrapper(IWVWInitializedMatchEvent event) {
+		LOGGER.debug(event);
+		this.synchronizeWorldsOfMatch(event.getMatch());		
+	}
+
 	@Override
 	public void onChangedMapScoreEvent(IWVWMapScoresChangedEvent event) {
 		LOGGER.debug(event);
@@ -88,14 +103,6 @@ class WVWAnalyzer implements IWVWAnalyzer {
 	@Override
 	public IWorldEntity worldEntityOf(IWorld world) {
 		return this.worldEntityDAO.findOrCreateWorldEntityOf(world);
-	}
-
-	@Override
-	public void onObjectiveClaimedEvent(IWVWObjectiveClaimedEvent event) {
-	}
-
-	@Override
-	public void onInitializedMatchForWrapper(IWVWInitializedMatchEvent event) {
 	}
 
 }

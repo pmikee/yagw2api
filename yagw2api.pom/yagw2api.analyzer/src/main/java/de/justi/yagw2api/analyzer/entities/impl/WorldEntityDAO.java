@@ -26,7 +26,7 @@ import de.justi.yagw2api.core.wrapper.model.IWorld;
 
 class WorldEntityDAO implements IWorldEnityDAO {
 	private static final Logger LOGGER = Logger.getLogger(WorldEntityDAO.class);
-	
+
 	@Override
 	public Collection<IWorldEntity> retrieveAllWorldEntities() {
 		checkState(YAGW2APIAnalyzerPersistence.getDefaultEM().isOpen());
@@ -100,7 +100,7 @@ class WorldEntityDAO implements IWorldEnityDAO {
 				q = YAGW2APIAnalyzerPersistence.getDefaultEM().createQuery("SELECT DISTINCT w FROM world w WHERE w.nameFR=:name");
 				break;
 			default:
-				LOGGER.error("Unsupported locale: "+locale);
+				LOGGER.error("Unsupported locale: " + locale);
 				throw new IllegalArgumentException("Unsupported locale: " + locale);
 		}
 		q.setParameter("name", name);
@@ -134,21 +134,21 @@ class WorldEntityDAO implements IWorldEnityDAO {
 		checkState(YAGW2APIAnalyzerPersistence.getDefaultEM().isOpen());
 		final EntityTransaction tx = YAGW2APIAnalyzerPersistence.getDefaultEM().getTransaction();
 		WorldEntity newEntity = null;
-		boolean isNewTransaction = tx.isActive() == false;
 		try {
-			if (isNewTransaction) {
-				tx.begin();
-			}
+			tx.begin();
 			newEntity = new WorldEntity();
-			checkState(newEntity.synchronizeWithModel(world));;
+			checkState(newEntity.synchronizeWithModel(world));
+			;
 			YAGW2APIAnalyzerPersistence.getDefaultEM().persist(newEntity);
-			if (isNewTransaction) {
-				tx.commit();
-			}
+			tx.commit();
 		} catch (PersistenceException | IllegalStateException e) {
 			LOGGER.error("Exception cought while creating new " + WorldEntity.class.getName(), e);
 			newEntity = null;
 			if (tx.isActive()) {
+				if (LOGGER.isTraceEnabled()) {
+					LOGGER.trace("Going to rollback " + EntityTransaction.class.getSimpleName() + " for new " + IWorldEntity.class.getSimpleName() + " creation out of " + IWorld.class.getSimpleName()
+							+ " for " + newEntity);
+				}
 				tx.rollback();
 			}
 		}
@@ -181,19 +181,17 @@ class WorldEntityDAO implements IWorldEnityDAO {
 	public boolean save(IWorldEntity entity) {
 		boolean success;
 		final EntityTransaction tx = YAGW2APIAnalyzerPersistence.getDefaultEM().getTransaction();
-		boolean isNewTransaction = tx.isActive() == false;
 		try {
-			if (isNewTransaction) {
-				tx.begin();
-			}
+			tx.begin();
 			YAGW2APIAnalyzerPersistence.getDefaultEM().persist(entity);
-			if (isNewTransaction) {
-				tx.commit();
-			}
+			tx.commit();
 			success = true;
 		} catch (PersistenceException | IllegalStateException e) {
 			LOGGER.error("Exception cought while saving " + entity, e);
-			if (tx.isActive()) {
+			if (tx.isActive() && !tx.getRollbackOnly()) {
+				if (LOGGER.isTraceEnabled()) {
+					LOGGER.trace("Going to rollback " + EntityTransaction.class.getSimpleName() + " for saving " + IWorldEntity.class.getSimpleName() + ": " + entity);
+				}
 				tx.rollback();
 			}
 			success = false;

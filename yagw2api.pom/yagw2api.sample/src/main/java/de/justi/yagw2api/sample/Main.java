@@ -52,7 +52,7 @@ public class Main {
 			mainWindow = new MainWindow();
 			mainWindow.setVisible(true);
 			
-			YAGW2APICore.setCurrentLocale(Locale.GERMANY);
+			YAGW2APICore.setCurrentLocale(Locale.FRANCE);
 			apiWrapper = YAGW2APICore.getWVWWrapper();
 			final IWVWAnalyzer analyzer = YAGW2APIAnalyzer.getAnalyzer();
 
