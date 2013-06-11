@@ -8,12 +8,12 @@ import javax.persistence.MappedSuperclass;
 import com.google.common.base.Objects;
 
 @MappedSuperclass
-public abstract class AbstractEntity {
+public abstract class AbstractEntity implements IEntity{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private long id;
 	
-	public final int getId() {
+	public final long getId() {
 		return this.id;
 	}
 	
