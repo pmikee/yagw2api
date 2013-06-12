@@ -9,6 +9,8 @@ import com.google.inject.Inject;
 import de.justi.yagw2api.analyzer.IWVWAnalyzer;
 import de.justi.yagw2api.analyzer.entities.IWorldEnityDAO;
 import de.justi.yagw2api.analyzer.entities.IWorldEntity;
+import de.justi.yagw2api.analyzer.entities.wvw.IWVWMatchEntity;
+import de.justi.yagw2api.analyzer.entities.wvw.IWVWMatchEntityDAO;
 import de.justi.yagw2api.core.wrapper.model.IWorld;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWInitializedMatchEvent;
@@ -22,6 +24,8 @@ class WVWAnalyzer implements IWVWAnalyzer {
 	private static final Logger LOGGER = Logger.getLogger(WVWAnalyzer.class);
 	@Inject
 	private IWorldEnityDAO worldEntityDAO;
+	@Inject
+	private IWVWMatchEntityDAO wvwMatchEntityDAO;
 
 	@Override
 	public void onMatchScoreChangedEvent(IWVWMatchScoresChangedEvent event) {
@@ -70,34 +74,27 @@ class WVWAnalyzer implements IWVWAnalyzer {
 
 	private boolean synchronizeWorldsOfMatch(IWVWMatch match) {
 		checkNotNull(match);
-		final IWorldEntity blueWorldEntity = this.worldEntityOf(match.getBlueWorld());
-		final IWorldEntity redWorldEntity = this.worldEntityOf(match.getRedWorld());
-		final IWorldEntity greenWorldEntity = this.worldEntityOf(match.getGreenWorld());
+		final IWVWMatchEntity entity = this.wvwMatchEntityDAO.findOrCreateWVWMatchEntityOf(match);
 
 		boolean persisted = false;
-		final boolean synchronizationCompleted = blueWorldEntity.synchronizeWithModel(match.getBlueWorld()) & redWorldEntity.synchronizeWithModel(match.getRedWorld())
-				& greenWorldEntity.synchronizeWithModel(match.getGreenWorld());
-		if (synchronizationCompleted) {
+		if (entity.synchronizeWithModel(match, true)) {
 			if (LOGGER.isTraceEnabled()) {
-				LOGGER.trace("Successfully synchronized " + IWorldEntity.class.getSimpleName() + "s [blue=" + blueWorldEntity + ", green=" + greenWorldEntity + ", red=" + redWorldEntity
-						+ "] with their " + IWorld.class.getSimpleName() + "s [blue=" + match.getBlueWorld() + ", green=" + match.getGreenWorld() + ", red=" + match.getRedWorld() + "]");
+				LOGGER.trace("Successfully synchronized "+IWVWMatchEntity.class.getSimpleName()+" with matchId="+entity.getOriginMatchId());
 			}
-			persisted = this.worldEntityDAO.save(blueWorldEntity) & this.worldEntityDAO.save(redWorldEntity) & this.worldEntityDAO.save(greenWorldEntity);
+			persisted = this.wvwMatchEntityDAO.save(entity);
 			if (LOGGER.isDebugEnabled()) {
 				if (persisted) {
 					if (LOGGER.isTraceEnabled()) {
-						LOGGER.trace("Successfully persisted synchronized " + IWorldEntity.class.getSimpleName() + "s: blue=" + blueWorldEntity + ", green=" + greenWorldEntity + ", red="
-								+ redWorldEntity);
+						LOGGER.trace("Successfully persisted "+IWVWMatchEntity.class.getSimpleName()+" with matchId="+entity.getOriginMatchId());
 					}
 				} else {
-					LOGGER.debug("Failed to persist synchronized " + IWorldEntity.class.getSimpleName() + "s: blue=" + blueWorldEntity + ", green=" + greenWorldEntity + ", red=" + redWorldEntity);
+					LOGGER.debug("Failed to persist synchronized "+IWVWMatchEntity.class.getSimpleName()+" with matchId="+entity.getOriginMatchId());
 				}
 			}
 		} else if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Failed to synchronize " + IWorldEntity.class.getSimpleName() + "s [blue=" + blueWorldEntity + ", green=" + greenWorldEntity + ", red=" + redWorldEntity + "] with their "
-					+ IWorld.class.getSimpleName() + "s [blue=" + match.getBlueWorld() + ", green=" + match.getGreenWorld() + ", red=" + match.getRedWorld() + "]");
+			LOGGER.debug("Failed to persist synchronize "+IWVWMatchEntity.class.getSimpleName()+" with matchId="+entity.getOriginMatchId());
 		}
-		return synchronizationCompleted && persisted;
+		return persisted;
 	}
 
 	@Override

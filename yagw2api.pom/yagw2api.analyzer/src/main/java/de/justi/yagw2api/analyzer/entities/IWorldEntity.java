@@ -1,10 +1,13 @@
 package de.justi.yagw2api.analyzer.entities;
 
+import java.util.List;
 import java.util.Locale;
 
 import com.google.common.base.Optional;
 
+import de.justi.yagw2api.analyzer.entities.wvw.IWVWMatchEntity;
 import de.justi.yagw2api.core.wrapper.model.IWorld;
+import de.justi.yagw2api.core.wrapper.model.types.IWorldLocationType;
 
 public interface IWorldEntity extends IEntity {
 	Optional<String> getName(Locale locale);
@@ -21,6 +24,19 @@ public interface IWorldEntity extends IEntity {
 
 	Optional<Integer> getOriginWorldId();
 
+	IWorldLocationType getLocation();
+
+	Optional<Locale> getWorldLocale();
+
+	boolean addParticipatedAsRedInMatch(IWVWMatchEntity match);
+	boolean addParticipatedAsBlueInMatch(IWVWMatchEntity match);
+	boolean addParticipatedAsGreenInMatch(IWVWMatchEntity match);
+	
+	Iterable<IWVWMatchEntity> getParticipatedInMatches();	
+	List<IWVWMatchEntity> getParticipatedInMatchesAsRedWorld();
+	List<IWVWMatchEntity> getParticipatedInMatchesAsGreenWorld();
+	List<IWVWMatchEntity> getParticipatedInMatchesAsBlueWorld();
+	
 	/**
 	 * <p>
 	 * Synchronize this with the given {@link IWorld}

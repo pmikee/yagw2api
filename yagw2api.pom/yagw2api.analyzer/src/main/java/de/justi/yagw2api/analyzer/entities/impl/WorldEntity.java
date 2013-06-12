@@ -2,25 +2,42 @@ package de.justi.yagw2api.analyzer.entities.impl;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 
 import org.apache.log4j.Logger;
+import org.eclipse.persistence.annotations.ConversionValue;
+import org.eclipse.persistence.annotations.Convert;
+import org.eclipse.persistence.annotations.ObjectTypeConverter;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
+import com.google.common.collect.Iterables;
 
 import de.justi.yagw2api.analyzer.entities.AbstractEntity;
 import de.justi.yagw2api.analyzer.entities.IWorldEntity;
+import de.justi.yagw2api.analyzer.entities.wvw.IWVWMatchEntity;
+import de.justi.yagw2api.analyzer.entities.wvw.impl.WVWMatchEntity;
 import de.justi.yagw2api.core.YAGW2APICore;
 import de.justi.yagw2api.core.wrapper.model.IWorld;
+import de.justi.yagw2api.core.wrapper.model.types.IWorldLocationType;
+import de.justi.yagw2api.core.wrapper.model.types.WorldLocationType;
 
+@ObjectTypeConverter(name = "IWorldLocationTypeConverter", objectType = WorldLocationType.class, dataType = String.class, conversionValues = {
+		@ConversionValue(objectValue = "NORTH_AMERICA", dataValue = "NA"), @ConversionValue(objectValue = "EUROPE", dataValue = "EU") })
 @Entity(name = "world")
-class WorldEntity extends AbstractEntity implements IWorldEntity {
+public class WorldEntity extends AbstractEntity implements IWorldEntity {
 	private static final Logger LOGGER = Logger.getLogger(WorldEntity.class);
+
 	@Column(name = "name_de", unique = true, nullable = true)
 	private String nameDE;
 
@@ -36,9 +53,71 @@ class WorldEntity extends AbstractEntity implements IWorldEntity {
 	@Column(name = "origin_id", unique = true, nullable = false)
 	private Integer originWorldId;
 
-	public WorldEntity() {
+	@Column(name = "world_locale", unique = false, nullable = true)
+	private Locale worldLocale;
+
+	@Column(name = "world_location", unique = false, nullable = false)
+	@Convert("IWorldLocationTypeConverter")
+	private IWorldLocationType location;
+
+	@OneToMany(targetEntity = WVWMatchEntity.class, mappedBy = "redWorld", cascade = { CascadeType.ALL })
+	private List<WVWMatchEntity> participatedInMatchesAsRedWorld;
+
+	@OneToMany(targetEntity = WVWMatchEntity.class, mappedBy = "greenWorld", cascade = { CascadeType.ALL })
+	private List<WVWMatchEntity> participatedInMatchesAsGreenWorld;
+
+	@OneToMany(targetEntity = WVWMatchEntity.class, mappedBy = "blueWorld", cascade = { CascadeType.ALL })
+	private List<WVWMatchEntity> participatedInMatchesAsBlueWorld;
+
+	protected WorldEntity() {
+		super();
 		this.nameDE = null;
 		this.originWorldId = null;
+		this.worldLocale = null;
+		this.location = null;
+		this.participatedInMatchesAsRedWorld = new ArrayList<WVWMatchEntity>();
+		this.participatedInMatchesAsGreenWorld = new ArrayList<WVWMatchEntity>();
+		this.participatedInMatchesAsBlueWorld = new ArrayList<WVWMatchEntity>();
+	}
+
+	@Override
+	public boolean addParticipatedAsRedInMatch(IWVWMatchEntity match) {
+		checkNotNull(match);
+		if (this.participatedInMatchesAsBlueWorld.contains(match) || this.participatedInMatchesAsGreenWorld.contains(match) || this.participatedInMatchesAsRedWorld.contains(match)) {
+			return false;
+		} else {
+			return this.participatedInMatchesAsRedWorld.add((WVWMatchEntity) match);
+		}
+	}
+
+	@Override
+	public boolean addParticipatedAsBlueInMatch(IWVWMatchEntity match) {
+		checkNotNull(match);
+		if (this.participatedInMatchesAsBlueWorld.contains(match) || this.participatedInMatchesAsGreenWorld.contains(match) || this.participatedInMatchesAsRedWorld.contains(match)) {
+			return false;
+		} else {
+			return this.participatedInMatchesAsBlueWorld.add((WVWMatchEntity) match);
+		}
+	}
+
+	@Override
+	public boolean addParticipatedAsGreenInMatch(IWVWMatchEntity match) {
+		checkNotNull(match);
+		if (this.participatedInMatchesAsBlueWorld.contains(match) || this.participatedInMatchesAsGreenWorld.contains(match) || this.participatedInMatchesAsRedWorld.contains(match)) {
+			return false;
+		} else {
+			return this.participatedInMatchesAsGreenWorld.add((WVWMatchEntity) match);
+		}
+	}
+
+	@Override
+	public IWorldLocationType getLocation() {
+		return this.location;
+	}
+
+	@Override
+	public Optional<Locale> getWorldLocale() {
+		return Optional.fromNullable(this.worldLocale);
 	}
 
 	@Override
@@ -47,9 +126,12 @@ class WorldEntity extends AbstractEntity implements IWorldEntity {
 		if (this.originWorldId == null || model.getId() == this.originWorldId) {
 			// compatible ids
 			this.originWorldId = model.getId();
-			if(model.getName().isPresent()) {
+			if (model.getName().isPresent()) {
 				this.setName(YAGW2APICore.getCurrentLocale(), model.getName().get());
 			}
+			this.worldLocale = model.getWorldLocale().orNull();
+			this.location = model.getWorldLocation();
+
 			return true;
 		} else {
 			// incompatible ids
@@ -146,5 +228,29 @@ class WorldEntity extends AbstractEntity implements IWorldEntity {
 			final IWorldEntity worldEntity = (IWorldEntity) obj;
 			return Objects.equal(this.originWorldId, worldEntity.getOriginWorldId().orNull());
 		}
+	}
+
+	@Override
+	public Iterable<IWVWMatchEntity> getParticipatedInMatches() {
+		checkState(this.participatedInMatchesAsBlueWorld != null);
+		checkState(this.participatedInMatchesAsGreenWorld != null);
+		checkState(this.participatedInMatchesAsRedWorld != null);
+		return Iterables.<IWVWMatchEntity> unmodifiableIterable(Iterables.<IWVWMatchEntity> concat(this.participatedInMatchesAsBlueWorld, this.participatedInMatchesAsGreenWorld,
+				this.participatedInMatchesAsRedWorld));
+	}
+
+	@Override
+	public List<IWVWMatchEntity> getParticipatedInMatchesAsRedWorld() {
+		return Collections.<IWVWMatchEntity> unmodifiableList(this.participatedInMatchesAsRedWorld);
+	}
+
+	@Override
+	public List<IWVWMatchEntity> getParticipatedInMatchesAsGreenWorld() {
+		return Collections.<IWVWMatchEntity> unmodifiableList(this.participatedInMatchesAsGreenWorld);
+	}
+
+	@Override
+	public List<IWVWMatchEntity> getParticipatedInMatchesAsBlueWorld() {
+		return Collections.<IWVWMatchEntity> unmodifiableList(this.participatedInMatchesAsBlueWorld);
 	}
 }

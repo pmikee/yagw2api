@@ -10,8 +10,8 @@ import com.google.common.base.Objects;
 @MappedSuperclass
 public abstract class AbstractEntity implements IEntity{
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	public long id;
 	
 	public final long getId() {
 		return this.id;

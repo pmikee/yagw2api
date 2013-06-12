@@ -7,6 +7,7 @@
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<class>de.justi.yagw2api.analyzer.entities.impl.WorldEntity</class>
+		<class>de.justi.yagw2api.analyzer.entities.wvw.impl.WVWMatchEntity</class>
 		<properties>
 			<property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.EmbeddedDriver" />
 			<property name="javax.persistence.jdbc.url" value="jdbc:derby:memory:yagw2api4test;create=true" />
@@ -16,9 +17,12 @@
 			<!-- EclipseLink should create the database schema automatically -->
 			<property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
 			<property name="eclipselink.target-database" value="Derby" />
-			
-			<property name="eclipselink.logging.level.sql" value="FINE"/>
-			<property name="eclipselink.logging.parameters" value="true"/>
+
+			<property name="eclipselink.logging.level.sql" value="FINE" />
+			<property name="eclipselink.logging.parameters" value="true" />
+
+			<property name="eclipselink.persistence-context.flush-mode"
+				value="auto" />
 		</properties>
 
 	</persistence-unit>
