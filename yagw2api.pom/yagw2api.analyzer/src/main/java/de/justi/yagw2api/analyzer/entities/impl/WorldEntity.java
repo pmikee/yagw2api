@@ -17,7 +17,10 @@ import javax.persistence.OneToMany;
 import org.apache.log4j.Logger;
 import org.eclipse.persistence.annotations.ConversionValue;
 import org.eclipse.persistence.annotations.Convert;
+import org.eclipse.persistence.annotations.Converter;
+import org.eclipse.persistence.annotations.Converters;
 import org.eclipse.persistence.annotations.ObjectTypeConverter;
+import org.eclipse.persistence.annotations.ObjectTypeConverters;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
@@ -27,13 +30,15 @@ import de.justi.yagw2api.analyzer.entities.AbstractEntity;
 import de.justi.yagw2api.analyzer.entities.IWorldEntity;
 import de.justi.yagw2api.analyzer.entities.wvw.IWVWMatchEntity;
 import de.justi.yagw2api.analyzer.entities.wvw.impl.WVWMatchEntity;
+import de.justi.yagw2api.analyzer.utils.converter.LocaleConverter;
 import de.justi.yagw2api.core.YAGW2APICore;
 import de.justi.yagw2api.core.wrapper.model.IWorld;
 import de.justi.yagw2api.core.wrapper.model.types.IWorldLocationType;
 import de.justi.yagw2api.core.wrapper.model.types.WorldLocationType;
 
-@ObjectTypeConverter(name = "IWorldLocationTypeConverter", objectType = WorldLocationType.class, dataType = String.class, conversionValues = {
-		@ConversionValue(objectValue = "NORTH_AMERICA", dataValue = "NA"), @ConversionValue(objectValue = "EUROPE", dataValue = "EU") })
+@ObjectTypeConverters({ @ObjectTypeConverter(name = "WorldLocationTypeConverter", objectType = WorldLocationType.class, dataType = String.class, conversionValues = {
+		@ConversionValue(objectValue = "NORTH_AMERICA", dataValue = "NA"), @ConversionValue(objectValue = "EUROPE", dataValue = "EU") }) })
+@Converters({ @Converter(converterClass = LocaleConverter.class, name = "LocaleConverter") })
 @Entity(name = "world")
 public class WorldEntity extends AbstractEntity implements IWorldEntity {
 	private static final Logger LOGGER = Logger.getLogger(WorldEntity.class);
@@ -54,10 +59,11 @@ public class WorldEntity extends AbstractEntity implements IWorldEntity {
 	private Integer originWorldId;
 
 	@Column(name = "world_locale", unique = false, nullable = true)
+	@Convert("LocaleConverter")
 	private Locale worldLocale;
 
 	@Column(name = "world_location", unique = false, nullable = false)
-	@Convert("IWorldLocationTypeConverter")
+	@Convert("WorldLocationTypeConverter")
 	private IWorldLocationType location;
 
 	@OneToMany(targetEntity = WVWMatchEntity.class, mappedBy = "redWorld", cascade = { CascadeType.ALL })
