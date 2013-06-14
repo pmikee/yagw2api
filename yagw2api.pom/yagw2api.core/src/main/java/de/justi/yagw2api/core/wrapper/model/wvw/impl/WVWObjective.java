@@ -31,6 +31,7 @@ import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWModelEventFactory;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveCaptureEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveClaimedEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveEvent;
+import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveUnclaimedEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.types.IWVWLocationType;
 import de.justi.yagw2api.core.wrapper.model.wvw.types.IWVWObjectiveType;
 import de.justi.yagw2api.core.wrapper.model.wvw.types.WVWLocationType;
@@ -156,7 +157,7 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 			checkState(this.map != null);
 
 			final IWVWObjective result = new WVWObjective(this.location.get());
-			if(this.map.isPresent()) {
+			if (this.map.isPresent()) {
 				result.connectWithMap(this.map.get());
 			}
 			result.initializeOwner(this.owner.orNull());
@@ -331,6 +332,12 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 			final IWVWObjectiveClaimedEvent event = WVW_MODEL_EVENTS_FACTORY.newObjectiveClaimedEvent(this, guild, this.claimedByGuild);
 			LOGGER.info(this.getLocation().getLabel(YAGW2APICore.getCurrentLocale()) + " has been claimed by: " + guild.getName() + " | previous claimed by " + this.claimedByGuild);
 			this.claimedByGuild = Optional.of(guild);
+			this.getChannel().post(event);
+		} else if (guild == null) {
+			// unclaim (e.g. after capture)
+			final IWVWObjectiveUnclaimedEvent event = WVW_MODEL_EVENTS_FACTORY.newObjectiveUnclaimedEvent(this, this.claimedByGuild);
+			LOGGER.info(this.getLocation().getLabel(YAGW2APICore.getCurrentLocale()) + " has been unclaimed from " + this.claimedByGuild);
+			this.claimedByGuild = Optional.absent();
 			this.getChannel().post(event);
 		} else {
 			// no change

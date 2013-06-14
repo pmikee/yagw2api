@@ -17,6 +17,7 @@ import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWModelEventFactory;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveCaptureEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveClaimedEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveEndOfBuffEvent;
+import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveUnclaimedEvent;
 
 class WVWModelEventFactory implements IWVWModelEventFactory {
 
@@ -60,6 +61,12 @@ class WVWModelEventFactory implements IWVWModelEventFactory {
 	public IWVWInitializedMatchEvent newInitializedMatchEvent(IWVWMatch match) {
 		checkNotNull(match);
 		return new WVWInitializedMatchEvent(match);
+	}
+
+	@Override
+	public IWVWObjectiveUnclaimedEvent newObjectiveUnclaimedEvent(IWVWObjective objective, Optional<IGuild> previousClaimedByGuild) {
+		checkNotNull(objective);
+		return new WVWObjectiveUnclaimedEvent(objective, previousClaimedByGuild.orNull());
 	}
 
 }

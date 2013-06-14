@@ -24,6 +24,7 @@ import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMapScoresChangedEvent
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveCaptureEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveClaimedEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveEndOfBuffEvent;
+import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveUnclaimedEvent;
 
 public class MapObjectivesTableModel extends AbstractTableModel implements IWVWMapListener {
 	private static final long	serialVersionUID	= -4657108157862724940L;
@@ -161,28 +162,30 @@ public class MapObjectivesTableModel extends AbstractTableModel implements IWVWM
 	@Override
 	public void onChangedMapScoreEvent(IWVWMapScoresChangedEvent event) {
 	}
-
-	@Override
-	public void onObjectiveCapturedEvent(IWVWObjectiveCaptureEvent event) {
-		checkState(this.content.contains(event.getObjective()));
-		final int row = this.content.indexOf(event.getObjective());
-		checkState(this.content.contains(event.getObjective()));
-		checkState(row >= 0, row + " should be greater than or equal to 0");
-		checkState(row < this.content.size(), row +" should be smaller than "+this.content.size());
-		checkState(row < this.getRowCount(), row +" should be smaller than "+this.getRowCount());
+	
+	private void updateObjective(IWVWObjective objective) {
+		checkState(this.content.contains(objective));
 		this.fireTableDataChanged();
 	}
 
 	@Override
+	public void onObjectiveCapturedEvent(IWVWObjectiveCaptureEvent event) {
+		this.updateObjective(event.getObjective());
+	}
+
+	@Override
 	public void onObjectiveEndOfBuffEvent(IWVWObjectiveEndOfBuffEvent event) {
-		checkState(this.content.contains(event.getObjective()));
-		final int row = this.content.indexOf(event.getObjective());
-		checkState(this.content.contains(event.getObjective()));
-		this.fireTableRowsUpdated(row, row);
+		this.updateObjective(event.getObjective());
 	}
 
 	@Override
 	public void onObjectiveClaimedEvent(IWVWObjectiveClaimedEvent event) {
+		this.updateObjective(event.getObjective());
+	}
+
+	@Override
+	public void onObjectiveUnclaimedEvent(IWVWObjectiveUnclaimedEvent event) {
+		this.updateObjective(event.getObjective());
 	}
 
 }

@@ -38,7 +38,7 @@ public class Main {
 
 
 	public static void main(String[] args) {
-		YAGW2APICore.setCurrentLocale(Locale.FRANCE);
+		YAGW2APICore.setCurrentLocale(Locale.getDefault());
 		final IWVWWrapper apiWrapper = YAGW2APICore.getWVWWrapper();
 		final IWVWAnalyzer analyzer = YAGW2APIAnalyzer.getAnalyzer();
 		YAGW2APIAnalyzerPersistence.getDefaultEM(); // startup db connection

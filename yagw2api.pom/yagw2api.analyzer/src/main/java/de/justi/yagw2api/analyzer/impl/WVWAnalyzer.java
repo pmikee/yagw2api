@@ -19,6 +19,7 @@ import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMatchScoresChangedEve
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveCaptureEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveClaimedEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveEndOfBuffEvent;
+import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveUnclaimedEvent;
 
 class WVWAnalyzer implements IWVWAnalyzer {
 	private static final Logger LOGGER = Logger.getLogger(WVWAnalyzer.class);
@@ -56,6 +57,16 @@ class WVWAnalyzer implements IWVWAnalyzer {
 		if (event.getMap().getMatch().isPresent()) {
 			this.synchronizeWorldsOfMatch(event.getMap().getMatch().get());
 		}
+	}
+	
+
+
+	@Override
+	public void onObjectiveUnclaimedEvent(IWVWObjectiveUnclaimedEvent event) {
+		LOGGER.debug(event);
+		if (event.getMap().getMatch().isPresent()) {
+			this.synchronizeWorldsOfMatch(event.getMap().getMatch().get());
+		}		
 	}
 
 	@Override

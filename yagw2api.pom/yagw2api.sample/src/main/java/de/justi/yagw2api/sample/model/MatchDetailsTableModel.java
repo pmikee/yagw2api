@@ -22,6 +22,7 @@ import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMatchScoresChangedEve
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveCaptureEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveClaimedEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveEndOfBuffEvent;
+import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveUnclaimedEvent;
 
 public class MatchDetailsTableModel extends AbstractTableModel implements IWVWMatchListener, IWVWMapListener {
 	private static final Logger LOGGER = Logger.getLogger(MatchDetailsTableModel.class);
@@ -209,6 +210,11 @@ public class MatchDetailsTableModel extends AbstractTableModel implements IWVWMa
 
 	@Override
 	public void onObjectiveClaimedEvent(IWVWObjectiveClaimedEvent event) {
+		// nothing to do
+	}
+
+	@Override
+	public void onObjectiveUnclaimedEvent(IWVWObjectiveUnclaimedEvent event) {
 		// nothing to do
 	}
 }
