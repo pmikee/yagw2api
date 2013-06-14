@@ -5,16 +5,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
 import com.google.common.eventbus.EventBus;
 
 import de.justi.yagw2api.core.AbstractHasChannel;
@@ -30,7 +26,6 @@ import de.justi.yagw2api.core.wrapper.model.wvw.IWVWObjective;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWModelEventFactory;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveCaptureEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveClaimedEvent;
-import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveUnclaimedEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.types.IWVWLocationType;
 import de.justi.yagw2api.core.wrapper.model.wvw.types.IWVWObjectiveType;
@@ -56,11 +51,6 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 		@Override
 		public EventBus getChannel() {
 			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName() + " and therefore can not be modified.");
-		}
-
-		@Override
-		public List<IWVWObjectiveEvent> getEventHistory() {
-			return Collections.unmodifiableList(WVWObjective.this.getEventHistory());
 		}
 
 		@Override
@@ -204,7 +194,6 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 	}
 
 	private final IWVWLocationType location;
-	private final List<IWVWObjectiveEvent> eventHistory = new CopyOnWriteArrayList<IWVWObjectiveEvent>();
 	private Optional<IWorld> owningWorld = Optional.absent();
 	private Optional<Calendar> lastCaptureEventTimestamp = Optional.absent();
 	private boolean postedEndOfBuffEvent = true;
@@ -232,10 +221,6 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 
 	public IWVWLocationType getLocation() {
 		return this.location;
-	}
-
-	public List<IWVWObjectiveEvent> getEventHistory() {
-		return ImmutableList.copyOf(this.eventHistory);
 	}
 
 	@Override
