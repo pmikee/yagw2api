@@ -3,6 +3,7 @@ package de.justi.yagw2api.sample.model;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 
+import java.lang.reflect.InvocationTargetException;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Comparator;
@@ -10,7 +11,10 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
+import javax.swing.SwingUtilities;
 import javax.swing.table.AbstractTableModel;
+
+import org.apache.log4j.Logger;
 
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.AbstractScheduledService;
@@ -27,21 +31,22 @@ import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveEndOfBuffEve
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveUnclaimedEvent;
 
 public class MapObjectivesTableModel extends AbstractTableModel implements IWVWMapListener {
-	private static final long	serialVersionUID	= -4657108157862724940L;
+	private static final long serialVersionUID = -4657108157862724940L;
+	private static final Logger LOGGER = Logger.getLogger(MapObjectivesTableModel.class);
 
-	final DateFormat			DF					= DateFormat.getTimeInstance(DateFormat.MEDIUM);
+	final DateFormat DF = DateFormat.getTimeInstance(DateFormat.MEDIUM);
 
-	private List<IWVWObjective>	content				= new CopyOnWriteArrayList<IWVWObjective>();
-	
+	private List<IWVWObjective> content = new CopyOnWriteArrayList<IWVWObjective>();
+
 	private Service service;
-	
+
 	public MapObjectivesTableModel() {
 		this.service = new AbstractScheduledService() {
 			@Override
 			protected void runOneIteration() throws Exception {
 				int row = 0;
 				for (IWVWObjective content : MapObjectivesTableModel.this.content) {
-					if(content.getRemainingBuffDuration(TimeUnit.SECONDS) > 0) {
+					if (content.getRemainingBuffDuration(TimeUnit.SECONDS) > 0) {
 						MapObjectivesTableModel.this.fireTableCellUpdated(row, 6);
 					}
 					row++;
@@ -52,7 +57,7 @@ public class MapObjectivesTableModel extends AbstractTableModel implements IWVWM
 			protected Scheduler scheduler() {
 				return Scheduler.newFixedDelaySchedule(0, 1, TimeUnit.SECONDS);
 			}
-			
+
 		};
 		this.service.startAndWait();
 	}
@@ -79,8 +84,8 @@ public class MapObjectivesTableModel extends AbstractTableModel implements IWVWM
 		return this.content.size();
 	}
 
-	public Comparator<?> getColumnComparator(int col){
-		switch(col) {
+	public Comparator<?> getColumnComparator(int col) {
+		switch (col) {
 			case 3: // objective points
 				return new Comparator<Integer>() {
 					@Override
@@ -104,16 +109,17 @@ public class MapObjectivesTableModel extends AbstractTableModel implements IWVWM
 						return String.valueOf(o1).compareTo(String.valueOf(o2));
 					}
 				};
-		}	
+		}
 	}
-	
-	public Optional<IWVWObjective> getObjectiveForRow(int row){
-		if(row < 0 || row >= this.content.size()) {
+
+	public Optional<IWVWObjective> getObjectiveForRow(int row) {
+		if (row < 0 || row >= this.content.size()) {
 			return Optional.absent();
-		}else{
+		} else {
 			return Optional.fromNullable(this.content.get(row));
 		}
 	}
+
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		final Optional<IWVWObjective> objective = this.getObjectiveForRow(rowIndex);
@@ -137,9 +143,9 @@ public class MapObjectivesTableModel extends AbstractTableModel implements IWVWM
 					return "";
 				}
 			case 6:
-				if(objective.get().getEndOfBuffTimestamp().isPresent()) {
+				if (objective.get().getEndOfBuffTimestamp().isPresent()) {
 					return objective.get().getRemainingBuffDuration(TimeUnit.SECONDS);
-				}else {
+				} else {
 					return "";
 				}
 			case 7:
@@ -162,10 +168,27 @@ public class MapObjectivesTableModel extends AbstractTableModel implements IWVWM
 	@Override
 	public void onChangedMapScoreEvent(IWVWMapScoresChangedEvent event) {
 	}
-	
-	private void updateObjective(IWVWObjective objective) {
-		checkState(this.content.contains(objective));
-		this.fireTableDataChanged();
+
+	private void updateObjective(final IWVWObjective objective) {
+		try {
+			SwingUtilities.invokeAndWait(new Runnable() {
+				@Override
+				public void run() {
+					checkState(SwingUtilities.isEventDispatchThread());
+					checkState(MapObjectivesTableModel.this.content.contains(objective));
+					final int row = MapObjectivesTableModel.this.content.indexOf(objective);
+					checkState(MapObjectivesTableModel.this.content.contains(objective));
+					checkState(row >= 0, row + " should be greater than or equal to 0");
+					checkState(row < MapObjectivesTableModel.this.content.size(), row + " should be smaller than " + MapObjectivesTableModel.this.content.size());
+					checkState(row < MapObjectivesTableModel.this.getRowCount(), row + " should be smaller than " + MapObjectivesTableModel.this.getRowCount());
+
+					MapObjectivesTableModel.this.fireTableDataChanged();
+				}
+			});
+		} catch (InvocationTargetException | InterruptedException e) {
+			LOGGER.error("Failed to update " + IWVWObjective.class.getSimpleName(), e);
+		}
+
 	}
 
 	@Override

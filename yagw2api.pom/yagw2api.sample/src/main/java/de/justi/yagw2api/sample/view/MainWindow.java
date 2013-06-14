@@ -184,7 +184,7 @@ public class MainWindow extends AbstractWindow {
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {
-						final int index = matchesTable.getSelectedRow();
+						final int index = matchesTable.convertRowIndexToModel(matchesTable.getSelectedRow());
 						final Optional<IWVWMatch> matchOptional = MainWindow.this.matchesTableModel.getMatch(index);
 						if (matchOptional.isPresent()) {
 							LOGGER.debug("Incoming selection event [" + index + "] -> match=" + matchOptional.get().getId());

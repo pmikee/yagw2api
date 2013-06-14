@@ -3,6 +3,7 @@ package de.justi.yagw2api.sample.model;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 
+import java.lang.reflect.InvocationTargetException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -12,6 +13,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import javax.swing.SwingUtilities;
 import javax.swing.table.AbstractTableModel;
 
 import org.apache.log4j.Logger;
@@ -37,7 +39,7 @@ public class MatchesTableModel extends AbstractTableModel implements IWVWMatchLi
 		this.matches.clear();
 		this.fireTableDataChanged();
 		wrapper.unregisterWVWMatchListener(this);
-		wrapper.registerWVWMatchListener(this);		
+		wrapper.registerWVWMatchListener(this);
 	}
 
 	public Comparator<?> getColumnComparator(int col) {
@@ -127,17 +129,36 @@ public class MatchesTableModel extends AbstractTableModel implements IWVWMatchLi
 	}
 
 	@Override
-	public void onMatchScoreChangedEvent(IWVWMatchScoresChangedEvent event) {
-		final int rowIndex = this.matches.indexOf(event.getMatch());
-		this.fireTableRowsUpdated(rowIndex, rowIndex);
+	public void onMatchScoreChangedEvent(final IWVWMatchScoresChangedEvent event) {
+		try {
+			SwingUtilities.invokeAndWait(new Runnable() {
+				@Override
+				public void run() {
+					final int rowIndex = MatchesTableModel.this.matches.indexOf(event.getMatch());
+					MatchesTableModel.this.fireTableRowsUpdated(rowIndex, rowIndex);
+				}
+			});
+		} catch (InvocationTargetException | InterruptedException e) {
+			LOGGER.error("Failed to react to " + event, e);
+		}
 	}
 
 	@Override
-	public void onInitializedMatchForWrapper(IWVWInitializedMatchEvent event) {
-		if (!this.matches.contains(event.getMatch())) {
-			this.matches.add(event.getMatch());
+	public void onInitializedMatchForWrapper(final IWVWInitializedMatchEvent event) {
+		try {
+			SwingUtilities.invokeAndWait(new Runnable() {
+				@Override
+				public void run() {
+					checkState(SwingUtilities.isEventDispatchThread());
+					if (!MatchesTableModel.this.matches.contains(event.getMatch())) {
+						MatchesTableModel.this.matches.add(event.getMatch());
+					}
+					MatchesTableModel.this.fireTableRowsInserted(MatchesTableModel.this.matches.size() - 1, MatchesTableModel.this.matches.size() - 1);
+				}
+			});
+		} catch (InvocationTargetException | InterruptedException e) {
+			LOGGER.error("Failed to react to " + event, e);
 		}
-		this.fireTableRowsInserted(this.matches.size()-1, this.matches.size()-1);
 	}
 
 }

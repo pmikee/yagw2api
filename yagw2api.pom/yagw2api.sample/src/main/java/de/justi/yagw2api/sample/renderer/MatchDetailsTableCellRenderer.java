@@ -22,10 +22,10 @@ public class MatchDetailsTableCellRenderer extends DefaultTableCellRenderer {
 		c.setForeground(Color.BLACK);
 		if (column > 0 && column < 3) {
 			c.setForeground(row == 4 ? Color.WHITE : Color.BLACK);
-			c.setBackground(row == 4 ? MainWindow.BLUE_WORLD_FG : MainWindow.BLUE_WORLD_BG);
+			c.setBackground(row == 4 ? MainWindow.GREEN_WORLD_FG : MainWindow.GREEN_WORLD_BG);
 		} else if (column >= 3 && column < 5) {
 			c.setForeground(row == 4 ? Color.WHITE : Color.BLACK);
-			c.setBackground(row == 4 ? MainWindow.GREEN_WORLD_FG : MainWindow.GREEN_WORLD_BG);
+			c.setBackground(row == 4 ? MainWindow.BLUE_WORLD_FG : MainWindow.BLUE_WORLD_BG);
 		} else if (column >= 5 && column < 7) {
 			c.setForeground(row == 4 ? Color.WHITE : Color.BLACK);
 			c.setBackground(row == 4 ? MainWindow.RED_WORLD_FG : MainWindow.RED_WORLD_BG);
