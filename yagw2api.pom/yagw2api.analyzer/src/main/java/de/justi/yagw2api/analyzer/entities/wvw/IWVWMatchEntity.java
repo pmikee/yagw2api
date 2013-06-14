@@ -29,7 +29,7 @@ public interface IWVWMatchEntity extends IEntity {
 	 * </p>
 	 * 
 	 * @param model
-	 * @param setupWorldReferences TODO
+	 * @param setupWorldReferences
 	 * @return true if successfully, else false
 	 */
 	boolean synchronizeWithModel(IWVWMatch model, boolean setupWorldReferences);

@@ -108,7 +108,6 @@ class WVWSynchronizerAction extends AbstractSynchronizerAction<String,WVWSynchro
 				// 1.2 synchronize claiming guild
 				claimedByGuildDTO = objectiveDTO.getGuildDetails();
 				if(claimedByGuildDTO.isPresent()) {
-					//TODO refactor this to make use of a builde --> see IWorld
 					final IGuild guild = MODEL_FACTORY.getOrCreateGuild(claimedByGuildDTO.get().getId(), claimedByGuildDTO.get().getName(), claimedByGuildDTO.get().getTag());
 					objectiveModel.claim(guild);
 				}else {

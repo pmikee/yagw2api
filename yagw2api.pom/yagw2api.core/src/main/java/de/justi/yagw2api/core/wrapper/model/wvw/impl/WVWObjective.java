@@ -160,7 +160,6 @@ class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 			checkNotNull(dto);
 			final Optional<IGuildDetailsDTO> guildDetails = dto.getGuildDetails();
 			if (guildDetails.isPresent()) {
-				// TODO refactor this to make use of a builder --> see IWorld
 				final IGuild guild = MODEL_FACTORY.getOrCreateGuild(guildDetails.get().getId(), guildDetails.get().getName(), guildDetails.get().getTag());
 				checkState(guild != null);
 				this.claimedBy(guild);
