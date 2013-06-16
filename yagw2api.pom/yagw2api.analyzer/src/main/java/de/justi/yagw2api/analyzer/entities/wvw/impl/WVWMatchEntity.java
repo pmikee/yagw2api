@@ -147,9 +147,6 @@ public class WVWMatchEntity extends AbstractEntity implements IWVWMatchEntity {
 		final Optional<IWVWScoresEmbeddable> latestScores = this.getLatestScores();
 		if(LOGGER.isDebugEnabled() && latestScores.isPresent()) {
 			LOGGER.debug("Latest score="+latestScores.get());
-			if(LOGGER.isTraceEnabled()) {
-				LOGGER.trace(this.scoresMappedByTimestamp);
-			}
 		}
 		if (!latestScores.isPresent() || 
 			 latestScores.get().getBlueScore() != model.getScores().getBlueScore() || 
