@@ -1,6 +1,9 @@
 package de.justi.yagw2api.analyzer.entities.wvw;
 
 import java.util.Date;
+import java.util.Map;
+
+import com.google.common.base.Optional;
 
 import de.justi.yagw2api.analyzer.entities.IEntity;
 import de.justi.yagw2api.analyzer.entities.IWorldEntity;
@@ -18,7 +21,10 @@ public interface IWVWMatchEntity extends IEntity {
 	IWorldEntity getGreenWorld();
 
 	IWorldEntity getBlueWorld();
-
+	
+	Map<Date, IWVWScoresEmbeddable> getScores();
+	Optional<IWVWScoresEmbeddable> getLatestScores();
+	
 	/**
 	 * <p>
 	 * Synchronize this with the given {@link IWVWMatch}
@@ -30,7 +36,6 @@ public interface IWVWMatchEntity extends IEntity {
 	 * 
 	 * @param model
 	 * @param setupWorldReferences
-	 * @return true if successfully, else false
 	 */
-	boolean synchronizeWithModel(IWVWMatch model, boolean setupWorldReferences);
+	void synchronizeWithModel(Date timestamp, IWVWMatch model, boolean setupWorldReferences);
 }

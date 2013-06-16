@@ -2,6 +2,8 @@ package de.justi.yagw2api.analyzer.impl;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.Date;
+
 import org.apache.log4j.Logger;
 
 import com.google.inject.Inject;
@@ -31,14 +33,14 @@ class WVWAnalyzer implements IWVWAnalyzer {
 	@Override
 	public void onMatchScoreChangedEvent(IWVWMatchScoresChangedEvent event) {
 		LOGGER.debug(event);
-		this.synchronizeWorldsOfMatch(event.getMatch());
+		this.synchronizeWorldsOfMatch(event.getTimestamp().getTime(), event.getMatch());
 	}
 
 	@Override
 	public void onObjectiveCapturedEvent(IWVWObjectiveCaptureEvent event) {
 		LOGGER.debug(event);
 		if (event.getMap().getMatch().isPresent()) {
-			this.synchronizeWorldsOfMatch(event.getMap().getMatch().get());
+			this.synchronizeWorldsOfMatch(event.getTimestamp().getTime(), event.getMap().getMatch().get());
 		}
 	}
 
@@ -46,64 +48,59 @@ class WVWAnalyzer implements IWVWAnalyzer {
 	public void onObjectiveEndOfBuffEvent(IWVWObjectiveEndOfBuffEvent event) {
 		LOGGER.debug(event);
 		if (event.getMap().getMatch().isPresent()) {
-			this.synchronizeWorldsOfMatch(event.getMap().getMatch().get());
+			this.synchronizeWorldsOfMatch(event.getTimestamp().getTime(), event.getMap().getMatch().get());
 		}
 	}
-
 
 	@Override
 	public void onObjectiveClaimedEvent(IWVWObjectiveClaimedEvent event) {
 		LOGGER.debug(event);
 		if (event.getMap().getMatch().isPresent()) {
-			this.synchronizeWorldsOfMatch(event.getMap().getMatch().get());
+			this.synchronizeWorldsOfMatch(event.getTimestamp().getTime(), event.getMap().getMatch().get());
 		}
 	}
-	
-
 
 	@Override
 	public void onObjectiveUnclaimedEvent(IWVWObjectiveUnclaimedEvent event) {
 		LOGGER.debug(event);
 		if (event.getMap().getMatch().isPresent()) {
-			this.synchronizeWorldsOfMatch(event.getMap().getMatch().get());
-		}		
+			this.synchronizeWorldsOfMatch(event.getTimestamp().getTime(), event.getMap().getMatch().get());
+		}
 	}
 
 	@Override
 	public void onInitializedMatchForWrapper(IWVWInitializedMatchEvent event) {
 		LOGGER.debug(event);
-		this.synchronizeWorldsOfMatch(event.getMatch());		
+		this.synchronizeWorldsOfMatch(event.getTimestamp().getTime(), event.getMatch());
 	}
 
 	@Override
 	public void onChangedMapScoreEvent(IWVWMapScoresChangedEvent event) {
 		LOGGER.debug(event);
 		if (event.getMap().getMatch().isPresent()) {
-			this.synchronizeWorldsOfMatch(event.getMap().getMatch().get());
+			this.synchronizeWorldsOfMatch(event.getTimestamp().getTime(), event.getMap().getMatch().get());
 		}
 	}
 
-	private boolean synchronizeWorldsOfMatch(IWVWMatch match) {
+	private boolean synchronizeWorldsOfMatch(Date timestamp, IWVWMatch match) {
 		checkNotNull(match);
 		final IWVWMatchEntity entity = this.wvwMatchEntityDAO.findOrCreateWVWMatchEntityOf(match);
 
 		boolean persisted = false;
-		if (entity.synchronizeWithModel(match, true)) {
-			if (LOGGER.isTraceEnabled()) {
-				LOGGER.trace("Successfully synchronized "+IWVWMatchEntity.class.getSimpleName()+" with matchId="+entity.getOriginMatchId());
-			}
-			persisted = this.wvwMatchEntityDAO.save(entity);
-			if (LOGGER.isDebugEnabled()) {
-				if (persisted) {
-					if (LOGGER.isTraceEnabled()) {
-						LOGGER.trace("Successfully persisted "+IWVWMatchEntity.class.getSimpleName()+" with matchId="+entity.getOriginMatchId());
-					}
-				} else {
-					LOGGER.debug("Failed to persist synchronized "+IWVWMatchEntity.class.getSimpleName()+" with matchId="+entity.getOriginMatchId());
+		entity.synchronizeWithModel(timestamp, match, true);
+		if (LOGGER.isTraceEnabled()) {
+			LOGGER.trace("Successfully synchronized " + IWVWMatchEntity.class.getSimpleName() + " with matchId=" + entity.getOriginMatchId());
+		}
+		persisted = this.wvwMatchEntityDAO.save(entity);
+		if (LOGGER.isDebugEnabled()) {
+			if (persisted) {
+				if (LOGGER.isTraceEnabled()) {
+					LOGGER.trace("Successfully persisted " + IWVWMatchEntity.class.getSimpleName() + " with matchId=" + entity.getOriginMatchId());
 				}
 			}
-		} else if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Failed to persist synchronize "+IWVWMatchEntity.class.getSimpleName()+" with matchId="+entity.getOriginMatchId());
+		}
+		if (!persisted) {
+			LOGGER.error("Failed to persist synchronized " + IWVWMatchEntity.class.getSimpleName() + " with matchId=" + entity.getOriginMatchId());
 		}
 		return persisted;
 	}

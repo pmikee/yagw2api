@@ -11,16 +11,22 @@ import de.justi.yagw2api.analyzer.entities.impl.AnalyzerEntitiesModule;
 import de.justi.yagw2api.analyzer.entities.wvw.IWVWMatchEntityDAO;
 import de.justi.yagw2api.analyzer.entities.wvw.impl.AnalyzerWVWEntitiesModule;
 import de.justi.yagw2api.analyzer.impl.AnalyzerWVWModule;
+import de.justi.yagw2api.analyzer.utils.DerbyServerHelper;
 
 public enum YAGW2APIAnalyzer {
-	DEFAULT(Guice.createInjector(new AnalyzerWVWModule(),new AnalyzerEntitiesModule(), new AnalyzerWVWEntitiesModule(), new YAGWAPIAnalyzerPersistenceModule(false))), TEST(Guice.createInjector(
+	DEFAULT(Guice.createInjector(new AnalyzerWVWModule(), new AnalyzerEntitiesModule(), new AnalyzerWVWEntitiesModule(), new YAGWAPIAnalyzerPersistenceModule(false))), TEST(Guice.createInjector(
 			new AnalyzerWVWModule(), new AnalyzerEntitiesModule(), new AnalyzerWVWEntitiesModule(), new YAGWAPIAnalyzerPersistenceModule(true)));
+	
+	static {
+		// launch the db server
+		new DerbyServerHelper().start();
+	}
 
 	private static YAGW2APIAnalyzer instance = DEFAULT;
 
 	public static void changeYAGW2APIAnalyzerInstance(YAGW2APIAnalyzer toUse) {
 		checkNotNull(toUse);
-		if(toUse != YAGW2APIAnalyzer.instance) {
+		if (toUse != YAGW2APIAnalyzer.instance) {
 			YAGW2APIAnalyzer.instance = toUse;
 		}
 	}
@@ -32,10 +38,11 @@ public enum YAGW2APIAnalyzer {
 	public static IWVWAnalyzer getAnalyzer() {
 		return instance.analyzer;
 	}
+
 	public static IWorldEnityDAO getWorldEntityDAO() {
 		return instance.worldEntityDAO;
 	}
-	
+
 	public static IWVWMatchEntityDAO getWVWMatchEntityDAO() {
 		return instance.wvwMatchEntityDAO;
 	}
@@ -51,5 +58,6 @@ public enum YAGW2APIAnalyzer {
 		this.analyzer = this.injector.getInstance(IWVWAnalyzer.class);
 		this.worldEntityDAO = this.injector.getInstance(IWorldEnityDAO.class);
 		this.wvwMatchEntityDAO = this.injector.getInstance(IWVWMatchEntityDAO.class);
+		
 	}
 }

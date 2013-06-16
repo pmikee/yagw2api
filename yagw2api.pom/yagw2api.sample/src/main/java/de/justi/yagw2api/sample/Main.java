@@ -30,13 +30,12 @@ public class Main {
 		} catch (IllegalAccessException e) {
 			// handle exception
 		}
+		
 	}
 
 	/**
 	 * @param args
 	 */
-
-
 	public static void main(String[] args) {
 		YAGW2APICore.setCurrentLocale(Locale.getDefault());
 		final IWVWWrapper apiWrapper = YAGW2APICore.getWVWWrapper();

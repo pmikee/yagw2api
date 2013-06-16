@@ -36,8 +36,9 @@ public class WVWMatchEntityDAO implements IWVWMatchEntityDAO {
 			if (newTransaction)
 				tx.begin();
 			newEntity = new WVWMatchEntity();
-			checkState(newEntity.synchronizeWithModel(match, setupWorldReferences));
+			newEntity.synchronizeWithModel(new Date(), match, setupWorldReferences);
 			YAGW2APIAnalyzerPersistence.getDefaultEM().persist(newEntity);
+			YAGW2APIAnalyzerPersistence.getDefaultEM().flush();
 			if (newTransaction)
 				tx.commit();
 		} catch (Exception e) {
@@ -65,6 +66,7 @@ public class WVWMatchEntityDAO implements IWVWMatchEntityDAO {
 			if (newTransaction)
 				tx.begin();
 			YAGW2APIAnalyzerPersistence.getDefaultEM().persist(entity);
+			YAGW2APIAnalyzerPersistence.getDefaultEM().flush();
 			if (newTransaction)
 				tx.commit();
 			success = true;

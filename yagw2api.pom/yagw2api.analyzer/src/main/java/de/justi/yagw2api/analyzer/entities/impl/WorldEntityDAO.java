@@ -139,6 +139,7 @@ class WorldEntityDAO implements IWorldEnityDAO {
 			newEntity = new WorldEntity();
 			checkState(newEntity.synchronizeWithModel(world));
 			YAGW2APIAnalyzerPersistence.getDefaultEM().persist(newEntity);
+			YAGW2APIAnalyzerPersistence.getDefaultEM().flush();
 			if(newTransaction) tx.commit();
 		} catch (Exception e) {
 			LOGGER.error("Exception cought while creating new " + WorldEntity.class.getName()+" out of "+world, e);
@@ -184,6 +185,7 @@ class WorldEntityDAO implements IWorldEnityDAO {
 		try {
 			if(newTransaction) tx.begin();
 			YAGW2APIAnalyzerPersistence.getDefaultEM().persist(entity);
+			YAGW2APIAnalyzerPersistence.getDefaultEM().flush();
 			if(newTransaction) tx.commit();
 			success = true;
 		} catch (Exception e) {
