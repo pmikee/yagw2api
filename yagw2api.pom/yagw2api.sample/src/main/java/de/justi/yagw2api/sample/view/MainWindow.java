@@ -1,6 +1,7 @@
 package de.justi.yagw2api.sample.view;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -8,6 +9,7 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -20,6 +22,10 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
 
 import org.apache.log4j.Logger;
+import org.jdesktop.swingx.JXMapKit;
+import org.jdesktop.swingx.JXMapKit.DefaultProviders;
+import org.jdesktop.swingx.mapviewer.DefaultTileFactory;
+import org.jdesktop.swingx.mapviewer.TileFactoryInfo;
 import org.noos.xing.mydoggy.DockedTypeDescriptor;
 import org.noos.xing.mydoggy.PushAwayMode;
 import org.noos.xing.mydoggy.ToolWindow;
@@ -79,6 +85,18 @@ public class MainWindow extends AbstractWindow {
 	private final ToolWindow matchDetailsToolWindow;
 	private final MyDoggyToolWindowManager toolWindowManager;
 
+	private static final class GW2TileFactoryInfo extends TileFactoryInfo {
+		public GW2TileFactoryInfo() {
+			super(0, 6, 7, 256, false, true, "https://tiles.guildwars2.com/1/1", "", "", "");
+		}
+
+		public String getTileUrl(int x, int y, int zoom) {
+			String url = this.baseURL + "/" + zoom + "/" + x + "/" + y + ".jpg";
+			System.out.println("returning: " + url);
+			return url;
+		}
+	}
+
 	public MainWindow() {
 		super();
 		this.setTitle("Yet Another GW2 API - Sample Application");
@@ -102,11 +120,20 @@ public class MainWindow extends AbstractWindow {
 		toolWindowManagerDesc.setNumberingEnabled(false);
 		toolWindowManagerDesc.setPushAwayMode(PushAwayMode.MOST_RECENT);
 
+		JFrame frame = new JFrame("JXMapViewer with swingwaypoints");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		final JXMapKit mapkit = new JXMapKit();
+		mapkit.setDefaultProvider(DefaultProviders.Custom);
+		mapkit.setTileFactory(new DefaultTileFactory(new GW2TileFactoryInfo()));
+		frame.add(mapkit);
+		frame.pack();
+		frame.setVisible(true);
+
 		this.matchesTable = this.initMatchesTable(this.matchesTableModel);
 		this.matchesToolWindow = this.toolWindowManager.registerToolWindow("Matches Overview", "Matches Overview", null, new JScrollPane(this.matchesTable), ToolWindowAnchor.LEFT);
 		this.matchesToolWindow.setVisible(true);
 		final DockedTypeDescriptor matchesToolWindowDescriptor = (DockedTypeDescriptor) this.matchesToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
-		matchesToolWindowDescriptor.setIdVisibleOnTitleBar(false);		
+		matchesToolWindowDescriptor.setIdVisibleOnTitleBar(false);
 
 		this.allMapsTable = this.initMapTable(this.allMapsModel);
 		this.allMapsToolWindow = this.toolWindowManager.registerToolWindow("All Maps", "All Maps", null, new JScrollPane(this.allMapsTable), ToolWindowAnchor.RIGHT);
@@ -163,6 +190,10 @@ public class MainWindow extends AbstractWindow {
 
 	public void wireUp(IWVWWrapper wrapper) {
 		checkNotNull(wrapper);
+		checkState(this.matchesTableModel != null);
+		if (this.wrapper.isPresent()) {
+			this.wrapper.get().unregisterWVWMatchListener(this.matchesTableModel);
+		}
 		this.wrapper = Optional.of(wrapper);
 		wrapper.registerWVWMatchListener(this.matchesTableModel);
 	}

@@ -27,7 +27,6 @@ import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWInitializedMatchEvent
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMatchScoresChangedEvent;
 
 public class MatchesTableModel extends AbstractTableModel implements IWVWMatchListener {
-	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(MatchesTableModel.class);
 	private static final long serialVersionUID = 267092039654136315L;
 	private static final NumberFormat NF = new DecimalFormat("#,###,##0");
