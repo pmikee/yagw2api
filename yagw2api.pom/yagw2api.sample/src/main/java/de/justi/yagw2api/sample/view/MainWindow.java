@@ -92,47 +92,48 @@ public class MainWindow extends AbstractWindow {
 	private static final class GW2TileFactoryInfo extends TileFactoryInfo {
 		private static final int MAX_ZOOM = 6;
 		private static final int MIN_ZOOM = 0;
-		private static final int DELTA_X = 0;
-		private static final int DELTA_Y = 0;
+
 		public GW2TileFactoryInfo() {
-			super(MIN_ZOOM, MAX_ZOOM-1, MAX_ZOOM, 256, false, true, "https://tiles.guildwars2.com/2/1", "", "", "");
+			super(MIN_ZOOM, MAX_ZOOM - 1, MAX_ZOOM, 256, false, true, "https://tiles.guildwars2.com/2/3", "", "", "");
 		}
-		
-	    public int getTileSize(int zoom) {
-	    	return 256;
-	    }
-	    
-	    public int getDefaultZoomLevel() {
-	    	return MIN_ZOOM;
-	    }
-		
+
+		public int getTileSize(int zoom) {
+			return 256;
+		}
+
+		public int getDefaultZoomLevel() {
+			return MIN_ZOOM;
+		}
+
 		public String getTileUrl(int x, int y, int zoom) {
-			String url = this.baseURL + "/" + (MAX_ZOOM-zoom) + "/" + (x+DELTA_X) + "/" + (y+DELTA_Y) + ".jpg";
+			final int x2use = x;
+			final int y2use = y;
+			final int zoom2use = MAX_ZOOM - zoom;
+			final String url = this.baseURL + "/" + zoom2use + "/" + x2use + "/" + y2use + ".jpg";
 			return url;
 		}
-		
-		
-		public int getMapWidthInTilesAtZoom(int zoom) {
-			return DoubleMath.roundToInt(Math.pow(2, MAX_ZOOM-zoom), RoundingMode.FLOOR);
-		}
-		
-	    /**
-	     * 
-	     * @param zoom 
-	     * @return 
-	     */
-	    public double getLongitudeDegreeWidthInPixels(int zoom) {
-	        return (double)this.getTileSize(zoom) / 360d;
-	    }
 
-	    /**
-	     * 
-	     * @param zoom 
-	     * @return 
-	     */
-	    public double getLongitudeRadianWidthInPixels(int zoom) {
-	        return (double)this.getTileSize(zoom) / (2d*Math.PI);
-	    }
+		public int getMapWidthInTilesAtZoom(int zoom) {
+			return DoubleMath.roundToInt(Math.pow(2, MAX_ZOOM - zoom), RoundingMode.UP);
+		}
+
+		/**
+		 * 
+		 * @param zoom
+		 * @return
+		 */
+		public double getLongitudeDegreeWidthInPixels(int zoom) {
+			return (double) this.getTileSize(zoom) / 360d;
+		}
+
+		/**
+		 * 
+		 * @param zoom
+		 * @return
+		 */
+		public double getLongitudeRadianWidthInPixels(int zoom) {
+			return (double) this.getTileSize(zoom) / (2d * Math.PI);
+		}
 	}
 
 	public MainWindow() {
@@ -155,34 +156,26 @@ public class MainWindow extends AbstractWindow {
 		final ToolWindowManagerDescriptor toolWindowManagerDesc = this.toolWindowManager.getToolWindowManagerDescriptor();
 		toolWindowManagerDesc.setNumberingEnabled(false);
 		toolWindowManagerDesc.setPushAwayMode(PushAwayMode.MOST_RECENT);
-		
+
 		final JXMapKit mapkit = new JXMapKit();
 		mapkit.setDefaultProvider(DefaultProviders.Custom);
 		mapkit.setAddressLocationShown(false);
 		final TileFactory factory = new DefaultTileFactory(new GW2TileFactoryInfo());
 		mapkit.setTileFactory(factory);
 		mapkit.setMiniMapVisible(false);
-		mapkit.setPreferredSize(new Dimension(640,480));
-		
+		mapkit.setPreferredSize(new Dimension(640, 480));
+
 		mapkit.getMainMap().setDrawTileBorders(true);
 		mapkit.getMainMap().setRestrictOutsidePanning(true);
 		mapkit.getMainMap().setHorizontalWrapped(false);
 		mapkit.getMainMap().setRecenterOnClickEnabled(true);
-		
+
 		final JPanel test = new JPanel();
 		test.add(mapkit);
-		
+
 		this.toolWindowManager.resetMainContent();
 		final ContentManager contentManager = this.toolWindowManager.getContentManager();
-		contentManager.addContent("dasdf13",
-		                          "sdf2fds",
-		                          null,
-		                          mapkit,
-		                          "Worldmap"
-		);
-//		frame.add(mapkit);
-//		frame.pack();
-//		frame.setVisible(true);
+		contentManager.addContent("Worldmap", "Worldmap", null, mapkit, "Worldmap");
 
 		this.matchesTable = this.initMatchesTable(this.matchesTableModel);
 		this.matchesToolWindow = this.toolWindowManager.registerToolWindow("Matches Overview", "Matches Overview", null, new JScrollPane(this.matchesTable), ToolWindowAnchor.LEFT);
