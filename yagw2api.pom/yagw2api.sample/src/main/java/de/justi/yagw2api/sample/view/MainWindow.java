@@ -90,6 +90,8 @@ public class MainWindow extends AbstractWindow {
 	private static final class GW2TileFactoryInfo extends TileFactoryInfo {
 		private static final int MAX_ZOOM = 6;
 		private static final int MIN_ZOOM = 0;
+		private static final int DELTA_X = 0;
+		private static final int DELTA_Y = 0;
 		public GW2TileFactoryInfo() {
 			super(MIN_ZOOM, MAX_ZOOM-1, MAX_ZOOM, 256, false, true, "https://tiles.guildwars2.com/2/1", "", "", "");
 		}
@@ -103,13 +105,13 @@ public class MainWindow extends AbstractWindow {
 	    }
 		
 		public String getTileUrl(int x, int y, int zoom) {
-			String url = this.baseURL + "/" + (MAX_ZOOM-zoom) + "/" + x + "/" + y + ".jpg";
+			String url = this.baseURL + "/" + (MAX_ZOOM-zoom) + "/" + (x-DELTA_X) + "/" + (y-DELTA_Y) + ".jpg";
 			return url;
 		}
 		
 		
 		public int getMapWidthInTilesAtZoom(int zoom) {
-			return DoubleMath.roundToInt(Math.pow(2, MAX_ZOOM-zoom), RoundingMode.FLOOR)-1;
+			return DoubleMath.roundToInt(Math.pow(2, MAX_ZOOM-zoom), RoundingMode.FLOOR);
 		}
 		
 	    /**
@@ -161,17 +163,13 @@ public class MainWindow extends AbstractWindow {
 		mapkit.setAddressLocationShown(false);
 		final TileFactory factory = new DefaultTileFactory(new GW2TileFactoryInfo());
 		mapkit.setTileFactory(factory);
+		mapkit.setMiniMapVisible(false);
 		mapkit.setPreferredSize(new Dimension(640,480));
 		
 		mapkit.getMainMap().setDrawTileBorders(true);
 		mapkit.getMainMap().setRestrictOutsidePanning(true);
 		mapkit.getMainMap().setHorizontalWrapped(false);
 		mapkit.getMainMap().setRecenterOnClickEnabled(true);
-		
-
-		mapkit.getMiniMap().setDrawTileBorders(true);
-		mapkit.getMiniMap().setRecenterOnClickEnabled(true);
-		mapkit.getMiniMap().setZoom(7);
 		
 		ToolWindow test = this.toolWindowManager.registerToolWindow("Worldmap", "Worldmap", null, mapkit, ToolWindowAnchor.TOP);
 		test.setVisible(true);
