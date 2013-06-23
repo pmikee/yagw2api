@@ -6,10 +6,10 @@ import static com.google.common.base.Preconditions.checkState;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -25,6 +25,7 @@ import org.apache.log4j.Logger;
 import org.jdesktop.swingx.JXMapKit;
 import org.jdesktop.swingx.JXMapKit.DefaultProviders;
 import org.jdesktop.swingx.mapviewer.DefaultTileFactory;
+import org.jdesktop.swingx.mapviewer.TileFactory;
 import org.jdesktop.swingx.mapviewer.TileFactoryInfo;
 import org.noos.xing.mydoggy.DockedTypeDescriptor;
 import org.noos.xing.mydoggy.PushAwayMode;
@@ -35,6 +36,7 @@ import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 
 import com.google.common.base.Optional;
+import com.google.common.math.DoubleMath;
 
 import de.justi.yagw2api.core.wrapper.IWVWWrapper;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
@@ -86,15 +88,47 @@ public class MainWindow extends AbstractWindow {
 	private final MyDoggyToolWindowManager toolWindowManager;
 
 	private static final class GW2TileFactoryInfo extends TileFactoryInfo {
+		private static final int MAX_ZOOM = 6;
+		private static final int MIN_ZOOM = 0;
 		public GW2TileFactoryInfo() {
-			super(0, 6, 7, 256, false, true, "https://tiles.guildwars2.com/1/1", "", "", "");
+			super(MIN_ZOOM, MAX_ZOOM-1, MAX_ZOOM, 256, false, true, "https://tiles.guildwars2.com/2/1", "", "", "");
 		}
-
+		
+	    public int getTileSize(int zoom) {
+	    	return 256;
+	    }
+	    
+	    public int getDefaultZoomLevel() {
+	    	return MIN_ZOOM;
+	    }
+		
 		public String getTileUrl(int x, int y, int zoom) {
-			String url = this.baseURL + "/" + zoom + "/" + x + "/" + y + ".jpg";
-			System.out.println("returning: " + url);
+			String url = this.baseURL + "/" + (MAX_ZOOM-zoom) + "/" + x + "/" + y + ".jpg";
 			return url;
 		}
+		
+		
+		public int getMapWidthInTilesAtZoom(int zoom) {
+			return DoubleMath.roundToInt(Math.pow(2, MAX_ZOOM-zoom), RoundingMode.FLOOR)-1;
+		}
+		
+	    /**
+	     * 
+	     * @param zoom 
+	     * @return 
+	     */
+	    public double getLongitudeDegreeWidthInPixels(int zoom) {
+	        return (double)this.getTileSize(zoom) / 360d;
+	    }
+
+	    /**
+	     * 
+	     * @param zoom 
+	     * @return 
+	     */
+	    public double getLongitudeRadianWidthInPixels(int zoom) {
+	        return (double)this.getTileSize(zoom) / (2d*Math.PI);
+	    }
 	}
 
 	public MainWindow() {
@@ -120,14 +154,30 @@ public class MainWindow extends AbstractWindow {
 		toolWindowManagerDesc.setNumberingEnabled(false);
 		toolWindowManagerDesc.setPushAwayMode(PushAwayMode.MOST_RECENT);
 
-		JFrame frame = new JFrame("JXMapViewer with swingwaypoints");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		JFrame frame = new JFrame("JXMapViewer with swingwaypoints");
+//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		final JXMapKit mapkit = new JXMapKit();
 		mapkit.setDefaultProvider(DefaultProviders.Custom);
-		mapkit.setTileFactory(new DefaultTileFactory(new GW2TileFactoryInfo()));
-		frame.add(mapkit);
-		frame.pack();
-		frame.setVisible(true);
+		mapkit.setAddressLocationShown(false);
+		final TileFactory factory = new DefaultTileFactory(new GW2TileFactoryInfo());
+		mapkit.setTileFactory(factory);
+		mapkit.setPreferredSize(new Dimension(640,480));
+		
+		mapkit.getMainMap().setDrawTileBorders(true);
+		mapkit.getMainMap().setRestrictOutsidePanning(true);
+		mapkit.getMainMap().setHorizontalWrapped(false);
+		mapkit.getMainMap().setRecenterOnClickEnabled(true);
+		
+
+		mapkit.getMiniMap().setDrawTileBorders(true);
+		mapkit.getMiniMap().setRecenterOnClickEnabled(true);
+		mapkit.getMiniMap().setZoom(7);
+		
+		ToolWindow test = this.toolWindowManager.registerToolWindow("Worldmap", "Worldmap", null, mapkit, ToolWindowAnchor.TOP);
+		test.setVisible(true);
+//		frame.add(mapkit);
+//		frame.pack();
+//		frame.setVisible(true);
 
 		this.matchesTable = this.initMatchesTable(this.matchesTableModel);
 		this.matchesToolWindow = this.toolWindowManager.registerToolWindow("Matches Overview", "Matches Overview", null, new JScrollPane(this.matchesTable), ToolWindowAnchor.LEFT);
