@@ -10,6 +10,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -27,6 +28,7 @@ import org.jdesktop.swingx.JXMapKit.DefaultProviders;
 import org.jdesktop.swingx.mapviewer.DefaultTileFactory;
 import org.jdesktop.swingx.mapviewer.TileFactory;
 import org.jdesktop.swingx.mapviewer.TileFactoryInfo;
+import org.noos.xing.mydoggy.ContentManager;
 import org.noos.xing.mydoggy.DockedTypeDescriptor;
 import org.noos.xing.mydoggy.PushAwayMode;
 import org.noos.xing.mydoggy.ToolWindow;
@@ -105,7 +107,7 @@ public class MainWindow extends AbstractWindow {
 	    }
 		
 		public String getTileUrl(int x, int y, int zoom) {
-			String url = this.baseURL + "/" + (MAX_ZOOM-zoom) + "/" + (x-DELTA_X) + "/" + (y-DELTA_Y) + ".jpg";
+			String url = this.baseURL + "/" + (MAX_ZOOM-zoom) + "/" + (x+DELTA_X) + "/" + (y+DELTA_Y) + ".jpg";
 			return url;
 		}
 		
@@ -149,15 +151,11 @@ public class MainWindow extends AbstractWindow {
 		this.matchDetailsTableModel = new MatchDetailsTableModel();
 
 		this.toolWindowManager = new MyDoggyToolWindowManager();
-		this.toolWindowManager.setDockableMainContentMode(true);
-		this.toolWindowManager.setBarsTemporarilyVisible(true);
 		this.getContentPanel().add(this.toolWindowManager, BorderLayout.CENTER);
 		final ToolWindowManagerDescriptor toolWindowManagerDesc = this.toolWindowManager.getToolWindowManagerDescriptor();
 		toolWindowManagerDesc.setNumberingEnabled(false);
 		toolWindowManagerDesc.setPushAwayMode(PushAwayMode.MOST_RECENT);
-
-//		JFrame frame = new JFrame("JXMapViewer with swingwaypoints");
-//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
 		final JXMapKit mapkit = new JXMapKit();
 		mapkit.setDefaultProvider(DefaultProviders.Custom);
 		mapkit.setAddressLocationShown(false);
@@ -171,8 +169,17 @@ public class MainWindow extends AbstractWindow {
 		mapkit.getMainMap().setHorizontalWrapped(false);
 		mapkit.getMainMap().setRecenterOnClickEnabled(true);
 		
-		ToolWindow test = this.toolWindowManager.registerToolWindow("Worldmap", "Worldmap", null, mapkit, ToolWindowAnchor.TOP);
-		test.setVisible(true);
+		final JPanel test = new JPanel();
+		test.add(mapkit);
+		
+		this.toolWindowManager.resetMainContent();
+		final ContentManager contentManager = this.toolWindowManager.getContentManager();
+		contentManager.addContent("dasdf13",
+		                          "sdf2fds",
+		                          null,
+		                          mapkit,
+		                          "Worldmap"
+		);
 //		frame.add(mapkit);
 //		frame.pack();
 //		frame.setVisible(true);
