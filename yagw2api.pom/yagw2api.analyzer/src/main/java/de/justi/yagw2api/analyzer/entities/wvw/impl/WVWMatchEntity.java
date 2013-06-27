@@ -36,7 +36,7 @@ import de.justi.yagw2api.analyzer.entities.wvw.IWVWScoresEmbeddable;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
 
 @Entity(name = "wvw_match")
-public class WVWMatchEntity extends AbstractEntity implements IWVWMatchEntity {
+public final class WVWMatchEntity extends AbstractEntity implements IWVWMatchEntity {
 	private static final Logger LOGGER = Logger.getLogger(WVWMatchEntity.class);
 
 	@Column(name = "match_id", nullable = false)
@@ -145,14 +145,11 @@ public class WVWMatchEntity extends AbstractEntity implements IWVWMatchEntity {
 		this.endTimestamp = model.getEndTimestamp().getTime();
 
 		final Optional<IWVWScoresEmbeddable> latestScores = this.getLatestScores();
-		if(LOGGER.isDebugEnabled() && latestScores.isPresent()) {
-			LOGGER.debug("Latest score="+latestScores.get());
+		if (LOGGER.isDebugEnabled() && latestScores.isPresent()) {
+			LOGGER.debug("Latest score=" + latestScores.get());
 		}
-		if (!latestScores.isPresent() || 
-			 latestScores.get().getBlueScore() != model.getScores().getBlueScore() || 
-			 latestScores.get().getGreenScore() != model.getScores().getGreenScore() || 
-			 latestScores.get().getRedScore() != model.getScores().getRedScore()) 
-		{
+		if (!latestScores.isPresent() || latestScores.get().getBlueScore() != model.getScores().getBlueScore() || latestScores.get().getGreenScore() != model.getScores().getGreenScore()
+				|| latestScores.get().getRedScore() != model.getScores().getRedScore()) {
 			// TODO make use of factory to create WVWScoresEmbeddable
 			this.addScores(timestamp, model.getScores().getRedScore(), model.getScores().getGreenScore(), model.getScores().getBlueScore());
 		}

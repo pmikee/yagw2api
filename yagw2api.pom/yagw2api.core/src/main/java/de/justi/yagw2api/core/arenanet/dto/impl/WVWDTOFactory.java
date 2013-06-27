@@ -18,7 +18,7 @@ import de.justi.yagw2api.core.arenanet.dto.IWVWMatchesDTO;
 import de.justi.yagw2api.core.arenanet.dto.IWVWObjectiveNameDTO;
 import de.justi.yagw2api.core.arenanet.dto.IWorldNameDTO;
 
-class WVWDTOFactory implements IWVWDTOFactory {
+final class WVWDTOFactory implements IWVWDTOFactory {
 	private static final Logger LOGGER = Logger.getLogger(WVWDTOFactory.class);
 
 	public WVWDTOFactory() {

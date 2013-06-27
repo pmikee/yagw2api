@@ -3,7 +3,7 @@ package de.justi.yagw2api.analyzer.utils;
 import org.apache.derby.drda.NetworkServerControl;
 import org.apache.log4j.Logger;
 
-public class DerbyServerHelper extends Thread implements Runnable{
+public final class DerbyServerHelper extends Thread implements Runnable{
 	private static final Logger LOGGER = Logger.getLogger(DerbyServerHelper.class);
 	public DerbyServerHelper() {
 		

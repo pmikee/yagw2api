@@ -16,7 +16,7 @@ import de.justi.yagw2api.core.wrapper.model.IModelFactory;
 import de.justi.yagw2api.core.wrapper.model.IWorld;
 import de.justi.yagw2api.core.wrapper.model.IWorld.IWorldBuilder;
 
-class ModelFactory implements IModelFactory {
+final class ModelFactory implements IModelFactory {
 	private static final Logger LOGGER = Logger.getLogger(ModelFactory.class);
 	private final Map<String, IGuild> guildsMappedById = new HashMap<String, IGuild>();
 	private final Map<Integer, IWorld> worldsMappedById = new HashMap<Integer, IWorld>();

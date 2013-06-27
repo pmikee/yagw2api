@@ -14,7 +14,7 @@ import de.justi.yagw2api.core.wrapper.model.IModelFactory;
 import de.justi.yagw2api.core.wrapper.model.IWorld;
 import de.justi.yagw2api.core.wrapper.model.types.WorldLocationType;
 
-public class WVWWorldEntityDAOTest extends AbstractAnalyzerTest {
+public final class WVWWorldEntityDAOTest extends AbstractAnalyzerTest {
 
 	private IModelFactory modelFactory = YAGW2APICore.getInjector().getInstance(IModelFactory.class);
 

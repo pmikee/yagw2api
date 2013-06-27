@@ -8,7 +8,7 @@ import org.eclipse.persistence.mappings.DatabaseMapping;
 import org.eclipse.persistence.mappings.converters.Converter;
 import org.eclipse.persistence.sessions.Session;
 
-public class LocaleConverter implements Converter {
+public final class LocaleConverter implements Converter {
 	private static final long serialVersionUID = 6076012675486780488L;
 
 	@Override

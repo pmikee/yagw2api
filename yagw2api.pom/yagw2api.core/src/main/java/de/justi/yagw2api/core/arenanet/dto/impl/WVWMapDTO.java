@@ -10,7 +10,7 @@ import com.google.gson.annotations.Since;
 import de.justi.yagw2api.core.arenanet.dto.IWVWMapDTO;
 import de.justi.yagw2api.core.arenanet.dto.IWVWObjectiveDTO;
 
-class WVWMapDTO implements IWVWMapDTO {
+final class WVWMapDTO implements IWVWMapDTO {
 
 	@Since(1.0)
 	@SerializedName("scores")

@@ -27,6 +27,7 @@ import com.google.common.eventbus.Subscribe;
 import de.justi.yagw2api.core.AbstractHasChannel;
 import de.justi.yagw2api.core.IEvent;
 import de.justi.yagw2api.core.YAGW2APICore;
+import de.justi.yagw2api.core.arenanet.dto.DTOConstants;
 import de.justi.yagw2api.core.arenanet.dto.IWVWMapDTO;
 import de.justi.yagw2api.core.arenanet.dto.IWVWMatchDTO;
 import de.justi.yagw2api.core.arenanet.dto.IWVWMatchDetailsDTO;
@@ -41,7 +42,7 @@ import de.justi.yagw2api.core.wrapper.model.wvw.IWVWModelFactory;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWObjective;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWScores;
 
-class WVWMatch extends AbstractHasChannel implements IWVWMatch {
+final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 	private static final Logger LOGGER = Logger.getLogger(WVWMatch.class);
 	private static final IWVWModelFactory WVW_MODEL_FACTORY = YAGW2APICore.getInjector().getInstance(IWVWModelFactory.class);
 	private static final IModelFactory MODEL_FACTORY = YAGW2APICore.getInjector().getInstance(IModelFactory.class);
@@ -474,11 +475,11 @@ class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 	public Optional<IWorld> getWorldByDTOOwnerString(String dtoOwnerString) {
 		checkNotNull(dtoOwnerString);
 		switch (dtoOwnerString.toUpperCase()) {
-			case IWVWObjectiveDTO.OWNER_RED_STRING:
+			case DTOConstants.OWNER_RED_STRING:
 				return Optional.of(this.redWorld);
-			case IWVWObjectiveDTO.OWNER_GREEN_STRING:
+			case DTOConstants.OWNER_GREEN_STRING:
 				return Optional.of(this.greenWorld);
-			case IWVWObjectiveDTO.OWNER_BLUE_STRING:
+			case DTOConstants.OWNER_BLUE_STRING:
 				return Optional.of(this.blueWorld);
 			default:
 				LOGGER.error("Invalid dtoOwnerString: " + dtoOwnerString);

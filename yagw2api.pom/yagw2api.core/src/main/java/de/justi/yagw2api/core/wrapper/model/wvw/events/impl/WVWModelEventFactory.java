@@ -19,7 +19,7 @@ import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveClaimedEvent
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveEndOfBuffEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveUnclaimedEvent;
 
-class WVWModelEventFactory implements IWVWModelEventFactory {
+final class WVWModelEventFactory implements IWVWModelEventFactory {
 
 	@Override
 	public IWVWObjectiveCaptureEvent newObjectiveCapturedEvent(IWVWObjective source, IWorld newOwner, Optional<IWorld> previousOwner) {

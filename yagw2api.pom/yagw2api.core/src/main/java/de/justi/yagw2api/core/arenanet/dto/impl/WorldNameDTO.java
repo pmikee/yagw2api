@@ -12,7 +12,7 @@ import com.google.gson.annotations.Since;
 
 import de.justi.yagw2api.core.arenanet.dto.IWorldNameDTO;
 
-class WorldNameDTO implements IWorldNameDTO{
+final class WorldNameDTO implements IWorldNameDTO{
 	private static final transient Pattern PATTERN = Pattern.compile("([^\\[]*)(("+Pattern.quote("[")+"[A-Z]*"+Pattern.quote("]")+")?)");
 	@Since(1.0)
 	@SerializedName("id")

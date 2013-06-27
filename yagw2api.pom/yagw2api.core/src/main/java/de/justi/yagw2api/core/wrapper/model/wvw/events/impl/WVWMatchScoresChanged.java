@@ -8,7 +8,7 @@ import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWScores;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMatchScoresChangedEvent;
 
-class WVWMatchScoresChanged extends AbstractWVWScoresChangedEvent implements IWVWMatchScoresChangedEvent {
+final class WVWMatchScoresChanged extends AbstractWVWScoresChangedEvent implements IWVWMatchScoresChangedEvent {
 	private final IWVWMatch match;
 
 	public WVWMatchScoresChanged(IWVWScores scores,int deltaRed, int deltaGreen, int deltaBlue, IWVWMatch match) {

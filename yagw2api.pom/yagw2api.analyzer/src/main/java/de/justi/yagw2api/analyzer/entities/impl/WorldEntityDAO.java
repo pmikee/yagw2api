@@ -23,7 +23,7 @@ import de.justi.yagw2api.analyzer.entities.IWorldEntity;
 import de.justi.yagw2api.analyzer.entities.YAGW2APIAnalyzerPersistence;
 import de.justi.yagw2api.core.wrapper.model.IWorld;
 
-class WorldEntityDAO implements IWorldEnityDAO {
+final class WorldEntityDAO implements IWorldEnityDAO {
 	private static final Logger LOGGER = Logger.getLogger(WorldEntityDAO.class);
 
 	@Override

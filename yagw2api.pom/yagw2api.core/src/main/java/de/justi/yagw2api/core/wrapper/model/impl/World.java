@@ -18,7 +18,7 @@ import de.justi.yagw2api.core.wrapper.model.types.IWorldLocationType;
 import de.justi.yagw2api.core.wrapper.model.types.WorldLocationType;
 
 
-class World implements IWorld {
+final class World implements IWorld {
 	private static final IModelFactory MODEL_FACTORY = YAGW2APICore.getInjector().getInstance(IModelFactory.class);
 	static final class WorldBuilder implements IWorld.IWorldBuilder{
 		private Optional<Integer> id = Optional.absent();

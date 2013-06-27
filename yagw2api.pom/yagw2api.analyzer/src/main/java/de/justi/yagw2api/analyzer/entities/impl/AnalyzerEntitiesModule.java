@@ -4,7 +4,7 @@ import com.google.inject.AbstractModule;
 
 import de.justi.yagw2api.analyzer.entities.IWorldEnityDAO;
 
-public class AnalyzerEntitiesModule extends AbstractModule {
+public final class AnalyzerEntitiesModule extends AbstractModule {
 
 	@Override
 	protected void configure() {

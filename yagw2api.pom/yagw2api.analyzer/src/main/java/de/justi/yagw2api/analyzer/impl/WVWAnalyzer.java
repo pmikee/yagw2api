@@ -23,7 +23,7 @@ import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveClaimedEvent
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveEndOfBuffEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveUnclaimedEvent;
 
-class WVWAnalyzer implements IWVWAnalyzer {
+final class WVWAnalyzer implements IWVWAnalyzer {
 	private static final Logger LOGGER = Logger.getLogger(WVWAnalyzer.class);
 	@Inject
 	private IWorldEnityDAO worldEntityDAO;
@@ -32,13 +32,17 @@ class WVWAnalyzer implements IWVWAnalyzer {
 
 	@Override
 	public void onMatchScoreChangedEvent(IWVWMatchScoresChangedEvent event) {
-		LOGGER.debug(event);
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug(event);
+		}
 		this.synchronizeWorldsOfMatch(event.getTimestamp().getTime(), event.getMatch());
 	}
 
 	@Override
 	public void onObjectiveCapturedEvent(IWVWObjectiveCaptureEvent event) {
-		LOGGER.debug(event);
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug(event);
+		}
 		if (event.getMap().getMatch().isPresent()) {
 			this.synchronizeWorldsOfMatch(event.getTimestamp().getTime(), event.getMap().getMatch().get());
 		}
@@ -46,7 +50,9 @@ class WVWAnalyzer implements IWVWAnalyzer {
 
 	@Override
 	public void onObjectiveEndOfBuffEvent(IWVWObjectiveEndOfBuffEvent event) {
-		LOGGER.debug(event);
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug(event);
+		}
 		if (event.getMap().getMatch().isPresent()) {
 			this.synchronizeWorldsOfMatch(event.getTimestamp().getTime(), event.getMap().getMatch().get());
 		}
@@ -54,7 +60,9 @@ class WVWAnalyzer implements IWVWAnalyzer {
 
 	@Override
 	public void onObjectiveClaimedEvent(IWVWObjectiveClaimedEvent event) {
-		LOGGER.debug(event);
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug(event);
+		}
 		if (event.getMap().getMatch().isPresent()) {
 			this.synchronizeWorldsOfMatch(event.getTimestamp().getTime(), event.getMap().getMatch().get());
 		}
@@ -62,7 +70,9 @@ class WVWAnalyzer implements IWVWAnalyzer {
 
 	@Override
 	public void onObjectiveUnclaimedEvent(IWVWObjectiveUnclaimedEvent event) {
-		LOGGER.debug(event);
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug(event);
+		}
 		if (event.getMap().getMatch().isPresent()) {
 			this.synchronizeWorldsOfMatch(event.getTimestamp().getTime(), event.getMap().getMatch().get());
 		}
@@ -70,13 +80,17 @@ class WVWAnalyzer implements IWVWAnalyzer {
 
 	@Override
 	public void onInitializedMatchForWrapper(IWVWInitializedMatchEvent event) {
-		LOGGER.debug(event);
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug(event);
+		}
 		this.synchronizeWorldsOfMatch(event.getTimestamp().getTime(), event.getMatch());
 	}
 
 	@Override
 	public void onChangedMapScoreEvent(IWVWMapScoresChangedEvent event) {
-		LOGGER.debug(event);
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug(event);
+		}
 		if (event.getMap().getMatch().isPresent()) {
 			this.synchronizeWorldsOfMatch(event.getTimestamp().getTime(), event.getMap().getMatch().get());
 		}

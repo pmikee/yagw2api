@@ -24,18 +24,18 @@ import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveClaimedEvent
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveEndOfBuffEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveUnclaimedEvent;
 
-public class MatchDetailsTableModel extends AbstractTableModel implements IWVWMatchListener, IWVWMapListener {
+public final class MatchDetailsTableModel extends AbstractTableModel implements IWVWMatchListener, IWVWMapListener {
 	private static final Logger LOGGER = Logger.getLogger(MatchDetailsTableModel.class);
 	private static NumberFormat NF = new DecimalFormat("###,###,##0", DecimalFormatSymbols.getInstance(YAGW2APICore.getCurrentLocale()));
 	static final long serialVersionUID = -8573658641105845856L;
 
 	private IWVWMatch match;
 
-	public void wireUp(IWVWWrapper wrapper, IWVWMatch match, IWVWMap...maps) {
+	public void wireUp(IWVWWrapper wrapper, IWVWMatch match, IWVWMap... maps) {
 		checkNotNull(wrapper);
 		checkNotNull(match);
 		checkNotNull(maps);
-		LOGGER.trace("Going to wire "+this+" up using wrapper="+wrapper+" match="+match.getId()+" maps="+maps.length);
+		LOGGER.trace("Going to wire " + this + " up using wrapper=" + wrapper + " match=" + match.getId() + " maps=" + maps.length);
 		this.match = match;
 		wrapper.unregisterWVWMatchListener(this);
 		wrapper.unregisterWVWMapListener(this);
@@ -166,21 +166,21 @@ public class MatchDetailsTableModel extends AbstractTableModel implements IWVWMa
 
 	@Override
 	public void onInitializedMatchForWrapper(IWVWInitializedMatchEvent event) {
-		// nothing to do		
+		// nothing to do
 	}
 
 	@Override
 	public void onChangedMapScoreEvent(IWVWMapScoresChangedEvent event) {
-		if(this.match.getCenterMap().equals(event.getMap())) {
+		if (this.match.getCenterMap().equals(event.getMap())) {
 			this.fireTableRowsUpdated(0, 0);
 			this.fireTableRowsUpdated(4, 4);
-		}else if(this.match.getGreenMap().equals(event.getMap())){
+		} else if (this.match.getGreenMap().equals(event.getMap())) {
 			this.fireTableRowsUpdated(1, 1);
 			this.fireTableRowsUpdated(4, 4);
-		}else if(this.match.getBlueMap().equals(event.getMap())){
+		} else if (this.match.getBlueMap().equals(event.getMap())) {
 			this.fireTableRowsUpdated(2, 2);
 			this.fireTableRowsUpdated(4, 4);
-		}else if(this.match.getRedMap().equals(event.getMap())){
+		} else if (this.match.getRedMap().equals(event.getMap())) {
 			this.fireTableRowsUpdated(3, 3);
 			this.fireTableRowsUpdated(4, 4);
 		}
@@ -188,16 +188,16 @@ public class MatchDetailsTableModel extends AbstractTableModel implements IWVWMa
 
 	@Override
 	public void onObjectiveCapturedEvent(IWVWObjectiveCaptureEvent event) {
-		if(this.match.getCenterMap().equals(event.getMap())) {
+		if (this.match.getCenterMap().equals(event.getMap())) {
 			this.fireTableRowsUpdated(0, 0);
 			this.fireTableRowsUpdated(4, 4);
-		}else if(this.match.getGreenMap().equals(event.getMap())){
+		} else if (this.match.getGreenMap().equals(event.getMap())) {
 			this.fireTableRowsUpdated(1, 1);
 			this.fireTableRowsUpdated(4, 4);
-		}else if(this.match.getBlueMap().equals(event.getMap())){
+		} else if (this.match.getBlueMap().equals(event.getMap())) {
 			this.fireTableRowsUpdated(2, 2);
 			this.fireTableRowsUpdated(4, 4);
-		}else if(this.match.getRedMap().equals(event.getMap())){
+		} else if (this.match.getRedMap().equals(event.getMap())) {
 			this.fireTableRowsUpdated(3, 3);
 			this.fireTableRowsUpdated(4, 4);
 		}

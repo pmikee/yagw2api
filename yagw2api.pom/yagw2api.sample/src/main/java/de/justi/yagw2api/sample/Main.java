@@ -14,7 +14,7 @@ import de.justi.yagw2api.core.YAGW2APICore;
 import de.justi.yagw2api.core.wrapper.IWVWWrapper;
 import de.justi.yagw2api.sample.view.MainWindow;
 
-public class Main {
+public final class Main {
 	private static final Logger LOGGER = Logger.getLogger(Main.class);
 
 	static {
@@ -30,7 +30,7 @@ public class Main {
 		} catch (IllegalAccessException e) {
 			// handle exception
 		}
-		
+
 	}
 
 	/**
@@ -41,14 +41,14 @@ public class Main {
 		final IWVWWrapper apiWrapper = YAGW2APICore.getWVWWrapper();
 		final IWVWAnalyzer analyzer = YAGW2APIAnalyzer.getAnalyzer();
 		YAGW2APIAnalyzerPersistence.getDefaultEM(); // startup db connection
-		final MainWindow mainWindow = new MainWindow();		
+		final MainWindow mainWindow = new MainWindow();
 		try {
 			mainWindow.setVisible(true);
-						
+
 			// start the api wrapper
 			apiWrapper.start();
 			mainWindow.wireUp(apiWrapper);
-			
+
 			// wire everything up
 			apiWrapper.registerWVWMapListener(analyzer);
 			apiWrapper.registerWVWMatchListener(analyzer);

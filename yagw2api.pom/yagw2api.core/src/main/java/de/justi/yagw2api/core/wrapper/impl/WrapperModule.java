@@ -5,7 +5,7 @@ import com.google.inject.AbstractModule;
 
 import de.justi.yagw2api.core.wrapper.IWVWWrapper;
 
-public class WrapperModule extends AbstractModule {
+public final class WrapperModule extends AbstractModule {
 
 	@Override
 	protected void configure() {

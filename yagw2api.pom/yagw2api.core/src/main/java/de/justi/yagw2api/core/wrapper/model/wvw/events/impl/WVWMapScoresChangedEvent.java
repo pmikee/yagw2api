@@ -11,7 +11,7 @@ import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWScores;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMapScoresChangedEvent;
 
-class WVWMapScoresChangedEvent extends AbstractWVWScoresChangedEvent implements IWVWMapScoresChangedEvent {
+final class WVWMapScoresChangedEvent extends AbstractWVWScoresChangedEvent implements IWVWMapScoresChangedEvent {
 	private final IWVWMap map;
 	
 	public WVWMapScoresChangedEvent(IWVWScores scores,int deltaRed, int deltaGreen, int deltaBlue, IWVWMap map) {

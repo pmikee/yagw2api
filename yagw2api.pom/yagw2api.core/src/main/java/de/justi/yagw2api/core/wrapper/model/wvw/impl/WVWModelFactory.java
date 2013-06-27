@@ -7,7 +7,7 @@ import de.justi.yagw2api.core.wrapper.model.wvw.IWVWModelFactory;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWObjective;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWScores;
 
-class WVWModelFactory implements IWVWModelFactory {
+final class WVWModelFactory implements IWVWModelFactory {
 
 	@Override
 	public IWVWMap.IWVWMapBuilder newMapBuilder() {

@@ -17,7 +17,7 @@ import de.justi.yagw2api.core.wrapper.model.wvw.IWVWObjective;
 import de.justi.yagw2api.sample.model.MapObjectivesTableModel;
 import de.justi.yagw2api.sample.view.MainWindow;
 
-public class ObjectiveTableCellRenderer extends DefaultTableCellRenderer {
+public final class ObjectiveTableCellRenderer extends DefaultTableCellRenderer {
 	private static final long serialVersionUID = -8506469778783597659L;
 
 	@Override
@@ -34,11 +34,11 @@ public class ObjectiveTableCellRenderer extends DefaultTableCellRenderer {
 			final Optional<IWVWMatch> match = map.get().getMatch();
 			if (match.isPresent()) {
 				if (match.get().getBlueWorld().equals(owner.get())) {
-					c.setBackground(isSelected? MainWindow.BLUE_WORLD_FG : MainWindow.BLUE_WORLD_BG);
+					c.setBackground(isSelected ? MainWindow.BLUE_WORLD_FG : MainWindow.BLUE_WORLD_BG);
 				} else if (match.get().getGreenWorld().equals(owner.get())) {
-					c.setBackground(isSelected? MainWindow.GREEN_WORLD_FG : MainWindow.GREEN_WORLD_BG);
+					c.setBackground(isSelected ? MainWindow.GREEN_WORLD_FG : MainWindow.GREEN_WORLD_BG);
 				} else if (match.get().getRedWorld().equals(owner.get())) {
-					c.setBackground(isSelected? MainWindow.RED_WORLD_FG : MainWindow.RED_WORLD_BG);
+					c.setBackground(isSelected ? MainWindow.RED_WORLD_FG : MainWindow.RED_WORLD_BG);
 				}
 			}
 		}

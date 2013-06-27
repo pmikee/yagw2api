@@ -6,7 +6,7 @@ import com.google.gson.annotations.Since;
 
 import de.justi.yagw2api.core.arenanet.dto.IGuildEmblemDTO;
 
-public class GuildEmblemDTO implements IGuildEmblemDTO {
+final class GuildEmblemDTO implements IGuildEmblemDTO {
 
 	@SerializedName("background_id")
 	@Since(1.0)

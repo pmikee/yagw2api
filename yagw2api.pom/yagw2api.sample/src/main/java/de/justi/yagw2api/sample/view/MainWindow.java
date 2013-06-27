@@ -48,7 +48,7 @@ import de.justi.yagw2api.sample.model.MatchesTableModel;
 import de.justi.yagw2api.sample.renderer.MatchDetailsTableCellRenderer;
 import de.justi.yagw2api.sample.renderer.ObjectiveTableCellRenderer;
 
-public class MainWindow extends AbstractWindow {
+public final class MainWindow extends AbstractWindow {
 	private static final long serialVersionUID = -6500541020042114865L;
 	private static final Logger LOGGER = Logger.getLogger(MainWindow.class);
 	public static final Color ETERNAL_BATTLEGROUNDS_FG = new Color(200, 130, 0);
@@ -71,18 +71,18 @@ public class MainWindow extends AbstractWindow {
 	private final JTable matchDetailslTable;
 	private final MatchDetailsTableModel matchDetailsTableModel;
 
-	private JTable allMapsTable;
+	private final JTable allMapsTable;
 	private final MapObjectivesTableModel allMapsModel;
 
-	private JTable greenTable;
+	private final JTable greenTable;
 	private final MapObjectivesTableModel greenMapModel;
-	private JTable blueTable;
+	private final JTable blueTable;
 	private final MapObjectivesTableModel blueMapModel;
-	private JTable redTable;
+	private final JTable redTable;
 	private final MapObjectivesTableModel redMapModel;
 	private final ToolWindow matchesToolWindow;
 	private final ToolWindow allMapsToolWindow;
-	private ToolWindow eternalMapToolWindow;
+	private final ToolWindow eternalMapToolWindow;
 	private final ToolWindow blueMapToolWindow;
 	private final ToolWindow greenMapToolWindow;
 	private final ToolWindow redMapToolWindow;
@@ -97,14 +97,17 @@ public class MainWindow extends AbstractWindow {
 			super(MIN_ZOOM, MAX_ZOOM - 1, MAX_ZOOM, 256, false, true, "https://tiles.guildwars2.com/2/3", "", "", "");
 		}
 
+		@Override
 		public int getTileSize(int zoom) {
 			return 256;
 		}
 
+		@Override
 		public int getDefaultZoomLevel() {
 			return MIN_ZOOM;
 		}
 
+		@Override
 		public String getTileUrl(int x, int y, int zoom) {
 			final int x2use = x;
 			final int y2use = y;
@@ -113,6 +116,7 @@ public class MainWindow extends AbstractWindow {
 			return url;
 		}
 
+		@Override
 		public int getMapWidthInTilesAtZoom(int zoom) {
 			return DoubleMath.roundToInt(Math.pow(2, MAX_ZOOM - zoom), RoundingMode.UP);
 		}
@@ -122,8 +126,9 @@ public class MainWindow extends AbstractWindow {
 		 * @param zoom
 		 * @return
 		 */
+		@Override
 		public double getLongitudeDegreeWidthInPixels(int zoom) {
-			return (double) this.getTileSize(zoom) / 360d;
+			return this.getTileSize(zoom) / 360d;
 		}
 
 		/**
@@ -131,8 +136,9 @@ public class MainWindow extends AbstractWindow {
 		 * @param zoom
 		 * @return
 		 */
+		@Override
 		public double getLongitudeRadianWidthInPixels(int zoom) {
-			return (double) this.getTileSize(zoom) / (2d * Math.PI);
+			return this.getTileSize(zoom) / (2d * Math.PI);
 		}
 	}
 

@@ -10,7 +10,7 @@ import com.google.common.base.Objects;
 import de.justi.yagw2api.analyzer.entities.wvw.IWVWScoresEmbeddable;
 
 @Embeddable
-class WVWScoresEmbeddable implements IWVWScoresEmbeddable {
+final class WVWScoresEmbeddable implements IWVWScoresEmbeddable {
 
 	public WVWScoresEmbeddable() {
 		this(0,0,0);

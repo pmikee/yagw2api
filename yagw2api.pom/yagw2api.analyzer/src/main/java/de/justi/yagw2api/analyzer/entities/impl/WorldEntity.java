@@ -40,7 +40,7 @@ import de.justi.yagw2api.core.wrapper.model.types.WorldLocationType;
 		@ConversionValue(objectValue = "NORTH_AMERICA", dataValue = "NA"), @ConversionValue(objectValue = "EUROPE", dataValue = "EU") }) })
 @Converters({ @Converter(converterClass = LocaleConverter.class, name = "LocaleConverter") })
 @Entity(name = "world")
-public class WorldEntity extends AbstractEntity implements IWorldEntity {
+public final class WorldEntity extends AbstractEntity implements IWorldEntity {
 	private static final Logger LOGGER = Logger.getLogger(WorldEntity.class);
 
 	@Column(name = "name_de", unique = true, nullable = true)

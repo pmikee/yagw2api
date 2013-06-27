@@ -22,7 +22,7 @@ import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWModelFactory;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWModelEventFactory;
 
-public class WVWSynchronizerInitAction extends AbstractSynchronizerAction<IWVWMatchDTO, WVWSynchronizerInitAction> implements IHasChannel {
+final class WVWSynchronizerInitAction extends AbstractSynchronizerAction<IWVWMatchDTO, WVWSynchronizerInitAction> implements IHasChannel {
 	private static final Logger LOGGER = Logger.getLogger(WVWSynchronizerInitAction.class);
 	private static final long serialVersionUID = 2446713690087630720L;
 	private static final int MAX_CHUNK_SIZE = 100; // init all matches with one thread

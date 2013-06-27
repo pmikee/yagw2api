@@ -11,13 +11,16 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 
 import de.justi.yagw2api.core.YAGW2APICore;
+import de.justi.yagw2api.core.arenanet.dto.DTOConstants;
 import de.justi.yagw2api.core.arenanet.dto.IWVWMapDTO;
 import de.justi.yagw2api.core.arenanet.dto.IWVWMatchDTO;
 import de.justi.yagw2api.core.arenanet.dto.IWVWMatchDetailsDTO;
 import de.justi.yagw2api.core.arenanet.service.IWVWService;
 
-class WVWMatchDetailsDTO implements IWVWMatchDetailsDTO {
+final class WVWMatchDetailsDTO implements IWVWMatchDetailsDTO {
 	private static final transient IWVWService SERVICE = YAGW2APICore.getInjector().getInstance(IWVWService.class);
+
+	
 	@Since(1.0)
 	@SerializedName("match_id")
 	private String id;
@@ -77,28 +80,28 @@ class WVWMatchDetailsDTO implements IWVWMatchDetailsDTO {
 
 	@Override
 	public IWVWMapDTO getCenterMap() {
-		final Optional<IWVWMapDTO> map = this.getMapForTypeString(CENTER_MAP_TYPE_STRING);
+		final Optional<IWVWMapDTO> map = this.getMapForTypeString(DTOConstants.CENTER_MAP_TYPE_STRING);
 		checkState(map.isPresent());
 		return map.get();
 	}
 
 	@Override
 	public IWVWMapDTO getRedMap() {
-		final Optional<IWVWMapDTO> map = this.getMapForTypeString(RED_MAP_TYPE_STRING);
+		final Optional<IWVWMapDTO> map = this.getMapForTypeString(DTOConstants.RED_MAP_TYPE_STRING);
 		checkState(map.isPresent());
 		return map.get();
 	}
 
 	@Override
 	public IWVWMapDTO getGreenMap() {
-		final Optional<IWVWMapDTO> map = this.getMapForTypeString(GREEN_MAP_TYPE_STRING);
+		final Optional<IWVWMapDTO> map = this.getMapForTypeString(DTOConstants.GREEN_MAP_TYPE_STRING);
 		checkState(map.isPresent());
 		return map.get();
 	}
 
 	@Override
 	public IWVWMapDTO getBlueMap() {
-		final Optional<IWVWMapDTO> map = this.getMapForTypeString(BLUE_MAP_TYPE_STRING);
+		final Optional<IWVWMapDTO> map = this.getMapForTypeString(DTOConstants.BLUE_MAP_TYPE_STRING);
 		checkState(map.isPresent());
 		return map.get();
 	}

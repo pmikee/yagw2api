@@ -11,7 +11,7 @@ import de.justi.yagw2api.core.wrapper.model.wvw.IWVWObjective;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveCaptureEvent;
 
 
-class WVWObjectiveCaptureEvent extends AbstractWVWObjectiveEvent implements IWVWObjectiveCaptureEvent {
+final class WVWObjectiveCaptureEvent extends AbstractWVWObjectiveEvent implements IWVWObjectiveCaptureEvent {
 
 	private final IWorld newOwningWorld;
 	private final Optional<IWorld> previousOwningWorld;

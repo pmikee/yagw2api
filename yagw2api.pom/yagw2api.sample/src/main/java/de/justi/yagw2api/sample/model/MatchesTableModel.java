@@ -26,13 +26,13 @@ import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWInitializedMatchEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMatchScoresChangedEvent;
 
-public class MatchesTableModel extends AbstractTableModel implements IWVWMatchListener {
+public final class MatchesTableModel extends AbstractTableModel implements IWVWMatchListener {
 	private static final Logger LOGGER = Logger.getLogger(MatchesTableModel.class);
 	private static final long serialVersionUID = 267092039654136315L;
 	private static final NumberFormat NF = new DecimalFormat("#,###,##0");
 	private static final DateFormat DF = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT);
 
-	private List<IWVWMatch> matches = Collections.synchronizedList(new CopyOnWriteArrayList<IWVWMatch>());
+	private final List<IWVWMatch> matches = Collections.synchronizedList(new CopyOnWriteArrayList<IWVWMatch>());
 
 	public void wireUp(IWVWWrapper wrapper) {
 		this.matches.clear();

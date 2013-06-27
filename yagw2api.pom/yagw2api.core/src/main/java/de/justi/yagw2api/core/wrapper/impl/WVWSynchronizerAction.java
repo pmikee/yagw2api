@@ -27,7 +27,7 @@ import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWObjective;
 import de.justi.yagw2api.core.wrapper.model.wvw.types.WVWMapType;
 
-class WVWSynchronizerAction extends AbstractSynchronizerAction<String,WVWSynchronizerAction>{
+final class WVWSynchronizerAction extends AbstractSynchronizerAction<String,WVWSynchronizerAction>{
 	private static final long serialVersionUID = 8391498327079686666L;
 	private static final int MAX_CHUNK_SIZE = 1;
 	private static final Logger LOGGER = Logger.getLogger(WVWSynchronizerAction.class);

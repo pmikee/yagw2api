@@ -1,6 +1,7 @@
 package de.justi.yagw2api.core.wrapper.model.wvw.types;
 
-import de.justi.yagw2api.core.arenanet.dto.IWVWMatchDetailsDTO;
+import de.justi.yagw2api.core.arenanet.dto.DTOConstants;
+
 
 public enum WVWMapType implements IWVWMapType{
 	CENTER,
@@ -10,13 +11,13 @@ public enum WVWMapType implements IWVWMapType{
 	
 	public static WVWMapType fromDTOString(String dtoString) {
 		switch(dtoString.toUpperCase()) {
-			case IWVWMatchDetailsDTO.CENTER_MAP_TYPE_STRING:
+			case DTOConstants.CENTER_MAP_TYPE_STRING:
 				return CENTER;
-			case IWVWMatchDetailsDTO.BLUE_MAP_TYPE_STRING:
+			case DTOConstants.BLUE_MAP_TYPE_STRING:
 				return BLUE;
-			case IWVWMatchDetailsDTO.GREEN_MAP_TYPE_STRING:
+			case DTOConstants.GREEN_MAP_TYPE_STRING:
 				return GREEN;
-			case IWVWMatchDetailsDTO.RED_MAP_TYPE_STRING:
+			case DTOConstants.RED_MAP_TYPE_STRING:
 				return RED;
 			default:
 				throw new IllegalArgumentException("Unknown dtoString: "+dtoString);

@@ -21,7 +21,7 @@ import de.justi.yagw2api.core.arenanet.dto.IWVWMatchDetailsDTO;
 import de.justi.yagw2api.core.arenanet.dto.IWorldNameDTO;
 import de.justi.yagw2api.core.arenanet.service.IWVWService;
 
-class WVWMatchDTO implements IWVWMatchDTO {
+final class WVWMatchDTO implements IWVWMatchDTO {
 	static final transient Logger LOGGER = Logger.getLogger(WVWMapDTO.class);
 	static final transient IWVWService SERVICE = YAGW2APICore.getInjector().getInstance(IWVWService.class);
 

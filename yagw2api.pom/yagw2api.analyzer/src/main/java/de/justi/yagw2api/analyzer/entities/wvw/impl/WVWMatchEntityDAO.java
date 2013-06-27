@@ -22,7 +22,7 @@ import de.justi.yagw2api.analyzer.entities.wvw.IWVWMatchEntityDAO;
 import de.justi.yagw2api.core.wrapper.model.IWorld;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
 
-public class WVWMatchEntityDAO implements IWVWMatchEntityDAO {
+public final class WVWMatchEntityDAO implements IWVWMatchEntityDAO {
 	private static final Logger LOGGER = Logger.getLogger(WVWMatchEntityDAO.class);
 
 	@Override

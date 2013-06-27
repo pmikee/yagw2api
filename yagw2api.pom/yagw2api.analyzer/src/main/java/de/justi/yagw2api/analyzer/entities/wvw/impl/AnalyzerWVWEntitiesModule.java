@@ -4,7 +4,7 @@ import com.google.inject.AbstractModule;
 
 import de.justi.yagw2api.analyzer.entities.wvw.IWVWMatchEntityDAO;
 
-public class AnalyzerWVWEntitiesModule extends AbstractModule {
+public final class AnalyzerWVWEntitiesModule extends AbstractModule {
 
 	@Override
 	protected void configure() {

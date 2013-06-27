@@ -5,7 +5,7 @@ import de.justi.yagw2api.core.AbstractEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWInitializedMatchEvent;
 
-class WVWInitializedMatchEvent extends AbstractEvent implements IWVWInitializedMatchEvent{
+final class WVWInitializedMatchEvent extends AbstractEvent implements IWVWInitializedMatchEvent{
 	private final IWVWMatch match;
 	
 	public WVWInitializedMatchEvent(IWVWMatch match) {

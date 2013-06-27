@@ -16,7 +16,7 @@ import de.justi.yagw2api.core.arenanet.dto.IWVWObjectiveDTO;
 import de.justi.yagw2api.core.arenanet.dto.IWVWObjectiveNameDTO;
 import de.justi.yagw2api.core.arenanet.service.IWVWService;
 
-class WVWObjectiveDTO implements IWVWObjectiveDTO {
+final class WVWObjectiveDTO implements IWVWObjectiveDTO {
 	private static final transient IWVWService SERVICE = YAGW2APICore.getInjector().getInstance(IWVWService.class);
 	
 	@Since(1.0)

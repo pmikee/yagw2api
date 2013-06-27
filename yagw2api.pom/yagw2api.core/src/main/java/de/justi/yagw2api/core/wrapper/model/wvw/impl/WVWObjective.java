@@ -31,7 +31,7 @@ import de.justi.yagw2api.core.wrapper.model.wvw.types.IWVWLocationType;
 import de.justi.yagw2api.core.wrapper.model.wvw.types.IWVWObjectiveType;
 import de.justi.yagw2api.core.wrapper.model.wvw.types.WVWLocationType;
 
-class WVWObjective extends AbstractHasChannel implements IWVWObjective {
+final class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 	private static final Logger LOGGER = Logger.getLogger(WVWObjective.class);
 	private static final IWVWModelEventFactory WVW_MODEL_EVENTS_FACTORY = YAGW2APICore.getInjector().getInstance(IWVWModelEventFactory.class);
 	private static final IModelFactory MODEL_FACTORY = YAGW2APICore.getInjector().getInstance(IModelFactory.class);

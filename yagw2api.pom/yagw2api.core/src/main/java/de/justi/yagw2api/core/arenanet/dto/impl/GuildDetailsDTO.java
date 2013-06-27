@@ -7,7 +7,7 @@ import com.google.gson.annotations.Since;
 import de.justi.yagw2api.core.arenanet.dto.IGuildDetailsDTO;
 import de.justi.yagw2api.core.arenanet.dto.IGuildEmblemDTO;
 
-public class GuildDetailsDTO implements IGuildDetailsDTO {
+final class GuildDetailsDTO implements IGuildDetailsDTO {
 	@SerializedName("guild_id")
 	@Since(1.0)
 	private String id;

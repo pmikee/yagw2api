@@ -8,7 +8,7 @@ import java.util.Map;
 import org.eclipse.persistence.jpa.Archive;
 import org.eclipse.persistence.jpa.ArchiveFactory;
 
-public class ArchiveFactoryImpl extends org.eclipse.persistence.internal.jpa.deployment.ArchiveFactoryImpl implements ArchiveFactory {
+public final class ArchiveFactoryImpl extends org.eclipse.persistence.internal.jpa.deployment.ArchiveFactoryImpl implements ArchiveFactory {
 	private static final org.apache.log4j.Logger LOGGER = org.apache.log4j.Logger.getLogger(ArchiveFactoryImpl.class);
 
 	@Override

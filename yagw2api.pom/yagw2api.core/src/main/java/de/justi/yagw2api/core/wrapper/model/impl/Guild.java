@@ -8,7 +8,7 @@ import de.justi.yagw2api.core.wrapper.model.IGuild;
 import de.justi.yagw2api.core.wrapper.model.IUnmodifiable;
 
 
-class Guild implements IGuild, IUnmodifiable{
+final class Guild implements IGuild, IUnmodifiable{
 	private final String id;
 	private final String name;
 	private final String tag;

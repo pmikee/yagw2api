@@ -25,7 +25,7 @@ import de.justi.yagw2api.core.wrapper.model.IWorld;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWInitializedMatchEvent;
 
-class WVWSynchronizer extends AbstractScheduledService implements IHasChannel {
+final class WVWSynchronizer extends AbstractScheduledService implements IHasChannel {
 	private static final IWVWService SERVICE = YAGW2APICore.getLowLevelWVWService();
 	private static final long DELAY_MILLIS = 500;
 	private static final Logger LOGGER = Logger.getLogger(WVWSynchronizer.class);

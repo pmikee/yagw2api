@@ -5,7 +5,7 @@ import com.google.inject.AbstractModule;
 
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWModelEventFactory;
 
-public class WVWModelEventsModule extends AbstractModule{
+public final class WVWModelEventsModule extends AbstractModule{
 
 	@Override
 	protected void configure() {

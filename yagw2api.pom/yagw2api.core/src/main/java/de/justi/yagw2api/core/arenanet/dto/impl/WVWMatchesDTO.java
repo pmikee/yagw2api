@@ -10,7 +10,7 @@ import com.google.gson.annotations.Since;
 import de.justi.yagw2api.core.arenanet.dto.IWVWMatchDTO;
 import de.justi.yagw2api.core.arenanet.dto.IWVWMatchesDTO;
 
-class WVWMatchesDTO implements IWVWMatchesDTO {
+final class WVWMatchesDTO implements IWVWMatchesDTO {
 
 	@Since(1.0)
 	@SerializedName("wvw_matches")

@@ -31,7 +31,7 @@ import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveCaptureEvent
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveClaimedEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveEndOfBuffEvent;
 
-class WVWWrapper implements IWVWWrapper {
+final class WVWWrapper implements IWVWWrapper {
 	private static final Logger LOGGER = Logger.getLogger(WVWWrapper.class);
 	private WVWSynchronizer deamon = null;
 	private final Map<IWVWMatch, Collection<IWVWMatchListener>> singleMatchListeners = new CopyOnWriteHashMap<IWVWMatch, Collection<IWVWMatchListener>>();

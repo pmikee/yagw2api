@@ -30,13 +30,13 @@ import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveClaimedEvent
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveEndOfBuffEvent;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveUnclaimedEvent;
 
-public class MapObjectivesTableModel extends AbstractTableModel implements IWVWMapListener {
+public final class MapObjectivesTableModel extends AbstractTableModel implements IWVWMapListener {
 	private static final long serialVersionUID = -4657108157862724940L;
 	private static final Logger LOGGER = Logger.getLogger(MapObjectivesTableModel.class);
 
 	final DateFormat DF = DateFormat.getTimeInstance(DateFormat.MEDIUM);
 
-	private List<IWVWObjective> content = new CopyOnWriteArrayList<IWVWObjective>();
+	private final List<IWVWObjective> content = new CopyOnWriteArrayList<IWVWObjective>();
 
 	private Service service;
 
@@ -113,7 +113,7 @@ public class MapObjectivesTableModel extends AbstractTableModel implements IWVWM
 	}
 
 	public Optional<IWVWObjective> getObjectiveForRow(int row) {
-		if (row < 0 || row >= this.content.size()) {
+		if ((row < 0) || (row >= this.content.size())) {
 			return Optional.absent();
 		} else {
 			return Optional.fromNullable(this.content.get(row));

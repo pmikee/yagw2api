@@ -9,7 +9,7 @@ import com.sun.jersey.api.client.ClientRequest;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.filter.ClientFilter;
 
-class RetryClientFilter extends ClientFilter {
+final class RetryClientFilter extends ClientFilter {
 	private static final Logger	LOGGER	= Logger.getLogger(RetryClientFilter.class);
 	private final int			maximumRetryCount;
 

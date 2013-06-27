@@ -8,7 +8,7 @@ import de.justi.yagw2api.core.wrapper.model.IGuild;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWObjective;
 import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveClaimedEvent;
 
-public class WVWObjectiveClaimedEvent extends AbstractWVWObjectiveEvent implements IWVWObjectiveClaimedEvent {
+final class WVWObjectiveClaimedEvent extends AbstractWVWObjectiveEvent implements IWVWObjectiveClaimedEvent {
 
 	private final IGuild claimingGuild;
 	private final Optional<IGuild> previousClaimedByGuild;

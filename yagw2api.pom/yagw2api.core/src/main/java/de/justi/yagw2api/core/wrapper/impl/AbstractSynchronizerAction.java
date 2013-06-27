@@ -8,7 +8,7 @@ import java.util.concurrent.RecursiveAction;
 
 import org.apache.log4j.Logger;
 
-public abstract class AbstractSynchronizerAction<T, A extends AbstractSynchronizerAction<T, ?>> extends RecursiveAction{
+abstract class AbstractSynchronizerAction<T, A extends AbstractSynchronizerAction<T, ?>> extends RecursiveAction{
 	private static final long serialVersionUID = -2838650978601355556L;
 	private static final Logger LOGGER = Logger.getLogger(AbstractSynchronizerAction.class);
 

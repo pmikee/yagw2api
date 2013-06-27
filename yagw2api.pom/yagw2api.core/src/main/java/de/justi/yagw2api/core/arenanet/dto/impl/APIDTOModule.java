@@ -5,7 +5,7 @@ import com.google.inject.AbstractModule;
 
 import de.justi.yagw2api.core.arenanet.dto.IWVWDTOFactory;
 
-public class APIDTOModule extends AbstractModule {
+public final class APIDTOModule extends AbstractModule {
 
 	@Override
 	protected void configure() {		

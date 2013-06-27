@@ -39,7 +39,7 @@ import de.justi.yagw2api.core.arenanet.dto.IWVWObjectiveNameDTO;
 import de.justi.yagw2api.core.arenanet.dto.IWorldNameDTO;
 import de.justi.yagw2api.core.arenanet.service.IWVWService;
 
-class WVWService extends AbstractService implements IWVWService {
+final class WVWService extends AbstractService implements IWVWService {
 	private static final int RETRY_COUNT = 10;
 	private static final long MATCH_CACHE_EXPIRE_MILLIS = 1000 * 60 * 10; // 10m
 	private static final long GUILD_DETAILS_CACHE_EXPIRE_MILLIS = 1000 * 60 * 5; // 5m
