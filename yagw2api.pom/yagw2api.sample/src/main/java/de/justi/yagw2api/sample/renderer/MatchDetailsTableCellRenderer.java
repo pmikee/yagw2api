@@ -34,9 +34,9 @@ public class MatchDetailsTableCellRenderer extends DefaultTableCellRenderer {
 			if (row == 0) {
 				c.setForeground(MainWindow.ETERNAL_BATTLEGROUNDS_FG);
 			} else if (row == 1) {
-				c.setForeground(MainWindow.BLUE_WORLD_FG);
-			} else if (row == 2) {
 				c.setForeground(MainWindow.GREEN_WORLD_FG);
+			} else if (row == 2) {
+				c.setForeground(MainWindow.BLUE_WORLD_FG);
 			} else if (row == 3) {
 				c.setForeground(MainWindow.RED_WORLD_FG);
 			} else if (row == 4) {
