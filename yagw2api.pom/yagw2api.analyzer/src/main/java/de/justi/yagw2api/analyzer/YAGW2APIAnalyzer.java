@@ -16,7 +16,7 @@ import de.justi.yagw2api.analyzer.utils.DerbyServerHelper;
 public enum YAGW2APIAnalyzer {
 	DEFAULT(Guice.createInjector(new AnalyzerWVWModule(), new AnalyzerEntitiesModule(), new AnalyzerWVWEntitiesModule(), new YAGWAPIAnalyzerPersistenceModule(false))), TEST(Guice.createInjector(
 			new AnalyzerWVWModule(), new AnalyzerEntitiesModule(), new AnalyzerWVWEntitiesModule(), new YAGWAPIAnalyzerPersistenceModule(true)));
-	
+
 	static {
 		// launch the db server
 		new DerbyServerHelper().start();
@@ -58,6 +58,5 @@ public enum YAGW2APIAnalyzer {
 		this.analyzer = this.injector.getInstance(IWVWAnalyzer.class);
 		this.worldEntityDAO = this.injector.getInstance(IWorldEnityDAO.class);
 		this.wvwMatchEntityDAO = this.injector.getInstance(IWVWMatchEntityDAO.class);
-		
 	}
 }

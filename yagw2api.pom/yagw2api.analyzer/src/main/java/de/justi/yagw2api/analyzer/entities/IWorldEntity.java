@@ -29,14 +29,19 @@ public interface IWorldEntity extends IEntity {
 	Optional<Locale> getWorldLocale();
 
 	boolean addParticipatedAsRedInMatch(IWVWMatchEntity match);
+
 	boolean addParticipatedAsBlueInMatch(IWVWMatchEntity match);
+
 	boolean addParticipatedAsGreenInMatch(IWVWMatchEntity match);
-	
-	Iterable<IWVWMatchEntity> getParticipatedInMatches();	
+
+	Iterable<IWVWMatchEntity> getParticipatedInMatches();
+
 	List<IWVWMatchEntity> getParticipatedInMatchesAsRedWorld();
+
 	List<IWVWMatchEntity> getParticipatedInMatchesAsGreenWorld();
+
 	List<IWVWMatchEntity> getParticipatedInMatchesAsBlueWorld();
-	
+
 	/**
 	 * <p>
 	 * Synchronize this with the given {@link IWorld}

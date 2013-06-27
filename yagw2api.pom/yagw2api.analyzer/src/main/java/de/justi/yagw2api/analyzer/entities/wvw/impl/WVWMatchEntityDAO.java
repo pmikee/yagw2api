@@ -26,21 +26,23 @@ public final class WVWMatchEntityDAO implements IWVWMatchEntityDAO {
 	private static final Logger LOGGER = Logger.getLogger(WVWMatchEntityDAO.class);
 
 	@Override
-	public synchronized Optional<IWVWMatchEntity> newMatchEntityOf(IWVWMatch match, boolean setupWorldReferences) {
+	public synchronized Optional<IWVWMatchEntity> newMatchEntityOf(IWVWMatch match, boolean setupWorldReferences, boolean setupMapReference) {
 		checkNotNull(match);
 		checkState(YAGW2APIAnalyzerPersistence.getDefaultEM().isOpen());
 		final EntityTransaction tx = YAGW2APIAnalyzerPersistence.getDefaultEM().getTransaction();
 		WVWMatchEntity newEntity = null;
 		final boolean newTransaction = !tx.isActive();
 		try {
-			if (newTransaction)
+			if (newTransaction) {
 				tx.begin();
+			}
 			newEntity = new WVWMatchEntity();
-			newEntity.synchronizeWithModel(new Date(), match, setupWorldReferences);
+			newEntity.synchronizeWithModel(new Date(), match, setupWorldReferences, setupMapReference);
 			YAGW2APIAnalyzerPersistence.getDefaultEM().persist(newEntity);
 			YAGW2APIAnalyzerPersistence.getDefaultEM().flush();
-			if (newTransaction)
+			if (newTransaction) {
 				tx.commit();
+			}
 		} catch (Exception e) {
 			LOGGER.error(
 					"Exception cought while creating new " + WVWMatchEntity.class.getName() + " out of " + match.getClass().getSimpleName() + "[matchId=" + match.getId() + ",redWorld="
@@ -63,12 +65,14 @@ public final class WVWMatchEntityDAO implements IWVWMatchEntityDAO {
 		final EntityTransaction tx = YAGW2APIAnalyzerPersistence.getDefaultEM().getTransaction();
 		final boolean newTransaction = !tx.isActive();
 		try {
-			if (newTransaction)
+			if (newTransaction) {
 				tx.begin();
+			}
 			YAGW2APIAnalyzerPersistence.getDefaultEM().persist(entity);
 			YAGW2APIAnalyzerPersistence.getDefaultEM().flush();
-			if (newTransaction)
+			if (newTransaction) {
 				tx.commit();
+			}
 			success = true;
 		} catch (Exception e) {
 			LOGGER.error("Exception cought while saving " + entity, e);
@@ -114,7 +118,7 @@ public final class WVWMatchEntityDAO implements IWVWMatchEntityDAO {
 		if (alreadyThere.isPresent()) {
 			return alreadyThere.get();
 		} else {
-			final Optional<IWVWMatchEntity> newCreated = this.newMatchEntityOf(match, true);
+			final Optional<IWVWMatchEntity> newCreated = this.newMatchEntityOf(match, true, true);
 			checkState(newCreated.isPresent());
 			return newCreated.get();
 		}

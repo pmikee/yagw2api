@@ -101,7 +101,7 @@ final class WVWAnalyzer implements IWVWAnalyzer {
 		final IWVWMatchEntity entity = this.wvwMatchEntityDAO.findOrCreateWVWMatchEntityOf(match);
 
 		boolean persisted = false;
-		entity.synchronizeWithModel(timestamp, match, true);
+		entity.synchronizeWithModel(timestamp, match, true, true);
 		if (LOGGER.isTraceEnabled()) {
 			LOGGER.trace("Successfully synchronized " + IWVWMatchEntity.class.getSimpleName() + " with matchId=" + entity.getOriginMatchId());
 		}

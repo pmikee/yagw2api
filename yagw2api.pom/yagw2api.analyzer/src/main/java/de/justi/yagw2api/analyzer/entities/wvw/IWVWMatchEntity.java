@@ -16,15 +16,24 @@ public interface IWVWMatchEntity extends IEntity {
 
 	Date getEndTimestamp();
 
+	IWVWMapEntity getRedMap();
+
+	IWVWMapEntity getGreenMap();
+
+	IWVWMapEntity getBlueMap();
+
+	IWVWMapEntity getCenterMap();
+
 	IWorldEntity getRedWorld();
 
 	IWorldEntity getGreenWorld();
 
 	IWorldEntity getBlueWorld();
-	
+
 	Map<Date, IWVWScoresEmbeddable> getScores();
+
 	Optional<IWVWScoresEmbeddable> getLatestScores();
-	
+
 	/**
 	 * <p>
 	 * Synchronize this with the given {@link IWVWMatch}
@@ -34,8 +43,9 @@ public interface IWVWMatchEntity extends IEntity {
 	 * {@link IWVWMatchEntityDAO#save(IWVWMatchEntity)} to persist them.
 	 * </p>
 	 * 
+	 * @param timestamp
 	 * @param model
 	 * @param setupWorldReferences
 	 */
-	void synchronizeWithModel(Date timestamp, IWVWMatch model, boolean setupWorldReferences);
+	void synchronizeWithModel(Date timestamp, IWVWMatch model, boolean setupWorldReferences, boolean setupMapReferences);
 }
