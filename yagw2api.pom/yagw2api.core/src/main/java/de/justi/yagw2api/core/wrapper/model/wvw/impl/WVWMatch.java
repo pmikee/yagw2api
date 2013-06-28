@@ -126,15 +126,16 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 
 		@Override
 		public EventBus getChannel() {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName()+" is instance of "+IUnmodifiable.class.getSimpleName()+" and therefore can not be modified.");
+			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName() + " and therefore can not be modified.");
 		}
 
+		@Override
 		public String toString() {
 			return Objects.toStringHelper(this).addValue(WVWMatch.this.toString()).toString();
 		}
-		
+
 		@Override
-		public int hashCode() {		
+		public int hashCode() {
 			return WVWMatch.this.hashCode();
 		}
 
@@ -169,7 +170,6 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 		}
 	}
 
-
 	public static class WVWMatchBuilder implements IWVWMatch.IWVWMatchBuilder {
 		private Optional<IWVWMatchDTO> fromMatchDTO = Optional.absent();
 		private Optional<String> id = Optional.absent();
@@ -188,20 +188,26 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 
 		@Override
 		public IWVWMatch build() {
-			checkState(this.id.isPresent());
-			checkState(this.centerMap.isPresent());
-			checkState(this.redMap.isPresent());
-			checkState(this.greenMap.isPresent());
-			checkState(this.blueMap.isPresent());
-			checkState(this.redWorld.isPresent());
-			checkState(this.greenWorld.isPresent());
-			checkState(this.blueWorld.isPresent());
-			checkState(this.start.isPresent());
-			checkState(this.end.isPresent());
-			
-			
-			final IWVWMatch match = new WVWMatch(this.id.get(), this.redWorld.get(), this.greenWorld.get(), this.blueWorld.get(), this.centerMap.get(),
-					this.redMap.get(), this.greenMap.get(), this.blueMap.get(), this.start.get(), this.end.get());
+			checkState(this.id.isPresent(), "Missing id in " + this);
+			checkState(this.centerMap != null, "Missing center " + IWVWMap.class.getSimpleName() + " in " + this);
+			checkState(this.centerMap.isPresent(), "Missing center " + IWVWMap.class.getSimpleName() + " in " + this);
+			checkState(this.redMap != null, "Missing red " + IWVWMap.class.getSimpleName() + " in " + this);
+			checkState(this.redMap.isPresent(), "Missing red " + IWVWMap.class.getSimpleName() + " in " + this);
+			checkState(this.greenMap != null, "Missing green " + IWVWMap.class.getSimpleName() + " in " + this);
+			checkState(this.greenMap.isPresent(), "Missing green " + IWVWMap.class.getSimpleName() + " in " + this);
+			checkState(this.blueMap != null, "Missing blue " + IWVWMap.class.getSimpleName() + " in " + this);
+			checkState(this.blueMap.isPresent(), "Missing blue " + IWVWMap.class.getSimpleName() + " in " + this);
+			checkState(this.redWorld != null, "Missing red " + IWorld.class.getSimpleName() + " in " + this);
+			checkState(this.redWorld.isPresent(), "Missing red " + IWorld.class.getSimpleName() + " in " + this);
+			checkState(this.greenWorld != null, "Missing green " + IWorld.class.getSimpleName() + " in " + this);
+			checkState(this.greenWorld.isPresent(), "Missing green " + IWorld.class.getSimpleName() + " in " + this);
+			checkState(this.blueWorld != null, "Missing blue " + IWorld.class.getSimpleName() + " in " + this);
+			checkState(this.blueWorld.isPresent(), "Missing blue " + IWorld.class.getSimpleName() + " in " + this);
+			checkState(this.start.isPresent(), "Missing start in " + this);
+			checkState(this.end.isPresent(), "Missing start in " + this);
+
+			final IWVWMatch match = new WVWMatch(this.id.get(), this.redWorld.get(), this.greenWorld.get(), this.blueWorld.get(), this.centerMap.get(), this.redMap.get(), this.greenMap.get(),
+					this.blueMap.get(), this.start.get(), this.end.get());
 			if (this.fromMatchDTO.isPresent()) {
 				checkState(this.fromMatchDTO.get().getDetails().isPresent());
 				this.setupOwner(match, match.getCenterMap(), this.fromMatchDTO.get(), this.fromMatchDTO.get().getDetails().get().getCenterMap());
@@ -235,15 +241,15 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 			}
 		}
 
-		private static final class BuildMatchFromDTOAction implements Callable<Void>{
+		private static final class BuildMatchFromDTOAction implements Callable<Void> {
 			private final IWVWMapDTO dto;
 			private Optional<IWVWMap> result;
-			
+
 			public BuildMatchFromDTOAction(IWVWMapDTO dto) {
 				this.dto = checkNotNull(dto);
 			}
-			
-			public Optional<IWVWMap> getResult(){
+
+			public Optional<IWVWMap> getResult() {
 				return this.result;
 			}
 
@@ -253,37 +259,40 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 				return null;
 			}
 		}
-		
-		private static final class BuildWorldFromDTOAction implements Callable<Void>{
+
+		private static final class BuildWorldFromDTOAction implements Callable<Void> {
 			private final IWorldNameDTO dto;
 			private Optional<IWorld> result;
+
 			public BuildWorldFromDTOAction(IWorldNameDTO dto) {
 				this.dto = checkNotNull(dto);
 			}
+
 			@Override
 			public Void call() throws Exception {
 				this.result = Optional.of(MODEL_FACTORY.newWorldBuilder().fromDTO(this.dto).build());
 				return null;
 			}
-			public Optional<IWorld> getResult(){
+
+			public Optional<IWorld> getResult() {
 				return this.result;
 			}
 		}
-		
+
 		@SuppressWarnings("unchecked")
 		@Override
 		public IWVWMatch.IWVWMatchBuilder fromMatchDTO(IWVWMatchDTO dto, Locale locale) {
 			checkNotNull(locale);
 			checkState(!this.fromMatchDTO.isPresent());
-			
+
 			final long startTimestamp = System.currentTimeMillis();
-			if(LOGGER.isTraceEnabled()) {
-				LOGGER.trace("Going to fill "+this.getClass().getSimpleName()+" with data from dto="+dto+" and locale="+locale);
+			if (LOGGER.isTraceEnabled()) {
+				LOGGER.trace("Going to fill " + this.getClass().getSimpleName() + " with data from dto=" + dto + " and locale=" + locale);
 			}
-			
+
 			this.fromMatchDTO = Optional.of(dto);
 			this.id = Optional.of(dto.getId());
-			
+
 			final BuildMatchFromDTOAction buildCenterMapAction = new BuildMatchFromDTOAction(dto.getDetails().get().getCenterMap());
 			final BuildMatchFromDTOAction buildRedMapAction = new BuildMatchFromDTOAction(dto.getDetails().get().getRedMap());
 			final BuildMatchFromDTOAction buildGreenMapAction = new BuildMatchFromDTOAction(dto.getDetails().get().getGreenMap());
@@ -291,34 +300,41 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 			final BuildWorldFromDTOAction buildRedWorldAction = new BuildWorldFromDTOAction(dto.getRedWorldName(YAGW2APICore.getCurrentLocale()).get());
 			final BuildWorldFromDTOAction buildGreenWorldAction = new BuildWorldFromDTOAction(dto.getGreenWorldName(YAGW2APICore.getCurrentLocale()).get());
 			final BuildWorldFromDTOAction buildBlueWorldAction = new BuildWorldFromDTOAction(dto.getBlueWorldName(YAGW2APICore.getCurrentLocale()).get());
-			
-			YAGW2APICore.getForkJoinPool().invokeAll(Lists.newArrayList(buildCenterMapAction, buildRedMapAction, buildGreenMapAction, buildBlueMapAction, buildRedWorldAction, buildGreenWorldAction, buildBlueWorldAction));
+
+			YAGW2APICore.getForkJoinPool().invokeAll(
+					Lists.newArrayList(buildCenterMapAction, buildRedMapAction, buildGreenMapAction, buildBlueMapAction, buildRedWorldAction, buildGreenWorldAction, buildBlueWorldAction));
 
 			this.centerMap = buildCenterMapAction.getResult();
+			checkState(this.centerMap != null);
 			this.blueMap = buildBlueMapAction.getResult();
+			checkState(this.blueMap != null);
 			this.greenMap = buildGreenMapAction.getResult();
+			checkState(this.greenMap != null);
 			this.redMap = buildRedMapAction.getResult();
-			
+			checkState(this.redMap != null);
+
 			this.redWorld = buildRedWorldAction.getResult();
+			checkState(this.redWorld != null);
 			this.greenWorld = buildGreenWorldAction.getResult();
+			checkState(this.greenWorld != null);
 			this.blueWorld = buildBlueWorldAction.getResult();
+			checkState(this.blueWorld != null);
 
 			this.start(dto.getStartTime());
 			this.end(dto.getEndTime());
-			
+
 			final Optional<IWVWMatchDetailsDTO> details = dto.getDetails();
 			if (details.isPresent()) {
 				this.redScore(details.get().getRedScore());
 				this.blueScore(details.get().getBlueScore());
 				this.greenScore(details.get().getGreenScore());
 			}
-			
 
 			final long endTimestamp = System.currentTimeMillis();
-			if(LOGGER.isTraceEnabled()) {
-				LOGGER.trace("Done with filling "+this.getClass().getSimpleName()+" with data from dto="+dto+" and locale="+locale+" in "+(endTimestamp-startTimestamp)+"ms");
+			if (LOGGER.isTraceEnabled()) {
+				LOGGER.trace("Done with filling " + this.getClass().getSimpleName() + " with data from dto=" + dto + " and locale=" + locale + " in " + (endTimestamp - startTimestamp) + "ms");
 			}
-			
+
 			return this;
 		}
 
@@ -373,7 +389,7 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 		this.id = checkNotNull(id);
 		this.redWorld = checkNotNull(redWorld);
 		this.greenWorld = checkNotNull(greenWorld);
-		this.blueWorld = checkNotNull(blueWorld);		
+		this.blueWorld = checkNotNull(blueWorld);
 		checkNotNull(centerMap);
 		checkArgument(centerMap.getType().isCenter());
 		this.centerMap = centerMap;
@@ -397,7 +413,7 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 
 		// register as listener to scores
 		this.scores.getChannel().register(this);
-		
+
 		// start / end time
 		checkNotNull(start);
 		checkNotNull(end);
@@ -465,10 +481,11 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 		return this.scores;
 	}
 
+	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("id", this.id).add("scores", this.scores).add("redWorld", this.redWorld).add("greenWorld", this.greenWorld)
-				.add("blueWorld", this.blueWorld).add("centerMap", this.centerMap).add("redMap", this.redMap).add("greenMap", this.greenMap)
-				.add("blueMap", this.blueMap).add("start",DF.format(this.startTime.getTime())).add("end",DF.format(this.endTime.getTime())).toString();
+		return Objects.toStringHelper(this).add("id", this.id).add("scores", this.scores).add("redWorld", this.redWorld).add("greenWorld", this.greenWorld).add("blueWorld", this.blueWorld)
+				.add("centerMap", this.centerMap).add("redMap", this.redMap).add("greenMap", this.greenMap).add("blueMap", this.blueMap).add("start", DF.format(this.startTime.getTime()))
+				.add("end", DF.format(this.endTime.getTime())).toString();
 	}
 
 	@Override
@@ -510,17 +527,18 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 	public IWVWMatch createUnmodifiableReference() {
 		return new UnmodifiableWVWMatch();
 	}
+
 	@Override
-	public int hashCode() {		
-		return Objects.hashCode(this.getClass().getName(),this.id);
+	public int hashCode() {
+		return Objects.hashCode(this.getClass().getName(), this.id);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if(obj == null || ! (obj instanceof IWVWMatch)) {
+		if ((obj == null) || !(obj instanceof IWVWMatch)) {
 			return false;
-		}else{
-			final IWVWMatch match = (IWVWMatch)obj;
+		} else {
+			final IWVWMatch match = (IWVWMatch) obj;
 			return Objects.equal(this.id, match.getId());
 		}
 	}
@@ -537,16 +555,16 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 
 	@Override
 	public int calculateGreenTick() {
-		return this.getGreenMap().calculateGreenTick()+this.getBlueMap().calculateGreenTick()+this.getRedMap().calculateGreenTick()+this.getCenterMap().calculateGreenTick();
+		return this.getGreenMap().calculateGreenTick() + this.getBlueMap().calculateGreenTick() + this.getRedMap().calculateGreenTick() + this.getCenterMap().calculateGreenTick();
 	}
 
 	@Override
 	public int calculateBlueTick() {
-		return this.getGreenMap().calculateBlueTick()+this.getBlueMap().calculateBlueTick()+this.getRedMap().calculateBlueTick()+this.getCenterMap().calculateBlueTick();
+		return this.getGreenMap().calculateBlueTick() + this.getBlueMap().calculateBlueTick() + this.getRedMap().calculateBlueTick() + this.getCenterMap().calculateBlueTick();
 	}
 
 	@Override
 	public int calculateRedTick() {
-		return this.getGreenMap().calculateRedTick()+this.getBlueMap().calculateRedTick()+this.getRedMap().calculateRedTick()+this.getCenterMap().calculateRedTick();
+		return this.getGreenMap().calculateRedTick() + this.getBlueMap().calculateRedTick() + this.getRedMap().calculateRedTick() + this.getCenterMap().calculateRedTick();
 	}
 }
