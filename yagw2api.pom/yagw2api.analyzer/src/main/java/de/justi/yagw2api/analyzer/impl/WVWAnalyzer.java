@@ -1,6 +1,7 @@
 package de.justi.yagw2api.analyzer.impl;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Date;
 
@@ -99,13 +100,42 @@ final class WVWAnalyzer implements IWVWAnalyzer {
 	private boolean synchronizeWorldsOfMatch(Date timestamp, IWVWMatch match) {
 		checkNotNull(match);
 		final IWVWMatchEntity entity = this.wvwMatchEntityDAO.findOrCreateWVWMatchEntityOf(match);
+		checkState(entity.getBlueMap() != null);
+		checkState(entity.getRedMap() != null);
+		checkState(entity.getGreenMap() != null);
+		checkState(entity.getCenterMap() != null);
+		checkState(entity.getBlueMap() != entity.getRedMap());
+		checkState(entity.getBlueMap().getId() != entity.getRedMap().getId());
+		checkState(entity.getBlueMap() != entity.getGreenMap());
+		checkState(entity.getBlueMap().getId() != entity.getGreenMap().getId());
+		checkState(entity.getBlueMap() != entity.getCenterMap());
+		checkState(entity.getBlueMap().getId() != entity.getCenterMap().getId());
+
+		checkState(entity.getBlueWorld() != null);
+		checkState(entity.getRedWorld() != null);
+		checkState(entity.getGreenWorld() != null);
 
 		boolean persisted = false;
 		entity.synchronizeWithModel(timestamp, match, true, true);
+		checkState(entity.getBlueMap() != null);
+		checkState(entity.getRedMap() != null);
+		checkState(entity.getGreenMap() != null);
+		checkState(entity.getCenterMap() != null);
+		checkState(entity.getBlueMap() != entity.getRedMap());
+		checkState(entity.getBlueMap().getId() != entity.getRedMap().getId());
+		checkState(entity.getBlueMap() != entity.getGreenMap());
+		checkState(entity.getBlueMap().getId() != entity.getGreenMap().getId());
+		checkState(entity.getBlueMap() != entity.getCenterMap());
+		checkState(entity.getBlueMap().getId() != entity.getCenterMap().getId());
+
+		checkState(entity.getBlueWorld() != null);
+		checkState(entity.getRedWorld() != null);
+		checkState(entity.getGreenWorld() != null);
 		if (LOGGER.isTraceEnabled()) {
 			LOGGER.trace("Successfully synchronized " + IWVWMatchEntity.class.getSimpleName() + " with matchId=" + entity.getOriginMatchId());
 		}
 		persisted = this.wvwMatchEntityDAO.save(entity);
+
 		if (LOGGER.isDebugEnabled()) {
 			if (persisted) {
 				if (LOGGER.isTraceEnabled()) {

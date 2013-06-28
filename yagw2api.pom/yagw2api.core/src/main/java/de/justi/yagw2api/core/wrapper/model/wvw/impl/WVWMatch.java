@@ -305,20 +305,20 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 					Lists.newArrayList(buildCenterMapAction, buildRedMapAction, buildGreenMapAction, buildBlueMapAction, buildRedWorldAction, buildGreenWorldAction, buildBlueWorldAction));
 
 			this.centerMap = buildCenterMapAction.getResult();
-			checkState(this.centerMap != null);
+			checkState(this.centerMap != null, "Failed to build center " + IWVWMap.class.getSimpleName() + " " + dto.getId());
 			this.blueMap = buildBlueMapAction.getResult();
-			checkState(this.blueMap != null);
+			checkState(this.blueMap != null, "Failed to build blue " + IWVWMap.class.getSimpleName() + " " + dto.getId());
 			this.greenMap = buildGreenMapAction.getResult();
-			checkState(this.greenMap != null);
+			checkState(this.greenMap != null, "Failed to build green " + IWVWMap.class.getSimpleName() + " " + dto.getId());
 			this.redMap = buildRedMapAction.getResult();
-			checkState(this.redMap != null);
+			checkState(this.redMap != null, "Failed to build red " + IWVWMap.class.getSimpleName() + " " + dto.getId());
 
 			this.redWorld = buildRedWorldAction.getResult();
-			checkState(this.redWorld != null);
+			checkState(this.redWorld != null, "Failed to build red " + IWorld.class.getSimpleName() + " id=" + dto.getRedWorldId());
 			this.greenWorld = buildGreenWorldAction.getResult();
-			checkState(this.greenWorld != null);
+			checkState(this.greenWorld != null, "Failed to build green " + IWorld.class.getSimpleName() + " id=" + dto.getRedWorldId());
 			this.blueWorld = buildBlueWorldAction.getResult();
-			checkState(this.blueWorld != null);
+			checkState(this.blueWorld != null, "Failed to build blue " + IWorld.class.getSimpleName() + " id=" + dto.getRedWorldId());
 
 			this.start(dto.getStartTime());
 			this.end(dto.getEndTime());

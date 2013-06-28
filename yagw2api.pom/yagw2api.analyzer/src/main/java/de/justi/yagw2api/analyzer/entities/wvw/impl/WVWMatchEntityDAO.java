@@ -116,10 +116,16 @@ public final class WVWMatchEntityDAO implements IWVWMatchEntityDAO {
 		checkState(YAGW2APIAnalyzerPersistence.getDefaultEM().isOpen());
 		final Optional<IWVWMatchEntity> alreadyThere = this.findWVWMatchEntity(match.getStartTimestamp().getTime(), match.getEndTimestamp().getTime(), match.getId());
 		if (alreadyThere.isPresent()) {
+			if (LOGGER.isInfoEnabled()) {
+				LOGGER.info("Found already existing " + IWVWMatchEntity.class.getSimpleName() + " for " + IWVWMatch.class.getSimpleName() + " matchId=" + match.getId());
+			}
 			return alreadyThere.get();
 		} else {
 			final Optional<IWVWMatchEntity> newCreated = this.newMatchEntityOf(match, true, true);
 			checkState(newCreated.isPresent());
+			if (LOGGER.isInfoEnabled()) {
+				LOGGER.info("Created new not persisted " + IWVWMatchEntity.class.getSimpleName() + " for " + IWVWMatch.class.getSimpleName() + " matchId=" + match.getId());
+			}
 			return newCreated.get();
 		}
 	}

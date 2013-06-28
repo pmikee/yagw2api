@@ -14,9 +14,9 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.MapKeyTemporal;
-import javax.persistence.OneToOne;
 import javax.persistence.TemporalType;
 
 import org.apache.log4j.Logger;
@@ -53,7 +53,7 @@ public final class WVWMapEntity extends AbstractEntity implements IWVWMapEntity 
 	@CollectionTable()
 	private final Map<Date, IWVWScoresEmbeddable> scoresMappedByTimestamp = new CopyOnWriteHashMap<Date, IWVWScoresEmbeddable>();
 
-	@OneToOne(targetEntity = WVWMatchEntity.class, cascade = { CascadeType.ALL })
+	@ManyToOne(targetEntity = WVWMatchEntity.class, cascade = { CascadeType.ALL }, optional = false)
 	private IWVWMatchEntity match = null;
 
 	@Column(name = "map_type", unique = false, nullable = false)

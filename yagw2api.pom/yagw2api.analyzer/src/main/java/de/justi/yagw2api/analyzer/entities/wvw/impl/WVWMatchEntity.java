@@ -16,9 +16,10 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapKeyClass;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.MapKeyTemporal;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -37,6 +38,8 @@ import de.justi.yagw2api.analyzer.entities.wvw.IWVWMapEntity;
 import de.justi.yagw2api.analyzer.entities.wvw.IWVWMatchEntity;
 import de.justi.yagw2api.analyzer.entities.wvw.IWVWScoresEmbeddable;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
+import de.justi.yagw2api.core.wrapper.model.wvw.types.IWVWMapType;
+import de.justi.yagw2api.core.wrapper.model.wvw.types.WVWMapType;
 
 @Entity(name = "wvw_match")
 public final class WVWMatchEntity extends AbstractEntity implements IWVWMatchEntity {
@@ -57,21 +60,10 @@ public final class WVWMatchEntity extends AbstractEntity implements IWVWMatchEnt
 	@ManyToOne(targetEntity = WorldEntity.class, cascade = { CascadeType.ALL })
 	private IWorldEntity blueWorld;
 
-	@JoinColumn(name = "redmap")
-	@OneToOne(targetEntity = WVWMapEntity.class, mappedBy = "match", cascade = { CascadeType.ALL })
-	private IWVWMapEntity redMap;
-
-	@JoinColumn(name = "greenmap")
-	@OneToOne(targetEntity = WVWMapEntity.class, mappedBy = "match", cascade = { CascadeType.ALL })
-	private IWVWMapEntity greenMap;
-
-	@JoinColumn(name = "bluemap")
-	@OneToOne(targetEntity = WVWMapEntity.class, mappedBy = "match", cascade = { CascadeType.ALL })
-	private IWVWMapEntity blueMap;
-
-	@JoinColumn(name = "centermap")
-	@OneToOne(targetEntity = WVWMapEntity.class, mappedBy = "match", cascade = { CascadeType.ALL })
-	private IWVWMapEntity centerMap;
+	@OneToMany(targetEntity = WVWMapEntity.class, mappedBy = "match", cascade = { CascadeType.ALL })
+	@MapKeyColumn(name = "mapType")
+	@MapKeyClass(WVWMapType.class)
+	private Map<IWVWMapType, WVWMapEntity> maps;
 
 	@Column(name = "startOfMatch")
 	@Temporal(TemporalType.TIMESTAMP)
@@ -141,48 +133,45 @@ public final class WVWMatchEntity extends AbstractEntity implements IWVWMatchEnt
 		// setup world references
 		if (setupWorldReferences) {
 			if (this.blueWorld == null) {
-				final IWorldEntity world = YAGW2APIAnalyzer.getWorldEntityDAO().findOrCreateWorldEntityOf(model.getBlueWorld());
-				this.blueWorld = world;
+				this.blueWorld = YAGW2APIAnalyzer.getWorldEntityDAO().findOrCreateWorldEntityOf(model.getBlueWorld());
 				this.blueWorld.addParticipatedAsBlueInMatch(this);
 			}
 			if (this.greenWorld == null) {
-				final IWorldEntity world = YAGW2APIAnalyzer.getWorldEntityDAO().findOrCreateWorldEntityOf(model.getGreenWorld());
-				this.greenWorld = world;
+				this.greenWorld = YAGW2APIAnalyzer.getWorldEntityDAO().findOrCreateWorldEntityOf(model.getGreenWorld());
 				this.greenWorld.addParticipatedAsGreenInMatch(this);
 			}
 			if (this.redWorld == null) {
-				final IWorldEntity world = YAGW2APIAnalyzer.getWorldEntityDAO().findOrCreateWorldEntityOf(model.getRedWorld());
-				this.redWorld = world;
+				this.redWorld = YAGW2APIAnalyzer.getWorldEntityDAO().findOrCreateWorldEntityOf(model.getRedWorld());
 				this.redWorld.addParticipatedAsRedInMatch(this);
 			}
 		}
 
 		// setup map references
 		if (setuptMapReferences) {
-			if (this.blueMap == null) {
-				this.blueMap = new WVWMapEntity(this);
+			if (!this.maps.containsKey(WVWMapType.BLUE)) {
+				this.maps.put(WVWMapType.BLUE, new WVWMapEntity(this));
 			}
-			if (this.greenMap == null) {
-				this.greenMap = new WVWMapEntity(this);
+			if (!this.maps.containsKey(WVWMapType.GREEN)) {
+				this.maps.put(WVWMapType.GREEN, new WVWMapEntity(this));
 			}
-			if (this.redMap == null) {
-				this.redMap = new WVWMapEntity(this);
+			if (!this.maps.containsKey(WVWMapType.RED)) {
+				this.maps.put(WVWMapType.RED, new WVWMapEntity(this));
 			}
-			if (this.centerMap == null) {
-				this.centerMap = new WVWMapEntity(this);
+			if (!this.maps.containsKey(WVWMapType.CENTER)) {
+				this.maps.put(WVWMapType.CENTER, new WVWMapEntity(this));
 			}
 		}
-		if (this.blueMap != null) {
-			this.blueMap.synchronizeWithModel(timestamp, model.getBlueMap(), false);
+		if (this.maps.containsKey(WVWMapType.BLUE)) {
+			this.maps.get(WVWMapType.BLUE).synchronizeWithModel(timestamp, model.getBlueMap(), false);
 		}
-		if (this.greenMap != null) {
-			this.greenMap.synchronizeWithModel(timestamp, model.getGreenMap(), false);
+		if (this.maps.containsKey(WVWMapType.GREEN)) {
+			this.maps.get(WVWMapType.GREEN).synchronizeWithModel(timestamp, model.getGreenMap(), false);
 		}
-		if (this.redMap != null) {
-			this.redMap.synchronizeWithModel(timestamp, model.getRedMap(), false);
+		if (this.maps.containsKey(WVWMapType.RED)) {
+			this.maps.get(WVWMapType.RED).synchronizeWithModel(timestamp, model.getRedMap(), false);
 		}
-		if (this.centerMap != null) {
-			this.centerMap.synchronizeWithModel(timestamp, model.getCenterMap(), false);
+		if (this.maps.containsKey(WVWMapType.CENTER)) {
+			this.maps.get(WVWMapType.CENTER).synchronizeWithModel(timestamp, model.getCenterMap(), false);
 		}
 
 		// synchronize timestamps
@@ -231,22 +220,22 @@ public final class WVWMatchEntity extends AbstractEntity implements IWVWMatchEnt
 
 	@Override
 	public IWVWMapEntity getRedMap() {
-		return this.redMap;
+		return this.maps.get(WVWMapType.RED);
 	}
 
 	@Override
 	public IWVWMapEntity getGreenMap() {
-		return this.greenMap;
+		return this.maps.get(WVWMapType.GREEN);
 	}
 
 	@Override
 	public IWVWMapEntity getBlueMap() {
-		return this.blueMap;
+		return this.maps.get(WVWMapType.BLUE);
 	}
 
 	@Override
 	public IWVWMapEntity getCenterMap() {
-		return this.centerMap;
+		return this.maps.get(WVWMapType.CENTER);
 	}
 
 	@Override
