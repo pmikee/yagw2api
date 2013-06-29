@@ -1,6 +1,5 @@
 package de.justi.yagw2api.analyzer.entities.wvw.impl;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
@@ -19,7 +18,6 @@ import javax.persistence.MapKeyColumn;
 import javax.persistence.MapKeyTemporal;
 import javax.persistence.TemporalType;
 
-import org.apache.log4j.Logger;
 import org.eclipse.persistence.annotations.ConversionValue;
 import org.eclipse.persistence.annotations.Convert;
 import org.eclipse.persistence.annotations.ObjectTypeConverter;
@@ -30,12 +28,10 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSortedSet;
 import com.sun.jersey.client.impl.CopyOnWriteHashMap;
 
-import de.justi.yagw2api.analyzer.YAGW2APIAnalyzer;
 import de.justi.yagw2api.analyzer.entities.AbstractEntity;
 import de.justi.yagw2api.analyzer.entities.wvw.IWVWMapEntity;
 import de.justi.yagw2api.analyzer.entities.wvw.IWVWMatchEntity;
 import de.justi.yagw2api.analyzer.entities.wvw.IWVWScoresEmbeddable;
-import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMap;
 import de.justi.yagw2api.core.wrapper.model.wvw.types.IWVWMapType;
 import de.justi.yagw2api.core.wrapper.model.wvw.types.WVWMapType;
 
@@ -44,8 +40,6 @@ import de.justi.yagw2api.core.wrapper.model.wvw.types.WVWMapType;
 		@ConversionValue(objectValue = "BLUE", dataValue = "BLUE") }) })
 @Entity(name = "map")
 public final class WVWMapEntity extends AbstractEntity implements IWVWMapEntity {
-	private static final Logger LOGGER = Logger.getLogger(WVWMapEntity.class);
-
 	@ElementCollection(targetClass = WVWScoresEmbeddable.class)
 	@MapKeyColumn(name = "timestamp")
 	@MapKeyTemporal(TemporalType.TIMESTAMP)
@@ -60,12 +54,19 @@ public final class WVWMapEntity extends AbstractEntity implements IWVWMapEntity 
 	@Convert("MapTypeConverter")
 	private IWVWMapType type = null;
 
-	public WVWMapEntity() {
+	@Override
+	public IWVWMapType getType() {
+		return this.type;
 	}
 
-	public WVWMapEntity(IWVWMatchEntity parentMatch) {
-		checkNotNull(parentMatch);
-		this.match = parentMatch;
+	@Override
+	public void setType(IWVWMapType type) {
+		this.type = checkNotNull(type);
+	}
+
+	@Override
+	public void setMatch(IWVWMatchEntity match) {
+		this.match = checkNotNull(match);
 	}
 
 	@Override
@@ -80,46 +81,12 @@ public final class WVWMapEntity extends AbstractEntity implements IWVWMapEntity 
 	}
 
 	@Override
-	public synchronized void synchronizeWithModel(Date timestamp, IWVWMap model, boolean setupMatchReference) {
-		checkNotNull(model);
-
-		this.type = model.getType();
-
-		if (setupMatchReference) {
-			if (LOGGER.isTraceEnabled()) {
-				LOGGER.trace("Going to setup match reference of " + this);
-			}
-			if ((this.match == null) && model.getMatch().isPresent()) {
-				this.match = YAGW2APIAnalyzer.getWVWMatchEntityDAO().findOrCreateWVWMatchEntityOf(model.getMatch().get());
-			}
-		}
-
-		final Optional<IWVWScoresEmbeddable> latestScores = this.getLatestScores();
-
-		if (!latestScores.isPresent() || (latestScores.get().getBlueScore() != model.getScores().getBlueScore()) || (latestScores.get().getGreenScore() != model.getScores().getGreenScore())
-				|| (latestScores.get().getRedScore() != model.getScores().getRedScore())) {
-			this.addScores(timestamp, model.getScores().getRedScore(), model.getScores().getGreenScore(), model.getScores().getBlueScore());
-		}
-		if (LOGGER.isTraceEnabled()) {
-			LOGGER.trace("Synchronized " + this.getClass().getSimpleName() + " " + this.getId() + " with " + model.getType() + " @ " + timestamp);
-		}
-	}
-
-	private void addScores(Date timestamp, int redScore, int greenScore, int blueScore) {
+	public void addScores(Date timestamp, IWVWScoresEmbeddable scores) {
 		checkNotNull(timestamp);
-		checkArgument(redScore >= 0);
-		checkArgument(greenScore >= 0);
-		checkArgument(blueScore >= 0);
-
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Going to add " + timestamp + " redScore=" + redScore + ", greenScore=" + greenScore + ", blueScore=" + blueScore + " to " + this);
-			System.out.println(this.scoresMappedByTimestamp);
-		}
-
+		checkNotNull(scores);
 		checkState(this.scoresMappedByTimestamp != null);
 		checkState(!this.scoresMappedByTimestamp.containsKey(timestamp), this + " already contains a score for the given timestamp: " + timestamp);
-		// TODO make use of factory to create WVWScoresEmbeddable
-		this.scoresMappedByTimestamp.put(timestamp, new WVWScoresEmbeddable(redScore, greenScore, blueScore));
+		this.scoresMappedByTimestamp.put(timestamp, checkNotNull(scores));
 	}
 
 	@Override

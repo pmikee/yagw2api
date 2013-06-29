@@ -7,7 +7,7 @@ import com.google.common.base.Optional;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
 
 public interface IWVWMatchEntityDAO {
-	Optional<IWVWMatchEntity> newMatchEntityOf(IWVWMatch match, boolean setupWorldReferences, boolean setupMapReference);
+	Optional<IWVWMatchEntity> newMatchEntityOf(IWVWMatch match);
 
 	boolean save(IWVWMatchEntity entity);
 
@@ -26,4 +26,19 @@ public interface IWVWMatchEntityDAO {
 	 * @return
 	 */
 	IWVWMatchEntity findOrCreateWVWMatchEntityOf(IWVWMatch match);
+
+	/**
+	 * <p>
+	 * Synchronize this with the given {@link IWVWMatch}
+	 * </p>
+	 * <p>
+	 * Synchronization is not persisted directly, therefore you have to use
+	 * {@link IWVWMatchEntityDAO#save(IWVWMatchEntity)} to persist them.
+	 * </p>
+	 * 
+	 * @param entity
+	 * @param timestamp
+	 * @param model
+	 */
+	void synchronizeEntityWithModel(IWVWMatchEntity entity, Date timestamp, IWVWMatch model);
 }

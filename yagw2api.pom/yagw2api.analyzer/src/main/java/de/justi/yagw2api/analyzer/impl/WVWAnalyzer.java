@@ -116,7 +116,7 @@ final class WVWAnalyzer implements IWVWAnalyzer {
 		checkState(entity.getGreenWorld() != null);
 
 		boolean persisted = false;
-		entity.synchronizeWithModel(timestamp, match, true, true);
+		this.wvwMatchEntityDAO.synchronizeEntityWithModel(entity, timestamp, match);
 		checkState(entity.getBlueMap() != null);
 		checkState(entity.getRedMap() != null);
 		checkState(entity.getGreenMap() != null);

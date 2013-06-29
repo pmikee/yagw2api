@@ -7,45 +7,51 @@ import com.google.common.base.Optional;
 
 import de.justi.yagw2api.analyzer.entities.IEntity;
 import de.justi.yagw2api.analyzer.entities.IWorldEntity;
-import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
 
 public interface IWVWMatchEntity extends IEntity {
+	void setOriginMatchId(String originMatchId);
+
 	String getOriginMatchId();
+
+	void setStartTimestamp(Date date);
 
 	Date getStartTimestamp();
 
+	void setEndTimestamp(Date date);
+
 	Date getEndTimestamp();
+
+	void setRedMap(IWVWMapEntity map);
 
 	IWVWMapEntity getRedMap();
 
+	void setGreenMap(IWVWMapEntity map);
+
 	IWVWMapEntity getGreenMap();
+
+	void setBlueMap(IWVWMapEntity map);
 
 	IWVWMapEntity getBlueMap();
 
+	void setCenterMap(IWVWMapEntity map);
+
 	IWVWMapEntity getCenterMap();
+
+	void setRedWorld(IWorldEntity world);
 
 	IWorldEntity getRedWorld();
 
+	void setGreenWorld(IWorldEntity world);
+
 	IWorldEntity getGreenWorld();
 
+	void setBlueWorld(IWorldEntity world);
+
 	IWorldEntity getBlueWorld();
+
+	void addScores(Date timestamp, IWVWScoresEmbeddable scores);
 
 	Map<Date, IWVWScoresEmbeddable> getScores();
 
 	Optional<IWVWScoresEmbeddable> getLatestScores();
-
-	/**
-	 * <p>
-	 * Synchronize this with the given {@link IWVWMatch}
-	 * </p>
-	 * <p>
-	 * Synchronization is not persisted directly, therefore you have to use
-	 * {@link IWVWMatchEntityDAO#save(IWVWMatchEntity)} to persist them.
-	 * </p>
-	 * 
-	 * @param timestamp
-	 * @param model
-	 * @param setupWorldReferences
-	 */
-	void synchronizeWithModel(Date timestamp, IWVWMatch model, boolean setupWorldReferences, boolean setupMapReferences);
 }
