@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -51,6 +52,7 @@ import com.google.common.base.Optional;
 import com.google.common.io.Closer;
 import com.google.common.math.DoubleMath;
 
+import de.justi.yagw2api.core.YAGW2APICore;
 import de.justi.yagw2api.core.wrapper.IWVWWrapper;
 import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
 import de.justi.yagw2api.sample.model.MapObjectivesTableModel;
@@ -215,6 +217,42 @@ public final class MainWindow extends AbstractWindow {
 		});
 		windowMenu.add(loadPerspectiveMenuItem);
 		mainMenuBar.add(windowMenu);
+		final JMenu settingsMenu = new JMenu("Settings");
+		final JMenu settingLocaleMenu = new JMenu("Language");
+		final JMenuItem enLocaleMenuItem = new JMenuItem("en");
+		enLocaleMenuItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				YAGW2APICore.setCurrentLocale(Locale.ENGLISH);
+			}
+		});
+		settingLocaleMenu.add(enLocaleMenuItem);
+		final JMenuItem deLocaleMenuItem = new JMenuItem("de");
+		deLocaleMenuItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				YAGW2APICore.setCurrentLocale(Locale.GERMANY);
+			}
+		});
+		settingLocaleMenu.add(deLocaleMenuItem);
+		final JMenuItem frLocaleMenuItem = new JMenuItem("fr");
+		frLocaleMenuItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				YAGW2APICore.setCurrentLocale(Locale.FRANCE);
+			}
+		});
+		settingLocaleMenu.add(frLocaleMenuItem);
+		final JMenuItem esLocaleMenuItem = new JMenuItem("es");
+		esLocaleMenuItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				YAGW2APICore.setCurrentLocale(Locale.forLanguageTag("es"));
+			}
+		});
+		settingLocaleMenu.add(esLocaleMenuItem);
+		settingsMenu.add(settingLocaleMenu);
+		mainMenuBar.add(settingsMenu);
 		this.getContentPanel().add(mainMenuBar, BorderLayout.NORTH);
 
 		this.toolWindowManager = new MyDoggyToolWindowManager();
