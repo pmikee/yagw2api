@@ -19,7 +19,6 @@ import java.util.Locale;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -172,6 +171,138 @@ public final class MainWindow extends AbstractWindow {
 		this.allMapsModel = new MapObjectivesTableModel();
 		this.matchDetailsTableModel = new MatchDetailsTableModel();
 
+		this.getContentPanel().add(this.builtMainMenuBar(), BorderLayout.NORTH);
+
+		this.toolWindowManager = new MyDoggyToolWindowManager();
+		this.getContentPanel().add(this.toolWindowManager, BorderLayout.CENTER);
+		final ToolWindowManagerDescriptor toolWindowManagerDesc = this.toolWindowManager.getToolWindowManagerDescriptor();
+		toolWindowManagerDesc.setNumberingEnabled(false);
+		toolWindowManagerDesc.setPushAwayMode(PushAwayMode.MOST_RECENT);
+
+		this.toolWindowManager.resetMainContent();
+		final ContentManager contentManager = this.toolWindowManager.getContentManager();
+		contentManager.addContent("Worldmap", "Worldmap", null, this.buildMap(), "Worldmap");
+
+		this.matchesTable = this.initMatchesTable(this.matchesTableModel);
+		this.matchesToolWindow = this.toolWindowManager.registerToolWindow("Matches Overview", "Matches Overview", null, new JScrollPane(this.matchesTable), ToolWindowAnchor.LEFT);
+		this.matchesToolWindow.setVisible(true);
+		final DockedTypeDescriptor matchesToolWindowDescriptor = (DockedTypeDescriptor) this.matchesToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
+		matchesToolWindowDescriptor.setIdVisibleOnTitleBar(false);
+
+		this.singleMapTableToolWindows = this.toolWindowManager.getToolWindowGroup("mapTableToolWindows");
+
+		this.allMapsTable = this.initMapTable(this.allMapsModel);
+		this.allMapsToolWindow = this.toolWindowManager.registerToolWindow("All Maps", "All Maps", null, new JScrollPane(this.allMapsTable), ToolWindowAnchor.LEFT);
+		this.allMapsToolWindow.setVisible(true);
+		final DockedTypeDescriptor allMapsToolWindowDescriptor = (DockedTypeDescriptor) this.allMapsToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
+		allMapsToolWindowDescriptor.setIdVisibleOnTitleBar(false);
+
+		this.eternalTable = this.initMapTable(this.eternalMapModel);
+		this.eternalMapToolWindow = this.toolWindowManager.registerToolWindow("Enternal Battlegrounds", "Enternal Battlegrounds", null, new JScrollPane(this.eternalTable), ToolWindowAnchor.RIGHT);
+		this.singleMapTableToolWindows.addToolWindow(this.eternalMapToolWindow);
+		final DockedTypeDescriptor eternalMapToolWindowDescriptor = (DockedTypeDescriptor) this.eternalMapToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
+		eternalMapToolWindowDescriptor.setIdVisibleOnTitleBar(false);
+
+		this.blueTable = this.initMapTable(this.blueMapModel);
+		this.blueMapToolWindow = this.toolWindowManager.registerToolWindow("Blue Borderlands", "Blue Borderlands", null, new JScrollPane(this.blueTable), ToolWindowAnchor.RIGHT);
+		this.singleMapTableToolWindows.addToolWindow(this.blueMapToolWindow);
+		final DockedTypeDescriptor blueMapToolWindowDescriptor = (DockedTypeDescriptor) this.blueMapToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
+		blueMapToolWindowDescriptor.setIdVisibleOnTitleBar(false);
+
+		this.greenTable = this.initMapTable(this.greenMapModel);
+		this.greenMapToolWindow = this.toolWindowManager.registerToolWindow("Green Borderlands", "Green Borderlands", null, new JScrollPane(this.greenTable), ToolWindowAnchor.RIGHT);
+		this.singleMapTableToolWindows.addToolWindow(this.greenMapToolWindow);
+		final DockedTypeDescriptor greenMapToolWindowDescriptor = (DockedTypeDescriptor) this.greenMapToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
+		greenMapToolWindowDescriptor.setIdVisibleOnTitleBar(false);
+
+		this.redTable = this.initMapTable(this.redMapModel);
+		this.redMapToolWindow = this.toolWindowManager.registerToolWindow("Red Borderlands", "Red Borderlands", null, new JScrollPane(this.redTable), ToolWindowAnchor.RIGHT);
+		this.singleMapTableToolWindows.addToolWindow(this.redMapToolWindow);
+		final DockedTypeDescriptor redMapToolWindowDescriptor = (DockedTypeDescriptor) this.redMapToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
+		redMapToolWindowDescriptor.setIdVisibleOnTitleBar(false);
+
+		this.singleMapTableToolWindows.setImplicit(true);
+		this.singleMapTableToolWindows.setVisible(true);
+
+		this.matchDetailslTable = this.initMatchDetailsTable(this.matchDetailsTableModel);
+		this.matchDetailsToolWindow = this.toolWindowManager.registerToolWindow("Match Details", "Match Details", null, new JScrollPane(this.matchDetailslTable), ToolWindowAnchor.BOTTOM);
+		this.matchDetailsToolWindow.setVisible(true);
+		final DockedTypeDescriptor matchDetailsToolWindowDescriptor = (DockedTypeDescriptor) this.matchDetailsToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
+		matchDetailsToolWindowDescriptor.setIdVisibleOnTitleBar(false);
+		matchDetailsToolWindowDescriptor.setTitleBarButtonsVisible(false);
+		matchDetailsToolWindowDescriptor.setTitleBarVisible(false);
+		//
+		// final ToolWindow chartTestToolWindow =
+		// this.toolWindowManager.registerToolWindow("Chart Test", "Chart Test",
+		// null, this.buildChart(), ToolWindowAnchor.TOP);
+		// final DockedTypeDescriptor chartTestToolWindowDescriptor =
+		// (DockedTypeDescriptor)
+		// chartTestToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
+		// chartTestToolWindowDescriptor.setIdVisibleOnTitleBar(false);
+		// chartTestToolWindow.setVisible(true);
+
+		this.pack();
+	}
+
+	// private ChartPanel buildChart() {
+	// final TimeSeriesCollection dataset = new TimeSeriesCollection();
+	// TimeSeries series;
+	// for (IWorldEntity world :
+	// YAGW2APIAnalyzer.getWorldEntityDAO().retrieveAllWorldEntities()) {
+	// for (IWVWMatchEntity match : world.getParticipatedInMatches()) {
+	// series = new TimeSeries(world.getName().get() + ": " +
+	// match.getStartTimestamp() + "-" + match.getEndTimestamp(),
+	// Millisecond.class);
+	// int i;
+	// if (match.getBlueWorld().equals(world)) {
+	// i = 1;
+	// } else if (match.getGreenWorld().equals(world)) {
+	// i = 2;
+	// } else {
+	// i = 3;
+	// }
+	//
+	// Map<Date, IWVWScoresEmbeddable> scores = match.getScores();
+	// for (Date key : scores.keySet()) {
+	// if (i == 1) {
+	// series.add(new Millisecond(key), scores.get(key).getBlueScore());
+	// } else if (i == 2) {
+	// series.add(new Millisecond(key), scores.get(key).getGreenScore());
+	// } else {
+	// series.add(new Millisecond(key), scores.get(key).getRedScore());
+	// }
+	// }
+	//
+	// dataset.addSeries(series);
+	// }
+	// }
+	//
+	// final JFreeChart chart =
+	// ChartFactory.createTimeSeriesChart("Legal & General Unit Trust Prices",
+	// // title
+	// "Date", // x-axis label
+	// "Total Points", // y-axis label
+	// dataset, // data
+	// false, // create legend?
+	// true, // generate tooltips?
+	// false);
+	//
+	// chart.setBackgroundPaint(Color.white);
+	//
+	// XYPlot plot = (XYPlot) chart.getPlot();
+	// plot.setBackgroundPaint(Color.lightGray);
+	// plot.setDomainGridlinePaint(Color.white);
+	// plot.setRangeGridlinePaint(Color.white);
+	// plot.setAxisOffset(new RectangleInsets(5.0, 5.0, 5.0, 5.0));
+	// plot.setDomainCrosshairVisible(true);
+	// plot.setRangeCrosshairVisible(true);
+	//
+	// final ChartPanel chartPanel = new ChartPanel(chart);
+	// return chartPanel;
+	//
+	// }
+
+	private JMenuBar builtMainMenuBar() {
 		final JMenuBar mainMenuBar = new JMenuBar();
 		final JMenu windowMenu = new JMenu("Window");
 		final JMenuItem savePerspectiveMenuItem = new JMenuItem("Save Perspective");
@@ -253,14 +384,10 @@ public final class MainWindow extends AbstractWindow {
 		settingLocaleMenu.add(esLocaleMenuItem);
 		settingsMenu.add(settingLocaleMenu);
 		mainMenuBar.add(settingsMenu);
-		this.getContentPanel().add(mainMenuBar, BorderLayout.NORTH);
+		return mainMenuBar;
+	}
 
-		this.toolWindowManager = new MyDoggyToolWindowManager();
-		this.getContentPanel().add(this.toolWindowManager, BorderLayout.CENTER);
-		final ToolWindowManagerDescriptor toolWindowManagerDesc = this.toolWindowManager.getToolWindowManagerDescriptor();
-		toolWindowManagerDesc.setNumberingEnabled(false);
-		toolWindowManagerDesc.setPushAwayMode(PushAwayMode.MOST_RECENT);
-
+	private JXMapKit buildMap() {
 		final JXMapKit mapkit = new JXMapKit();
 		mapkit.setDefaultProvider(DefaultProviders.Custom);
 		mapkit.setAddressLocationShown(false);
@@ -273,63 +400,7 @@ public final class MainWindow extends AbstractWindow {
 		mapkit.getMainMap().setRestrictOutsidePanning(true);
 		mapkit.getMainMap().setHorizontalWrapped(false);
 		mapkit.getMainMap().setRecenterOnClickEnabled(true);
-
-		final JPanel test = new JPanel();
-		test.add(mapkit);
-
-		this.toolWindowManager.resetMainContent();
-		final ContentManager contentManager = this.toolWindowManager.getContentManager();
-		contentManager.addContent("Worldmap", "Worldmap", null, mapkit, "Worldmap");
-
-		this.matchesTable = this.initMatchesTable(this.matchesTableModel);
-		this.matchesToolWindow = this.toolWindowManager.registerToolWindow("Matches Overview", "Matches Overview", null, new JScrollPane(this.matchesTable), ToolWindowAnchor.LEFT);
-		this.matchesToolWindow.setVisible(true);
-		final DockedTypeDescriptor matchesToolWindowDescriptor = (DockedTypeDescriptor) this.matchesToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
-		matchesToolWindowDescriptor.setIdVisibleOnTitleBar(false);
-
-		this.singleMapTableToolWindows = this.toolWindowManager.getToolWindowGroup("mapTableToolWindows");
-
-		this.allMapsTable = this.initMapTable(this.allMapsModel);
-		this.allMapsToolWindow = this.toolWindowManager.registerToolWindow("All Maps", "All Maps", null, new JScrollPane(this.allMapsTable), ToolWindowAnchor.LEFT);
-		this.allMapsToolWindow.setVisible(true);
-		final DockedTypeDescriptor allMapsToolWindowDescriptor = (DockedTypeDescriptor) this.allMapsToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
-		allMapsToolWindowDescriptor.setIdVisibleOnTitleBar(false);
-
-		this.eternalTable = this.initMapTable(this.eternalMapModel);
-		this.eternalMapToolWindow = this.toolWindowManager.registerToolWindow("Enternal Battlegrounds", "Enternal Battlegrounds", null, new JScrollPane(this.eternalTable), ToolWindowAnchor.RIGHT);
-		this.singleMapTableToolWindows.addToolWindow(this.eternalMapToolWindow);
-		final DockedTypeDescriptor eternalMapToolWindowDescriptor = (DockedTypeDescriptor) this.eternalMapToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
-		eternalMapToolWindowDescriptor.setIdVisibleOnTitleBar(false);
-
-		this.blueTable = this.initMapTable(this.blueMapModel);
-		this.blueMapToolWindow = this.toolWindowManager.registerToolWindow("Blue Borderlands", "Blue Borderlands", null, new JScrollPane(this.blueTable), ToolWindowAnchor.RIGHT);
-		this.singleMapTableToolWindows.addToolWindow(this.blueMapToolWindow);
-		final DockedTypeDescriptor blueMapToolWindowDescriptor = (DockedTypeDescriptor) this.blueMapToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
-		blueMapToolWindowDescriptor.setIdVisibleOnTitleBar(false);
-
-		this.greenTable = this.initMapTable(this.greenMapModel);
-		this.greenMapToolWindow = this.toolWindowManager.registerToolWindow("Green Borderlands", "Green Borderlands", null, new JScrollPane(this.greenTable), ToolWindowAnchor.RIGHT);
-		this.singleMapTableToolWindows.addToolWindow(this.greenMapToolWindow);
-		final DockedTypeDescriptor greenMapToolWindowDescriptor = (DockedTypeDescriptor) this.greenMapToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
-		greenMapToolWindowDescriptor.setIdVisibleOnTitleBar(false);
-
-		this.redTable = this.initMapTable(this.redMapModel);
-		this.redMapToolWindow = this.toolWindowManager.registerToolWindow("Red Borderlands", "Red Borderlands", null, new JScrollPane(this.redTable), ToolWindowAnchor.RIGHT);
-		this.singleMapTableToolWindows.addToolWindow(this.redMapToolWindow);
-		final DockedTypeDescriptor redMapToolWindowDescriptor = (DockedTypeDescriptor) this.redMapToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
-		redMapToolWindowDescriptor.setIdVisibleOnTitleBar(false);
-
-		this.singleMapTableToolWindows.setImplicit(true);
-		this.singleMapTableToolWindows.setVisible(true);
-
-		this.matchDetailslTable = this.initMatchDetailsTable(this.matchDetailsTableModel);
-		this.matchDetailsToolWindow = this.toolWindowManager.registerToolWindow("Match Details", "Match Details", null, new JScrollPane(this.matchDetailslTable), ToolWindowAnchor.BOTTOM);
-		this.matchDetailsToolWindow.setVisible(true);
-		final DockedTypeDescriptor matchDetailsToolWindowDescriptor = (DockedTypeDescriptor) this.matchDetailsToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
-		matchDetailsToolWindowDescriptor.setIdVisibleOnTitleBar(false);
-		matchDetailsToolWindowDescriptor.setTitleBarButtonsVisible(false);
-		matchDetailsToolWindowDescriptor.setTitleBarVisible(false);
-		this.pack();
+		return mapkit;
 	}
 
 	private TableColumnModel newTCM(String[] header) {

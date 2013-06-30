@@ -184,7 +184,7 @@
 				<artifactId>swingx-graphics</artifactId>
 				<version>1.6.5-1</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>org.swinglabs</groupId>
 				<artifactId>swingx-core</artifactId>
@@ -212,6 +212,12 @@
 				<groupId>net.sourceforge.mydoggy</groupId>
 				<artifactId>mydoggy-plaf</artifactId>
 				<version>1.5.0-beta-r1389</version>
+			</dependency>
+
+			<dependency>
+				<groupId>jfree</groupId>
+				<artifactId>jfreechart</artifactId>
+				<version>1.0.13</version>
 			</dependency>
 
 			<dependency>
