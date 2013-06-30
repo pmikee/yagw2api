@@ -6,10 +6,18 @@ import static com.google.common.base.Preconditions.checkState;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -30,14 +38,17 @@ import org.jdesktop.swingx.mapviewer.TileFactory;
 import org.jdesktop.swingx.mapviewer.TileFactoryInfo;
 import org.noos.xing.mydoggy.ContentManager;
 import org.noos.xing.mydoggy.DockedTypeDescriptor;
+import org.noos.xing.mydoggy.PersistenceDelegate.MergePolicy;
 import org.noos.xing.mydoggy.PushAwayMode;
 import org.noos.xing.mydoggy.ToolWindow;
 import org.noos.xing.mydoggy.ToolWindowAnchor;
+import org.noos.xing.mydoggy.ToolWindowGroup;
 import org.noos.xing.mydoggy.ToolWindowManagerDescriptor;
 import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 
 import com.google.common.base.Optional;
+import com.google.common.io.Closer;
 import com.google.common.math.DoubleMath;
 
 import de.justi.yagw2api.core.wrapper.IWVWWrapper;
@@ -49,6 +60,7 @@ import de.justi.yagw2api.sample.renderer.MatchDetailsTableCellRenderer;
 import de.justi.yagw2api.sample.renderer.ObjectiveTableCellRenderer;
 
 public final class MainWindow extends AbstractWindow {
+	private static final String WORKSPACE_XML_FILENAME = "workspace.xml";
 	private static final long serialVersionUID = -6500541020042114865L;
 	private static final Logger LOGGER = Logger.getLogger(MainWindow.class);
 	public static final Color ETERNAL_BATTLEGROUNDS_FG = new Color(200, 130, 0);
@@ -88,6 +100,7 @@ public final class MainWindow extends AbstractWindow {
 	private final ToolWindow redMapToolWindow;
 	private final ToolWindow matchDetailsToolWindow;
 	private final MyDoggyToolWindowManager toolWindowManager;
+	private ToolWindowGroup singleMapTableToolWindows;
 
 	private static final class GW2TileFactoryInfo extends TileFactoryInfo {
 		private static final int MAX_ZOOM = 6;
@@ -157,6 +170,53 @@ public final class MainWindow extends AbstractWindow {
 		this.allMapsModel = new MapObjectivesTableModel();
 		this.matchDetailsTableModel = new MatchDetailsTableModel();
 
+		final JMenuBar mainMenuBar = new JMenuBar();
+		final JMenu windowMenu = new JMenu("Window");
+		final JMenuItem savePerspectiveMenuItem = new JMenuItem("Save Perspective");
+		savePerspectiveMenuItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Closer closer = Closer.create();
+				try {
+					try {
+						final FileOutputStream saveDestination = closer.register(new FileOutputStream(WORKSPACE_XML_FILENAME));
+						MainWindow.this.toolWindowManager.getPersistenceDelegate().save(saveDestination);
+						LOGGER.info("Successfull saved workspace.");
+					} catch (Throwable ex) {
+						closer.rethrow(ex);
+					} finally {
+						closer.close();
+					}
+				} catch (IOException ex) {
+					LOGGER.error("Exeption thrown while saving workspace.", ex);
+				}
+			}
+		});
+		windowMenu.add(savePerspectiveMenuItem);
+		final JMenuItem loadPerspectiveMenuItem = new JMenuItem("Load Perspective");
+		loadPerspectiveMenuItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Closer closer = Closer.create();
+				try {
+					try {
+						final FileInputStream loadSource = closer.register(new FileInputStream(WORKSPACE_XML_FILENAME));
+						MainWindow.this.toolWindowManager.getPersistenceDelegate().merge(loadSource, MergePolicy.RESET);
+						LOGGER.info("Successfull loaded workspace.");
+					} catch (Throwable ex) {
+						closer.rethrow(ex);
+					} finally {
+						closer.close();
+					}
+				} catch (IOException ex) {
+					LOGGER.error("Exeption thrown while loading workspace.", ex);
+				}
+			}
+		});
+		windowMenu.add(loadPerspectiveMenuItem);
+		mainMenuBar.add(windowMenu);
+		this.getContentPanel().add(mainMenuBar, BorderLayout.NORTH);
+
 		this.toolWindowManager = new MyDoggyToolWindowManager();
 		this.getContentPanel().add(this.toolWindowManager, BorderLayout.CENTER);
 		final ToolWindowManagerDescriptor toolWindowManagerDesc = this.toolWindowManager.getToolWindowManagerDescriptor();
@@ -189,35 +249,40 @@ public final class MainWindow extends AbstractWindow {
 		final DockedTypeDescriptor matchesToolWindowDescriptor = (DockedTypeDescriptor) this.matchesToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
 		matchesToolWindowDescriptor.setIdVisibleOnTitleBar(false);
 
+		this.singleMapTableToolWindows = this.toolWindowManager.getToolWindowGroup("mapTableToolWindows");
+
 		this.allMapsTable = this.initMapTable(this.allMapsModel);
-		this.allMapsToolWindow = this.toolWindowManager.registerToolWindow("All Maps", "All Maps", null, new JScrollPane(this.allMapsTable), ToolWindowAnchor.RIGHT);
+		this.allMapsToolWindow = this.toolWindowManager.registerToolWindow("All Maps", "All Maps", null, new JScrollPane(this.allMapsTable), ToolWindowAnchor.LEFT);
 		this.allMapsToolWindow.setVisible(true);
 		final DockedTypeDescriptor allMapsToolWindowDescriptor = (DockedTypeDescriptor) this.allMapsToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
 		allMapsToolWindowDescriptor.setIdVisibleOnTitleBar(false);
 
 		this.eternalTable = this.initMapTable(this.eternalMapModel);
 		this.eternalMapToolWindow = this.toolWindowManager.registerToolWindow("Enternal Battlegrounds", "Enternal Battlegrounds", null, new JScrollPane(this.eternalTable), ToolWindowAnchor.RIGHT);
-		this.eternalMapToolWindow.setVisible(true);
+		this.singleMapTableToolWindows.addToolWindow(this.eternalMapToolWindow);
 		final DockedTypeDescriptor eternalMapToolWindowDescriptor = (DockedTypeDescriptor) this.eternalMapToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
 		eternalMapToolWindowDescriptor.setIdVisibleOnTitleBar(false);
 
 		this.blueTable = this.initMapTable(this.blueMapModel);
 		this.blueMapToolWindow = this.toolWindowManager.registerToolWindow("Blue Borderlands", "Blue Borderlands", null, new JScrollPane(this.blueTable), ToolWindowAnchor.RIGHT);
-		this.blueMapToolWindow.setVisible(true);
+		this.singleMapTableToolWindows.addToolWindow(this.blueMapToolWindow);
 		final DockedTypeDescriptor blueMapToolWindowDescriptor = (DockedTypeDescriptor) this.blueMapToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
 		blueMapToolWindowDescriptor.setIdVisibleOnTitleBar(false);
 
 		this.greenTable = this.initMapTable(this.greenMapModel);
 		this.greenMapToolWindow = this.toolWindowManager.registerToolWindow("Green Borderlands", "Green Borderlands", null, new JScrollPane(this.greenTable), ToolWindowAnchor.RIGHT);
-		this.greenMapToolWindow.setVisible(true);
+		this.singleMapTableToolWindows.addToolWindow(this.greenMapToolWindow);
 		final DockedTypeDescriptor greenMapToolWindowDescriptor = (DockedTypeDescriptor) this.greenMapToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
 		greenMapToolWindowDescriptor.setIdVisibleOnTitleBar(false);
 
 		this.redTable = this.initMapTable(this.redMapModel);
 		this.redMapToolWindow = this.toolWindowManager.registerToolWindow("Red Borderlands", "Red Borderlands", null, new JScrollPane(this.redTable), ToolWindowAnchor.RIGHT);
-		this.redMapToolWindow.setVisible(true);
+		this.singleMapTableToolWindows.addToolWindow(this.redMapToolWindow);
 		final DockedTypeDescriptor redMapToolWindowDescriptor = (DockedTypeDescriptor) this.redMapToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
 		redMapToolWindowDescriptor.setIdVisibleOnTitleBar(false);
+
+		this.singleMapTableToolWindows.setImplicit(true);
+		this.singleMapTableToolWindows.setVisible(true);
 
 		this.matchDetailslTable = this.initMatchDetailsTable(this.matchDetailsTableModel);
 		this.matchDetailsToolWindow = this.toolWindowManager.registerToolWindow("Match Details", "Match Details", null, new JScrollPane(this.matchDetailslTable), ToolWindowAnchor.BOTTOM);
