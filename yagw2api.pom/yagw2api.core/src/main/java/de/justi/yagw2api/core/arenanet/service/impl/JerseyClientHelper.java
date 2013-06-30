@@ -21,14 +21,14 @@ enum JerseyClientHelper {
 
 	}
 
-	private ClientConfig configureClient() {
+	private ClientConfig createClientConfig() {
 		HttpsURLConnection.setDefaultSSLSocketFactory((SSLSocketFactory) SSLSocketFactory.getDefault());
 		final ClientConfig config = new DefaultClientConfig();
 		return config;
 	}
 
 	public Client createClient() {
-		final Client restClient = Client.create(this.configureClient());
+		final Client restClient = Client.create(this.createClientConfig());
 		restClient.setFollowRedirects(true);
 		restClient.setReadTimeout(READ_TIMEOUT_MILLIS);
 		restClient.setConnectTimeout(CONNECTION_TIMEOUT_MILLIS);
