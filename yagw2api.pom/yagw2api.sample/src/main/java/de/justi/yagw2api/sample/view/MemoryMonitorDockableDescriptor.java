@@ -26,10 +26,10 @@ public class MemoryMonitorDockableDescriptor extends CustomDockableDescriptor {
 
 	@Override
 	public JComponent getRepresentativeAnchor(Component parent) {
-		if (representativeAnchor == null) {
-			representativeAnchor = new MemoryMonitorPanel(anchor);
+		if (this.representativeAnchor == null) {
+			this.representativeAnchor = new MemoryMonitorPanel(anchor);
 		}
-		return representativeAnchor;
+		return this.representativeAnchor;
 	}
 
 	@Override
@@ -49,12 +49,10 @@ public class MemoryMonitorDockableDescriptor extends CustomDockableDescriptor {
 				@Override
 				public void run() {
 					while (true) {
-						String grabbed = StringUtil.bytes2MBytes(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
-						String total = StringUtil.bytes2MBytes(Runtime.getRuntime().totalMemory());
-
+						final String grabbed = StringUtil.bytes2MBytes(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
+						final String total = StringUtil.bytes2MBytes(Runtime.getRuntime().totalMemory());
 						memoryUsage.setMaximum(Integer.parseInt(total));
 						memoryUsage.setValue(Integer.parseInt(grabbed));
-
 						memoryUsage.setString(grabbed + " MB of " + total + " MB");
 						try {
 							Thread.sleep(SLEEP);
@@ -71,23 +69,19 @@ public class MemoryMonitorDockableDescriptor extends CustomDockableDescriptor {
 				case BOTTOM:
 				case TOP:
 					memoryUsage.setOrientation(SwingConstants.HORIZONTAL);
-					setLayout(new TableLayout(new double[][] { { 120, 1, 17 }, { -1 } }));
-					add(memoryUsage, "0,0,FULL,FULL");
+					this.setLayout(new TableLayout(new double[][] { { 120, -1 }, { -1 } }));
+					this.add(memoryUsage, "0,0,FULL,FULL");
 					break;
 				case LEFT:
-					memoryUsage.setOrientation(SwingConstants.VERTICAL);
-					setLayout(new TableLayout(new double[][] { { -1 }, { 120, 1, 17 } }));
-					add(memoryUsage, "0,0,FULL,FULL");
-					break;
 				case RIGHT:
 					memoryUsage.setOrientation(SwingConstants.VERTICAL);
-					setLayout(new TableLayout(new double[][] { { -1 }, { 17, 1, 120 } }));
-					add(memoryUsage, "0,2,FULL,FULL");
+					this.setLayout(new TableLayout(new double[][] { { -1 }, { 120, -1 } }));
+					this.add(memoryUsage, "0,0,FULL,FULL");
 					break;
 			}
 
-			registerDragListener(memoryUsage);
-			registerDragListener(this);
+			MemoryMonitorDockableDescriptor.this.registerDragListener(memoryUsage);
+			MemoryMonitorDockableDescriptor.this.registerDragListener(this);
 		}
 	}
 

@@ -237,7 +237,6 @@ public final class MainWindow extends AbstractWindow {
 		final DockableDescriptor memoryMonitorDescriptor = new MemoryMonitorDockableDescriptor(this.toolWindowManager, ToolWindowAnchor.BOTTOM);
 		memoryMonitorDescriptor.setAvailable(true);
 		memoryMonitorDescriptor.setAnchor(ToolWindowAnchor.BOTTOM, 0);
-		memoryMonitorDescriptor.setAnchorPositionLocked(true);
 
 		//
 		// final ToolWindow chartTestToolWindow =
