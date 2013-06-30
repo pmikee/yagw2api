@@ -32,7 +32,7 @@
 </security>
 
 <resources>
-    <j2se version="1.7+" href="http://java.com/de/download/index.jsp" />
+    <j2se version="1.7+" href="http://java.com/de/download/index.jsp" initial-heap-size="256m" max-heap-size="1024m" />
     $dependencies
 </resources>
 <application-desc main-class="$mainClass"/>

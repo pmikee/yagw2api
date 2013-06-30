@@ -46,6 +46,7 @@ import org.noos.xing.mydoggy.ToolWindowGroup;
 import org.noos.xing.mydoggy.ToolWindowManagerDescriptor;
 import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
+import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
 
 import com.google.common.base.Optional;
 import com.google.common.io.Closer;
@@ -227,10 +228,17 @@ public final class MainWindow extends AbstractWindow {
 		this.matchDetailslTable = this.initMatchDetailsTable(this.matchDetailsTableModel);
 		this.matchDetailsToolWindow = this.toolWindowManager.registerToolWindow("Match Details", "Match Details", null, new JScrollPane(this.matchDetailslTable), ToolWindowAnchor.BOTTOM);
 		this.matchDetailsToolWindow.setVisible(true);
+
 		final DockedTypeDescriptor matchDetailsToolWindowDescriptor = (DockedTypeDescriptor) this.matchDetailsToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
 		matchDetailsToolWindowDescriptor.setIdVisibleOnTitleBar(false);
 		matchDetailsToolWindowDescriptor.setTitleBarButtonsVisible(false);
 		matchDetailsToolWindowDescriptor.setTitleBarVisible(false);
+
+		final DockableDescriptor memoryMonitorDescriptor = new MemoryMonitorDockableDescriptor(this.toolWindowManager, ToolWindowAnchor.BOTTOM);
+		memoryMonitorDescriptor.setAvailable(true);
+		memoryMonitorDescriptor.setAnchor(ToolWindowAnchor.BOTTOM, 0);
+		memoryMonitorDescriptor.setAnchorPositionLocked(true);
+
 		//
 		// final ToolWindow chartTestToolWindow =
 		// this.toolWindowManager.registerToolWindow("Chart Test", "Chart Test",
