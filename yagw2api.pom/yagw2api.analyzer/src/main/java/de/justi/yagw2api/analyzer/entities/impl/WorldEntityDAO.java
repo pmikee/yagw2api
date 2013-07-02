@@ -21,7 +21,7 @@ import com.google.common.base.Optional;
 import de.justi.yagw2api.analyzer.entities.IWorldEnityDAO;
 import de.justi.yagw2api.analyzer.entities.IWorldEntity;
 import de.justi.yagw2api.analyzer.entities.YAGW2APIAnalyzerPersistence;
-import de.justi.yagw2api.core.wrapper.model.IWorld;
+import de.justi.yagw2api.wrapper.model.IWorld;
 
 final class WorldEntityDAO implements IWorldEnityDAO {
 	private static final Logger LOGGER = Logger.getLogger(WorldEntityDAO.class);
@@ -135,14 +135,18 @@ final class WorldEntityDAO implements IWorldEnityDAO {
 		WorldEntity newEntity = null;
 		final boolean newTransaction = !tx.isActive();
 		try {
-			if(newTransaction) tx.begin();
+			if (newTransaction) {
+				tx.begin();
+			}
 			newEntity = new WorldEntity();
 			checkState(newEntity.synchronizeWithModel(world));
 			YAGW2APIAnalyzerPersistence.getDefaultEM().persist(newEntity);
 			YAGW2APIAnalyzerPersistence.getDefaultEM().flush();
-			if(newTransaction) tx.commit();
+			if (newTransaction) {
+				tx.commit();
+			}
 		} catch (Exception e) {
-			LOGGER.error("Exception cought while creating new " + WorldEntity.class.getName()+" out of "+world, e);
+			LOGGER.error("Exception cought while creating new " + WorldEntity.class.getName() + " out of " + world, e);
 			newEntity = null;
 			if (tx.isActive()) {
 				if (LOGGER.isTraceEnabled()) {
@@ -183,10 +187,14 @@ final class WorldEntityDAO implements IWorldEnityDAO {
 		final EntityTransaction tx = YAGW2APIAnalyzerPersistence.getDefaultEM().getTransaction();
 		final boolean newTransaction = !tx.isActive();
 		try {
-			if(newTransaction) tx.begin();
+			if (newTransaction) {
+				tx.begin();
+			}
 			YAGW2APIAnalyzerPersistence.getDefaultEM().persist(entity);
 			YAGW2APIAnalyzerPersistence.getDefaultEM().flush();
-			if(newTransaction) tx.commit();
+			if (newTransaction) {
+				tx.commit();
+			}
 			success = true;
 		} catch (Exception e) {
 			LOGGER.error("Exception cought while saving " + entity, e);

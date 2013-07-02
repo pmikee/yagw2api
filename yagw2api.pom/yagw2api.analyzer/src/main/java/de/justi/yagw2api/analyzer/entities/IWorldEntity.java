@@ -6,8 +6,8 @@ import java.util.Locale;
 import com.google.common.base.Optional;
 
 import de.justi.yagw2api.analyzer.entities.wvw.IWVWMatchEntity;
-import de.justi.yagw2api.core.wrapper.model.IWorld;
-import de.justi.yagw2api.core.wrapper.model.types.IWorldLocationType;
+import de.justi.yagw2api.wrapper.model.IWorld;
+import de.justi.yagw2api.wrapper.model.types.IWorldLocationType;
 
 public interface IWorldEntity extends IEntity {
 	Optional<String> getName(Locale locale);

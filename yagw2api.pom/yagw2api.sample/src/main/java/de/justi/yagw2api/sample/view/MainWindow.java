@@ -52,14 +52,14 @@ import com.google.common.base.Optional;
 import com.google.common.io.Closer;
 import com.google.common.math.DoubleMath;
 
-import de.justi.yagw2api.core.YAGW2APICore;
-import de.justi.yagw2api.core.wrapper.IWVWWrapper;
-import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
 import de.justi.yagw2api.sample.model.MapObjectivesTableModel;
 import de.justi.yagw2api.sample.model.MatchDetailsTableModel;
 import de.justi.yagw2api.sample.model.MatchesTableModel;
 import de.justi.yagw2api.sample.renderer.MatchDetailsTableCellRenderer;
 import de.justi.yagw2api.sample.renderer.ObjectiveTableCellRenderer;
+import de.justi.yagw2api.wrapper.IWVWWrapper;
+import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
+import de.justi.yagw2api.wrapper.model.wvw.IWVWMatch;
 
 public final class MainWindow extends AbstractWindow {
 	private static final String WORKSPACE_XML_FILENAME = "workspace.xml";
@@ -361,7 +361,7 @@ public final class MainWindow extends AbstractWindow {
 		enLocaleMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				YAGW2APICore.setCurrentLocale(Locale.ENGLISH);
+				YAGW2APIWrapper.setCurrentLocale(Locale.ENGLISH);
 			}
 		});
 		settingLocaleMenu.add(enLocaleMenuItem);
@@ -369,7 +369,7 @@ public final class MainWindow extends AbstractWindow {
 		deLocaleMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				YAGW2APICore.setCurrentLocale(Locale.GERMANY);
+				YAGW2APIWrapper.setCurrentLocale(Locale.GERMANY);
 			}
 		});
 		settingLocaleMenu.add(deLocaleMenuItem);
@@ -377,7 +377,7 @@ public final class MainWindow extends AbstractWindow {
 		frLocaleMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				YAGW2APICore.setCurrentLocale(Locale.FRANCE);
+				YAGW2APIWrapper.setCurrentLocale(Locale.FRANCE);
 			}
 		});
 		settingLocaleMenu.add(frLocaleMenuItem);
@@ -385,7 +385,7 @@ public final class MainWindow extends AbstractWindow {
 		esLocaleMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				YAGW2APICore.setCurrentLocale(Locale.forLanguageTag("es"));
+				YAGW2APIWrapper.setCurrentLocale(Locale.forLanguageTag("es"));
 			}
 		});
 		settingLocaleMenu.add(esLocaleMenuItem);

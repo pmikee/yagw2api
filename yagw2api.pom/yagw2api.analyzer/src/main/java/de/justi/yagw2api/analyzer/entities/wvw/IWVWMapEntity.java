@@ -6,7 +6,7 @@ import java.util.Map;
 import com.google.common.base.Optional;
 
 import de.justi.yagw2api.analyzer.entities.IEntity;
-import de.justi.yagw2api.core.wrapper.model.wvw.types.IWVWMapType;
+import de.justi.yagw2api.wrapper.model.wvw.types.IWVWMapType;
 
 public interface IWVWMapEntity extends IEntity {
 	void setMatch(IWVWMatchEntity match);

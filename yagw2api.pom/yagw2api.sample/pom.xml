@@ -132,7 +132,7 @@
 			</dependency> <dependency> <groupId>jgraph</groupId> <artifactId>jgraph</artifactId> 
 			</dependency> -->
 		<dependency>
-			<artifactId>yagw2api.core</artifactId>
+			<artifactId>yagw2api.wrapper</artifactId>
 			<groupId>de.justi</groupId>
 		</dependency>
 		<dependency>

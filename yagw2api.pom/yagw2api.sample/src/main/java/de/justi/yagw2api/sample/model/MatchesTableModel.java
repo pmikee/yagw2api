@@ -20,11 +20,11 @@ import org.apache.log4j.Logger;
 
 import com.google.common.base.Optional;
 
-import de.justi.yagw2api.core.wrapper.IWVWMatchListener;
-import de.justi.yagw2api.core.wrapper.IWVWWrapper;
-import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMatch;
-import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWInitializedMatchEvent;
-import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMatchScoresChangedEvent;
+import de.justi.yagw2api.wrapper.IWVWMatchListener;
+import de.justi.yagw2api.wrapper.IWVWWrapper;
+import de.justi.yagw2api.wrapper.model.wvw.IWVWMatch;
+import de.justi.yagw2api.wrapper.model.wvw.events.IWVWInitializedMatchEvent;
+import de.justi.yagw2api.wrapper.model.wvw.events.IWVWMatchScoresChangedEvent;
 
 public final class MatchesTableModel extends AbstractTableModel implements IWVWMatchListener {
 	private static final Logger LOGGER = Logger.getLogger(MatchesTableModel.class);

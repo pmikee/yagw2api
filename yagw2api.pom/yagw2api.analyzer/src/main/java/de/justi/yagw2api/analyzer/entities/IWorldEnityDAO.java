@@ -5,7 +5,7 @@ import java.util.Locale;
 
 import com.google.common.base.Optional;
 
-import de.justi.yagw2api.core.wrapper.model.IWorld;
+import de.justi.yagw2api.wrapper.model.IWorld;
 
 public interface IWorldEnityDAO {
 	/**

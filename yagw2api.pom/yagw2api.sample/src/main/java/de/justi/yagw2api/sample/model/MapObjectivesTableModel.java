@@ -20,15 +20,15 @@ import com.google.common.base.Optional;
 import com.google.common.util.concurrent.AbstractScheduledService;
 import com.google.common.util.concurrent.Service;
 
-import de.justi.yagw2api.core.wrapper.IWVWMapListener;
-import de.justi.yagw2api.core.wrapper.IWVWWrapper;
-import de.justi.yagw2api.core.wrapper.model.wvw.IWVWMap;
-import de.justi.yagw2api.core.wrapper.model.wvw.IWVWObjective;
-import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWMapScoresChangedEvent;
-import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveCaptureEvent;
-import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveClaimedEvent;
-import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveEndOfBuffEvent;
-import de.justi.yagw2api.core.wrapper.model.wvw.events.IWVWObjectiveUnclaimedEvent;
+import de.justi.yagw2api.wrapper.IWVWMapListener;
+import de.justi.yagw2api.wrapper.IWVWWrapper;
+import de.justi.yagw2api.wrapper.model.wvw.IWVWMap;
+import de.justi.yagw2api.wrapper.model.wvw.IWVWObjective;
+import de.justi.yagw2api.wrapper.model.wvw.events.IWVWMapScoresChangedEvent;
+import de.justi.yagw2api.wrapper.model.wvw.events.IWVWObjectiveCaptureEvent;
+import de.justi.yagw2api.wrapper.model.wvw.events.IWVWObjectiveClaimedEvent;
+import de.justi.yagw2api.wrapper.model.wvw.events.IWVWObjectiveEndOfBuffEvent;
+import de.justi.yagw2api.wrapper.model.wvw.events.IWVWObjectiveUnclaimedEvent;
 
 public final class MapObjectivesTableModel extends AbstractTableModel implements IWVWMapListener {
 	private static final long serialVersionUID = -4657108157862724940L;

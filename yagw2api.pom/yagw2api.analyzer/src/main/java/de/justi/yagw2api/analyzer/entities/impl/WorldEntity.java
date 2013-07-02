@@ -31,10 +31,10 @@ import de.justi.yagw2api.analyzer.entities.IWorldEntity;
 import de.justi.yagw2api.analyzer.entities.wvw.IWVWMatchEntity;
 import de.justi.yagw2api.analyzer.entities.wvw.impl.WVWMatchEntity;
 import de.justi.yagw2api.analyzer.utils.converter.LocaleConverter;
-import de.justi.yagw2api.core.YAGW2APICore;
-import de.justi.yagw2api.core.wrapper.model.IWorld;
-import de.justi.yagw2api.core.wrapper.model.types.IWorldLocationType;
-import de.justi.yagw2api.core.wrapper.model.types.WorldLocationType;
+import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
+import de.justi.yagw2api.wrapper.model.IWorld;
+import de.justi.yagw2api.wrapper.model.types.IWorldLocationType;
+import de.justi.yagw2api.wrapper.model.types.WorldLocationType;
 
 @ObjectTypeConverters({ @ObjectTypeConverter(name = "WorldLocationTypeConverter", objectType = WorldLocationType.class, dataType = String.class, conversionValues = {
 		@ConversionValue(objectValue = "NORTH_AMERICA", dataValue = "NA"), @ConversionValue(objectValue = "EUROPE", dataValue = "EU") }) })
@@ -129,11 +129,11 @@ public final class WorldEntity extends AbstractEntity implements IWorldEntity {
 	@Override
 	public boolean synchronizeWithModel(IWorld model) {
 		checkNotNull(model);
-		if (this.originWorldId == null || model.getId() == this.originWorldId) {
+		if ((this.originWorldId == null) || (model.getId() == this.originWorldId)) {
 			// compatible ids
 			this.originWorldId = model.getId();
 			if (model.getName().isPresent()) {
-				this.setName(YAGW2APICore.getCurrentLocale(), model.getName().get());
+				this.setName(YAGW2APIWrapper.getCurrentLocale(), model.getName().get());
 			}
 			this.worldLocale = model.getWorldLocale().orNull();
 			this.location = model.getWorldLocation();
@@ -187,7 +187,7 @@ public final class WorldEntity extends AbstractEntity implements IWorldEntity {
 
 	@Override
 	public Optional<String> getName() {
-		return this.getName(YAGW2APICore.getCurrentLocale());
+		return this.getName(YAGW2APIWrapper.getCurrentLocale());
 	}
 
 	@Override
@@ -211,6 +211,7 @@ public final class WorldEntity extends AbstractEntity implements IWorldEntity {
 		return Optional.fromNullable(this.nameFR);
 	}
 
+	@Override
 	public String toString() {
 		return Objects.toStringHelper(this).add("super", super.toString()).add("nameDE", this.getNameDE()).add("nameEN", this.getNameEN()).add("nameES", this.getNameES()).add("nameFR", this.nameFR)
 				.add("origin", this.getOriginWorldId()).toString();
@@ -228,7 +229,7 @@ public final class WorldEntity extends AbstractEntity implements IWorldEntity {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof IWorldEntity)) {
+		if ((obj == null) || !(obj instanceof IWorldEntity)) {
 			return false;
 		} else {
 			final IWorldEntity worldEntity = (IWorldEntity) obj;
