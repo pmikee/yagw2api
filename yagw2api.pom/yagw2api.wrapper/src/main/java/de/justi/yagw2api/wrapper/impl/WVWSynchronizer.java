@@ -61,10 +61,14 @@ final class WVWSynchronizer extends AbstractScheduledService implements IHasChan
 		Thread asyncStartup = new Thread() {
 			@Override
 			public void run() {
-				YAGW2APIWrapper.getForkJoinPool().invoke(initAction);
-				final long endTimestamp = System.currentTimeMillis();
-				if (LOGGER.isInfoEnabled()) {
-					LOGGER.info("Initialized " + this.getClass().getSimpleName() + " in " + (endTimestamp - startTimestamp) + "ms");
+				try {
+					YAGW2APIWrapper.getForkJoinPool().invoke(initAction);
+					final long endTimestamp = System.currentTimeMillis();
+					if (LOGGER.isInfoEnabled()) {
+						LOGGER.info("Initialized " + this.getClass().getSimpleName() + " in " + (endTimestamp - startTimestamp) + "ms");
+					}
+				} catch (Exception e) {
+					LOGGER.fatal("Exception thrown during initialization of " + WVWSynchronizer.this);
 				}
 			}
 		};

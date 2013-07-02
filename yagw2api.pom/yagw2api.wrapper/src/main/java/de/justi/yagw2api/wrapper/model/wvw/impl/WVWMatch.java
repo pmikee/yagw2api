@@ -241,11 +241,11 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 			}
 		}
 
-		private static final class BuildMatchFromDTOAction implements Callable<Void> {
+		private static final class BuildMapFromDTOAction implements Callable<Void> {
 			private final IWVWMapDTO dto;
 			private Optional<IWVWMap> result = Optional.absent();
 
-			public BuildMatchFromDTOAction(IWVWMapDTO dto) {
+			public BuildMapFromDTOAction(IWVWMapDTO dto) {
 				this.dto = checkNotNull(dto);
 			}
 
@@ -256,7 +256,12 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 
 			@Override
 			public Void call() throws Exception {
-				this.result = Optional.of(WVW_MODEL_FACTORY.newMapBuilder().fromDTO(this.dto).build());
+				try {
+					this.result = Optional.of(WVW_MODEL_FACTORY.newMapBuilder().fromDTO(this.dto).build());
+				} catch (Exception e) {
+					LOGGER.fatal("Uncought exception thrown during execution of " + this, e);
+					throw e;
+				}
 				return null;
 			}
 
@@ -280,7 +285,12 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 
 			@Override
 			public Void call() throws Exception {
-				this.result = Optional.of(MODEL_FACTORY.newWorldBuilder().fromDTO(this.dto).build());
+				try {
+					this.result = Optional.of(MODEL_FACTORY.newWorldBuilder().fromDTO(this.dto).build());
+				} catch (Exception e) {
+					LOGGER.fatal("Uncought exception thrown during execution of " + this, e);
+					throw e;
+				}
 				return null;
 			}
 
@@ -303,16 +313,21 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 			this.fromMatchDTO = Optional.of(dto);
 			this.id = Optional.of(dto.getId());
 
-			final BuildMatchFromDTOAction buildCenterMapAction = new BuildMatchFromDTOAction(dto.getDetails().get().getCenterMap());
-			final BuildMatchFromDTOAction buildRedMapAction = new BuildMatchFromDTOAction(dto.getDetails().get().getRedMap());
-			final BuildMatchFromDTOAction buildGreenMapAction = new BuildMatchFromDTOAction(dto.getDetails().get().getGreenMap());
-			final BuildMatchFromDTOAction buildBlueMapAction = new BuildMatchFromDTOAction(dto.getDetails().get().getBlueMap());
+			checkArgument(dto.getDetails().get().getCenterMap().getType().equalsIgnoreCase(DTOConstants.CENTER_MAP_TYPE_STRING));
+			checkArgument(dto.getDetails().get().getRedMap().getType().equalsIgnoreCase(DTOConstants.RED_MAP_TYPE_STRING));
+			checkArgument(dto.getDetails().get().getGreenMap().getType().equalsIgnoreCase(DTOConstants.GREEN_MAP_TYPE_STRING));
+			checkArgument(dto.getDetails().get().getBlueMap().getType().equalsIgnoreCase(DTOConstants.BLUE_MAP_TYPE_STRING));
+
+			final BuildMapFromDTOAction buildCenterMapAction = new BuildMapFromDTOAction(dto.getDetails().get().getCenterMap());
+			final BuildMapFromDTOAction buildRedMapAction = new BuildMapFromDTOAction(dto.getDetails().get().getRedMap());
+			final BuildMapFromDTOAction buildGreenMapAction = new BuildMapFromDTOAction(dto.getDetails().get().getGreenMap());
+			final BuildMapFromDTOAction buildBlueMapAction = new BuildMapFromDTOAction(dto.getDetails().get().getBlueMap());
 			final BuildWorldFromDTOAction buildRedWorldAction = new BuildWorldFromDTOAction(dto.getRedWorldName(YAGW2APIWrapper.getCurrentLocale()).get());
 			final BuildWorldFromDTOAction buildGreenWorldAction = new BuildWorldFromDTOAction(dto.getGreenWorldName(YAGW2APIWrapper.getCurrentLocale()).get());
 			final BuildWorldFromDTOAction buildBlueWorldAction = new BuildWorldFromDTOAction(dto.getBlueWorldName(YAGW2APIWrapper.getCurrentLocale()).get());
 
 			if (LOGGER.isTraceEnabled()) {
-				LOGGER.trace("Going to execute " + BuildMatchFromDTOAction.class.getSimpleName() + "'s and " + BuildWorldFromDTOAction.class.getSimpleName() + "'s to build "
+				LOGGER.trace("Going to execute " + BuildMapFromDTOAction.class.getSimpleName() + "'s and " + BuildWorldFromDTOAction.class.getSimpleName() + "'s to build "
 						+ this.getClass().getSimpleName() + "\n" + "~ " + buildCenterMapAction.toString() + "\n" + "~ " + buildRedMapAction.toString() + "\n" + "~ " + buildGreenMapAction.toString()
 						+ "\n" + "~ " + buildBlueMapAction.toString() + "\n" + "~ " + buildRedWorldAction.toString() + "\n" + "~ " + buildGreenWorldAction.toString() + "\n" + "~ "
 						+ buildBlueWorldAction.toString());
@@ -322,7 +337,7 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 					Lists.newArrayList(buildCenterMapAction, buildRedMapAction, buildBlueMapAction, buildGreenMapAction, buildRedWorldAction, buildGreenWorldAction, buildBlueWorldAction));
 
 			if (LOGGER.isTraceEnabled()) {
-				LOGGER.trace("Done with execution of " + BuildMatchFromDTOAction.class.getSimpleName() + "'s and " + BuildWorldFromDTOAction.class.getSimpleName() + "'s to build "
+				LOGGER.trace("Done with execution of " + BuildMapFromDTOAction.class.getSimpleName() + "'s and " + BuildWorldFromDTOAction.class.getSimpleName() + "'s to build "
 						+ this.getClass().getSimpleName() + "\n" + "~ " + buildCenterMapAction.toString() + "\n" + "~ " + buildRedMapAction.toString() + "\n" + "~ " + buildGreenMapAction.toString()
 						+ "\n" + "~ " + buildBlueMapAction.toString() + "\n" + "~ " + buildRedWorldAction.toString() + "\n" + "~ " + buildGreenWorldAction.toString() + "\n" + "~ "
 						+ buildBlueWorldAction.toString());

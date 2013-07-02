@@ -1,7 +1,5 @@
 package de.justi.yagw2api.arenanet.dto.impl;
 
-import java.util.Arrays;
-
 import com.google.common.base.Objects;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
@@ -17,7 +15,7 @@ final class WVWMatchesDTO implements IWVWMatchesDTO {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("matches", Arrays.deepToString(this.matches)).toString();
+		return Objects.toStringHelper(this).add("matchesCount", this.matches.length).toString();
 	}
 
 	@Override
