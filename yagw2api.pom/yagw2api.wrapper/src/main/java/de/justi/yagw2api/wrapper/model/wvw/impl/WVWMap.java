@@ -192,6 +192,10 @@ final class WVWMap extends AbstractHasChannel implements IWVWMap {
 			}
 		}
 
+		@Override
+		public String toString() {
+			return Objects.toStringHelper(this).add("dtoCount", this.objectiveDTOs.size()).add("presentResultsCount", this.results.size()).toString();
+		}
 	}
 
 	public static class WVWMapBuilder implements IWVWMap.IWVWMapBuilder {
@@ -246,9 +250,16 @@ final class WVWMap extends AbstractHasChannel implements IWVWMap {
 		@Override
 		public IWVWMap.IWVWMapBuilder fromDTO(IWVWMapDTO dto) {
 			checkNotNull(dto);
-			final BuildObjectivesFromDTOsAction initObjectivesAction = new BuildObjectivesFromDTOsAction(dto.getObjectives());
+			if (LOGGER.isTraceEnabled()) {
+				LOGGER.trace("Going to build from " + IWVWMapDTO.class.getSimpleName() + " where dto=" + dto);
+			}
 
+			final BuildObjectivesFromDTOsAction initObjectivesAction = new BuildObjectivesFromDTOsAction(dto.getObjectives());
 			YAGW2APIWrapper.getForkJoinPool().invoke(initObjectivesAction);
+
+			if (LOGGER.isTraceEnabled()) {
+				LOGGER.trace("Done with execution of " + initObjectivesAction.toString() + " for " + dto);
+			}
 
 			this.type(WVWMapType.fromDTOString(dto.getType()));
 			return this.blueScore(dto.getBlueScore()).redScore(dto.getRedScore()).greenScore(dto.getGreenScore());
@@ -357,7 +368,7 @@ final class WVWMap extends AbstractHasChannel implements IWVWMap {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("type", this.type).add("content", this.content).add("scored", this.scores).toString();
+		return Objects.toStringHelper(this).add("type", this.type).add("contentCount", this.content.size()).add("scored", this.scores).toString();
 	}
 
 	@Override

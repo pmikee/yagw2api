@@ -1,7 +1,5 @@
 package de.justi.yagw2api.arenanet.dto.impl;
 
-import java.util.Arrays;
-
 import com.google.common.base.Objects;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
@@ -34,7 +32,7 @@ final class WVWMapDTO implements IWVWMapDTO {
 	@Override
 	public String toString() {
 		return Objects.toStringHelper(this).add("redScore", this.getRedScore()).add("greenScore", this.getGreenScore()).add("blueScore", this.getBlueScore())
-				.add("objectives", Arrays.deepToString(this.objectives)).add("type", this.type).toString();
+				.add("objectiveCount", this.objectives.length).add("type", this.type).toString();
 	}
 
 	@Override

@@ -243,14 +243,15 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 
 		private static final class BuildMatchFromDTOAction implements Callable<Void> {
 			private final IWVWMapDTO dto;
-			private Optional<IWVWMap> result;
+			private Optional<IWVWMap> result = Optional.absent();
 
 			public BuildMatchFromDTOAction(IWVWMapDTO dto) {
 				this.dto = checkNotNull(dto);
 			}
 
-			public Optional<IWVWMap> getResult() {
-				return this.result;
+			@Override
+			public String toString() {
+				return Objects.toStringHelper(this).add("dto", this.dto).add("resultPresent", this.result.isPresent()).toString();
 			}
 
 			@Override
@@ -258,14 +259,23 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 				this.result = Optional.of(WVW_MODEL_FACTORY.newMapBuilder().fromDTO(this.dto).build());
 				return null;
 			}
+
+			public Optional<IWVWMap> getResult() {
+				return this.result;
+			}
 		}
 
 		private static final class BuildWorldFromDTOAction implements Callable<Void> {
 			private final IWorldNameDTO dto;
-			private Optional<IWorld> result;
+			private Optional<IWorld> result = Optional.absent();
 
 			public BuildWorldFromDTOAction(IWorldNameDTO dto) {
 				this.dto = checkNotNull(dto);
+			}
+
+			@Override
+			public String toString() {
+				return Objects.toStringHelper(this).add("dto", this.dto).add("resultPresent", this.result.isPresent()).toString();
 			}
 
 			@Override
@@ -301,8 +311,22 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 			final BuildWorldFromDTOAction buildGreenWorldAction = new BuildWorldFromDTOAction(dto.getGreenWorldName(YAGW2APIWrapper.getCurrentLocale()).get());
 			final BuildWorldFromDTOAction buildBlueWorldAction = new BuildWorldFromDTOAction(dto.getBlueWorldName(YAGW2APIWrapper.getCurrentLocale()).get());
 
+			if (LOGGER.isTraceEnabled()) {
+				LOGGER.trace("Going to execute " + BuildMatchFromDTOAction.class.getSimpleName() + "'s and " + BuildWorldFromDTOAction.class.getSimpleName() + "'s to build "
+						+ this.getClass().getSimpleName() + "\n" + "~ " + buildCenterMapAction.toString() + "\n" + "~ " + buildRedMapAction.toString() + "\n" + "~ " + buildGreenMapAction.toString()
+						+ "\n" + "~ " + buildBlueMapAction.toString() + "\n" + "~ " + buildRedWorldAction.toString() + "\n" + "~ " + buildGreenWorldAction.toString() + "\n" + "~ "
+						+ buildBlueWorldAction.toString());
+			}
+
 			YAGW2APIWrapper.getForkJoinPool().invokeAll(
-					Lists.newArrayList(buildCenterMapAction, buildRedMapAction, buildGreenMapAction, buildBlueMapAction, buildRedWorldAction, buildGreenWorldAction, buildBlueWorldAction));
+					Lists.newArrayList(buildCenterMapAction, buildRedMapAction, buildBlueMapAction, buildGreenMapAction, buildRedWorldAction, buildGreenWorldAction, buildBlueWorldAction));
+
+			if (LOGGER.isTraceEnabled()) {
+				LOGGER.trace("Done with execution of " + BuildMatchFromDTOAction.class.getSimpleName() + "'s and " + BuildWorldFromDTOAction.class.getSimpleName() + "'s to build "
+						+ this.getClass().getSimpleName() + "\n" + "~ " + buildCenterMapAction.toString() + "\n" + "~ " + buildRedMapAction.toString() + "\n" + "~ " + buildGreenMapAction.toString()
+						+ "\n" + "~ " + buildBlueMapAction.toString() + "\n" + "~ " + buildRedWorldAction.toString() + "\n" + "~ " + buildGreenWorldAction.toString() + "\n" + "~ "
+						+ buildBlueWorldAction.toString());
+			}
 
 			this.centerMap = buildCenterMapAction.getResult();
 			checkState(this.centerMap != null, "Failed to build center " + IWVWMap.class.getSimpleName() + " " + dto.getId());
@@ -369,6 +393,13 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 		public IWVWMatchBuilder end(Date date) {
 			this.end = Optional.fromNullable(date);
 			return this;
+		}
+
+		@Override
+		public String toString() {
+			return Objects.toStringHelper(this).add("id", this.id).add("start", this.start).add("end", this.end).add("redScore", this.redScore).add("greenScore", this.greenScore)
+					.add("blueScore", this.blueScore).add("redWorld", this.redWorld).add("greenWorld", this.greenWorld).add("blueWorld", this.blueWorld).add("centerMap", this.centerMap)
+					.add("redMap", this.redMap).add("greenMap", this.greenMap).add("blueMap", this.blueMap).toString();
 		}
 
 	}
