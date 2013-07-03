@@ -249,6 +249,9 @@ public final class MainWindow extends AbstractWindow {
 		// chartTestToolWindow.setVisible(true);
 
 		this.pack();
+
+		// finally try to restore workspace setting
+		this.loadWorkspaceSettings();
 	}
 
 	// private ChartPanel buildChart() {
@@ -309,6 +312,50 @@ public final class MainWindow extends AbstractWindow {
 	//
 	// }
 
+	private boolean loadWorkspaceSettings() {
+		boolean success;
+		Closer closer = Closer.create();
+		try {
+			try {
+				final FileInputStream loadSource = closer.register(new FileInputStream(WORKSPACE_XML_FILENAME));
+				MainWindow.this.toolWindowManager.getPersistenceDelegate().merge(loadSource, MergePolicy.RESET);
+				LOGGER.info("Successfull loaded workspace settings.");
+				success = true;
+			} catch (Throwable ex) {
+				success = false;
+				closer.rethrow(ex);
+			} finally {
+				closer.close();
+			}
+		} catch (IOException ex) {
+			LOGGER.error("Exeption thrown while loading workspace settings.", ex);
+			success = false;
+		}
+		return success;
+	}
+
+	private boolean saveWorskapceSettings() {
+		boolean success;
+		Closer closer = Closer.create();
+		try {
+			try {
+				final FileOutputStream saveDestination = closer.register(new FileOutputStream(WORKSPACE_XML_FILENAME));
+				MainWindow.this.toolWindowManager.getPersistenceDelegate().save(saveDestination);
+				LOGGER.info("Successfull saved workspace settings.");
+				success = true;
+			} catch (Throwable ex) {
+				closer.rethrow(ex);
+				success = false;
+			} finally {
+				closer.close();
+			}
+		} catch (IOException ex) {
+			LOGGER.error("Exeption thrown while saving workspace settings.", ex);
+			success = false;
+		}
+		return success;
+	}
+
 	private JMenuBar builtMainMenuBar() {
 		final JMenuBar mainMenuBar = new JMenuBar();
 		final JMenu windowMenu = new JMenu("Window");
@@ -316,20 +363,7 @@ public final class MainWindow extends AbstractWindow {
 		savePerspectiveMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Closer closer = Closer.create();
-				try {
-					try {
-						final FileOutputStream saveDestination = closer.register(new FileOutputStream(WORKSPACE_XML_FILENAME));
-						MainWindow.this.toolWindowManager.getPersistenceDelegate().save(saveDestination);
-						LOGGER.info("Successfull saved workspace.");
-					} catch (Throwable ex) {
-						closer.rethrow(ex);
-					} finally {
-						closer.close();
-					}
-				} catch (IOException ex) {
-					LOGGER.error("Exeption thrown while saving workspace.", ex);
-				}
+				MainWindow.this.saveWorskapceSettings();
 			}
 		});
 		windowMenu.add(savePerspectiveMenuItem);
@@ -337,20 +371,7 @@ public final class MainWindow extends AbstractWindow {
 		loadPerspectiveMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Closer closer = Closer.create();
-				try {
-					try {
-						final FileInputStream loadSource = closer.register(new FileInputStream(WORKSPACE_XML_FILENAME));
-						MainWindow.this.toolWindowManager.getPersistenceDelegate().merge(loadSource, MergePolicy.RESET);
-						LOGGER.info("Successfull loaded workspace.");
-					} catch (Throwable ex) {
-						closer.rethrow(ex);
-					} finally {
-						closer.close();
-					}
-				} catch (IOException ex) {
-					LOGGER.error("Exeption thrown while loading workspace.", ex);
-				}
+				MainWindow.this.loadWorkspaceSettings();
 			}
 		});
 		windowMenu.add(loadPerspectiveMenuItem);
