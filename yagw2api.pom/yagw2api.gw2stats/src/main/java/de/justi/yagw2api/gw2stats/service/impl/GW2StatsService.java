@@ -22,7 +22,6 @@ import de.justi.yagwapi.common.utils.RetryClientFilter;
 
 final class GW2StatsService extends AbstractService implements IGW2StatsService {
 	private static final int RETRY_COUNT = 10;
-	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(GW2StatsService.class);
 	private static final URL STATUS_URL;
 	private static final URL STATUS_CODES_URL;
