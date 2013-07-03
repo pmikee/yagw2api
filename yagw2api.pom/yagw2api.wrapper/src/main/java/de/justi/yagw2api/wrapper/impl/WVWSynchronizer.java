@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -47,33 +48,39 @@ final class WVWSynchronizer extends AbstractScheduledService implements IHasChan
 
 	@Override
 	public void startUp() {
-		final long startTimestamp = System.currentTimeMillis();
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Will now initialize new " + this.getClass().getSimpleName());
-		}
-		final IWVWMatchesDTO matchesDto = SERVICE.retrieveAllMatches();
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Retrieved " + IWVWMatchesDTO.class.getSimpleName() + " after " + (System.currentTimeMillis() - startTimestamp) + "ms");
-			LOGGER.debug("Going to initialize new " + this.getClass().getSimpleName() + " for " + matchesDto);
-		}
-		final WVWSynchronizerInitAction initAction = new WVWSynchronizerInitAction(Arrays.asList(matchesDto.getMatches()));
-		initAction.getChannel().register(this);
-		Thread asyncStartup = new Thread() {
-			@Override
-			public void run() {
-				try {
-					YAGW2APIWrapper.getForkJoinPool().invoke(initAction);
-					final long endTimestamp = System.currentTimeMillis();
-					if (LOGGER.isInfoEnabled()) {
-						LOGGER.info("Initialized " + this.getClass().getSimpleName() + " in " + (endTimestamp - startTimestamp) + "ms");
-					}
-				} catch (Exception e) {
-					LOGGER.fatal("Exception thrown during initialization of " + WVWSynchronizer.this);
-				}
+
+		try {
+			final long startTimestamp = System.currentTimeMillis();
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Will now initialize new " + this.getClass().getSimpleName());
 			}
-		};
-		asyncStartup.setDaemon(true);
-		asyncStartup.start();
+			final IWVWMatchesDTO matchesDto = SERVICE.retrieveAllMatches();
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Retrieved " + IWVWMatchesDTO.class.getSimpleName() + " after " + (System.currentTimeMillis() - startTimestamp) + "ms");
+				LOGGER.debug("Going to initialize new " + this.getClass().getSimpleName() + " for " + matchesDto);
+			}
+			final WVWSynchronizerInitAction initAction = new WVWSynchronizerInitAction(Arrays.asList(matchesDto.getMatches()));
+			initAction.getChannel().register(this);
+			final Thread asyncStartup = new Thread() {
+				@Override
+				public void run() {
+					try {
+						YAGW2APIWrapper.getForkJoinPool().invoke(initAction);
+						final long endTimestamp = System.currentTimeMillis();
+						if (LOGGER.isInfoEnabled()) {
+							LOGGER.info("Initialized " + this.getClass().getSimpleName() + " in " + (endTimestamp - startTimestamp) + "ms");
+						}
+					} catch (Exception e) {
+						LOGGER.fatal("Exception thrown during initialization of " + WVWSynchronizer.this);
+					}
+				}
+			};
+			asyncStartup.setDaemon(true);
+			asyncStartup.start();
+		} catch (Exception e) {
+			LOGGER.fatal("Cought exception while initializing " + this, e);
+			throw e;
+		}
 	}
 
 	public Set<IWVWMatch> getAllMatches() {
@@ -91,34 +98,45 @@ final class WVWSynchronizer extends AbstractScheduledService implements IHasChan
 	@Subscribe
 	public void onEvent(IEvent event) {
 		checkNotNull(event);
-		if (event instanceof IWVWInitializedMatchEvent) {
-			final IWVWInitializedMatchEvent initializeEvent = (IWVWInitializedMatchEvent) event;
-			initializeEvent.getMatch().getChannel().register(this);
-			this.matchesMappedById.put(initializeEvent.getMatch().getId(), initializeEvent.getMatch());
-			this.matches.add(initializeEvent.getMatch());
-			this.worlds.add(initializeEvent.getMatch().getRedWorld());
-			this.worlds.add(initializeEvent.getMatch().getBlueWorld());
-			this.worlds.add(initializeEvent.getMatch().getGreenWorld());
-			if (LOGGER.isInfoEnabled()) {
-				LOGGER.info("Added match with id=" + initializeEvent.getMatch().getId() + " to matches to synchronize.");
+		try {
+			if (event instanceof IWVWInitializedMatchEvent) {
+				final IWVWInitializedMatchEvent initializeEvent = (IWVWInitializedMatchEvent) event;
+				initializeEvent.getMatch().getChannel().register(this);
+				this.matchesMappedById.put(initializeEvent.getMatch().getId(), initializeEvent.getMatch());
+				this.matches.add(initializeEvent.getMatch());
+				this.worlds.add(initializeEvent.getMatch().getRedWorld());
+				this.worlds.add(initializeEvent.getMatch().getBlueWorld());
+				this.worlds.add(initializeEvent.getMatch().getGreenWorld());
+				if (LOGGER.isInfoEnabled()) {
+					LOGGER.info("Added match with id=" + initializeEvent.getMatch().getId() + " to matches to synchronize.");
+				}
 			}
+			this.channel.post(event);
+		} catch (Exception e) {
+			LOGGER.fatal("Cought exception while handling of " + event, e);
+			throw e;
 		}
-		this.channel.post(event);
 	}
 
 	@Override
 	protected void runOneIteration() throws Exception {
-		if (LOGGER.isInfoEnabled()) {
-			LOGGER.info("Going to synchronize " + this.getMatchesMappedById().keySet());
-		}
-		final long startTimestamp = System.currentTimeMillis();
+		try {
+			final Map<String, IWVWMatch> defensiveCopyOfMatchesMappedById = Collections.unmodifiableMap(new HashMap<String, IWVWMatch>(this.getMatchesMappedById()));
+			if (LOGGER.isInfoEnabled()) {
+				LOGGER.info("Going to synchronize " + defensiveCopyOfMatchesMappedById.keySet());
+			}
+			final long startTimestamp = System.currentTimeMillis();
+			final WVWSynchronizerAction action = new WVWSynchronizerAction(defensiveCopyOfMatchesMappedById);
+			YAGW2APIWrapper.getForkJoinPool().invoke(action);
 
-		YAGW2APIWrapper.getForkJoinPool().invoke(new WVWSynchronizerAction(this.getMatchesMappedById()));
-
-		final long endTime = System.currentTimeMillis();
-		final long executionTime = endTime - startTimestamp;
-		if (LOGGER.isInfoEnabled()) {
-			LOGGER.info("Done with " + this.getClass().getSimpleName() + " iteration after " + executionTime + "ms");
+			final long endTime = System.currentTimeMillis();
+			final long executionTime = endTime - startTimestamp;
+			if (LOGGER.isInfoEnabled()) {
+				LOGGER.info("Done with " + this.getClass().getSimpleName() + " iteration after " + executionTime + "ms");
+			}
+		} catch (Exception e) {
+			LOGGER.fatal("Cought exception during run of iteration of " + this.getClass().getSimpleName(), e);
+			throw e;
 		}
 	}
 

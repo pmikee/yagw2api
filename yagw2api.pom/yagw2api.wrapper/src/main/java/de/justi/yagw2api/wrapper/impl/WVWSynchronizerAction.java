@@ -12,6 +12,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
+import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
 import de.justi.yagw2api.arenanet.dto.IGuildDetailsDTO;
 import de.justi.yagw2api.arenanet.dto.IWVWMapDTO;
 import de.justi.yagw2api.arenanet.dto.IWVWMatchDTO;
@@ -32,13 +33,16 @@ final class WVWSynchronizerAction extends AbstractSynchronizerAction<String, WVW
 	private static final long serialVersionUID = 8391498327079686666L;
 	private static final int MAX_CHUNK_SIZE = 1;
 	private static final Logger LOGGER = Logger.getLogger(WVWSynchronizerAction.class);
-	private static final IWVWService SERVICE = YAGW2APIWrapper.getInjector().getInstance(IWVWService.class);
+	private static final IWVWService SERVICE = YAGW2APIArenanet.getInjector().getInstance(IWVWService.class);
 	private static final IModelFactory MODEL_FACTORY = YAGW2APIWrapper.getInjector().getInstance(IModelFactory.class);
 
 	private final Map<String, IWVWMatch> matchesMappedById;
 
 	public WVWSynchronizerAction(Map<String, IWVWMatch> matchesMappedById) {
 		this(ImmutableMap.copyOf(matchesMappedById), ImmutableList.copyOf(matchesMappedById.keySet()), MAX_CHUNK_SIZE, 0, matchesMappedById.size());
+		if (LOGGER.isTraceEnabled()) {
+			LOGGER.trace("Created new " + this.getClass().getSimpleName() + " that has to handle " + this.matchesMappedById);
+		}
 	}
 
 	private WVWSynchronizerAction(Map<String, IWVWMatch> matchesMappedById, List<String> matchIds, int chunkSize, int fromInclusive, int toExclusive) {
