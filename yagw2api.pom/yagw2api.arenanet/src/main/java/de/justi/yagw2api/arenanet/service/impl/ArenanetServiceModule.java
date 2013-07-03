@@ -4,7 +4,7 @@ import com.google.inject.AbstractModule;
 
 import de.justi.yagw2api.arenanet.service.IWVWService;
 
-public final class APIServiceModule extends AbstractModule {
+public final class ArenanetServiceModule extends AbstractModule {
 
 	@Override
 	protected void configure() {

@@ -38,6 +38,7 @@ import de.justi.yagw2api.arenanet.dto.IWVWMatchesDTO;
 import de.justi.yagw2api.arenanet.dto.IWVWObjectiveNameDTO;
 import de.justi.yagw2api.arenanet.dto.IWorldNameDTO;
 import de.justi.yagw2api.arenanet.service.IWVWService;
+import de.justi.yagwapi.common.AbstractService;
 import de.justi.yagwapi.common.utils.RetryClientFilter;
 
 final class WVWService extends AbstractService implements IWVWService {

@@ -1,9 +1,9 @@
-package de.justi.yagw2api.arenanet.service.impl;
+package de.justi.yagwapi.common;
 
 import com.sun.jersey.api.client.Client;
 
 import de.justi.yagwapi.common.utils.JerseyClientHelper;
 
-class AbstractService {
+public class AbstractService {
 	protected static final Client CLIENT = JerseyClientHelper.createDefaultClient();
 }

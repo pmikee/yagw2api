@@ -13,7 +13,7 @@ import com.google.inject.Injector;
 
 import de.justi.yagw2api.arenanet.dto.impl.ArenanetDTOModule;
 import de.justi.yagw2api.arenanet.service.IWVWService;
-import de.justi.yagw2api.arenanet.service.impl.APIServiceModule;
+import de.justi.yagw2api.arenanet.service.impl.ArenanetServiceModule;
 
 public enum YAGW2APIArenanet {
 	INSTANCE;
@@ -57,7 +57,7 @@ public enum YAGW2APIArenanet {
 	private Locale currentLocale = Locale.getDefault();
 
 	private YAGW2APIArenanet() {
-		this.injector = Guice.createInjector(new ArenanetDTOModule(), new APIServiceModule());
+		this.injector = Guice.createInjector(new ArenanetDTOModule(), new ArenanetServiceModule());
 		this.forkJoinPool = new ForkJoinPool(Runtime.getRuntime().availableProcessors() * THREAD_COUNT_PER_PROCESSOR, ForkJoinPool.defaultForkJoinWorkerThreadFactory,
 				new Thread.UncaughtExceptionHandler() {
 					@Override
