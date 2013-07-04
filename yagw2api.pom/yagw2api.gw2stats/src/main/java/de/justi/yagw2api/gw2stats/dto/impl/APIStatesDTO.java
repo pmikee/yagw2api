@@ -4,94 +4,94 @@ import com.google.common.base.Objects;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 
-import de.justi.yagw2api.gw2stats.dto.IAPIStatusDTO;
+import de.justi.yagw2api.gw2stats.dto.IAPIStatesDTO;
 
-final class APIStatusDTO implements IAPIStatusDTO {
+final class APIStatesDTO implements IAPIStatesDTO {
 	@SerializedName("http://gw2stats.net/api/status.json")
 	@Since(1.0)
-	private StatusDTO statusCodesStatus;
+	private APIStateDTO statusCodesStatus;
 
 	@SerializedName("http://gw2stats.net/api/status_codes.json")
 	@Since(1.0)
-	private StatusDTO statusStatus;
+	private APIStateDTO statusStatus;
 
 	@SerializedName("https://api.guildwars2.com/v1/build.json")
 	@Since(1.0)
-	private StatusDTO buildStatus;
+	private APIStateDTO buildStatus;
 
 	@SerializedName("https://api.guildwars2.com/v1/colors.json")
 	@Since(1.0)
-	private StatusDTO colorsStatus;
+	private APIStateDTO colorsStatus;
 
 	@SerializedName("https://api.guildwars2.com/v1/continents.json")
 	@Since(1.0)
-	private StatusDTO continentsStatus;
+	private APIStateDTO continentsStatus;
 
 	@SerializedName("https://api.guildwars2.com/v1/event_details.json")
 	@Since(1.0)
-	private StatusDTO eventsDetailsStatus;
+	private APIStateDTO eventsDetailsStatus;
 
 	@SerializedName("https://api.guildwars2.com/v1/event_names.json")
 	@Since(1.0)
-	private StatusDTO eventNamesStatus;
+	private APIStateDTO eventNamesStatus;
 
 	@SerializedName("https://api.guildwars2.com/v1/events.json")
 	@Since(1.0)
-	private StatusDTO eventsStatus;
+	private APIStateDTO eventsStatus;
 
 	@SerializedName("https://api.guildwars2.com/v1/guild_details.json")
 	@Since(1.0)
-	private StatusDTO guildDetailsStatus;
+	private APIStateDTO guildDetailsStatus;
 
 	@SerializedName("https://api.guildwars2.com/v1/items.json")
 	@Since(1.0)
-	private StatusDTO itemsStatus;
+	private APIStateDTO itemsStatus;
 
 	@SerializedName("https://api.guildwars2.com/v1/map_floor.json")
 	@Since(1.0)
-	private StatusDTO mapFloorStatus;
+	private APIStateDTO mapFloorStatus;
 
 	@SerializedName("https://api.guildwars2.com/v1/map_names.json")
 	@Since(1.0)
-	private StatusDTO mapNamesStatus;
+	private APIStateDTO mapNamesStatus;
 
 	@SerializedName("https://api.guildwars2.com/v1/maps.json")
 	@Since(1.0)
-	private StatusDTO mapsStatus;
+	private APIStateDTO mapsStatus;
 
 	@SerializedName("https://api.guildwars2.com/v1/recipe_details.json")
 	@Since(1.0)
-	private StatusDTO recipeDetailsStatus;
+	private APIStateDTO recipeDetailsStatus;
 
 	@SerializedName("https://api.guildwars2.com/v1/recipes.json")
 	@Since(1.0)
-	private StatusDTO recipesStatus;
+	private APIStateDTO recipesStatus;
 
 	@SerializedName("https://api.guildwars2.com/v1/world_names.json")
 	@Since(1.0)
-	private StatusDTO worldNamesStatus;
+	private APIStateDTO worldNamesStatus;
 
 	@SerializedName("https://api.guildwars2.com/v1/wvw/match_details.json")
 	@Since(1.0)
-	private StatusDTO matchDetailsStatus;
+	private APIStateDTO matchDetailsStatus;
 
 	@SerializedName("https://api.guildwars2.com/v1/wvw/matches.json")
 	@Since(1.0)
-	private StatusDTO matchesStatus;
+	private APIStateDTO matchesStatus;
 
 	@SerializedName("https://api.guildwars2.com/v1/wvw/objective_names.json")
 	@Since(1.0)
-	private StatusDTO objectiveNamesStatus;
+	private APIStateDTO objectiveNamesStatus;
 
 	@SerializedName("https://tiles.guildwars2.com/")
 	@Since(1.0)
-	private StatusDTO tilesStatus;
+	private APIStateDTO tilesStatus;
 
 	/**
 	 * @return the statusCodesStatus
 	 */
 	@Override
-	public final StatusDTO getStatusCodesStatus() {
+	public final APIStateDTO getStatusCodesStatus() {
 		return statusCodesStatus;
 	}
 
@@ -99,7 +99,7 @@ final class APIStatusDTO implements IAPIStatusDTO {
 	 * @return the statusStatus
 	 */
 	@Override
-	public final StatusDTO getStatusStatus() {
+	public final APIStateDTO getStatusStatus() {
 		return statusStatus;
 	}
 
@@ -107,7 +107,7 @@ final class APIStatusDTO implements IAPIStatusDTO {
 	 * @return the buildStatus
 	 */
 	@Override
-	public final StatusDTO getBuildStatus() {
+	public final APIStateDTO getBuildStatus() {
 		return buildStatus;
 	}
 
@@ -115,7 +115,7 @@ final class APIStatusDTO implements IAPIStatusDTO {
 	 * @return the colorsStatus
 	 */
 	@Override
-	public final StatusDTO getColorsStatus() {
+	public final APIStateDTO getColorsStatus() {
 		return colorsStatus;
 	}
 
@@ -123,7 +123,7 @@ final class APIStatusDTO implements IAPIStatusDTO {
 	 * @return the continentsStatus
 	 */
 	@Override
-	public final StatusDTO getContinentsStatus() {
+	public final APIStateDTO getContinentsStatus() {
 		return continentsStatus;
 	}
 
@@ -131,7 +131,7 @@ final class APIStatusDTO implements IAPIStatusDTO {
 	 * @return the eventsDetailsStatus
 	 */
 	@Override
-	public final StatusDTO getEventsDetailsStatus() {
+	public final APIStateDTO getEventsDetailsStatus() {
 		return eventsDetailsStatus;
 	}
 
@@ -139,7 +139,7 @@ final class APIStatusDTO implements IAPIStatusDTO {
 	 * @return the eventNamesStatus
 	 */
 	@Override
-	public final StatusDTO getEventNamesStatus() {
+	public final APIStateDTO getEventNamesStatus() {
 		return eventNamesStatus;
 	}
 
@@ -147,7 +147,7 @@ final class APIStatusDTO implements IAPIStatusDTO {
 	 * @return the eventsStatus
 	 */
 	@Override
-	public final StatusDTO getEventsStatus() {
+	public final APIStateDTO getEventsStatus() {
 		return eventsStatus;
 	}
 
@@ -155,7 +155,7 @@ final class APIStatusDTO implements IAPIStatusDTO {
 	 * @return the guildDetailsStatus
 	 */
 	@Override
-	public final StatusDTO getGuildDetailsStatus() {
+	public final APIStateDTO getGuildDetailsStatus() {
 		return guildDetailsStatus;
 	}
 
@@ -163,7 +163,7 @@ final class APIStatusDTO implements IAPIStatusDTO {
 	 * @return the itemsStatus
 	 */
 	@Override
-	public final StatusDTO getItemsStatus() {
+	public final APIStateDTO getItemsStatus() {
 		return itemsStatus;
 	}
 
@@ -171,7 +171,7 @@ final class APIStatusDTO implements IAPIStatusDTO {
 	 * @return the mapFloorStatus
 	 */
 	@Override
-	public final StatusDTO getMapFloorStatus() {
+	public final APIStateDTO getMapFloorStatus() {
 		return mapFloorStatus;
 	}
 
@@ -179,7 +179,7 @@ final class APIStatusDTO implements IAPIStatusDTO {
 	 * @return the mapNamesStatus
 	 */
 	@Override
-	public final StatusDTO getMapNamesStatus() {
+	public final APIStateDTO getMapNamesStatus() {
 		return mapNamesStatus;
 	}
 
@@ -187,7 +187,7 @@ final class APIStatusDTO implements IAPIStatusDTO {
 	 * @return the mapsStatus
 	 */
 	@Override
-	public final StatusDTO getMapsStatus() {
+	public final APIStateDTO getMapsStatus() {
 		return mapsStatus;
 	}
 
@@ -195,7 +195,7 @@ final class APIStatusDTO implements IAPIStatusDTO {
 	 * @return the recipeDetailsStatus
 	 */
 	@Override
-	public final StatusDTO getRecipeDetailsStatus() {
+	public final APIStateDTO getRecipeDetailsStatus() {
 		return recipeDetailsStatus;
 	}
 
@@ -203,7 +203,7 @@ final class APIStatusDTO implements IAPIStatusDTO {
 	 * @return the recipesStatus
 	 */
 	@Override
-	public final StatusDTO getRecipesStatus() {
+	public final APIStateDTO getRecipesStatus() {
 		return recipesStatus;
 	}
 
@@ -211,7 +211,7 @@ final class APIStatusDTO implements IAPIStatusDTO {
 	 * @return the worldNamesStatus
 	 */
 	@Override
-	public final StatusDTO getWorldNamesStatus() {
+	public final APIStateDTO getWorldNamesStatus() {
 		return worldNamesStatus;
 	}
 
@@ -219,7 +219,7 @@ final class APIStatusDTO implements IAPIStatusDTO {
 	 * @return the matchDetailsStatus
 	 */
 	@Override
-	public final StatusDTO getMatchDetailsStatus() {
+	public final APIStateDTO getMatchDetailsStatus() {
 		return matchDetailsStatus;
 	}
 
@@ -227,7 +227,7 @@ final class APIStatusDTO implements IAPIStatusDTO {
 	 * @return the matchesStatus
 	 */
 	@Override
-	public final StatusDTO getMatchesStatus() {
+	public final APIStateDTO getMatchesStatus() {
 		return matchesStatus;
 	}
 
@@ -235,7 +235,7 @@ final class APIStatusDTO implements IAPIStatusDTO {
 	 * @return the objectiveNamesStatus
 	 */
 	@Override
-	public final StatusDTO getObjectiveNamesStatus() {
+	public final APIStateDTO getObjectiveNamesStatus() {
 		return objectiveNamesStatus;
 	}
 
@@ -243,7 +243,7 @@ final class APIStatusDTO implements IAPIStatusDTO {
 	 * @return the tilesStatus
 	 */
 	@Override
-	public final StatusDTO getTilesStatus() {
+	public final APIStateDTO getTilesStatus() {
 		return tilesStatus;
 	}
 

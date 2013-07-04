@@ -4,19 +4,27 @@ import com.google.common.base.Objects;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 
-import de.justi.yagw2api.gw2stats.dto.IAPIStatusDTO;
+import de.justi.yagw2api.gw2stats.dto.IAPIStatesDTO;
 
 final class ResultWrapper {
 	@SerializedName("api")
 	@Since(1.0)
-	private APIStatusDTO api;
+	private APIStatesDTO apiStates;
+
+	@SerializedName("status_codes")
+	@Since(1.0)
+	private APIStateDescriptionsDTO descriptions;
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("api", this.api).toString();
+		return Objects.toStringHelper(this).add("api", this.apiStates).add("descriptions", this.descriptions).toString();
 	}
 
-	public IAPIStatusDTO getAPI() {
-		return this.api;
+	public IAPIStatesDTO getAPIStates() {
+		return this.apiStates;
+	}
+
+	public APIStateDescriptionsDTO getAPIStateDescriptions() {
+		return this.descriptions;
 	}
 }

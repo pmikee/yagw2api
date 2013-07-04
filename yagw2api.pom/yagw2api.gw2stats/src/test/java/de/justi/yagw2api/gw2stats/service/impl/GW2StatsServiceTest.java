@@ -7,8 +7,14 @@ import de.justi.yagw2api.gw2stats.dto.IGW2StatsDTOFactory;
 
 public class GW2StatsServiceTest {
 	@Test
-	public void testRetrieveStatus() {
+	public void testRetrieveAPIStates() {
 		GW2StatsService service = new GW2StatsService(YAGW2APIGW2Stats.getInjector().getInstance(IGW2StatsDTOFactory.class));
-		service.retrieveAPIStatus();
+		service.retrieveAPIStates();
+	}
+
+	@Test
+	public void testRetrieveAPIStateDescriptions() {
+		GW2StatsService service = new GW2StatsService(YAGW2APIGW2Stats.getInjector().getInstance(IGW2StatsDTOFactory.class));
+		service.retrieveAPIStateDescriptions();
 	}
 }

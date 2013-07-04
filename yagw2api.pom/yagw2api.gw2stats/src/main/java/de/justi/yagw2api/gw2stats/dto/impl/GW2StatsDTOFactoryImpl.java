@@ -9,7 +9,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
-import de.justi.yagw2api.gw2stats.dto.IAPIStatusDTO;
+import de.justi.yagw2api.gw2stats.dto.IAPIStateDescriptionsDTO;
+import de.justi.yagw2api.gw2stats.dto.IAPIStatesDTO;
 import de.justi.yagw2api.gw2stats.dto.IGW2StatsDTOFactory;
 
 public class GW2StatsDTOFactoryImpl implements IGW2StatsDTOFactory {
@@ -20,11 +21,26 @@ public class GW2StatsDTOFactoryImpl implements IGW2StatsDTOFactory {
 	}
 
 	@Override
-	public IAPIStatusDTO newAPIDTOOf(String json) {
-		LOGGER.trace("Going to built " + IAPIStatusDTO.class.getSimpleName() + " out of json string of length=" + json.length());
-		IAPIStatusDTO result;
+	public IAPIStatesDTO newAPIStatesOf(String json) {
+		LOGGER.trace("Going to built " + IAPIStatesDTO.class.getSimpleName() + " out of json string of length=" + json.length());
+		IAPIStatesDTO result;
 		try {
-			result = this.createGSON().fromJson(checkNotNull(json), ResultWrapper.class).getAPI();
+			result = this.createGSON().fromJson(checkNotNull(json), ResultWrapper.class).getAPIStates();
+		} catch (JsonSyntaxException e) {
+			result = null;
+			LOGGER.fatal("Invalid response: " + json, e);
+		}
+		checkState(result != null);
+		LOGGER.debug("Built " + result);
+		return result;
+	}
+
+	@Override
+	public IAPIStateDescriptionsDTO newAPIStateDescriptionsOf(String json) {
+		LOGGER.trace("Going to built " + IAPIStateDescriptionsDTO.class.getSimpleName() + " out of json string of length=" + json.length());
+		IAPIStateDescriptionsDTO result;
+		try {
+			result = this.createGSON().fromJson(checkNotNull(json), ResultWrapper.class).getAPIStateDescriptions();
 		} catch (JsonSyntaxException e) {
 			result = null;
 			LOGGER.fatal("Invalid response: " + json, e);
