@@ -28,6 +28,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import org.apache.log4j.Logger;
@@ -52,6 +53,7 @@ import com.google.common.base.Optional;
 import com.google.common.io.Closer;
 import com.google.common.math.DoubleMath;
 
+import de.justi.yagw2api.sample.model.APIStatusTableModel;
 import de.justi.yagw2api.sample.model.MapObjectivesTableModel;
 import de.justi.yagw2api.sample.model.MatchDetailsTableModel;
 import de.justi.yagw2api.sample.model.MatchesTableModel;
@@ -103,6 +105,9 @@ public final class MainWindow extends AbstractWindow {
 	private final ToolWindow matchDetailsToolWindow;
 	private final MyDoggyToolWindowManager toolWindowManager;
 	private ToolWindowGroup singleMapTableToolWindows;
+
+	private final JTable apiStatusTable;
+	private final TableModel apiStatusTableModel;
 
 	private static final class GW2TileFactoryInfo extends TileFactoryInfo {
 		private static final int MAX_ZOOM = 6;
@@ -171,6 +176,7 @@ public final class MainWindow extends AbstractWindow {
 		this.redMapModel = new MapObjectivesTableModel();
 		this.allMapsModel = new MapObjectivesTableModel();
 		this.matchDetailsTableModel = new MatchDetailsTableModel();
+		this.apiStatusTableModel = new APIStatusTableModel();
 
 		this.getContentPanel().add(this.builtMainMenuBar(), BorderLayout.NORTH);
 
@@ -229,6 +235,10 @@ public final class MainWindow extends AbstractWindow {
 		this.matchDetailsToolWindow = this.toolWindowManager.registerToolWindow("Match Details", "Match Details", null, new JScrollPane(this.matchDetailslTable), ToolWindowAnchor.BOTTOM);
 		this.matchDetailsToolWindow.setVisible(true);
 
+		this.apiStatusTable = this.initAPIStatusTable(this.apiStatusTableModel);
+		final ToolWindow toolWindow = this.toolWindowManager.registerToolWindow("API Status", "API Status", null, new JScrollPane(this.apiStatusTable), ToolWindowAnchor.TOP);
+		toolWindow.setVisible(true);
+
 		final DockedTypeDescriptor matchDetailsToolWindowDescriptor = (DockedTypeDescriptor) this.matchDetailsToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
 		matchDetailsToolWindowDescriptor.setIdVisibleOnTitleBar(false);
 		matchDetailsToolWindowDescriptor.setTitleBarButtonsVisible(false);
@@ -252,6 +262,13 @@ public final class MainWindow extends AbstractWindow {
 
 		// finally try to restore workspace setting
 		this.loadWorkspaceSettings();
+	}
+
+	private JTable initAPIStatusTable(final TableModel tableModel) {
+		final String[] header = { "API", "State", "Description", "Ping", "Retrieve", "Record", "Time" };
+		final JTable table = new JTable(tableModel, newTCM(header));
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		return table;
 	}
 
 	// private ChartPanel buildChart() {

@@ -1,45 +1,51 @@
 package de.justi.yagw2api.gw2stats.dto;
 
+import java.util.SortedMap;
+
 public interface IAPIStatesDTO {
 
-	IAPIStateDTO getTilesStatus();
+	SortedMap<String, IAPIStateDTO> getStatesMapedByURL();
 
-	IAPIStateDTO getObjectiveNamesStatus();
+	IAPIStateDTO getTilesState();
 
-	IAPIStateDTO getMatchesStatus();
+	IAPIStateDTO getObjectiveNamesState();
 
-	IAPIStateDTO getMatchDetailsStatus();
+	IAPIStateDTO getMatchesState();
 
-	IAPIStateDTO getWorldNamesStatus();
+	IAPIStateDTO getMatchDetailsState();
 
-	IAPIStateDTO getRecipesStatus();
+	IAPIStateDTO getWorldNamesState();
 
-	IAPIStateDTO getRecipeDetailsStatus();
+	IAPIStateDTO getRecipesState();
 
-	IAPIStateDTO getMapsStatus();
+	IAPIStateDTO getRecipeDetailsState();
 
-	IAPIStateDTO getMapNamesStatus();
+	IAPIStateDTO getMapsState();
 
-	IAPIStateDTO getMapFloorStatus();
+	IAPIStateDTO getMapNamesState();
 
-	IAPIStateDTO getItemsStatus();
+	IAPIStateDTO getMapFloorState();
 
-	IAPIStateDTO getGuildDetailsStatus();
+	IAPIStateDTO getItemsState();
 
-	IAPIStateDTO getEventsStatus();
+	IAPIStateDTO getItemDetailsState();
 
-	IAPIStateDTO getEventNamesStatus();
+	IAPIStateDTO getGuildDetailsState();
 
-	IAPIStateDTO getEventsDetailsStatus();
+	IAPIStateDTO getEventsState();
 
-	IAPIStateDTO getContinentsStatus();
+	IAPIStateDTO getEventNamesState();
 
-	IAPIStateDTO getColorsStatus();
+	IAPIStateDTO getEventsDetailsState();
 
-	IAPIStateDTO getBuildStatus();
+	IAPIStateDTO getContinentsState();
 
-	IAPIStateDTO getStatusStatus();
+	IAPIStateDTO getColorsState();
 
-	IAPIStateDTO getStatusCodesStatus();
+	IAPIStateDTO getBuildState();
+
+	IAPIStateDTO getStatesState();
+
+	IAPIStateDTO getStateCodesState();
 
 }

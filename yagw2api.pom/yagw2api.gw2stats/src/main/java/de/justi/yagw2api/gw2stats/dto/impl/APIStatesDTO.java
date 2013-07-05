@@ -1,259 +1,313 @@
 package de.justi.yagw2api.gw2stats.dto.impl;
 
+import java.util.SortedMap;
+import java.util.TreeMap;
+
 import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableSortedMap;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 
+import de.justi.yagw2api.gw2stats.dto.IAPIStateDTO;
 import de.justi.yagw2api.gw2stats.dto.IAPIStatesDTO;
 
 final class APIStatesDTO implements IAPIStatesDTO {
+
 	@SerializedName("http://gw2stats.net/api/status.json")
 	@Since(1.0)
-	private APIStateDTO statusCodesStatus;
+	private APIStateDTO stateCodesState;
 
 	@SerializedName("http://gw2stats.net/api/status_codes.json")
 	@Since(1.0)
-	private APIStateDTO statusStatus;
+	private APIStateDTO stateState;
 
 	@SerializedName("https://api.guildwars2.com/v1/build.json")
 	@Since(1.0)
-	private APIStateDTO buildStatus;
+	private APIStateDTO buildState;
 
 	@SerializedName("https://api.guildwars2.com/v1/colors.json")
 	@Since(1.0)
-	private APIStateDTO colorsStatus;
+	private APIStateDTO colorsState;
 
 	@SerializedName("https://api.guildwars2.com/v1/continents.json")
 	@Since(1.0)
-	private APIStateDTO continentsStatus;
+	private APIStateDTO continentsState;
 
 	@SerializedName("https://api.guildwars2.com/v1/event_details.json")
 	@Since(1.0)
-	private APIStateDTO eventsDetailsStatus;
+	private APIStateDTO eventsDetailsState;
 
 	@SerializedName("https://api.guildwars2.com/v1/event_names.json")
 	@Since(1.0)
-	private APIStateDTO eventNamesStatus;
+	private APIStateDTO eventNamesState;
 
 	@SerializedName("https://api.guildwars2.com/v1/events.json")
 	@Since(1.0)
-	private APIStateDTO eventsStatus;
+	private APIStateDTO eventsState;
 
-	@SerializedName("https://api.guildwars2.com/v1/guild_details.json")
+	@SerializedName("https://api.guildwars2.com/v1/guild_details.json?guild_name=Arenanet")
 	@Since(1.0)
-	private APIStateDTO guildDetailsStatus;
+	private APIStateDTO guildDetailsState;
 
 	@SerializedName("https://api.guildwars2.com/v1/items.json")
 	@Since(1.0)
-	private APIStateDTO itemsStatus;
+	private APIStateDTO itemsState;
+
+	@SerializedName("https://api.guildwars2.com/v1/item_details.json?item_id=14484")
+	@Since(1.0)
+	private APIStateDTO itemDetailsState;
 
 	@SerializedName("https://api.guildwars2.com/v1/map_floor.json")
 	@Since(1.0)
-	private APIStateDTO mapFloorStatus;
+	private APIStateDTO mapFloorState;
 
 	@SerializedName("https://api.guildwars2.com/v1/map_names.json")
 	@Since(1.0)
-	private APIStateDTO mapNamesStatus;
+	private APIStateDTO mapNamesState;
 
 	@SerializedName("https://api.guildwars2.com/v1/maps.json")
 	@Since(1.0)
-	private APIStateDTO mapsStatus;
+	private APIStateDTO mapsState;
 
-	@SerializedName("https://api.guildwars2.com/v1/recipe_details.json")
+	@SerializedName("https://api.guildwars2.com/v1/recipe_details.json?recipe_id=1972")
 	@Since(1.0)
-	private APIStateDTO recipeDetailsStatus;
+	private APIStateDTO recipeDetailsState;
 
 	@SerializedName("https://api.guildwars2.com/v1/recipes.json")
 	@Since(1.0)
-	private APIStateDTO recipesStatus;
+	private APIStateDTO recipesState;
 
 	@SerializedName("https://api.guildwars2.com/v1/world_names.json")
 	@Since(1.0)
-	private APIStateDTO worldNamesStatus;
+	private APIStateDTO worldNamesState;
 
-	@SerializedName("https://api.guildwars2.com/v1/wvw/match_details.json")
+	@SerializedName("https://api.guildwars2.com/v1/wvw/match_details.json?match_id=1-3")
 	@Since(1.0)
-	private APIStateDTO matchDetailsStatus;
+	private APIStateDTO matchDetailsState;
 
 	@SerializedName("https://api.guildwars2.com/v1/wvw/matches.json")
 	@Since(1.0)
-	private APIStateDTO matchesStatus;
+	private APIStateDTO matchesState;
 
 	@SerializedName("https://api.guildwars2.com/v1/wvw/objective_names.json")
 	@Since(1.0)
-	private APIStateDTO objectiveNamesStatus;
+	private APIStateDTO objectiveNamesState;
 
 	@SerializedName("https://tiles.guildwars2.com/")
 	@Since(1.0)
-	private APIStateDTO tilesStatus;
+	private APIStateDTO tilesState;
+
+	private volatile transient SortedMap<String, IAPIStateDTO> statesMappedByURL = null;
 
 	/**
 	 * @return the statusCodesStatus
 	 */
 	@Override
-	public final APIStateDTO getStatusCodesStatus() {
-		return statusCodesStatus;
+	public final IAPIStateDTO getStateCodesState() {
+		return stateCodesState;
 	}
 
 	/**
 	 * @return the statusStatus
 	 */
 	@Override
-	public final APIStateDTO getStatusStatus() {
-		return statusStatus;
+	public final IAPIStateDTO getStatesState() {
+		return stateState;
 	}
 
 	/**
 	 * @return the buildStatus
 	 */
 	@Override
-	public final APIStateDTO getBuildStatus() {
-		return buildStatus;
+	public final IAPIStateDTO getBuildState() {
+		return buildState;
 	}
 
 	/**
 	 * @return the colorsStatus
 	 */
 	@Override
-	public final APIStateDTO getColorsStatus() {
-		return colorsStatus;
+	public final IAPIStateDTO getColorsState() {
+		return colorsState;
 	}
 
 	/**
 	 * @return the continentsStatus
 	 */
 	@Override
-	public final APIStateDTO getContinentsStatus() {
-		return continentsStatus;
+	public final IAPIStateDTO getContinentsState() {
+		return continentsState;
 	}
 
 	/**
 	 * @return the eventsDetailsStatus
 	 */
 	@Override
-	public final APIStateDTO getEventsDetailsStatus() {
-		return eventsDetailsStatus;
+	public final IAPIStateDTO getEventsDetailsState() {
+		return eventsDetailsState;
 	}
 
 	/**
 	 * @return the eventNamesStatus
 	 */
 	@Override
-	public final APIStateDTO getEventNamesStatus() {
-		return eventNamesStatus;
+	public final IAPIStateDTO getEventNamesState() {
+		return eventNamesState;
 	}
 
 	/**
 	 * @return the eventsStatus
 	 */
 	@Override
-	public final APIStateDTO getEventsStatus() {
-		return eventsStatus;
+	public final IAPIStateDTO getEventsState() {
+		return eventsState;
 	}
 
 	/**
 	 * @return the guildDetailsStatus
 	 */
 	@Override
-	public final APIStateDTO getGuildDetailsStatus() {
-		return guildDetailsStatus;
+	public final IAPIStateDTO getGuildDetailsState() {
+		return guildDetailsState;
 	}
 
 	/**
 	 * @return the itemsStatus
 	 */
 	@Override
-	public final APIStateDTO getItemsStatus() {
-		return itemsStatus;
+	public final IAPIStateDTO getItemsState() {
+		return itemsState;
+	}
+
+	/**
+	 * @return the itemDetailsState
+	 */
+	@Override
+	public final IAPIStateDTO getItemDetailsState() {
+		return itemDetailsState;
 	}
 
 	/**
 	 * @return the mapFloorStatus
 	 */
 	@Override
-	public final APIStateDTO getMapFloorStatus() {
-		return mapFloorStatus;
+	public final IAPIStateDTO getMapFloorState() {
+		return mapFloorState;
 	}
 
 	/**
 	 * @return the mapNamesStatus
 	 */
 	@Override
-	public final APIStateDTO getMapNamesStatus() {
-		return mapNamesStatus;
+	public final IAPIStateDTO getMapNamesState() {
+		return mapNamesState;
 	}
 
 	/**
 	 * @return the mapsStatus
 	 */
 	@Override
-	public final APIStateDTO getMapsStatus() {
-		return mapsStatus;
+	public final IAPIStateDTO getMapsState() {
+		return mapsState;
 	}
 
 	/**
 	 * @return the recipeDetailsStatus
 	 */
 	@Override
-	public final APIStateDTO getRecipeDetailsStatus() {
-		return recipeDetailsStatus;
+	public final IAPIStateDTO getRecipeDetailsState() {
+		return recipeDetailsState;
 	}
 
 	/**
 	 * @return the recipesStatus
 	 */
 	@Override
-	public final APIStateDTO getRecipesStatus() {
-		return recipesStatus;
+	public final IAPIStateDTO getRecipesState() {
+		return recipesState;
 	}
 
 	/**
 	 * @return the worldNamesStatus
 	 */
 	@Override
-	public final APIStateDTO getWorldNamesStatus() {
-		return worldNamesStatus;
+	public final IAPIStateDTO getWorldNamesState() {
+		return worldNamesState;
 	}
 
 	/**
 	 * @return the matchDetailsStatus
 	 */
 	@Override
-	public final APIStateDTO getMatchDetailsStatus() {
-		return matchDetailsStatus;
+	public final IAPIStateDTO getMatchDetailsState() {
+		return matchDetailsState;
 	}
 
 	/**
 	 * @return the matchesStatus
 	 */
 	@Override
-	public final APIStateDTO getMatchesStatus() {
-		return matchesStatus;
+	public final IAPIStateDTO getMatchesState() {
+		return matchesState;
 	}
 
 	/**
 	 * @return the objectiveNamesStatus
 	 */
 	@Override
-	public final APIStateDTO getObjectiveNamesStatus() {
-		return objectiveNamesStatus;
+	public final IAPIStateDTO getObjectiveNamesState() {
+		return objectiveNamesState;
 	}
 
 	/**
 	 * @return the tilesStatus
 	 */
 	@Override
-	public final APIStateDTO getTilesStatus() {
-		return tilesStatus;
+	public final IAPIStateDTO getTilesState() {
+		return tilesState;
 	}
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("statusCodesStatus", this.statusCodesStatus).add("statusStatus", this.statusStatus).add("buildStatus", this.buildStatus)
-				.add("colorsStatus", this.colorsStatus).add("continentsStatus", this.continentsStatus).add("eventsDetailsStatus", this.eventsDetailsStatus)
-				.add("eventNamesStatus", this.eventNamesStatus).add("eventsStatus", this.eventsStatus).add("guildDetailsStatus", this.guildDetailsStatus).add("itemsStatus", this.itemsStatus)
-				.add("mapFloorStatus", this.mapFloorStatus).add("mapNamesStatus", this.mapNamesStatus).add("mapsStatus", this.mapsStatus).add("recipeDetailsStatus", recipeDetailsStatus)
-				.add("recipesStatus", this.recipesStatus).add("worldNamesStatus", this.worldNamesStatus).add("matchDetailsStatus", this.matchDetailsStatus).add("matchesStatus", this.matchesStatus)
-				.add("objectiveNamesStatus", this.objectiveNamesStatus).add("tilesStatus", this.tilesStatus).toString();
+		return Objects.toStringHelper(this).add("statusCodesStatus", this.stateCodesState).add("statusStatus", this.stateState).add("buildStatus", this.buildState)
+				.add("colorsStatus", this.colorsState).add("continentsStatus", this.continentsState).add("eventsDetailsStatus", this.eventsDetailsState).add("eventNamesStatus", this.eventNamesState)
+				.add("eventsStatus", this.eventsState).add("guildDetailsStatus", this.guildDetailsState).add("itemsStatus", this.itemsState).add("itemDetailsState", this.itemDetailsState)
+				.add("mapFloorStatus", this.mapFloorState).add("mapNamesStatus", this.mapNamesState).add("mapsStatus", this.mapsState).add("recipeDetailsStatus", recipeDetailsState)
+				.add("recipesStatus", this.recipesState).add("worldNamesStatus", this.worldNamesState).add("matchDetailsStatus", this.matchDetailsState).add("matchesStatus", this.matchesState)
+				.add("objectiveNamesStatus", this.objectiveNamesState).add("tilesStatus", this.tilesState).toString();
+	}
+
+	@Override
+	public SortedMap<String, IAPIStateDTO> getStatesMapedByURL() {
+		if (this.statesMappedByURL == null) {
+			synchronized (this) {
+				if (this.statesMappedByURL == null) {
+					final SortedMap<String, IAPIStateDTO> statesMap = new TreeMap<String, IAPIStateDTO>();
+					statesMap.put("http://gw2stats.net/api/status.json", this.getStatesState());
+					statesMap.put("http://gw2stats.net/api/status_codes.json", this.getStateCodesState());
+					statesMap.put("https://api.guildwars2.com/v1/build.json", this.getBuildState());
+					statesMap.put("https://api.guildwars2.com/v1/colors.json", this.getColorsState());
+					statesMap.put("https://api.guildwars2.com/v1/continents.json", this.getContinentsState());
+					statesMap.put("https://api.guildwars2.com/v1/event_details.json", this.getEventsDetailsState());
+					statesMap.put("https://api.guildwars2.com/v1/event_names.json", this.getEventNamesState());
+					statesMap.put("https://api.guildwars2.com/v1/events.json", this.getEventsState());
+					statesMap.put("https://api.guildwars2.com/v1/guild_details.json", this.getGuildDetailsState());
+					statesMap.put("https://api.guildwars2.com/v1/items.json", this.getItemsState());
+					statesMap.put("https://api.guildwars2.com/v1/item_details.json", this.getItemDetailsState());
+					statesMap.put("https://api.guildwars2.com/v1/map_floor.json", this.getMapFloorState());
+					statesMap.put("https://api.guildwars2.com/v1/map_names.json", this.getMapNamesState());
+					statesMap.put("https://api.guildwars2.com/v1/maps.json", this.getMapsState());
+					statesMap.put("https://api.guildwars2.com/v1/recipe_details.json", this.getRecipeDetailsState());
+					statesMap.put("https://api.guildwars2.com/v1/recipes.json", this.getRecipesState());
+					statesMap.put("https://api.guildwars2.com/v1/world_names.json", this.getWorldNamesState());
+					statesMap.put("https://api.guildwars2.com/v1/wvw/match_details.json", this.getMatchDetailsState());
+					statesMap.put("https://api.guildwars2.com/v1/wvw/matches.json", this.getMatchesState());
+					statesMap.put("https://api.guildwars2.com/v1/wvw/objective_names.json", this.getWorldNamesState());
+					statesMap.put("https://tiles.guildwars2.com/", this.getTilesState());
+					this.statesMappedByURL = ImmutableSortedMap.copyOf(statesMap);
+				}
+			}
+		}
+		return this.statesMappedByURL;
 	}
 }

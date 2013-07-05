@@ -177,6 +177,11 @@
 				<version>${de.justi.yagw2api.arenanet.version}</version>
 			</dependency>
 			<dependency>
+				<artifactId>yagw2api.gw2stats</artifactId>
+				<groupId>de.justi</groupId>
+				<version>${de.justi.yagw2api.gw2stats.version}</version>
+			</dependency>
+			<dependency>
 				<artifactId>yagw2api.wrapper</artifactId>
 				<groupId>de.justi</groupId>
 				<version>${de.justi.yagw2api.wrapper.version}</version>
