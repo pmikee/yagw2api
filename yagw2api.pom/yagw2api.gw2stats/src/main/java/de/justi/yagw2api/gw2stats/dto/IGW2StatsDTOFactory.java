@@ -1,7 +1,9 @@
 package de.justi.yagw2api.gw2stats.dto;
 
-public interface IGW2StatsDTOFactory {
-	IAPIStatesDTO newAPIStatesOf(String json);
+import java.util.Map;
 
-	IAPIStateDescriptionsDTO newAPIStateDescriptionsOf(String json);
+public interface IGW2StatsDTOFactory {
+	Map<String, IAPIStateDTO> newAPIStatesOf(String json);
+
+	Map<String, IAPIStateDescriptionDTO> newAPIStateDescriptionsOf(String json);
 }

@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -20,9 +21,8 @@ import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.WebResource;
 
+import de.justi.yagw2api.gw2stats.dto.IAPIStateDTO;
 import de.justi.yagw2api.gw2stats.dto.IAPIStateDescriptionDTO;
-import de.justi.yagw2api.gw2stats.dto.IAPIStateDescriptionsDTO;
-import de.justi.yagw2api.gw2stats.dto.IAPIStatesDTO;
 import de.justi.yagw2api.gw2stats.dto.IGW2StatsDTOFactory;
 import de.justi.yagw2api.gw2stats.service.IGW2StatsService;
 import de.justi.yagwapi.common.AbstractService;
@@ -54,53 +54,58 @@ final class GW2StatsService extends AbstractService implements IGW2StatsService 
 		this.gw2statsDTOFactory = gw2statsDTOFactory;
 	}
 
-	private final Cache<String, IAPIStatesDTO> apieStatesCache = CacheBuilder.newBuilder().expireAfterWrite(API_STATES_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build();
-	private final Cache<String, IAPIStateDescriptionsDTO> apieStateDescriptionsCache = CacheBuilder.newBuilder().expireAfterWrite(API_STATE_DESCRIPTIONS_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS)
-			.build();
+	private final Cache<String, Map<String, IAPIStateDTO>> apieStatesCache = CacheBuilder.newBuilder().expireAfterWrite(API_STATES_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build();
+	private final Cache<String, Map<String, IAPIStateDescriptionDTO>> apieStateDescriptionsCache = CacheBuilder.newBuilder()
+			.expireAfterWrite(API_STATE_DESCRIPTIONS_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build();
 
 	@Override
-	public IAPIStatesDTO retrieveAPIStates() {
+	public Map<String, IAPIStateDTO> retrieveAPIStates() {
 		try {
-			return this.apieStatesCache.get("", new Callable<IAPIStatesDTO>() {
+			return this.apieStatesCache.get("", new Callable<Map<String, IAPIStateDTO>>() {
 				@Override
-				public IAPIStatesDTO call() throws Exception {
-					final WebResource resource = CLIENT.resource(API_STATES_URL.toExternalForm());
-					resource.addFilter(new RetryClientFilter(RETRY_COUNT));
-					final WebResource.Builder builder = resource.accept(MediaType.APPLICATION_JSON_TYPE);
+				public Map<String, IAPIStateDTO> call() throws Exception {
 					try {
-						final String response = builder.get(String.class).replaceAll(Pattern.quote("\\"), "");
-						LOGGER.trace("Retrieved response=" + response);
-						final IAPIStatesDTO result = GW2StatsService.this.gw2statsDTOFactory.newAPIStatesOf(response);
-						if (LOGGER.isDebugEnabled()) {
-							LOGGER.debug("Built result=" + result);
+						final WebResource resource = CLIENT.resource(API_STATES_URL.toExternalForm());
+						resource.addFilter(new RetryClientFilter(RETRY_COUNT));
+						final WebResource.Builder builder = resource.accept(MediaType.APPLICATION_JSON_TYPE);
+						try {
+							final String response = builder.get(String.class).replaceAll(Pattern.quote("\\"), "");
+							LOGGER.trace("Retrieved response=" + response);
+							final Map<String, IAPIStateDTO> result = GW2StatsService.this.gw2statsDTOFactory.newAPIStatesOf(response);
+							if (LOGGER.isDebugEnabled()) {
+								LOGGER.debug("Built result=" + result);
+							}
+							return result;
+						} catch (ClientHandlerException e) {
+							LOGGER.fatal("Exception thrown while quering " + resource.getURI(), e);
+							return null;
 						}
-						return result;
-					} catch (ClientHandlerException e) {
-						LOGGER.fatal("Exception thrown while quering " + resource.getURI(), e);
-						return null;
+					} catch (Throwable e) {
+						LOGGER.fatal("Failed to retrieve cache result.", e);
+						throw e;
 					}
 				}
 			});
 		} catch (ExecutionException e) {
-			LOGGER.error("Failed to retrieve " + IAPIStatesDTO.class.getSimpleName() + " from cache.", e);
-			throw new IllegalStateException("Failed to retrieve " + IAPIStatesDTO.class.getSimpleName() + " from cache.", e);
+			LOGGER.error("Failed to retrieve " + Map.class.getSimpleName() + " of " + IAPIStateDTO.class.getSimpleName() + " from cache.", e);
+			throw new IllegalStateException("Failed to retrieve " + Map.class.getSimpleName() + " of " + IAPIStateDTO.class.getSimpleName() + " from cache.", e);
 		}
 
 	}
 
 	@Override
-	public IAPIStateDescriptionsDTO retrieveAPIStateDescriptions() {
+	public Map<String, IAPIStateDescriptionDTO> retrieveAPIStateDescriptions() {
 		try {
-			return this.apieStateDescriptionsCache.get("", new Callable<IAPIStateDescriptionsDTO>() {
+			return this.apieStateDescriptionsCache.get("", new Callable<Map<String, IAPIStateDescriptionDTO>>() {
 				@Override
-				public IAPIStateDescriptionsDTO call() throws Exception {
+				public Map<String, IAPIStateDescriptionDTO> call() throws Exception {
 					final WebResource resource = CLIENT.resource(API_STATE_DESCRIPTIONS_URL.toExternalForm());
 					resource.addFilter(new RetryClientFilter(RETRY_COUNT));
 					final WebResource.Builder builder = resource.accept(MediaType.APPLICATION_JSON_TYPE);
 					try {
 						final String response = builder.get(String.class);
 						LOGGER.trace("Retrieved response=" + response);
-						final IAPIStateDescriptionsDTO result = GW2StatsService.this.gw2statsDTOFactory.newAPIStateDescriptionsOf(response);
+						final Map<String, IAPIStateDescriptionDTO> result = GW2StatsService.this.gw2statsDTOFactory.newAPIStateDescriptionsOf(response);
 						if (LOGGER.isDebugEnabled()) {
 							LOGGER.debug("Built result=" + result);
 						}
@@ -112,13 +117,13 @@ final class GW2StatsService extends AbstractService implements IGW2StatsService 
 				}
 			});
 		} catch (ExecutionException e) {
-			LOGGER.error("Failed to retrieve " + IAPIStatesDTO.class.getSimpleName() + " from cache.", e);
-			throw new IllegalStateException("Failed to retrieve " + IAPIStatesDTO.class.getSimpleName() + " from cache.", e);
+			LOGGER.error("Failed to retrieve " + Map.class.getSimpleName() + " of " + IAPIStateDTO.class.getSimpleName() + " from cache.", e);
+			throw new IllegalStateException("Failed to retrieve " + Map.class.getSimpleName() + " of " + IAPIStateDTO.class.getSimpleName() + " from cache.", e);
 		}
 	}
 
 	@Override
 	public Optional<IAPIStateDescriptionDTO> retrieveAPIStateDescription(String state) {
-		return this.retrieveAPIStateDescriptions().getDescriptionOfState(state);
+		return Optional.fromNullable(this.retrieveAPIStateDescriptions().get(state));
 	}
 }
