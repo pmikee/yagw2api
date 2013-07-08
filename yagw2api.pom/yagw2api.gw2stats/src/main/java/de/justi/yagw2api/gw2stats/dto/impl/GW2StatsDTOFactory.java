@@ -7,6 +7,8 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
@@ -38,13 +40,15 @@ public class GW2StatsDTOFactory implements IGW2StatsDTOFactory {
 		return result;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Map<String, IAPIStateDescriptionDTO> newAPIStateDescriptionsOf(String json) {
 		LOGGER.trace("Going to built " + Map.class.getSimpleName() + " of " + IAPIStateDescriptionDTO.class.getSimpleName() + " out of json string of length=" + json.length());
 		Map<String, IAPIStateDescriptionDTO> result;
 		try {
-			result = (Map<String, IAPIStateDescriptionDTO>) this.createGSON().fromJson(checkNotNull(json), APIStateDescriptionDTOResultWrapper.class).getResult();
+			// the following roundtrip is required, because gson handling for interfaces suxx
+			final Map<String, IAPIStateDescriptionDTO> buffer = Maps.newHashMap();
+			buffer.putAll(this.createGSON().fromJson(checkNotNull(json), APIStateDescriptionDTOResultWrapper.class).getResult());
+			result = ImmutableMap.copyOf(buffer);
 		} catch (JsonSyntaxException e) {
 			result = null;
 			LOGGER.fatal("Invalid response: " + json, e);
@@ -53,5 +57,4 @@ public class GW2StatsDTOFactory implements IGW2StatsDTOFactory {
 		LOGGER.debug("Built " + result);
 		return result;
 	}
-
 }
