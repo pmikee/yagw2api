@@ -3,6 +3,7 @@ package de.justi.yagw2api.sample.model;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
@@ -26,7 +27,6 @@ public class APIStatusTableModel extends AbstractTableModel {
 	public APIStatusTableModel() {
 		// TODO refactor this to an event based system -> wrap it
 		final AbstractScheduledService service = new AbstractScheduledService() {
-
 			@Override
 			protected Scheduler scheduler() {
 				return AbstractScheduledService.Scheduler.newFixedDelaySchedule(0, 5000, TimeUnit.MILLISECONDS);
@@ -39,6 +39,27 @@ public class APIStatusTableModel extends AbstractTableModel {
 			}
 		};
 		service.start();
+	}
+
+	public Comparator<?> getColumnComparator(int col) {
+		switch (col) {
+			case 3:
+			case 4:
+			case 5:
+				return new Comparator<Object>() {
+					@Override
+					public int compare(Object o1, Object o2) {
+						return Integer.valueOf(o1.toString()).compareTo(Integer.valueOf(o2.toString()));
+					}
+				};
+			default:
+				return new Comparator<Object>() {
+					@Override
+					public int compare(Object o1, Object o2) {
+						return String.valueOf(o1).compareTo(String.valueOf(o2));
+					}
+				};
+		}
 	}
 
 	@Override

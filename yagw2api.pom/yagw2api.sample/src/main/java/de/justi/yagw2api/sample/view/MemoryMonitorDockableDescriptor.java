@@ -16,8 +16,11 @@ import org.noos.xing.mydoggy.plaf.ui.util.StringUtil;
 
 public class MemoryMonitorDockableDescriptor extends CustomDockableDescriptor {
 
-	public MemoryMonitorDockableDescriptor(MyDoggyToolWindowManager manager, ToolWindowAnchor anchor) {
+	private final boolean draggable;
+
+	public MemoryMonitorDockableDescriptor(MyDoggyToolWindowManager manager, ToolWindowAnchor anchor, boolean draggable) {
 		super(manager, anchor);
+		this.draggable = draggable;
 	}
 
 	@Override
@@ -25,9 +28,9 @@ public class MemoryMonitorDockableDescriptor extends CustomDockableDescriptor {
 	}
 
 	@Override
-	public JComponent getRepresentativeAnchor(Component parent) {
+	public synchronized JComponent getRepresentativeAnchor(Component parent) {
 		if (this.representativeAnchor == null) {
-			this.representativeAnchor = new MemoryMonitorPanel(anchor);
+			this.representativeAnchor = new MemoryMonitorPanel(anchor, this.draggable);
 		}
 		return this.representativeAnchor;
 	}
@@ -41,7 +44,7 @@ public class MemoryMonitorDockableDescriptor extends CustomDockableDescriptor {
 		private static final int SLEEP = 1000;
 		private static final long serialVersionUID = -5081978515639631610L;
 
-		public MemoryMonitorPanel(ToolWindowAnchor anchor) {
+		public MemoryMonitorPanel(ToolWindowAnchor anchor, boolean draggable) {
 			final JProgressBar memoryUsage = new JProgressBar();
 			memoryUsage.setStringPainted(true);
 
@@ -80,8 +83,10 @@ public class MemoryMonitorDockableDescriptor extends CustomDockableDescriptor {
 					break;
 			}
 
-			MemoryMonitorDockableDescriptor.this.registerDragListener(memoryUsage);
-			MemoryMonitorDockableDescriptor.this.registerDragListener(this);
+			if (draggable) {
+				MemoryMonitorDockableDescriptor.this.registerDragListener(memoryUsage);
+				MemoryMonitorDockableDescriptor.this.registerDragListener(this);
+			}
 		}
 	}
 

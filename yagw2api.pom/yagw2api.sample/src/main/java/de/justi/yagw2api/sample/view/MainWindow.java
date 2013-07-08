@@ -28,7 +28,6 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import org.apache.log4j.Logger;
@@ -107,7 +106,8 @@ public final class MainWindow extends AbstractWindow {
 	private ToolWindowGroup singleMapTableToolWindows;
 
 	private final JTable apiStatusTable;
-	private final TableModel apiStatusTableModel;
+	private final APIStatusTableModel apiStatusTableModel;
+	private ToolWindow apiStatusToolWindow;
 
 	private static final class GW2TileFactoryInfo extends TileFactoryInfo {
 		private static final int MAX_ZOOM = 6;
@@ -190,12 +190,6 @@ public final class MainWindow extends AbstractWindow {
 		final ContentManager contentManager = this.toolWindowManager.getContentManager();
 		contentManager.addContent("Worldmap", "Worldmap", null, this.buildMap(), "Worldmap");
 
-		this.matchesTable = this.initMatchesTable(this.matchesTableModel);
-		this.matchesToolWindow = this.toolWindowManager.registerToolWindow("Matches Overview", "Matches Overview", null, new JScrollPane(this.matchesTable), ToolWindowAnchor.LEFT);
-		this.matchesToolWindow.setVisible(true);
-		final DockedTypeDescriptor matchesToolWindowDescriptor = (DockedTypeDescriptor) this.matchesToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
-		matchesToolWindowDescriptor.setIdVisibleOnTitleBar(false);
-
 		this.singleMapTableToolWindows = this.toolWindowManager.getToolWindowGroup("mapTableToolWindows");
 
 		this.allMapsTable = this.initMapTable(this.allMapsModel);
@@ -203,48 +197,68 @@ public final class MainWindow extends AbstractWindow {
 		this.allMapsToolWindow.setVisible(true);
 		final DockedTypeDescriptor allMapsToolWindowDescriptor = (DockedTypeDescriptor) this.allMapsToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
 		allMapsToolWindowDescriptor.setIdVisibleOnTitleBar(false);
+		allMapsToolWindowDescriptor.setTitleBarButtonsVisible(false);
+		allMapsToolWindowDescriptor.setTitleBarVisible(false);
 
 		this.eternalTable = this.initMapTable(this.eternalMapModel);
 		this.eternalMapToolWindow = this.toolWindowManager.registerToolWindow("Enternal Battlegrounds", "Enternal Battlegrounds", null, new JScrollPane(this.eternalTable), ToolWindowAnchor.RIGHT);
+		this.eternalMapToolWindow.setAggregateMode(true);
 		this.singleMapTableToolWindows.addToolWindow(this.eternalMapToolWindow);
 		final DockedTypeDescriptor eternalMapToolWindowDescriptor = (DockedTypeDescriptor) this.eternalMapToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
 		eternalMapToolWindowDescriptor.setIdVisibleOnTitleBar(false);
 
 		this.blueTable = this.initMapTable(this.blueMapModel);
 		this.blueMapToolWindow = this.toolWindowManager.registerToolWindow("Blue Borderlands", "Blue Borderlands", null, new JScrollPane(this.blueTable), ToolWindowAnchor.RIGHT);
+		this.blueMapToolWindow.setAggregateMode(true);
 		this.singleMapTableToolWindows.addToolWindow(this.blueMapToolWindow);
 		final DockedTypeDescriptor blueMapToolWindowDescriptor = (DockedTypeDescriptor) this.blueMapToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
 		blueMapToolWindowDescriptor.setIdVisibleOnTitleBar(false);
 
 		this.greenTable = this.initMapTable(this.greenMapModel);
 		this.greenMapToolWindow = this.toolWindowManager.registerToolWindow("Green Borderlands", "Green Borderlands", null, new JScrollPane(this.greenTable), ToolWindowAnchor.RIGHT);
+		this.greenMapToolWindow.setAggregateMode(true);
 		this.singleMapTableToolWindows.addToolWindow(this.greenMapToolWindow);
 		final DockedTypeDescriptor greenMapToolWindowDescriptor = (DockedTypeDescriptor) this.greenMapToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
 		greenMapToolWindowDescriptor.setIdVisibleOnTitleBar(false);
 
 		this.redTable = this.initMapTable(this.redMapModel);
 		this.redMapToolWindow = this.toolWindowManager.registerToolWindow("Red Borderlands", "Red Borderlands", null, new JScrollPane(this.redTable), ToolWindowAnchor.RIGHT);
+		this.redMapToolWindow.setAggregateMode(true);
 		this.singleMapTableToolWindows.addToolWindow(this.redMapToolWindow);
 		final DockedTypeDescriptor redMapToolWindowDescriptor = (DockedTypeDescriptor) this.redMapToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
 		redMapToolWindowDescriptor.setIdVisibleOnTitleBar(false);
 
-		this.singleMapTableToolWindows.setImplicit(true);
+		this.singleMapTableToolWindows.setImplicit(false);
 		this.singleMapTableToolWindows.setVisible(true);
+
+		this.apiStatusTable = this.initAPIStatusTable(this.apiStatusTableModel);
+		this.apiStatusToolWindow = this.toolWindowManager.registerToolWindow("API Status", "API Status", null, new JScrollPane(this.apiStatusTable), ToolWindowAnchor.BOTTOM);
+		this.apiStatusToolWindow.setVisible(true);
+		this.apiStatusToolWindow.setAggregateMode(true);
+		final DockedTypeDescriptor apiStatusToolWindowDescriptor = (DockedTypeDescriptor) this.apiStatusToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
+		apiStatusToolWindowDescriptor.setIdVisibleOnTitleBar(false);
+		apiStatusToolWindowDescriptor.setTitleBarButtonsVisible(false);
+		apiStatusToolWindowDescriptor.setTitleBarVisible(false);
 
 		this.matchDetailslTable = this.initMatchDetailsTable(this.matchDetailsTableModel);
 		this.matchDetailsToolWindow = this.toolWindowManager.registerToolWindow("Match Details", "Match Details", null, new JScrollPane(this.matchDetailslTable), ToolWindowAnchor.BOTTOM);
 		this.matchDetailsToolWindow.setVisible(true);
-
-		this.apiStatusTable = this.initAPIStatusTable(this.apiStatusTableModel);
-		final ToolWindow toolWindow = this.toolWindowManager.registerToolWindow("API Status", "API Status", null, new JScrollPane(this.apiStatusTable), ToolWindowAnchor.TOP);
-		toolWindow.setVisible(true);
-
+		this.matchDetailsToolWindow.setAggregateMode(true);
 		final DockedTypeDescriptor matchDetailsToolWindowDescriptor = (DockedTypeDescriptor) this.matchDetailsToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
 		matchDetailsToolWindowDescriptor.setIdVisibleOnTitleBar(false);
 		matchDetailsToolWindowDescriptor.setTitleBarButtonsVisible(false);
 		matchDetailsToolWindowDescriptor.setTitleBarVisible(false);
 
-		final DockableDescriptor memoryMonitorDescriptor = new MemoryMonitorDockableDescriptor(this.toolWindowManager, ToolWindowAnchor.BOTTOM);
+		this.matchesTable = this.initMatchesTable(this.matchesTableModel);
+		this.matchesToolWindow = this.toolWindowManager.registerToolWindow("Matches Overview", "Matches Overview", null, new JScrollPane(this.matchesTable), ToolWindowAnchor.BOTTOM);
+		this.matchesToolWindow.setVisible(true);
+		this.matchesToolWindow.setAggregateMode(true);
+		final DockedTypeDescriptor matchesToolWindowDescriptor = (DockedTypeDescriptor) this.matchesToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
+		matchesToolWindowDescriptor.setIdVisibleOnTitleBar(false);
+		matchesToolWindowDescriptor.setTitleBarButtonsVisible(false);
+		matchesToolWindowDescriptor.setTitleBarVisible(false);
+
+		final DockableDescriptor memoryMonitorDescriptor = new MemoryMonitorDockableDescriptor(this.toolWindowManager, ToolWindowAnchor.BOTTOM, false);
 		memoryMonitorDescriptor.setAvailable(true);
 		memoryMonitorDescriptor.setAnchor(ToolWindowAnchor.BOTTOM, 0);
 
@@ -264,10 +278,16 @@ public final class MainWindow extends AbstractWindow {
 		this.loadWorkspaceSettings();
 	}
 
-	private JTable initAPIStatusTable(final TableModel tableModel) {
+	private JTable initAPIStatusTable(final APIStatusTableModel tableModel) {
 		final String[] header = { "API", "State", "Description", "Ping", "Retrieve", "Record", "Time" };
 		final JTable table = new JTable(tableModel, newTCM(header));
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		final TableRowSorter<APIStatusTableModel> sorter = new TableRowSorter<APIStatusTableModel>(tableModel);
+		table.setRowSorter(sorter);
+		sorter.setSortsOnUpdates(true);
+		for (int col = 0; col < tableModel.getColumnCount(); col++) {
+			sorter.setComparator(col, tableModel.getColumnComparator(col));
+		}
 		return table;
 	}
 
