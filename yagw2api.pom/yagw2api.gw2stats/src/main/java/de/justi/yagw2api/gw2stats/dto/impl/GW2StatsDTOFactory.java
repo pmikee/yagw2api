@@ -19,7 +19,7 @@ public class GW2StatsDTOFactory implements IGW2StatsDTOFactory {
 	private static final Logger LOGGER = Logger.getLogger(GW2StatsDTOFactory.class);
 
 	private Gson createGSON() {
-		return new GsonBuilder().excludeFieldsWithModifiers(java.lang.reflect.Modifier.TRANSIENT).setVersion(1.0).create();
+		return new GsonBuilder().excludeFieldsWithModifiers(java.lang.reflect.Modifier.TRANSIENT).setDateFormat("yyyy-MM-dd HH:mm:ss zzz").setVersion(1.0).create();
 	}
 
 	@SuppressWarnings("unchecked")

@@ -1,10 +1,12 @@
 package de.justi.yagw2api.gw2stats.dto;
 
+import java.util.Date;
+
 import com.google.common.base.Optional;
 
 public interface IAPIStateDTO {
 
-	String getTime();
+	Date getTime();
 
 	int getRecords();
 

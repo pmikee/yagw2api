@@ -2,6 +2,8 @@ package de.justi.yagw2api.gw2stats.dto.impl;
 
 import static com.google.common.base.Preconditions.checkState;
 
+import java.util.Date;
+
 import org.apache.log4j.Logger;
 
 import com.google.common.base.Objects;
@@ -36,7 +38,7 @@ final class APIStateDTO implements IAPIStateDTO {
 
 	@SerializedName("time")
 	@Since(1.0)
-	private String time;
+	private Date time;
 
 	@Override
 	public String toString() {
@@ -80,7 +82,7 @@ final class APIStateDTO implements IAPIStateDTO {
 	 * @return the time
 	 */
 	@Override
-	public final String getTime() {
+	public final Date getTime() {
 		return time;
 	}
 
