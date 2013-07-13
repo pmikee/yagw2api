@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -53,7 +54,7 @@ final class WVWWrapper implements IWVWWrapper {
 			}
 		}
 	}
-	
+
 	@Override
 	public void start() {
 		this.initDemaonIfRequired();
@@ -61,18 +62,14 @@ final class WVWWrapper implements IWVWWrapper {
 		checkState(!this.deamon.isRunning());
 		this.deamon.start();
 	}
-	
-
 
 	@Override
 	public void startAndWait() {
 		this.initDemaonIfRequired();
 		checkState(this.deamon != null);
 		checkState(!this.deamon.isRunning());
-		this.deamon.startAndWait();		
+		this.deamon.startAndWait();
 	}
-	
-
 
 	@Override
 	public void stopAndWait() {
@@ -80,6 +77,7 @@ final class WVWWrapper implements IWVWWrapper {
 		checkState(this.deamon.isRunning());
 		this.deamon.stopAndWait();
 	}
+
 	@Override
 	public void stop() {
 		checkState(this.deamon != null);
@@ -89,7 +87,7 @@ final class WVWWrapper implements IWVWWrapper {
 
 	@Override
 	public boolean isRunning() {
-		return this.deamon != null && this.deamon.isRunning();
+		return (this.deamon != null) && this.deamon.isRunning();
 	}
 
 	@Subscribe
@@ -111,10 +109,10 @@ final class WVWWrapper implements IWVWWrapper {
 	private void notifyWVWMatchListener(IWVWMatchListener listener, IWVWMatchEvent event) {
 		checkNotNull(listener);
 		checkNotNull(event);
-		LOGGER.trace("Going to notify "+listener+" about "+event);
+		LOGGER.trace("Going to notify " + listener + " about " + event);
 		if (event instanceof IWVWMatchScoresChangedEvent) {
 			listener.onMatchScoreChangedEvent((IWVWMatchScoresChangedEvent) event);
-		}else if (event instanceof IWVWInitializedMatchEvent) {
+		} else if (event instanceof IWVWInitializedMatchEvent) {
 			listener.onInitializedMatchForWrapper((IWVWInitializedMatchEvent) event);
 		}
 	}
@@ -123,38 +121,49 @@ final class WVWWrapper implements IWVWWrapper {
 	public void onWVWMapEvent(IWVWMapEvent event) {
 		checkNotNull(event);
 		checkArgument(event.getMap().getMatch().isPresent());
-		LOGGER.debug(this + " will now inform it's registered listeners about " + event);
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug(this + " will now inform it's registered listeners about " + event);
+		}
 		final IWVWMap map = event.getMap();
 		final IWVWMatch match = map.getMatch().get();
 
+		final Collection<IWVWMapListener> notifiedListeners = new ArrayList<IWVWMapListener>();
+
 		for (IWVWMapListener listener : this.allMapsOfAllMatchesListeners) {
 			this.notifyWVWMapListener(listener, event);
+			notifiedListeners.add(listener);
 		}
 		if (this.allMapsOfSingleMatchListeners.containsKey(match)) {
 			for (IWVWMapListener listener : this.allMapsOfSingleMatchListeners.get(match)) {
 				this.notifyWVWMapListener(listener, event);
+				notifiedListeners.add(listener);
 			}
 		}
 		if (this.singleMapListeners.containsKey(map)) {
 			for (IWVWMapListener listener : this.singleMapListeners.get(map)) {
 				this.notifyWVWMapListener(listener, event);
+				notifiedListeners.add(listener);
 			}
+		}
+
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Notified " + notifiedListeners + " about " + event);
 		}
 	}
 
 	private void notifyWVWMapListener(IWVWMapListener listener, IWVWMapEvent event) {
 		checkNotNull(listener);
 		checkNotNull(event);
-		LOGGER.trace("Going to notify "+listener+" about "+event);
+		LOGGER.trace("Going to notify " + listener + " about " + event);
 		if (event instanceof IWVWMapScoresChangedEvent) {
 			listener.onChangedMapScoreEvent((IWVWMapScoresChangedEvent) event);
-			
+
 		} else if (event instanceof IWVWObjectiveCaptureEvent) {
 			listener.onObjectiveCapturedEvent((IWVWObjectiveCaptureEvent) event);
-			
+
 		} else if (event instanceof IWVWObjectiveEndOfBuffEvent) {
 			listener.onObjectiveEndOfBuffEvent((IWVWObjectiveEndOfBuffEvent) event);
-			
+
 		} else if (event instanceof IWVWObjectiveClaimedEvent) {
 			listener.onObjectiveClaimedEvent((IWVWObjectiveClaimedEvent) event);
 		}

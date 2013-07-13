@@ -52,17 +52,25 @@ import com.google.common.base.Optional;
 import com.google.common.io.Closer;
 import com.google.common.math.DoubleMath;
 
+import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
 import de.justi.yagw2api.explorer.model.APIStatusTableModel;
 import de.justi.yagw2api.explorer.model.MapObjectivesTableModel;
 import de.justi.yagw2api.explorer.model.MatchDetailsTableModel;
 import de.justi.yagw2api.explorer.model.MatchesTableModel;
 import de.justi.yagw2api.explorer.renderer.MatchDetailsTableCellRenderer;
 import de.justi.yagw2api.explorer.renderer.ObjectiveTableCellRenderer;
+import de.justi.yagw2api.wrapper.IWVWMapListener;
 import de.justi.yagw2api.wrapper.IWVWWrapper;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
 import de.justi.yagw2api.wrapper.model.wvw.IWVWMatch;
+import de.justi.yagw2api.wrapper.model.wvw.events.IWVWMapScoresChangedEvent;
+import de.justi.yagw2api.wrapper.model.wvw.events.IWVWObjectiveCaptureEvent;
+import de.justi.yagw2api.wrapper.model.wvw.events.IWVWObjectiveClaimedEvent;
+import de.justi.yagw2api.wrapper.model.wvw.events.IWVWObjectiveEndOfBuffEvent;
+import de.justi.yagw2api.wrapper.model.wvw.events.IWVWObjectiveUnclaimedEvent;
+import de.justi.yagwapi.common.utils.TTSUtils;
 
-public final class MainWindow extends AbstractWindow {
+public final class MainWindow extends AbstractWindow implements IWVWMapListener {
 	private static final String WORKSPACE_XML_FILENAME = "workspace.xml";
 	private static final long serialVersionUID = -6500541020042114865L;
 	private static final Logger LOGGER = Logger.getLogger(MainWindow.class);
@@ -524,6 +532,12 @@ public final class MainWindow extends AbstractWindow {
 									MainWindow.this.greenMapModel.wireUp(MainWindow.this.wrapper.get(), match.getGreenMap());
 									MainWindow.this.blueMapModel.wireUp(MainWindow.this.wrapper.get(), match.getBlueMap());
 									MainWindow.this.redMapModel.wireUp(MainWindow.this.wrapper.get(), match.getRedMap());
+
+									MainWindow.this.wrapper.get().unregisterWVWMapListener(MainWindow.this);
+									MainWindow.this.wrapper.get().registerWVWMapListener(match.getCenterMap(), MainWindow.this);
+									MainWindow.this.wrapper.get().registerWVWMapListener(match.getGreenMap(), MainWindow.this);
+									MainWindow.this.wrapper.get().registerWVWMapListener(match.getBlueMap(), MainWindow.this);
+									MainWindow.this.wrapper.get().registerWVWMapListener(match.getRedMap(), MainWindow.this);
 								}
 
 								if (match.getGreenWorld().getName().isPresent()) {
@@ -578,6 +592,29 @@ public final class MainWindow extends AbstractWindow {
 			sorter.setComparator(col, tableModel.getColumnComparator(col));
 		}
 		return mapTable;
+	}
+
+	@Override
+	public void onObjectiveCapturedEvent(IWVWObjectiveCaptureEvent event) {
+		TTSUtils.readOut(event.getObjective().getLabel().get() + " wurde von " + event.getNewOwningWorld().getName().get() + " erobert.", YAGW2APIArenanet.getInstance().getCurrentLocale());
+	}
+
+	@Override
+	public void onObjectiveEndOfBuffEvent(IWVWObjectiveEndOfBuffEvent event) {
+		TTSUtils.readOut(event.getObjective().getLabel().get() + " hat keinen Buff mehr.", YAGW2APIArenanet.getInstance().getCurrentLocale());
+	}
+
+	@Override
+	public void onObjectiveClaimedEvent(IWVWObjectiveClaimedEvent event) {
+		TTSUtils.readOut(event.getObjective().getLabel().get() + " wurde von " + event.getClaimingGuild().getName() + " eingenommen.", YAGW2APIArenanet.getInstance().getCurrentLocale());
+	}
+
+	@Override
+	public void onChangedMapScoreEvent(IWVWMapScoresChangedEvent event) {
+	}
+
+	@Override
+	public void onObjectiveUnclaimedEvent(IWVWObjectiveUnclaimedEvent event) {
 	}
 
 }

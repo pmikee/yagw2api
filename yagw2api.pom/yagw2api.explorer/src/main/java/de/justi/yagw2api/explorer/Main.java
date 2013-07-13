@@ -1,5 +1,6 @@
 package de.justi.yagw2api.explorer;
 
+import java.io.IOException;
 import java.util.Locale;
 
 import javax.swing.UIManager;
@@ -35,6 +36,10 @@ public final class Main {
 
 	/**
 	 * @param args
+	 * @throws MaryConfigurationException
+	 * @throws SynthesisException
+	 * @throws InterruptedException
+	 * @throws IOException
 	 */
 	public static void main(String[] args) {
 		YAGW2APIWrapper.setCurrentLocale(Locale.getDefault());
