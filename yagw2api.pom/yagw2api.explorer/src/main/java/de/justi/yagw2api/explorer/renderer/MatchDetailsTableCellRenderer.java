@@ -1,4 +1,4 @@
-package de.justi.yagw2api.sample.renderer;
+package de.justi.yagw2api.explorer.renderer;
 
 import static com.google.common.base.Preconditions.checkState;
 
@@ -8,8 +8,8 @@ import java.awt.Component;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import de.justi.yagw2api.sample.model.MatchDetailsTableModel;
-import de.justi.yagw2api.sample.view.MainWindow;
+import de.justi.yagw2api.explorer.model.MatchDetailsTableModel;
+import de.justi.yagw2api.explorer.view.MainWindow;
 
 public final class MatchDetailsTableCellRenderer extends DefaultTableCellRenderer {
 	private static final long serialVersionUID = -7631435914940282639L;

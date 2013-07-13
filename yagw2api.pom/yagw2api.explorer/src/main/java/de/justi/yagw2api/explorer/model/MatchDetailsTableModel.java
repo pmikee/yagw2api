@@ -1,4 +1,4 @@
-package de.justi.yagw2api.sample.model;
+package de.justi.yagw2api.explorer.model;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

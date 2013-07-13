@@ -1,4 +1,4 @@
-package de.justi.yagw2api.sample.view;
+package de.justi.yagw2api.explorer.view;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
@@ -52,12 +52,12 @@ import com.google.common.base.Optional;
 import com.google.common.io.Closer;
 import com.google.common.math.DoubleMath;
 
-import de.justi.yagw2api.sample.model.APIStatusTableModel;
-import de.justi.yagw2api.sample.model.MapObjectivesTableModel;
-import de.justi.yagw2api.sample.model.MatchDetailsTableModel;
-import de.justi.yagw2api.sample.model.MatchesTableModel;
-import de.justi.yagw2api.sample.renderer.MatchDetailsTableCellRenderer;
-import de.justi.yagw2api.sample.renderer.ObjectiveTableCellRenderer;
+import de.justi.yagw2api.explorer.model.APIStatusTableModel;
+import de.justi.yagw2api.explorer.model.MapObjectivesTableModel;
+import de.justi.yagw2api.explorer.model.MatchDetailsTableModel;
+import de.justi.yagw2api.explorer.model.MatchesTableModel;
+import de.justi.yagw2api.explorer.renderer.MatchDetailsTableCellRenderer;
+import de.justi.yagw2api.explorer.renderer.ObjectiveTableCellRenderer;
 import de.justi.yagw2api.wrapper.IWVWWrapper;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
 import de.justi.yagw2api.wrapper.model.wvw.IWVWMatch;
@@ -164,7 +164,7 @@ public final class MainWindow extends AbstractWindow {
 
 	public MainWindow() {
 		super();
-		this.setTitle("Yet Another GW2 API - Sample Application");
+		this.setTitle("Yet Another GW2 API - Explorer");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setMinimumSize(new Dimension(640, 480));
 		this.setPreferredSize(new Dimension(1024, 768));

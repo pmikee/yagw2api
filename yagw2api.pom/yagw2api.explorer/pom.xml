@@ -6,8 +6,8 @@
 		<artifactId>yagw2api.pom</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<name>YAGW2API-Sample-Application</name>
-	<artifactId>yagw2api.sample</artifactId>
+	<name>YAGW2API-Explorer-Application</name>
+	<artifactId>yagw2api.explorer</artifactId>
 
 	<build>
 		<plugins>

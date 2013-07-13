@@ -1,4 +1,4 @@
-package de.justi.yagw2api.sample.renderer;
+package de.justi.yagw2api.explorer.renderer;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
@@ -10,8 +10,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import com.google.common.base.Optional;
 
-import de.justi.yagw2api.sample.model.MapObjectivesTableModel;
-import de.justi.yagw2api.sample.view.MainWindow;
+import de.justi.yagw2api.explorer.model.MapObjectivesTableModel;
+import de.justi.yagw2api.explorer.view.MainWindow;
 import de.justi.yagw2api.wrapper.model.IWorld;
 import de.justi.yagw2api.wrapper.model.wvw.IWVWMap;
 import de.justi.yagw2api.wrapper.model.wvw.IWVWMatch;

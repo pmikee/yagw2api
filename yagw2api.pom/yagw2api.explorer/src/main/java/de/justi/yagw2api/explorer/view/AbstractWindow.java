@@ -1,4 +1,4 @@
-package de.justi.yagw2api.sample.view;
+package de.justi.yagw2api.explorer.view;
 
 import java.awt.BorderLayout;
 

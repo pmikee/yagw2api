@@ -37,8 +37,8 @@
 								<jarResource>
 									<groupId>de.justi</groupId>
 									<artifactId>yagw2api.sample</artifactId>
-									<version>${de.justi.yagw2api.sample.version}</version>
-									<mainClass>de.justi.yagw2api.sample.Main</mainClass>
+									<version>${de.justi.yagw2api.explorer.version}</version>
+									<mainClass>de.justi.yagw2api.explorer.Main</mainClass>
 								</jarResource>
 							</jarResources>
 						</jnlpFile>

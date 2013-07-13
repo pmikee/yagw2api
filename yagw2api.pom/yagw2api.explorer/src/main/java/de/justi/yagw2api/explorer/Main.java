@@ -1,4 +1,4 @@
-package de.justi.yagw2api.sample;
+package de.justi.yagw2api.explorer;
 
 import java.util.Locale;
 
@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
 import de.justi.yagw2api.analyzer.IWVWAnalyzer;
 import de.justi.yagw2api.analyzer.YAGW2APIAnalyzer;
 import de.justi.yagw2api.analyzer.entities.YAGW2APIAnalyzerPersistence;
-import de.justi.yagw2api.sample.view.MainWindow;
+import de.justi.yagw2api.explorer.view.MainWindow;
 import de.justi.yagw2api.wrapper.IWVWWrapper;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
 
