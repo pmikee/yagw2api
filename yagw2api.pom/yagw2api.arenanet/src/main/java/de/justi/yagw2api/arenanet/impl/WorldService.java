@@ -27,7 +27,6 @@ import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.WebResource;
 
-import de.justi.yagw2api.arenanet.IWVWDTOFactory;
 import de.justi.yagw2api.arenanet.IWorldDTOFactory;
 import de.justi.yagw2api.arenanet.IWorldNameDTO;
 import de.justi.yagw2api.arenanet.IWorldService;
@@ -59,13 +58,11 @@ final class WorldService implements IWorldService {
 				}
 			}).build();
 	private final Map<Locale, Cache<Integer, IWorldNameDTO>> worldNameCaches = new HashMap<Locale, Cache<Integer, IWorldNameDTO>>();
-	private final IWVWDTOFactory wvwDTOFactory;
 	private final IWorldDTOFactory worldDTOFactory;
 
 	// METHODS
 	@Inject
-	public WorldService(IWVWDTOFactory wvwDTOFactory, IWorldDTOFactory worldDTOFactory) {
-		this.wvwDTOFactory = checkNotNull(wvwDTOFactory);
+	public WorldService(IWorldDTOFactory worldDTOFactory) {
 		this.worldDTOFactory = checkNotNull(worldDTOFactory);
 	}
 
