@@ -8,27 +8,64 @@ import java.util.concurrent.ForkJoinPool;
 
 import org.apache.log4j.Logger;
 
+import com.google.inject.CreationException;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-import de.justi.yagw2api.arenanet.dto.impl.ArenanetDTOModule;
-import de.justi.yagw2api.arenanet.service.IWVWService;
-import de.justi.yagw2api.arenanet.service.impl.ArenanetServiceModule;
+import de.justi.yagw2api.arenanet.impl.Module;
 
 public enum YAGW2APIArenanet {
+	/**
+	 * <p>
+	 * Use {@link YAGW2APIArenanet#getInstance} instead.
+	 * </p>
+	 */
 	INSTANCE;
-	private static final Logger LOGGER = Logger.getLogger(YAGW2APIArenanet.class);
+
+	// CONSTS
 	private static final int THREAD_COUNT_PER_PROCESSOR = 2;
 
-	public static ForkJoinPool getForkJoinPool() {
-		checkState(INSTANCE != null);
-		return INSTANCE.forkJoinPool;
+	// STATIC METHODS
+	public static YAGW2APIArenanet getInstance() {
+		return INSTANCE;
 	}
 
-	public static Injector getInjector() {
-		checkState(INSTANCE != null);
-		checkState(INSTANCE.injector != null);
-		return INSTANCE.injector;
+	// FIELDS
+	private final IWVWService wvwService;
+	private final IGuildService guildService;
+	private final IWorldService worldService;
+	private final ForkJoinPool forkJoinPool;
+
+	private Locale currentLocale = Locale.getDefault();
+
+	// CONSTRUCTOR
+	private YAGW2APIArenanet() {
+
+		try {
+			final Injector injector = Guice.createInjector(new Module());
+			this.forkJoinPool = new ForkJoinPool(Runtime.getRuntime().availableProcessors() * THREAD_COUNT_PER_PROCESSOR, ForkJoinPool.defaultForkJoinWorkerThreadFactory,
+					new Thread.UncaughtExceptionHandler() {
+						@Override
+						public void uncaughtException(Thread t, Throwable e) {
+							Logger.getLogger(YAGW2APIArenanet.class).fatal("Uncought exception thrown in " + t.getName(), e);
+						}
+					}, false);
+			this.guildService = injector.getInstance(IGuildService.class);
+			this.wvwService = injector.getInstance(IWVWService.class);
+			this.worldService = injector.getInstance(IWorldService.class);
+			this.currentLocale = injector.getInstance(Locale.class);
+		} catch (CreationException e) {
+			Logger.getLogger(YAGW2APIArenanet.class).fatal("Failed to create " + Injector.class.getSimpleName() + " for " + Module.class.getSimpleName(), e);
+			throw new IllegalStateException("Failed to create " + Injector.class.getSimpleName() + " for " + Module.class.getSimpleName(), e);
+		}
+
+	}
+
+	// METHODS
+
+	public static ForkJoinPool getForkJoinPool() {
+		checkState(getInstance() != null);
+		return getInstance().forkJoinPool;
 	}
 
 	/**
@@ -38,32 +75,38 @@ public enum YAGW2APIArenanet {
 	 * 
 	 * @return
 	 */
-	public static IWVWService getWVWService() {
-		checkState(INSTANCE != null);
-		checkState(INSTANCE.injector != null);
-		return getInjector().getInstance(IWVWService.class);
+	public IWVWService getWVWService() {
+		return this.wvwService;
 	}
 
-	public static Locale getCurrentLocale() {
-		return INSTANCE.currentLocale;
+	/**
+	 * <p>
+	 * access to low level api calls returning dtos
+	 * <p>
+	 * 
+	 * @return
+	 */
+	public IWorldService getWorldService() {
+		return this.worldService;
 	}
 
-	public static void setCurrentLocale(Locale locale) {
-		INSTANCE.currentLocale = checkNotNull(locale);
+	/**
+	 * <p>
+	 * access to low level api calls returning dtos
+	 * <p>
+	 * 
+	 * @return
+	 */
+	public IGuildService getGuildService() {
+		return this.guildService;
 	}
 
-	private final ForkJoinPool forkJoinPool;
-	private final Injector injector;
-	private Locale currentLocale = Locale.getDefault();
-
-	private YAGW2APIArenanet() {
-		this.injector = Guice.createInjector(new ArenanetDTOModule(), new ArenanetServiceModule());
-		this.forkJoinPool = new ForkJoinPool(Runtime.getRuntime().availableProcessors() * THREAD_COUNT_PER_PROCESSOR, ForkJoinPool.defaultForkJoinWorkerThreadFactory,
-				new Thread.UncaughtExceptionHandler() {
-					@Override
-					public void uncaughtException(Thread t, Throwable e) {
-						LOGGER.fatal("Uncought exception thrown in " + t.getName(), e);
-					}
-				}, false);
+	public Locale getCurrentLocale() {
+		return getInstance().currentLocale;
 	}
+
+	public void setCurrentLocale(Locale locale) {
+		getInstance().currentLocale = checkNotNull(locale);
+	}
+
 }

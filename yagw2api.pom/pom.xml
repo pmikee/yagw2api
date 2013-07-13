@@ -25,6 +25,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<de.justi.yagw2api.test.version>0.0.1-SNAPSHOT</de.justi.yagw2api.test.version>
 		<de.justi.yagw2api.common.version>0.0.1-SNAPSHOT</de.justi.yagw2api.common.version>
 		<de.justi.yagw2api.arenanet.version>0.0.1-SNAPSHOT</de.justi.yagw2api.arenanet.version>
 		<de.justi.yagw2api.gw2stats.version>0.0.1-SNAPSHOT</de.justi.yagw2api.gw2stats.version>
@@ -35,6 +36,7 @@
 	</properties>
 
 	<modules>
+		<module>yagw2api.test</module>
 		<module>yagw2api.common</module>
 		<module>yagw2api.gw2stats</module>
 		<module>yagw2api.arenanet</module>
@@ -50,6 +52,7 @@
 				<activeByDefault>false</activeByDefault>
 			</activation>
 			<modules>
+				<module>yagw2api.test</module>
 				<module>yagw2api.common</module>
 				<module>yagw2api.gw2stats</module>
 				<module>yagw2api.arenanet</module>
@@ -166,6 +169,12 @@
 
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<artifactId>yagw2api.test</artifactId>
+				<groupId>de.justi</groupId>
+				<version>${de.justi.yagw2api.test.version}</version>
+				<scope>test</scope>
+			</dependency>
 			<dependency>
 				<artifactId>yagw2api.common</artifactId>
 				<groupId>de.justi</groupId>

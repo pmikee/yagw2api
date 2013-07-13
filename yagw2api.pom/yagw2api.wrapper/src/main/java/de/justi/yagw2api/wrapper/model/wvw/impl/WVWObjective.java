@@ -13,8 +13,8 @@ import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.eventbus.EventBus;
 
-import de.justi.yagw2api.arenanet.dto.IGuildDetailsDTO;
-import de.justi.yagw2api.arenanet.dto.IWVWObjectiveDTO;
+import de.justi.yagw2api.arenanet.IGuildDetailsDTO;
+import de.justi.yagw2api.arenanet.IWVWObjectiveDTO;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
 import de.justi.yagw2api.wrapper.model.IGuild;
 import de.justi.yagw2api.wrapper.model.IModelFactory;

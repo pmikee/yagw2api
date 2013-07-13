@@ -10,6 +10,10 @@
 	<name>YAGW2API-Arenanet</name>
 	<dependencies>
 		<dependency>
+			<artifactId>yagw2api.test</artifactId>
+			<groupId>de.justi</groupId>
+		</dependency>
+		<dependency>
 			<artifactId>yagw2api.common</artifactId>
 			<groupId>de.justi</groupId>
 		</dependency>

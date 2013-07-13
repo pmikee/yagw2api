@@ -25,8 +25,8 @@ import com.google.common.collect.Iterables;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
-import de.justi.yagw2api.arenanet.dto.IWVWMapDTO;
-import de.justi.yagw2api.arenanet.dto.IWVWObjectiveDTO;
+import de.justi.yagw2api.arenanet.IWVWMapDTO;
+import de.justi.yagw2api.arenanet.IWVWObjectiveDTO;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
 import de.justi.yagw2api.wrapper.model.IWorld;
 import de.justi.yagw2api.wrapper.model.wvw.IHasWVWLocation;

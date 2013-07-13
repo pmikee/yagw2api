@@ -4,7 +4,7 @@ import java.util.Locale;
 
 import com.google.common.base.Optional;
 
-import de.justi.yagw2api.arenanet.dto.IWorldNameDTO;
+import de.justi.yagw2api.arenanet.IWorldNameDTO;
 import de.justi.yagw2api.wrapper.model.types.IWorldLocationType;
 
 public interface IWorld {

@@ -12,14 +12,14 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
+import de.justi.yagw2api.arenanet.IGuildDetailsDTO;
+import de.justi.yagw2api.arenanet.IWVWMapDTO;
+import de.justi.yagw2api.arenanet.IWVWMatchDTO;
+import de.justi.yagw2api.arenanet.IWVWMatchDetailsDTO;
+import de.justi.yagw2api.arenanet.IWVWObjectiveDTO;
+import de.justi.yagw2api.arenanet.IWVWService;
+import de.justi.yagw2api.arenanet.IWorldNameDTO;
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
-import de.justi.yagw2api.arenanet.dto.IGuildDetailsDTO;
-import de.justi.yagw2api.arenanet.dto.IWVWMapDTO;
-import de.justi.yagw2api.arenanet.dto.IWVWMatchDTO;
-import de.justi.yagw2api.arenanet.dto.IWVWMatchDetailsDTO;
-import de.justi.yagw2api.arenanet.dto.IWVWObjectiveDTO;
-import de.justi.yagw2api.arenanet.dto.IWorldNameDTO;
-import de.justi.yagw2api.arenanet.service.IWVWService;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
 import de.justi.yagw2api.wrapper.model.IGuild;
 import de.justi.yagw2api.wrapper.model.IModelFactory;
@@ -33,7 +33,7 @@ final class WVWSynchronizerAction extends AbstractSynchronizerAction<String, WVW
 	private static final long serialVersionUID = 8391498327079686666L;
 	private static final int MAX_CHUNK_SIZE = 1;
 	private static final Logger LOGGER = Logger.getLogger(WVWSynchronizerAction.class);
-	private static final IWVWService SERVICE = YAGW2APIArenanet.getInjector().getInstance(IWVWService.class);
+	private static final IWVWService WVW_SERVICE = YAGW2APIArenanet.getInstance().getWVWService();
 	private static final IModelFactory MODEL_FACTORY = YAGW2APIWrapper.getInjector().getInstance(IModelFactory.class);
 
 	private final Map<String, IWVWMatch> matchesMappedById;
@@ -63,7 +63,7 @@ final class WVWSynchronizerAction extends AbstractSynchronizerAction<String, WVW
 	protected void perform(String matchId) {
 		final long startTimestamp = System.currentTimeMillis();
 		LOGGER.trace("Going to synchronize matchId=" + matchId);
-		final Optional<IWVWMatchDTO> matchDTOOptional = SERVICE.retrieveMatch(matchId);
+		final Optional<IWVWMatchDTO> matchDTOOptional = WVW_SERVICE.retrieveMatch(matchId);
 		if (matchDTOOptional.isPresent() && matchDTOOptional.get().getDetails().isPresent()) {
 			final IWVWMatchDTO matchDTO = matchDTOOptional.get();
 			final IWVWMatchDetailsDTO matchDetailsDTO = matchDTO.getDetails().get();

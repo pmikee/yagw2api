@@ -24,12 +24,12 @@ import com.google.common.collect.Lists;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
-import de.justi.yagw2api.arenanet.dto.DTOConstants;
-import de.justi.yagw2api.arenanet.dto.IWVWMapDTO;
-import de.justi.yagw2api.arenanet.dto.IWVWMatchDTO;
-import de.justi.yagw2api.arenanet.dto.IWVWMatchDetailsDTO;
-import de.justi.yagw2api.arenanet.dto.IWVWObjectiveDTO;
-import de.justi.yagw2api.arenanet.dto.IWorldNameDTO;
+import de.justi.yagw2api.arenanet.DTOConstants;
+import de.justi.yagw2api.arenanet.IWVWMapDTO;
+import de.justi.yagw2api.arenanet.IWVWMatchDTO;
+import de.justi.yagw2api.arenanet.IWVWMatchDetailsDTO;
+import de.justi.yagw2api.arenanet.IWVWObjectiveDTO;
+import de.justi.yagw2api.arenanet.IWorldNameDTO;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
 import de.justi.yagw2api.wrapper.model.IModelFactory;
 import de.justi.yagw2api.wrapper.model.IWorld;

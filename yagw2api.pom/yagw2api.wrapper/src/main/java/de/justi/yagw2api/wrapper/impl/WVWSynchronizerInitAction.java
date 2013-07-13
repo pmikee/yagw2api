@@ -14,7 +14,7 @@ import org.apache.log4j.Logger;
 import com.google.common.collect.ImmutableList;
 import com.google.common.eventbus.EventBus;
 
-import de.justi.yagw2api.arenanet.dto.IWVWMatchDTO;
+import de.justi.yagw2api.arenanet.IWVWMatchDTO;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
 import de.justi.yagw2api.wrapper.model.IWorld;
 import de.justi.yagw2api.wrapper.model.wvw.IWVWMatch;

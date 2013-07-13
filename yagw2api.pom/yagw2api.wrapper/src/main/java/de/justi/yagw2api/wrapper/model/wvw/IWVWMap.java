@@ -5,7 +5,7 @@ import java.util.Set;
 
 import com.google.common.base.Optional;
 
-import de.justi.yagw2api.arenanet.dto.IWVWMapDTO;
+import de.justi.yagw2api.arenanet.IWVWMapDTO;
 import de.justi.yagw2api.wrapper.model.wvw.types.IWVWLocationType;
 import de.justi.yagw2api.wrapper.model.wvw.types.IWVWMapType;
 import de.justi.yagwapi.common.IHasChannel;

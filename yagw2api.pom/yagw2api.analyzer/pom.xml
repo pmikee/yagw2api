@@ -12,7 +12,10 @@
 
 
 	<dependencies>
-
+		<dependency>
+			<artifactId>yagw2api.test</artifactId>
+			<groupId>de.justi</groupId>
+		</dependency>
 		<dependency>
 			<artifactId>junit</artifactId>
 			<groupId>junit</groupId>

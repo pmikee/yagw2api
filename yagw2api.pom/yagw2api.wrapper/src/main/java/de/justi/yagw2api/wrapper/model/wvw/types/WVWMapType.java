@@ -1,6 +1,6 @@
 package de.justi.yagw2api.wrapper.model.wvw.types;
 
-import de.justi.yagw2api.arenanet.dto.DTOConstants;
+import de.justi.yagw2api.arenanet.DTOConstants;
 
 public enum WVWMapType implements IWVWMapType {
 	CENTER, RED, GREEN, BLUE;

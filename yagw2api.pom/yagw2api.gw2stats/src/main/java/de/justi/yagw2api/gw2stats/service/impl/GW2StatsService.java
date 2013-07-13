@@ -25,10 +25,9 @@ import de.justi.yagw2api.gw2stats.dto.IAPIStateDTO;
 import de.justi.yagw2api.gw2stats.dto.IAPIStateDescriptionDTO;
 import de.justi.yagw2api.gw2stats.dto.IGW2StatsDTOFactory;
 import de.justi.yagw2api.gw2stats.service.IGW2StatsService;
-import de.justi.yagwapi.common.AbstractService;
 import de.justi.yagwapi.common.utils.RetryClientFilter;
 
-final class GW2StatsService extends AbstractService implements IGW2StatsService {
+final class GW2StatsService implements IGW2StatsService {
 	private static final int RETRY_COUNT = 10;
 	private static final Logger LOGGER = Logger.getLogger(GW2StatsService.class);
 
@@ -65,7 +64,7 @@ final class GW2StatsService extends AbstractService implements IGW2StatsService 
 				@Override
 				public Map<String, IAPIStateDTO> call() throws Exception {
 					try {
-						final WebResource resource = CLIENT.resource(API_STATES_URL.toExternalForm());
+						final WebResource resource = ServiceUtils.REST_CLIENT.resource(API_STATES_URL.toExternalForm());
 						resource.addFilter(new RetryClientFilter(RETRY_COUNT));
 						final WebResource.Builder builder = resource.accept(MediaType.APPLICATION_JSON_TYPE);
 						try {
@@ -99,7 +98,7 @@ final class GW2StatsService extends AbstractService implements IGW2StatsService 
 			return this.apieStateDescriptionsCache.get("", new Callable<Map<String, IAPIStateDescriptionDTO>>() {
 				@Override
 				public Map<String, IAPIStateDescriptionDTO> call() throws Exception {
-					final WebResource resource = CLIENT.resource(API_STATE_DESCRIPTIONS_URL.toExternalForm());
+					final WebResource resource = ServiceUtils.REST_CLIENT.resource(API_STATE_DESCRIPTIONS_URL.toExternalForm());
 					resource.addFilter(new RetryClientFilter(RETRY_COUNT));
 					final WebResource.Builder builder = resource.accept(MediaType.APPLICATION_JSON_TYPE);
 					try {

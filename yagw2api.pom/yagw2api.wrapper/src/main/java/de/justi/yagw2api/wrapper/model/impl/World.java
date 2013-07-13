@@ -9,7 +9,7 @@ import java.util.Locale;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 
-import de.justi.yagw2api.arenanet.dto.IWorldNameDTO;
+import de.justi.yagw2api.arenanet.IWorldNameDTO;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
 import de.justi.yagw2api.wrapper.model.IModelFactory;
 import de.justi.yagw2api.wrapper.model.IWorld;

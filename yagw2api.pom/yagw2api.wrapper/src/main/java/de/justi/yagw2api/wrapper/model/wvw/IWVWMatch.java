@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 import com.google.common.base.Optional;
 
-import de.justi.yagw2api.arenanet.dto.IWVWMatchDTO;
+import de.justi.yagw2api.arenanet.IWVWMatchDTO;
 import de.justi.yagw2api.wrapper.model.IWorld;
 import de.justi.yagwapi.common.IHasChannel;
 
