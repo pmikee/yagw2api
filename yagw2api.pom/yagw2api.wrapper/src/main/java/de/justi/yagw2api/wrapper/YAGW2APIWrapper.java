@@ -1,6 +1,5 @@
 package de.justi.yagw2api.wrapper;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Locale;
@@ -11,6 +10,7 @@ import org.apache.log4j.Logger;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
+import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
 import de.justi.yagw2api.wrapper.impl.WrapperModule;
 import de.justi.yagw2api.wrapper.model.impl.ModelModule;
 import de.justi.yagw2api.wrapper.model.wvw.events.impl.WVWModelEventsModule;
@@ -34,8 +34,7 @@ public enum YAGW2APIWrapper {
 
 	/**
 	 * <p>
-	 * access to high level api wrapper that provides an event driven model
-	 * access
+	 * access to high level api wrapper that provides an event driven model access
 	 * </p>
 	 * 
 	 * @return
@@ -47,16 +46,15 @@ public enum YAGW2APIWrapper {
 	}
 
 	public static Locale getCurrentLocale() {
-		return INSTANCE.currentLocale;
+		return YAGW2APIArenanet.getInstance().getCurrentLocale();
 	}
 
 	public static void setCurrentLocale(Locale locale) {
-		INSTANCE.currentLocale = checkNotNull(locale);
+		YAGW2APIArenanet.getInstance().setCurrentLocale(locale);
 	}
 
 	private final ForkJoinPool forkJoinPool;
 	private final Injector injector;
-	private Locale currentLocale = Locale.getDefault();
 
 	private YAGW2APIWrapper() {
 		this.injector = Guice.createInjector(new ModelModule(), new WVWModelModule(), new WVWModelEventsModule(), new WrapperModule());

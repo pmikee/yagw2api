@@ -41,7 +41,7 @@ public final class TTSUtils {
 	private static final String MP3_SUFFIX = ".mp3";
 	private static final int MAXIMUM_PLAY_TIME_PER_MP3 = 15000;
 	private static final int MAX_TEXT_LENGTH_PER_REQUEST = 100;
-	private static final double RATE = 1.3d;
+	private static final double RATE = 1.1d;
 	private static final Logger LOGGER = Logger.getLogger(TTSUtils.class);
 	private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:11.0) " + "Gecko/20100101 Firefox/11.0";
 	private static final long MP3_CACHE_EXPIRE_HOURS = 24;
@@ -84,17 +84,17 @@ public final class TTSUtils {
 		}
 	}).build();
 
-	private static File retrieveMP3File(final String text) {
+	private static File retrieveMP3File(final String text, final Locale locale) {
 		checkNotNull(text);
 		checkArgument(text.trim().length() <= MAX_TEXT_LENGTH_PER_REQUEST, "Text has to be shorter than " + MAX_TEXT_LENGTH_PER_REQUEST + " but actual is " + text.trim().length() + ": \n" + text);
 		try {
-			final File mp3 = MP3_FILE_CACHE.get(text, new Callable<File>() {
+			final File mp3 = MP3_FILE_CACHE.get(locale.getLanguage() + text, new Callable<File>() {
 				@Override
 				public File call() throws Exception {
 					try {
-						final File target = new File(YAGW2API_TEMP_FILE, DigestUtils.md5Hex(text) + MP3_SUFFIX);
+						final File target = new File(YAGW2API_TEMP_FILE, DigestUtils.md5Hex(locale.getLanguage() + text) + MP3_SUFFIX);
 						if (!target.exists()) {
-							downloadFileFromURI(buildURIForMP3Request(Locale.GERMAN, text), target);
+							downloadFileFromURI(buildURIForMP3Request(locale, text), target);
 						}
 						checkState(target.isFile());
 						return target;
@@ -104,7 +104,10 @@ public final class TTSUtils {
 					}
 				}
 			});
-			LOGGER.info("Retrieved " + mp3 + " for '" + text + "'.");
+
+			if (LOGGER.isInfoEnabled()) {
+				LOGGER.info("Retrieved " + mp3 + " for '" + text + "'.");
+			}
 			return mp3;
 		} catch (ExecutionException e) {
 			LOGGER.error("Failed to retrieve mp3 cached file for text=" + text, e);
@@ -143,7 +146,9 @@ public final class TTSUtils {
 		checkNotNull(mp3File);
 		checkArgument(mp3File.exists());
 		checkArgument(mp3File.isFile());
-		LOGGER.debug("Going to play " + mp3File);
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Going to play " + mp3File);
+		}
 		try {
 			final Media mp3Media = new Media(mp3File.toURI().toURL().toString());
 			final MediaPlayer mediaPlayer = new MediaPlayer(mp3Media);
@@ -164,7 +169,9 @@ public final class TTSUtils {
 				} catch (InterruptedException e) {
 					LOGGER.error("Interrupted while waiting for " + mediaPlayer + " to complete play of " + mp3File);
 				}
-				LOGGER.info(mediaPlayer + " played " + mp3File);
+				if (LOGGER.isInfoEnabled()) {
+					LOGGER.info(mediaPlayer + " played " + mp3File);
+				}
 			}
 
 		} catch (MalformedURLException e) {
@@ -188,29 +195,39 @@ public final class TTSUtils {
 		final List<String> result = new ArrayList<String>();
 		String rest;
 		final String[] tokens = text.split(Pattern.compile("(\\s)+").toString());
-		LOGGER.debug("Tokenized: " + Arrays.deepToString(tokens));
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Tokenized: " + Arrays.deepToString(tokens));
+		}
 		for (String token : tokens) {
 			if ((resultElement.length() + token.length()) < MAX_TEXT_LENGTH_PER_REQUEST) {
 				resultElement.append(" ").append(token);
 			} else if ((resultElement.length() > 0) && (token.length() < MAX_TEXT_LENGTH_PER_REQUEST)) {
-				LOGGER.trace("New result element: " + resultElement);
+				if (LOGGER.isTraceEnabled()) {
+					LOGGER.trace("New result element: " + resultElement);
+				}
 				result.add(resultElement.toString().trim());
 				resultElement = new StringBuilder();
 				resultElement.append(token);
 			} else if (token.length() > 0) {
 				if (resultElement.length() > 0) {
-					LOGGER.trace("New result element: " + resultElement);
+					if (LOGGER.isTraceEnabled()) {
+						LOGGER.trace("New result element: " + resultElement);
+					}
 					result.add(resultElement.toString().trim());
 					resultElement = new StringBuilder();
 				}
 				rest = token;
 				do {
 					resultElement.append(rest.substring(0, Math.min(rest.length(), MAX_TEXT_LENGTH_PER_REQUEST)));
-					LOGGER.trace("Current result element = " + resultElement);
+					if (LOGGER.isTraceEnabled()) {
+						LOGGER.trace("Current result element = " + resultElement);
+					}
 					result.add(resultElement.toString());
 					resultElement = new StringBuilder();
 					rest = rest.substring(Math.min(rest.length(), MAX_TEXT_LENGTH_PER_REQUEST));
-					LOGGER.trace("Current rest = " + rest);
+					if (LOGGER.isTraceEnabled()) {
+						LOGGER.trace("Current rest = " + rest);
+					}
 				} while (rest.length() > 0);
 				resultElement = new StringBuilder();
 			}
@@ -218,7 +235,9 @@ public final class TTSUtils {
 		if (resultElement.length() > 0) {
 			result.add(resultElement.toString().trim());
 		}
-		LOGGER.info("Created text blocks for api calls: " + result);
+		if (LOGGER.isInfoEnabled()) {
+			LOGGER.info("Created text blocks for api calls: " + result);
+		}
 		return result;
 	}
 
@@ -226,12 +245,18 @@ public final class TTSUtils {
 		checkNotNull(text);
 		checkNotNull(locale);
 		initializeIfRequired();
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Going to read out '" + text + "' using locale=" + locale);
+		}
 		final List<File> mp3s = new ArrayList<File>();
 		for (String block : divideInTextBlocks(text)) {
-			mp3s.add(retrieveMP3File(block));
+			mp3s.add(retrieveMP3File(block, locale));
 		}
 		for (File mp3 : mp3s) {
 			playMP3File(mp3);
+		}
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Reat out '" + text + "' using locale=" + locale);
 		}
 	}
 }
