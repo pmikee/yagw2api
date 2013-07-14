@@ -10,13 +10,16 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.RoundingMode;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Queue;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -32,32 +35,81 @@ import javax.ws.rs.ext.RuntimeDelegate;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.log4j.Logger;
 
+import com.google.common.base.Objects;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
+import com.google.common.collect.Queues;
+import com.google.common.math.DoubleMath;
+import com.google.common.util.concurrent.AbstractScheduledService;
+import com.google.common.util.concurrent.Service;
 
 public final class TTSUtils {
+	private static final int DEFAULT_PRIORITY = 0;
 	private static final String MP3_SUFFIX = ".mp3";
 	private static final int MAXIMUM_PLAY_TIME_PER_MP3 = 15000;
 	private static final int MAX_TEXT_LENGTH_PER_REQUEST = 100;
-	private static final double RATE = 1.1d;
+	private static final double RATE = 1.5d;
 	private static final Logger LOGGER = Logger.getLogger(TTSUtils.class);
 	private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:11.0) " + "Gecko/20100101 Firefox/11.0";
 	private static final long MP3_CACHE_EXPIRE_HOURS = 24;
 	private static final File YAGW2API_TEMP_FILE;
 
-	static {
-		try {
-			final File tempDirDetectionFile = File.createTempFile(UUID.randomUUID().toString(), ".dat");
-			checkState(tempDirDetectionFile.delete());
-			YAGW2API_TEMP_FILE = new File(tempDirDetectionFile.getParentFile(), "yagw2api");
-			checkState((YAGW2API_TEMP_FILE.exists() && YAGW2API_TEMP_FILE.isDirectory()) || YAGW2API_TEMP_FILE.mkdirs());
-		} catch (IOException e) {
-			LOGGER.fatal("Failed to initialize " + TTSUtils.class.getSimpleName(), e);
-			throw new RuntimeException("Failed to initialize " + TTSUtils.class.getSimpleName(), e);
+	private static final class TTSTask implements Comparable<TTSTask> {
+		private final String text;
+		private final Locale locale;
+		private final int priority;
+		private final Date creationTimestamp;
+
+		public TTSTask(String text, Locale locale, int priority) {
+			this.text = checkNotNull(text);
+			this.locale = checkNotNull(locale);
+			this.creationTimestamp = new Date();
+			this.priority = priority;
+		}
+
+		/**
+		 * @return the text
+		 */
+		public final String getText() {
+			return text;
+		}
+
+		/**
+		 * @return the locale
+		 */
+		public final Locale getLocale() {
+			return locale;
+		}
+
+		/**
+		 * @return the priority
+		 */
+		public final int getPriority() {
+			return priority;
+		}
+
+		/**
+		 * @return the creationTimestamp
+		 */
+		public final Date getCreationTimestamp() {
+			return creationTimestamp;
+		}
+
+		@Override
+		public int compareTo(TTSTask o) {
+			return DoubleMath.roundToInt(
+					(Math.signum(new Integer(this.getPriority()).compareTo(o.getPriority())) * 10d) + Math.signum(this.getCreationTimestamp().compareTo(o.getCreationTimestamp())), RoundingMode.FLOOR);
+		}
+
+		@Override
+		public String toString() {
+			return Objects.toStringHelper(this).add("priority", this.getPriority()).add("timestamp", this.getCreationTimestamp()).add("locale", this.getLocale()).addValue(this.getText()).toString();
 		}
 	}
+
+	private static final Queue<TTSTask> TASK_QUEUE = Queues.newPriorityBlockingQueue();
 
 	private static volatile boolean initialized = false;
 
@@ -72,7 +124,52 @@ public final class TTSUtils {
 		}
 	}
 
-	public TTSUtils() {
+	static {
+		try {
+			final File tempDirDetectionFile = File.createTempFile(UUID.randomUUID().toString(), ".dat");
+			checkState(tempDirDetectionFile.delete());
+			YAGW2API_TEMP_FILE = new File(tempDirDetectionFile.getParentFile(), "yagw2api");
+			checkState((YAGW2API_TEMP_FILE.exists() && YAGW2API_TEMP_FILE.isDirectory()) || YAGW2API_TEMP_FILE.mkdirs());
+		} catch (IOException e) {
+			LOGGER.fatal("Failed to initialize " + TTSUtils.class.getSimpleName(), e);
+			throw new RuntimeException("Failed to initialize " + TTSUtils.class.getSimpleName(), e);
+		}
+
+		final Service ttsService = new AbstractScheduledService() {
+			@Override
+			protected Scheduler scheduler() {
+				return Scheduler.newFixedDelaySchedule(0, 100, TimeUnit.MILLISECONDS);
+			}
+
+			@Override
+			protected void runOneIteration() throws Exception {
+				initializeIfRequired();
+				if (LOGGER.isDebugEnabled()) {
+					LOGGER.debug("Queue: " + TASK_QUEUE);
+				}
+				final TTSTask task = TASK_QUEUE.poll();
+
+				if (task != null) {
+					if (LOGGER.isDebugEnabled()) {
+						LOGGER.debug("Going to handle " + task);
+					}
+					final List<File> mp3s = new ArrayList<File>();
+					for (String block : divideInTextBlocks(task.getText())) {
+						mp3s.add(retrieveMP3File(block, task.getLocale()));
+					}
+					for (File mp3 : mp3s) {
+						playMP3File(mp3);
+					}
+					if (LOGGER.isDebugEnabled()) {
+						LOGGER.debug("Handled " + task);
+					}
+				}
+			}
+		};
+		ttsService.startAndWait();
+	}
+
+	private TTSUtils() {
 	}
 
 	private static final Cache<String, File> MP3_FILE_CACHE = CacheBuilder.newBuilder().expireAfterWrite(MP3_CACHE_EXPIRE_HOURS, TimeUnit.HOURS).removalListener(new RemovalListener<String, File>() {
@@ -244,19 +341,12 @@ public final class TTSUtils {
 	public static synchronized void readOut(final String text, final Locale locale) {
 		checkNotNull(text);
 		checkNotNull(locale);
-		initializeIfRequired();
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Going to read out '" + text + "' using locale=" + locale);
-		}
-		final List<File> mp3s = new ArrayList<File>();
-		for (String block : divideInTextBlocks(text)) {
-			mp3s.add(retrieveMP3File(block, locale));
-		}
-		for (File mp3 : mp3s) {
-			playMP3File(mp3);
-		}
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Reat out '" + text + "' using locale=" + locale);
-		}
+		readOut(text, locale, DEFAULT_PRIORITY);
+	}
+
+	public static synchronized void readOut(final String text, final Locale locale, int priority) {
+		checkNotNull(text);
+		checkNotNull(locale);
+		TASK_QUEUE.add(new TTSTask(text, locale, priority));
 	}
 }

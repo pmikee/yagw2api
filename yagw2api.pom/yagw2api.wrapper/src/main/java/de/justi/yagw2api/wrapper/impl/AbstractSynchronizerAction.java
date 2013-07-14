@@ -34,8 +34,9 @@ abstract class AbstractSynchronizerAction<T, A extends AbstractSynchronizerActio
 	@Override
 	protected final void compute() {
 		final long startTimestamp = System.currentTimeMillis();
-		try {
-			if ((this.toExclusive - this.fromInclusive) <= this.chunkSize) {
+
+		if ((this.toExclusive - this.fromInclusive) <= this.chunkSize) {
+			try {
 				// compute directly
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug(this.getClass().getSimpleName() + " is going to perform on " + this.fromInclusive + " to " + this.toExclusive);
@@ -48,13 +49,13 @@ abstract class AbstractSynchronizerAction<T, A extends AbstractSynchronizerActio
 					}
 					this.perform(content);
 				}
-			} else {
-				// fork
-				final int splitAtIndex = this.fromInclusive + ((this.toExclusive - this.fromInclusive) / 2);
-				invokeAll(this.createSubTask(this.content, this.chunkSize, this.fromInclusive, splitAtIndex), this.createSubTask(this.content, this.chunkSize, splitAtIndex, this.toExclusive));
+			} catch (Throwable t) {
+				LOGGER.error("Failed during execution of " + this.getClass().getSimpleName() + " computing " + this.fromInclusive + "-" + this.toExclusive, t);
 			}
-		} catch (Exception e) {
-			LOGGER.fatal("Failed during execution of " + this.getClass().getSimpleName() + " computing " + this.fromInclusive + "-" + this.toExclusive, e);
+		} else {
+			// fork
+			final int splitAtIndex = this.fromInclusive + ((this.toExclusive - this.fromInclusive) / 2);
+			invokeAll(this.createSubTask(this.content, this.chunkSize, this.fromInclusive, splitAtIndex), this.createSubTask(this.content, this.chunkSize, splitAtIndex, this.toExclusive));
 		}
 		final long endTimestamp = System.currentTimeMillis();
 		if (LOGGER.isDebugEnabled()) {

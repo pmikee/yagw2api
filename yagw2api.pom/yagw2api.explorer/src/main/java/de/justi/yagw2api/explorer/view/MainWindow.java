@@ -16,9 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -71,6 +73,7 @@ import de.justi.yagw2api.wrapper.model.wvw.events.IWVWObjectiveUnclaimedEvent;
 import de.justi.yagwapi.common.utils.TTSUtils;
 
 public final class MainWindow extends AbstractWindow implements IWVWMapListener {
+	private static final Locale LOCALE_ES = Locale.forLanguageTag("es");
 	private static final String WORKSPACE_XML_FILENAME = "workspace.xml";
 	private static final long serialVersionUID = -6500541020042114865L;
 	private static final Logger LOGGER = Logger.getLogger(MainWindow.class);
@@ -423,38 +426,51 @@ public final class MainWindow extends AbstractWindow implements IWVWMapListener 
 		mainMenuBar.add(windowMenu);
 		final JMenu settingsMenu = new JMenu("Settings");
 		final JMenu settingLocaleMenu = new JMenu("Language");
-		final JMenuItem enLocaleMenuItem = new JMenuItem("en");
+
+		final JMenuItem enLocaleMenuItem = new JRadioButtonMenuItem(Locale.ENGLISH.getLanguage());
 		enLocaleMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				YAGW2APIWrapper.setCurrentLocale(Locale.ENGLISH);
 			}
 		});
+
+		enLocaleMenuItem.setSelected(YAGW2APIWrapper.getCurrentLocale().equals(Locale.ENGLISH));
 		settingLocaleMenu.add(enLocaleMenuItem);
-		final JMenuItem deLocaleMenuItem = new JMenuItem("de");
+		final JMenuItem deLocaleMenuItem = new JRadioButtonMenuItem(Locale.GERMANY.getLanguage());
 		deLocaleMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				YAGW2APIWrapper.setCurrentLocale(Locale.GERMANY);
 			}
 		});
+		deLocaleMenuItem.setSelected(YAGW2APIWrapper.getCurrentLocale().getLanguage().equals(Locale.GERMANY.getLanguage()));
 		settingLocaleMenu.add(deLocaleMenuItem);
-		final JMenuItem frLocaleMenuItem = new JMenuItem("fr");
+		final JMenuItem frLocaleMenuItem = new JRadioButtonMenuItem(Locale.FRANCE.getLanguage());
 		frLocaleMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				YAGW2APIWrapper.setCurrentLocale(Locale.FRANCE);
 			}
 		});
+		frLocaleMenuItem.setSelected(YAGW2APIWrapper.getCurrentLocale().getLanguage().equals(Locale.FRANCE.getLanguage()));
 		settingLocaleMenu.add(frLocaleMenuItem);
-		final JMenuItem esLocaleMenuItem = new JMenuItem("es");
+		final JMenuItem esLocaleMenuItem = new JRadioButtonMenuItem(LOCALE_ES.getLanguage());
 		esLocaleMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				YAGW2APIWrapper.setCurrentLocale(Locale.forLanguageTag("es"));
+				YAGW2APIWrapper.setCurrentLocale(LOCALE_ES);
 			}
 		});
+		esLocaleMenuItem.setSelected(YAGW2APIWrapper.getCurrentLocale().getLanguage().equals(LOCALE_ES.getLanguage()));
 		settingLocaleMenu.add(esLocaleMenuItem);
+
+		final ButtonGroup group = new ButtonGroup();
+		group.add(enLocaleMenuItem);
+		group.add(deLocaleMenuItem);
+		group.add(frLocaleMenuItem);
+		group.add(esLocaleMenuItem);
+
 		settingsMenu.add(settingLocaleMenu);
 		mainMenuBar.add(settingsMenu);
 		return mainMenuBar;
@@ -596,17 +612,17 @@ public final class MainWindow extends AbstractWindow implements IWVWMapListener 
 
 	@Override
 	public void onObjectiveCapturedEvent(IWVWObjectiveCaptureEvent event) {
-		TTSUtils.readOut(event.getObjective().getLabel().get() + " wurde von " + event.getNewOwningWorld().getName().get() + " erobert.", YAGW2APIArenanet.getInstance().getCurrentLocale());
+		TTSUtils.readOut(event.getObjective().getLabel().get() + " wurde von " + event.getNewOwningWorld().getName().get() + " erobert.", YAGW2APIArenanet.getInstance().getCurrentLocale(), 3);
 	}
 
 	@Override
 	public void onObjectiveEndOfBuffEvent(IWVWObjectiveEndOfBuffEvent event) {
-		TTSUtils.readOut(event.getObjective().getLabel().get() + " hat keinen Buff mehr.", YAGW2APIArenanet.getInstance().getCurrentLocale());
+		TTSUtils.readOut(event.getObjective().getLabel().get() + " hat keinen Buff mehr.", YAGW2APIArenanet.getInstance().getCurrentLocale(), 2);
 	}
 
 	@Override
 	public void onObjectiveClaimedEvent(IWVWObjectiveClaimedEvent event) {
-		TTSUtils.readOut(event.getObjective().getLabel().get() + " wurde von " + event.getClaimingGuild().getName() + " eingenommen.", YAGW2APIArenanet.getInstance().getCurrentLocale());
+		TTSUtils.readOut(event.getObjective().getLabel().get() + " wurde von " + event.getClaimingGuild().getName() + " eingenommen.", YAGW2APIArenanet.getInstance().getCurrentLocale(), -1);
 	}
 
 	@Override
