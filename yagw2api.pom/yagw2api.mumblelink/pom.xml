@@ -6,9 +6,12 @@
 		<artifactId>yagw2api.pom</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>yagw2api.arenanet</artifactId>
-	<name>YAGW2API-Arenanet</name>
+	<artifactId>yagw2api.mumblelink</artifactId>
+	<name>YAGW2API-MumbleLink</name>
+	<description>JNA based implementation of the Mumble memory-mapped-file IPC interface.</description>
+
 	<dependencies>
+
 		<dependency>
 			<artifactId>yagw2api.test</artifactId>
 			<groupId>de.justi</groupId>
@@ -17,7 +20,24 @@
 			<artifactId>yagw2api.common</artifactId>
 			<groupId>de.justi</groupId>
 		</dependency>
-		
+
+		<dependency>
+			<groupId>net.java.dev.jna</groupId>
+			<artifactId>platform</artifactId>
+		</dependency>
+
+
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+		</dependency>
+
+
+		<dependency>
+			<groupId>com.google.inject</groupId>
+			<artifactId>guice</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
@@ -26,21 +46,6 @@
 			<artifactId>junit</artifactId>
 			<groupId>junit</groupId>
 		</dependency>
-		<dependency>
-			<groupId>com.sun.jersey</groupId>
-			<artifactId>jersey-client</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.google.inject</groupId>
-			<artifactId>guice</artifactId>
-		</dependency>
+
 	</dependencies>
 </project>

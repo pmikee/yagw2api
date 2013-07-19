@@ -28,6 +28,7 @@
 		<de.justi.yagw2api.test.version>0.0.1-SNAPSHOT</de.justi.yagw2api.test.version>
 		<de.justi.yagw2api.common.version>0.0.1-SNAPSHOT</de.justi.yagw2api.common.version>
 		<de.justi.yagw2api.arenanet.version>0.0.1-SNAPSHOT</de.justi.yagw2api.arenanet.version>
+		<de.justi.yagw2api.mumblelink.version>0.0.1-SNAPSHOT</de.justi.yagw2api.mumblelink.version>
 		<de.justi.yagw2api.gw2stats.version>0.0.1-SNAPSHOT</de.justi.yagw2api.gw2stats.version>
 		<de.justi.yagw2api.wrapper.version>0.0.1-SNAPSHOT</de.justi.yagw2api.wrapper.version>
 		<de.justi.yagw2api.analyzer.version>0.0.1-SNAPSHOT</de.justi.yagw2api.analyzer.version>
@@ -39,6 +40,7 @@
 		<module>yagw2api.test</module>
 		<module>yagw2api.common</module>
 		<module>yagw2api.gw2stats</module>
+		<module>yagw2api.mumblelink</module>
 		<module>yagw2api.arenanet</module>
 		<module>yagw2api.wrapper</module>
 		<module>yagw2api.analyzer</module>
@@ -55,6 +57,7 @@
 				<module>yagw2api.test</module>
 				<module>yagw2api.common</module>
 				<module>yagw2api.gw2stats</module>
+				<module>yagw2api.mumblelink</module>
 				<module>yagw2api.arenanet</module>
 				<module>yagw2api.wrapper</module>
 				<module>yagw2api.analyzer</module>
@@ -169,6 +172,7 @@
 
 	<dependencyManagement>
 		<dependencies>
+
 			<dependency>
 				<artifactId>yagw2api.test</artifactId>
 				<groupId>de.justi</groupId>
@@ -190,6 +194,12 @@
 				<artifactId>yagw2api.gw2stats</artifactId>
 				<version>${de.justi.yagw2api.gw2stats.version}</version>
 			</dependency>
+
+			<dependency>
+				<groupId>de.justi</groupId>
+				<artifactId>yagw2api.mumblelink</artifactId>
+				<version>${de.justi.yagw2api.mumblelink.version}</version>
+			</dependency>
 			<dependency>
 				<artifactId>yagw2api.wrapper</artifactId>
 				<groupId>de.justi</groupId>
@@ -206,6 +216,11 @@
 				<version>${de.justi.yagw2api.explorer.version}</version>
 			</dependency>
 
+			<dependency>
+				<groupId>net.java.dev.jna</groupId>
+				<artifactId>platform</artifactId>
+				<version>3.5.2</version>
+			</dependency>
 			<dependency>
 				<groupId>org.swinglabs.swingx</groupId>
 				<artifactId>swingx-all</artifactId>
@@ -299,7 +314,7 @@
 				<artifactId>jersey-core</artifactId>
 				<version>1.17</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>com.sun.jersey</groupId>
 				<artifactId>jersey-client</artifactId>

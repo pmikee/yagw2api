@@ -140,6 +140,10 @@
 			<artifactId>yagw2api.gw2stats</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>de.justi</groupId>
+			<artifactId>yagw2api.mumblelink</artifactId>
+		</dependency>
+		<dependency>
 			<artifactId>yagw2api.analyzer</artifactId>
 			<groupId>de.justi</groupId>
 		</dependency>

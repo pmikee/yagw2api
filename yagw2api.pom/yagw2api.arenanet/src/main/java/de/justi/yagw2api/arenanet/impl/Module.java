@@ -28,5 +28,4 @@ public final class Module extends AbstractModule {
 		// default locale
 		this.bind(Locale.class).toInstance(Locale.getDefault());
 	}
-
 }
