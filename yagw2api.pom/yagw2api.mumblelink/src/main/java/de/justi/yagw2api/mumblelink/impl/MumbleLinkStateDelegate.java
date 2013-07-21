@@ -68,12 +68,22 @@ abstract class MumbleLinkStateDelegate implements IMumbleLinkState {
 	}
 
 	@Override
-	public final Optional<byte[]> getContext() {
-		return this.getDelegate() != null ? this.getDelegate().getContext() : Optional.<byte[]> absent();
+	public String toString() {
+		return Objects.toStringHelper(MumbleLinkStateDelegate.class).addValue(this.getDelegate()).toString();
 	}
 
 	@Override
-	public String toString() {
-		return Objects.toStringHelper(MumbleLinkStateDelegate.class).addValue(this.getDelegate()).toString();
+	public Optional<Integer> getRegionId() {
+		return this.getDelegate() != null ? this.getDelegate().getRegionId() : Optional.<Integer> absent();
+	}
+
+	@Override
+	public Optional<Integer> getBuild() {
+		return this.getDelegate() != null ? this.getDelegate().getBuild() : Optional.<Integer> absent();
+	}
+
+	@Override
+	public Optional<Integer> getMapId() {
+		return this.getDelegate() != null ? this.getDelegate().getMapId() : Optional.<Integer> absent();
 	}
 }

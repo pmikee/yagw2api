@@ -1,7 +1,5 @@
 package de.justi.yagw2api.mumblelink.impl;
 
-import static com.google.common.base.Preconditions.checkState;
-
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
@@ -42,30 +40,6 @@ final class MumbleLinkSynchronizerService extends AbstractScheduledService imple
 		return this.currentState;
 	}
 
-	private final void checkCurrentState() {
-		checkState(this.currentState.isPresent());
-		checkState(this.currentState.get().getAvatarFront().isPresent());
-		checkState(this.currentState.get().getAvatarTop().isPresent());
-		checkState(this.currentState.get().getAvatarPosition().isPresent());
-		checkState(this.currentState.get().getCameraFront().isPresent());
-		checkState(this.currentState.get().getCameraTop().isPresent());
-		checkState(this.currentState.get().getCameraPosition().isPresent());
-
-		checkState(this.currentState.get().getAvatarName().isPresent());
-	}
-
-	private final void checkLastState() {
-		checkState(this.lastState.isPresent());
-		checkState(this.lastState.get().getAvatarFront().isPresent());
-		checkState(this.lastState.get().getAvatarTop().isPresent());
-		checkState(this.lastState.get().getAvatarPosition().isPresent());
-		checkState(this.lastState.get().getCameraFront().isPresent());
-		checkState(this.lastState.get().getCameraTop().isPresent());
-		checkState(this.lastState.get().getCameraPosition().isPresent());
-
-		checkState(this.lastState.get().getAvatarName().isPresent());
-	}
-
 	@Override
 	protected void runOneIteration() throws Exception {
 		try {
@@ -103,69 +77,43 @@ final class MumbleLinkSynchronizerService extends AbstractScheduledService imple
 			if (!this.lastState.equals(this.currentState)) {
 				// dirty state
 				// -> create position events where required
-				if (this.currentState.isPresent() && this.lastState.isPresent()) {
-					// current and last state are present -> create selective events
-					this.checkCurrentState();
-					this.checkLastState();
-					LOGGER.trace(this + " synchronized state with game.");
-					if (!this.currentState.get().getAvatarName().equals(this.lastState.get().getAvatarName())) {
-						this.getChannel().post(new MumbleLinkAvatarChangeEvent(this.lastState.get().getAvatarName().get(), this.currentState.get().getAvatarName().get()));
-					}
-					if (!this.currentState.get().getAvatarFront().equals(this.lastState.get().getAvatarFront())) {
-						this.getChannel().post(new MumbleLinkAvatarFrontChangeEvent(this.lastState.get().getAvatarFront().get(), this.currentState.get().getAvatarFront().get()));
-					}
-					if (!this.currentState.get().getAvatarTop().equals(this.lastState.get().getAvatarTop())) {
-						this.getChannel().post(new MumbleLinkAvatarTopChangeEvent(this.lastState.get().getAvatarTop().get(), this.currentState.get().getAvatarTop().get()));
-					}
-					if (!this.currentState.get().getAvatarPosition().equals(this.lastState.get().getAvatarPosition())) {
-						this.getChannel().post(new MumbleLinkAvatarPositionChangeEvent(this.lastState.get().getAvatarPosition().get(), this.currentState.get().getAvatarPosition().get()));
-					}
-					if (!this.currentState.get().getCameraFront().equals(this.lastState.get().getCameraFront())) {
-						this.getChannel().post(new MumbleLinkCameraFrontChangeEvent(this.lastState.get().getCameraFront().get(), this.currentState.get().getCameraFront().get()));
-					}
-					if (!this.currentState.get().getCameraTop().equals(this.lastState.get().getCameraTop())) {
-						this.getChannel().post(new MumbleLinkCameraTopChangeEvent(this.lastState.get().getCameraTop().get(), this.currentState.get().getCameraTop().get()));
-					}
-					if (!this.currentState.get().getCameraPosition().equals(this.lastState.get().getCameraPosition())) {
-						this.getChannel().post(new MumbleLinkCameraPositionChangeEvent(this.lastState.get().getCameraPosition().get(), this.currentState.get().getCameraPosition().get()));
-					}
-				} else if (this.currentState.isPresent()) {
-					// now value present til now -> create all events
-					this.checkCurrentState();
-					LOGGER.info(this + " established connection to game.");
-					this.getChannel().post(new MumbleLinkAvatarChangeEvent(null, this.currentState.get().getAvatarName().get()));
-
-					this.getChannel().post(new MumbleLinkAvatarFrontChangeEvent(null, this.currentState.get().getAvatarFront().get()));
-					this.getChannel().post(new MumbleLinkAvatarTopChangeEvent(null, this.currentState.get().getAvatarTop().get()));
-					this.getChannel().post(new MumbleLinkAvatarPositionChangeEvent(null, this.currentState.get().getAvatarPosition().get()));
-					this.getChannel().post(new MumbleLinkCameraFrontChangeEvent(null, this.currentState.get().getCameraFront().get()));
-					this.getChannel().post(new MumbleLinkCameraTopChangeEvent(null, this.currentState.get().getCameraTop().get()));
-					this.getChannel().post(new MumbleLinkCameraPositionChangeEvent(null, this.currentState.get().getCameraPosition().get()));
-				} else if (this.lastState.isPresent()) {
-					// new state is absent -> create all events
-					this.checkLastState();
-					LOGGER.warn(this + " lost connection to game.");
-					this.getChannel().post(new MumbleLinkAvatarChangeEvent(this.lastState.get().getAvatarName().get(), null));
-
-					this.getChannel().post(new MumbleLinkAvatarFrontChangeEvent(this.lastState.get().getAvatarFront().get(), null));
-					this.getChannel().post(new MumbleLinkAvatarTopChangeEvent(this.lastState.get().getAvatarTop().get(), null));
-					this.getChannel().post(new MumbleLinkAvatarPositionChangeEvent(this.lastState.get().getAvatarPosition().get(), null));
-					this.getChannel().post(new MumbleLinkCameraFrontChangeEvent(this.lastState.get().getCameraFront().get(), null));
-					this.getChannel().post(new MumbleLinkCameraTopChangeEvent(this.lastState.get().getCameraTop().get(), null));
-					this.getChannel().post(new MumbleLinkCameraPositionChangeEvent(this.lastState.get().getCameraPosition().get(), null));
+				LOGGER.trace(this + " synchronized state with game.");
+				if (!this.currentState.get().getAvatarName().equals(this.lastState.get().getAvatarName())) {
+					this.getChannel().post(new MumbleLinkAvatarChangeEvent(this.lastState.get().getAvatarName().orNull(), this.currentState.get().getAvatarName().orNull()));
+				}
+				if (!this.currentState.get().getAvatarFront().equals(this.lastState.get().getAvatarFront())) {
+					this.getChannel().post(new MumbleLinkAvatarFrontChangeEvent(this.lastState.get().getAvatarFront().orNull(), this.currentState.get().getAvatarFront().orNull()));
+				}
+				if (!this.currentState.get().getAvatarTop().equals(this.lastState.get().getAvatarTop())) {
+					this.getChannel().post(new MumbleLinkAvatarTopChangeEvent(this.lastState.get().getAvatarTop().orNull(), this.currentState.get().getAvatarTop().orNull()));
+				}
+				if (!this.currentState.get().getAvatarPosition().equals(this.lastState.get().getAvatarPosition())) {
+					this.getChannel().post(new MumbleLinkAvatarPositionChangeEvent(this.lastState.get().getAvatarPosition().orNull(), this.currentState.get().getAvatarPosition().orNull()));
+				}
+				if (!this.currentState.get().getCameraFront().equals(this.lastState.get().getCameraFront())) {
+					this.getChannel().post(new MumbleLinkCameraFrontChangeEvent(this.lastState.get().getCameraFront().orNull(), this.currentState.get().getCameraFront().orNull()));
+				}
+				if (!this.currentState.get().getCameraTop().equals(this.lastState.get().getCameraTop())) {
+					this.getChannel().post(new MumbleLinkCameraTopChangeEvent(this.lastState.get().getCameraTop().orNull(), this.currentState.get().getCameraTop().orNull()));
+				}
+				if (!this.currentState.get().getCameraPosition().equals(this.lastState.get().getCameraPosition())) {
+					this.getChannel().post(new MumbleLinkCameraPositionChangeEvent(this.lastState.get().getCameraPosition().orNull(), this.currentState.get().getCameraPosition().orNull()));
+				}
+				if (!this.currentState.get().getMapId().equals(this.lastState.get().getMapId())) {
+					this.getChannel().post(new MumbleLinkMapChangeEvent(this.lastState.get().getMapId().orNull(), this.currentState.get().getMapId().orNull()));
 				}
 			} else if (this.currentState.isPresent()) {
 				// non dirty state but lost connectivity
-				this.checkCurrentState();
 				LOGGER.warn(this + " lost connection to game.");
-				this.getChannel().post(new MumbleLinkAvatarChangeEvent(this.currentState.get().getAvatarName().get(), null));
+				this.getChannel().post(new MumbleLinkAvatarChangeEvent(this.currentState.get().getAvatarName().orNull(), null));
 
-				this.getChannel().post(new MumbleLinkAvatarFrontChangeEvent(this.currentState.get().getAvatarFront().get(), null));
-				this.getChannel().post(new MumbleLinkAvatarTopChangeEvent(this.currentState.get().getAvatarTop().get(), null));
-				this.getChannel().post(new MumbleLinkAvatarPositionChangeEvent(this.currentState.get().getAvatarPosition().get(), null));
-				this.getChannel().post(new MumbleLinkCameraFrontChangeEvent(this.currentState.get().getCameraFront().get(), null));
-				this.getChannel().post(new MumbleLinkCameraTopChangeEvent(this.currentState.get().getCameraTop().get(), null));
-				this.getChannel().post(new MumbleLinkCameraPositionChangeEvent(this.currentState.get().getCameraPosition().get(), null));
+				this.getChannel().post(new MumbleLinkAvatarFrontChangeEvent(this.currentState.get().getAvatarFront().orNull(), null));
+				this.getChannel().post(new MumbleLinkAvatarTopChangeEvent(this.currentState.get().getAvatarTop().orNull(), null));
+				this.getChannel().post(new MumbleLinkAvatarPositionChangeEvent(this.currentState.get().getAvatarPosition().orNull(), null));
+				this.getChannel().post(new MumbleLinkCameraFrontChangeEvent(this.currentState.get().getCameraFront().orNull(), null));
+				this.getChannel().post(new MumbleLinkCameraTopChangeEvent(this.currentState.get().getCameraTop().orNull(), null));
+				this.getChannel().post(new MumbleLinkCameraPositionChangeEvent(this.currentState.get().getCameraPosition().orNull(), null));
+				this.getChannel().post(new MumbleLinkMapChangeEvent(this.currentState.get().getMapId().orNull(), null));
 				this.lastState = this.currentState;
 				this.currentState = Optional.absent();
 			}
