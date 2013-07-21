@@ -98,6 +98,7 @@ final class MumbleLinkState implements IMumbleLinkState {
 			}
 			return null;
 		}
+
 		final byte[] context = memMapFileData.getByteArray(1108, 256);
 		if (context == null) {
 			if (LOGGER.isTraceEnabled()) {
@@ -106,8 +107,22 @@ final class MumbleLinkState implements IMumbleLinkState {
 			return null;
 		}
 
+		final int regionId = memMapFileData.getInt(1108 + 0); // affirmed
+		final int ip1 = unsignedByteValue2ByteValue(memMapFileData.getByte(1108 + 4));
+		final int ip2 = unsignedByteValue2ByteValue(memMapFileData.getByte(1108 + 5));
+		final int ip3 = unsignedByteValue2ByteValue(memMapFileData.getByte(1108 + 6));
+		final int ip4 = unsignedByteValue2ByteValue(memMapFileData.getByte(1108 + 7));
+		@SuppressWarnings("unused")
+		final String serverIp = ip1 + "." + ip2 + "." + ip3 + "." + ip4; // affirmed
+		final int build = memMapFileData.getInt(1108 + 44); // affirmed
+		final int mapId = memMapFileData.getInt(1108 + 28); // affirmed
+
 		return new MumbleLinkState(uiVersion, uiTick, avatarPosition.get(), avatarFront.get(), avatarTop.get(), cameraPosition.get(), cameraFront.get(), cameraTop.get(), avatarName, gameName,
-				contextLength, context);
+				contextLength, regionId, build, mapId);
+	}
+
+	private static int unsignedByteValue2ByteValue(int unsignedByteValue) {
+		return (256 + unsignedByteValue) % 256;
 	}
 
 	private final Optional<Integer> uiVersion;
@@ -121,10 +136,12 @@ final class MumbleLinkState implements IMumbleLinkState {
 	private final Optional<String> avatarName;
 	private final Optional<String> gameName;
 	private final Optional<Integer> contextLength;
-	private final Optional<byte[]> context;
+	private final Optional<Integer> regionId;
+	private final Optional<Integer> build;
+	private final Optional<Integer> mapId;
 
 	private MumbleLinkState(int uiVersion, int uiTick, IMumbleLinkPosition avatarPosition, IMumbleLinkPosition avatarFront, IMumbleLinkPosition avatarTop, IMumbleLinkPosition cameraPosition,
-			IMumbleLinkPosition cameraFront, IMumbleLinkPosition cameraTop, String avatarName, String gameName, int contextLength, byte[] context) {
+			IMumbleLinkPosition cameraFront, IMumbleLinkPosition cameraTop, String avatarName, String gameName, int contextLength, int regionId, int build, int mapId) {
 		checkNotNull(avatarPosition);
 		checkNotNull(avatarFront);
 		checkNotNull(avatarTop);
@@ -133,7 +150,6 @@ final class MumbleLinkState implements IMumbleLinkState {
 		checkNotNull(cameraTop);
 		checkNotNull(avatarName);
 		checkNotNull(gameName);
-		checkNotNull(context);
 
 		this.uiVersion = Optional.of(uiVersion);
 		this.uiTick = Optional.of(uiTick);
@@ -146,7 +162,9 @@ final class MumbleLinkState implements IMumbleLinkState {
 		this.avatarName = Optional.of(avatarName);
 		this.gameName = Optional.of(gameName);
 		this.contextLength = Optional.of(contextLength);
-		this.context = Optional.of(context);
+		this.regionId = Optional.of(regionId);
+		this.build = Optional.of(build);
+		this.mapId = Optional.of(mapId);
 	}
 
 	@Override
@@ -204,11 +222,6 @@ final class MumbleLinkState implements IMumbleLinkState {
 		return this.contextLength;
 	}
 
-	@Override
-	public final Optional<byte[]> getContext() {
-		return this.context;
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -225,11 +238,13 @@ final class MumbleLinkState implements IMumbleLinkState {
 		result = (prime * result) + ((cameraFront == null) ? 0 : cameraFront.hashCode());
 		result = (prime * result) + ((cameraPosition == null) ? 0 : cameraPosition.hashCode());
 		result = (prime * result) + ((cameraTop == null) ? 0 : cameraTop.hashCode());
-		result = (prime * result) + ((context == null) ? 0 : context.hashCode());
 		result = (prime * result) + ((contextLength == null) ? 0 : contextLength.hashCode());
 		result = (prime * result) + ((gameName == null) ? 0 : gameName.hashCode());
 		result = (prime * result) + ((uiTick == null) ? 0 : uiTick.hashCode());
 		result = (prime * result) + ((uiVersion == null) ? 0 : uiVersion.hashCode());
+		result = (prime * result) + ((regionId == null) ? 0 : regionId.hashCode());
+		result = (prime * result) + ((build == null) ? 0 : build.hashCode());
+		result = (prime * result) + ((mapId == null) ? 0 : mapId.hashCode());
 		return result;
 	}
 
@@ -283,12 +298,13 @@ final class MumbleLinkState implements IMumbleLinkState {
 		if (!Objects.equal(this.uiVersion, other.getUIVersion())) {
 			return false;
 		}
-
-		if (this.context.isPresent() && other.getContext().isPresent()) {
-			if (!Arrays.equals(this.context.get(), other.getContext().get())) {
-				return false;
-			}
-		} else if (this.context.isPresent() ^ other.getContext().isPresent()) {
+		if (!Objects.equal(this.regionId, other.getRegionId())) {
+			return false;
+		}
+		if (!Objects.equal(this.build, other.getBuild())) {
+			return false;
+		}
+		if (!Objects.equal(this.mapId, other.getMapId())) {
 			return false;
 		}
 		return true;
@@ -298,6 +314,21 @@ final class MumbleLinkState implements IMumbleLinkState {
 	public String toString() {
 		return Objects.toStringHelper(this).add("uiVersion", this.uiVersion).add("uiTick", this.uiTick).add("avatarPosition", this.avatarPosition).add("avatarFront", this.avatarFront)
 				.add("avatarTop", this.avatarTop).add("cameraPosition", this.cameraPosition).add("cameraFront", this.cameraFront).add("cameraTop", this.cameraTop).add("avatarName", this.avatarName)
-				.add("gameName", this.gameName).add("contextLength", this.contextLength).add("context.isPresent()", this.context.isPresent()).toString();
+				.add("gameName", this.gameName).add("contextLength", this.contextLength).add("regionId", this.regionId).add("build", this.build).add("mapId", this.mapId).toString();
+	}
+
+	@Override
+	public Optional<Integer> getRegionId() {
+		return this.regionId;
+	}
+
+	@Override
+	public Optional<Integer> getBuild() {
+		return this.build;
+	}
+
+	@Override
+	public Optional<Integer> getMapId() {
+		return this.mapId;
 	}
 }

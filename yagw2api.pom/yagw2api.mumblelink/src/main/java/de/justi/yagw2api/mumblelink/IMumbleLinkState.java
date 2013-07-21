@@ -26,5 +26,9 @@ public interface IMumbleLinkState {
 
 	Optional<Integer> getContextLength();
 
-	Optional<byte[]> getContext();
+	Optional<Integer> getRegionId();
+
+	Optional<Integer> getBuild();
+
+	Optional<Integer> getMapId();
 }
