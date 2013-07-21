@@ -170,6 +170,22 @@
 		</pluginManagement>
 	</build>
 
+
+	<dependencies>
+		<dependency>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>jsr305</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+		</dependency>
+		<dependency>
+			<artifactId>junit</artifactId>
+			<groupId>junit</groupId>
+		</dependency>
+	</dependencies>
+
 	<dependencyManagement>
 		<dependencies>
 
@@ -214,6 +230,12 @@
 				<artifactId>yagw2api.explorer</artifactId>
 				<groupId>de.justi</groupId>
 				<version>${de.justi.yagw2api.explorer.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.google.code.findbugs</groupId>
+				<artifactId>jsr305</artifactId>
+				<version>1.3.7</version>
 			</dependency>
 
 			<dependency>
