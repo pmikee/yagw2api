@@ -8,16 +8,10 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import org.apache.log4j.Logger;
 
-import com.google.common.eventbus.Subscribe;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-
 import de.justi.yagw2api.analyzer.IWVWAnalyzer;
 import de.justi.yagw2api.analyzer.YAGW2APIAnalyzer;
 import de.justi.yagw2api.analyzer.entities.YAGW2APIAnalyzerPersistence;
 import de.justi.yagw2api.explorer.view.MainWindow;
-import de.justi.yagw2api.mumblelink.IMumbleLink;
-import de.justi.yagw2api.mumblelink.IMumbleLinkEvent;
 import de.justi.yagw2api.wrapper.IWVWWrapper;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
 
@@ -66,15 +60,5 @@ public final class Main {
 		} catch (Exception e) {
 			LOGGER.fatal("Uncought exception while running " + Main.class.getName() + "#main(String[])", e);
 		}
-
-		final Injector injector = Guice.createInjector(new de.justi.yagw2api.mumblelink.impl.Module());
-		final IMumbleLink link = injector.getInstance(IMumbleLink.class);
-		link.getChannel().register(new Object() {
-			@Subscribe
-			public void test(IMumbleLinkEvent e) {
-				System.out.println(e);
-			}
-
-		});
 	}
 }

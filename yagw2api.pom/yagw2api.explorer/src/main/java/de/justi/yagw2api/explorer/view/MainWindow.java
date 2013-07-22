@@ -59,9 +59,11 @@ import de.justi.yagw2api.explorer.model.APIStatusTableModel;
 import de.justi.yagw2api.explorer.model.MapObjectivesTableModel;
 import de.justi.yagw2api.explorer.model.MatchDetailsTableModel;
 import de.justi.yagw2api.explorer.model.MatchesTableModel;
+import de.justi.yagw2api.explorer.model.MumbleLinkTableModel;
 import de.justi.yagw2api.explorer.renderer.MatchDetailsTableCellRenderer;
 import de.justi.yagw2api.explorer.renderer.ObjectiveTableCellRenderer;
 import de.justi.yagw2api.gw2stats.YAGW2APIGW2Stats;
+import de.justi.yagw2api.mumblelink.YAGW2APIMumbleLink;
 import de.justi.yagw2api.wrapper.IWVWMapListener;
 import de.justi.yagw2api.wrapper.IWVWWrapper;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
@@ -115,11 +117,15 @@ public final class MainWindow extends AbstractWindow implements IWVWMapListener 
 	private final ToolWindow redMapToolWindow;
 	private final ToolWindow matchDetailsToolWindow;
 	private final MyDoggyToolWindowManager toolWindowManager;
-	private ToolWindowGroup singleMapTableToolWindows;
+	private final ToolWindowGroup singleMapTableToolWindows;
 
 	private final JTable apiStatusTable;
 	private final APIStatusTableModel apiStatusTableModel;
-	private ToolWindow apiStatusToolWindow;
+	private final ToolWindow apiStatusToolWindow;
+
+	private final JTable mumbleLinkTable;
+	private final MumbleLinkTableModel mumbleLinkTableModel;
+	private final ToolWindow mumbleLinkToolWindow;
 
 	private static final class GW2TileFactoryInfo extends TileFactoryInfo {
 		private static final int MAX_ZOOM = 6;
@@ -189,6 +195,7 @@ public final class MainWindow extends AbstractWindow implements IWVWMapListener 
 		this.allMapsModel = new MapObjectivesTableModel();
 		this.matchDetailsTableModel = new MatchDetailsTableModel();
 		this.apiStatusTableModel = YAGW2APIGW2Stats.INSTANCE.getInjector().getInstance(APIStatusTableModel.class);
+		this.mumbleLinkTableModel = YAGW2APIMumbleLink.INSTANCE.getInjector().getInstance(MumbleLinkTableModel.class);
 
 		this.getContentPanel().add(this.builtMainMenuBar(), BorderLayout.NORTH);
 
@@ -243,6 +250,15 @@ public final class MainWindow extends AbstractWindow implements IWVWMapListener 
 		this.singleMapTableToolWindows.setImplicit(false);
 		this.singleMapTableToolWindows.setVisible(true);
 
+		this.mumbleLinkTable = this.initMumbleLinkTable(this.mumbleLinkTableModel);
+		this.mumbleLinkToolWindow = this.toolWindowManager.registerToolWindow("MumbleLink", "MumbleLink", null, new JScrollPane(this.mumbleLinkTable), ToolWindowAnchor.BOTTOM);
+		this.mumbleLinkToolWindow.setVisible(true);
+		this.mumbleLinkToolWindow.setAggregateMode(true);
+		final DockedTypeDescriptor mumbleLinkToolWindowDescriptor = (DockedTypeDescriptor) this.mumbleLinkToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
+		mumbleLinkToolWindowDescriptor.setIdVisibleOnTitleBar(false);
+		mumbleLinkToolWindowDescriptor.setTitleBarButtonsVisible(false);
+		mumbleLinkToolWindowDescriptor.setTitleBarVisible(false);
+
 		this.apiStatusTable = this.initAPIStatusTable(this.apiStatusTableModel);
 		this.apiStatusToolWindow = this.toolWindowManager.registerToolWindow("API Status", "API Status", null, new JScrollPane(this.apiStatusTable), ToolWindowAnchor.BOTTOM);
 		this.apiStatusToolWindow.setVisible(true);
@@ -274,20 +290,16 @@ public final class MainWindow extends AbstractWindow implements IWVWMapListener 
 		memoryMonitorDescriptor.setAvailable(true);
 		memoryMonitorDescriptor.setAnchor(ToolWindowAnchor.BOTTOM, 0);
 
-		//
-		// final ToolWindow chartTestToolWindow =
-		// this.toolWindowManager.registerToolWindow("Chart Test", "Chart Test",
-		// null, this.buildChart(), ToolWindowAnchor.TOP);
-		// final DockedTypeDescriptor chartTestToolWindowDescriptor =
-		// (DockedTypeDescriptor)
-		// chartTestToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
-		// chartTestToolWindowDescriptor.setIdVisibleOnTitleBar(false);
-		// chartTestToolWindow.setVisible(true);
-
 		this.pack();
 
 		// finally try to restore workspace setting
 		this.loadWorkspaceSettings();
+	}
+
+	private JTable initMumbleLinkTable(final MumbleLinkTableModel tableModel) {
+		final String[] header = { "Avatarname", "Current Map", "Position-X", "Position-Y", "Position-Z" };
+		final JTable table = new JTable(tableModel, newTCM(header));
+		return table;
 	}
 
 	private JTable initAPIStatusTable(final APIStatusTableModel tableModel) {
@@ -302,64 +314,6 @@ public final class MainWindow extends AbstractWindow implements IWVWMapListener 
 		}
 		return table;
 	}
-
-	// private ChartPanel buildChart() {
-	// final TimeSeriesCollection dataset = new TimeSeriesCollection();
-	// TimeSeries series;
-	// for (IWorldEntity world :
-	// YAGW2APIAnalyzer.getWorldEntityDAO().retrieveAllWorldEntities()) {
-	// for (IWVWMatchEntity match : world.getParticipatedInMatches()) {
-	// series = new TimeSeries(world.getName().get() + ": " +
-	// match.getStartTimestamp() + "-" + match.getEndTimestamp(),
-	// Millisecond.class);
-	// int i;
-	// if (match.getBlueWorld().equals(world)) {
-	// i = 1;
-	// } else if (match.getGreenWorld().equals(world)) {
-	// i = 2;
-	// } else {
-	// i = 3;
-	// }
-	//
-	// Map<Date, IWVWScoresEmbeddable> scores = match.getScores();
-	// for (Date key : scores.keySet()) {
-	// if (i == 1) {
-	// series.add(new Millisecond(key), scores.get(key).getBlueScore());
-	// } else if (i == 2) {
-	// series.add(new Millisecond(key), scores.get(key).getGreenScore());
-	// } else {
-	// series.add(new Millisecond(key), scores.get(key).getRedScore());
-	// }
-	// }
-	//
-	// dataset.addSeries(series);
-	// }
-	// }
-	//
-	// final JFreeChart chart =
-	// ChartFactory.createTimeSeriesChart("Legal & General Unit Trust Prices",
-	// // title
-	// "Date", // x-axis label
-	// "Total Points", // y-axis label
-	// dataset, // data
-	// false, // create legend?
-	// true, // generate tooltips?
-	// false);
-	//
-	// chart.setBackgroundPaint(Color.white);
-	//
-	// XYPlot plot = (XYPlot) chart.getPlot();
-	// plot.setBackgroundPaint(Color.lightGray);
-	// plot.setDomainGridlinePaint(Color.white);
-	// plot.setRangeGridlinePaint(Color.white);
-	// plot.setAxisOffset(new RectangleInsets(5.0, 5.0, 5.0, 5.0));
-	// plot.setDomainCrosshairVisible(true);
-	// plot.setRangeCrosshairVisible(true);
-	//
-	// final ChartPanel chartPanel = new ChartPanel(chart);
-	// return chartPanel;
-	//
-	// }
 
 	private boolean loadWorkspaceSettings() {
 		boolean success;
