@@ -8,7 +8,7 @@ import de.justi.yagw2api.mumblelink.IMumbleLink;
 import de.justi.yagw2api.mumblelink.IMumbleLinkEvent;
 import de.justi.yagw2api.mumblelink.IMumbleLinkState;
 
-final class MumbleLink extends MumbleLinkStateDelegate implements IMumbleLink {
+final class MumbleLink extends AbstractForwardingMumbleLinkState implements IMumbleLink {
 
 	private final MumbleLinkSynchronizerService mumbleLinkUpdater;
 	private EventBus channel = new EventBus(this.getClass().getName());
@@ -24,7 +24,7 @@ final class MumbleLink extends MumbleLinkStateDelegate implements IMumbleLink {
 	}
 
 	@Override
-	protected IMumbleLinkState getDelegate() {
+	protected IMumbleLinkState getForwardTo() {
 		return this.mumbleLinkUpdater.getCurrentSate().orNull();
 	}
 

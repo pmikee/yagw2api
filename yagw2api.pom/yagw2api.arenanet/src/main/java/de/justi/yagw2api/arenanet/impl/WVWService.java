@@ -25,6 +25,7 @@ import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientHandlerException;
+import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
 
 import de.justi.yagw2api.arenanet.IWVWDTOFactory;
@@ -42,6 +43,7 @@ final class WVWService implements IWVWService {
 	private static final long MATCH_DETAILS_CACHE_EXPIRE_MILLIS = 1000 * 3; // 3s
 	private static final long OBJECTIVE_NAMES_CACHE_EXPIRE_MILLIS = 1000 * 60 * 60 * 12; // 12h
 
+	private static final IWVWObjectiveNameDTO[] EMPTY_OBJECTIVE_NAME_ARRAY = new IWVWObjectiveNameDTO[0];
 	private static final URL MATCHES_URL;
 	private static final URL MATCH_DETAILS_URL;
 	private static final URL OBJECTIVE_NAMES_URL;
@@ -56,7 +58,7 @@ final class WVWService implements IWVWService {
 	}
 
 	// caches
-	private final Cache<Locale, IWVWObjectiveNameDTO[]> objectiveNamesCache = CacheBuilder.newBuilder().expireAfterWrite(OBJECTIVE_NAMES_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS)
+	private final Cache<Locale, Optional<IWVWObjectiveNameDTO[]>> objectiveNamesCache = CacheBuilder.newBuilder().expireAfterWrite(OBJECTIVE_NAMES_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS)
 			.removalListener(new RemovalListener<Locale, IWVWObjectiveNameDTO[]>() {
 				@Override
 				public void onRemoval(RemovalNotification<Locale, IWVWObjectiveNameDTO[]> notification) {
@@ -68,18 +70,18 @@ final class WVWService implements IWVWService {
 					}
 				}
 			}).build();
-	private final Map<Locale, Cache<Integer, IWVWObjectiveNameDTO>> objectiveNameCaches = new HashMap<Locale, Cache<Integer, IWVWObjectiveNameDTO>>();
-	private final Cache<String, IWVWMatchDetailsDTO> matchDetailsCache = CacheBuilder.newBuilder().expireAfterWrite(MATCH_DETAILS_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build();
-	private final Cache<String, IWVWMatchesDTO> matchesCache = CacheBuilder.newBuilder().initialCapacity(1).maximumSize(1).expireAfterWrite(MATCH_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS)
-			.removalListener(new RemovalListener<String, IWVWMatchesDTO>() {
+	private final Map<Locale, Cache<Integer, Optional<IWVWObjectiveNameDTO>>> objectiveNameCaches = new HashMap<Locale, Cache<Integer, Optional<IWVWObjectiveNameDTO>>>();
+	private final Cache<String, Optional<IWVWMatchDetailsDTO>> matchDetailsCache = CacheBuilder.newBuilder().expireAfterWrite(MATCH_DETAILS_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build();
+	private final Cache<String, Optional<IWVWMatchesDTO>> matchesCache = CacheBuilder.newBuilder().initialCapacity(1).maximumSize(1).expireAfterWrite(MATCH_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS)
+			.removalListener(new RemovalListener<String, Optional<IWVWMatchesDTO>>() {
 				@Override
-				public void onRemoval(RemovalNotification<String, IWVWMatchesDTO> notification) {
+				public void onRemoval(RemovalNotification<String, Optional<IWVWMatchesDTO>> notification) {
 					// synchronize matchesCache and
 					// matchCache
 					WVWService.this.matchCache.invalidateAll();
 				}
 			}).build();
-	private final Cache<String, IWVWMatchDTO> matchCache = CacheBuilder.newBuilder().expireAfterWrite(MATCH_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build();
+	private final Cache<String, Optional<IWVWMatchDTO>> matchCache = CacheBuilder.newBuilder().expireAfterWrite(MATCH_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build();
 
 	// injections
 	private final IWVWDTOFactory wvwDTOFactory;
@@ -96,13 +98,13 @@ final class WVWService implements IWVWService {
 	 * @param locale
 	 * @return
 	 */
-	private Cache<Integer, IWVWObjectiveNameDTO> getOrCreateObjectiveNameCache(Locale locale) {
+	private Cache<Integer, Optional<IWVWObjectiveNameDTO>> getOrCreateObjectiveNameCache(Locale locale) {
 		checkNotNull(locale);
 		final Locale key = ServiceUtils.normalizeLocaleForAPIUsage(locale);
 		if (!this.objectiveNameCaches.containsKey(key)) {
 			synchronized (this) {
 				if (!this.objectiveNameCaches.containsKey(key)) {
-					final Cache<Integer, IWVWObjectiveNameDTO> newCache = CacheBuilder.newBuilder().expireAfterWrite(OBJECTIVE_NAMES_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build();
+					final Cache<Integer, Optional<IWVWObjectiveNameDTO>> newCache = CacheBuilder.newBuilder().expireAfterWrite(OBJECTIVE_NAMES_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build();
 					this.objectiveNameCaches.put(key, newCache);
 				}
 			}
@@ -111,12 +113,13 @@ final class WVWService implements IWVWService {
 		return this.objectiveNameCaches.get(key);
 	}
 
+	// TODO refactor this to return optional
 	@Override
 	public IWVWMatchesDTO retrieveAllMatches() {
 		try {
-			return this.matchesCache.get("", new Callable<IWVWMatchesDTO>() {
+			return this.matchesCache.get("", new Callable<Optional<IWVWMatchesDTO>>() {
 				@Override
-				public IWVWMatchesDTO call() throws Exception {
+				public Optional<IWVWMatchesDTO> call() throws Exception {
 					final WebResource resource = ServiceUtils.REST_CLIENT.resource(MATCHES_URL.toExternalForm());
 					resource.addFilter(new RetryClientFilter(ServiceUtils.REST_RETRY_COUNT));
 					final WebResource.Builder builder = resource.accept(MediaType.APPLICATION_JSON_TYPE);
@@ -125,13 +128,13 @@ final class WVWService implements IWVWService {
 						LOGGER.trace("Retrieved response=" + response);
 						final IWVWMatchesDTO result = WVWService.this.wvwDTOFactory.newMatchesOf(response);
 						LOGGER.debug("Built result=" + result);
-						return result;
-					} catch (ClientHandlerException e) {
+						return Optional.of(result);
+					} catch (ClientHandlerException | UniformInterfaceException e) {
 						LOGGER.fatal("Exception thrown while quering " + resource.getURI(), e);
-						return null;
+						return Optional.absent();
 					}
 				}
-			});
+			}).orNull();
 		} catch (ExecutionException e) {
 			LOGGER.error("Failed to retrieve " + IWVWMatchesDTO.class.getSimpleName() + " from cache.", e);
 			throw new IllegalStateException("Failed to retrieve " + IWVWMatchesDTO.class.getSimpleName() + " from cache.", e);
@@ -142,9 +145,9 @@ final class WVWService implements IWVWService {
 	public Optional<IWVWMatchDetailsDTO> retrieveMatchDetails(final String id) {
 		checkNotNull(id);
 		try {
-			return Optional.fromNullable(this.matchDetailsCache.get(id, new Callable<IWVWMatchDetailsDTO>() {
+			return this.matchDetailsCache.get(id, new Callable<Optional<IWVWMatchDetailsDTO>>() {
 				@Override
-				public IWVWMatchDetailsDTO call() throws Exception {
+				public Optional<IWVWMatchDetailsDTO> call() throws Exception {
 					final WebResource resource = ServiceUtils.REST_CLIENT.resource(MATCH_DETAILS_URL.toExternalForm()).queryParam("match_id", id);
 					resource.addFilter(new RetryClientFilter(ServiceUtils.REST_RETRY_COUNT));
 					final WebResource.Builder builder = resource.accept(MediaType.APPLICATION_JSON_TYPE);
@@ -153,27 +156,28 @@ final class WVWService implements IWVWService {
 						LOGGER.trace("Retrieved response=" + response);
 						final IWVWMatchDetailsDTO result = WVWService.this.wvwDTOFactory.newMatchDetailsOf(response);
 						LOGGER.debug("Built result=" + result);
-						return result;
-					} catch (ClientHandlerException e) {
+						return Optional.of(result);
+					} catch (ClientHandlerException | UniformInterfaceException e) {
 						LOGGER.fatal("Exception thrown while quering " + resource.getURI(), e);
-						return null;
+						return Optional.absent();
 					}
 				}
-			}));
+			});
 		} catch (ExecutionException e) {
 			LOGGER.error("Failed to retrieve " + IWVWMatchDetailsDTO.class.getSimpleName() + " from cache for id=" + id, e);
 			throw new IllegalStateException("Failed to retrieve " + IWVWMatchDetailsDTO.class.getSimpleName() + " from cache for id=" + id, e);
 		}
 	}
 
+	// TODO refactor this to return optional
 	@Override
 	public IWVWObjectiveNameDTO[] retrieveAllObjectiveNames(final Locale locale) {
 		checkNotNull(locale);
 		final Locale key = ServiceUtils.normalizeLocaleForAPIUsage(locale);
 		try {
-			return this.objectiveNamesCache.get(key, new Callable<IWVWObjectiveNameDTO[]>() {
+			return this.objectiveNamesCache.get(key, new Callable<Optional<IWVWObjectiveNameDTO[]>>() {
 				@Override
-				public IWVWObjectiveNameDTO[] call() throws Exception {
+				public Optional<IWVWObjectiveNameDTO[]> call() throws Exception {
 					final WebResource resource = ServiceUtils.REST_CLIENT.resource(OBJECTIVE_NAMES_URL.toExternalForm()).queryParam("lang", key.getLanguage());
 					resource.addFilter(new RetryClientFilter(ServiceUtils.REST_RETRY_COUNT));
 					final WebResource.Builder builder = resource.accept(MediaType.APPLICATION_JSON_TYPE);
@@ -184,13 +188,13 @@ final class WVWService implements IWVWService {
 						if (LOGGER.isDebugEnabled()) {
 							LOGGER.debug("Built result=" + Arrays.deepToString(result));
 						}
-						return result;
-					} catch (ClientHandlerException e) {
+						return Optional.of(result);
+					} catch (ClientHandlerException | UniformInterfaceException e) {
 						LOGGER.fatal("Exception thrown while quering " + resource.getURI(), e);
-						return null;
+						return Optional.absent();
 					}
 				}
-			});
+			}).or(EMPTY_OBJECTIVE_NAME_ARRAY);
 		} catch (ExecutionException e) {
 			LOGGER.error("Failed to retrieve all " + IWVWObjectiveNameDTO.class.getSimpleName() + " from cache for lang=" + key, e);
 			throw new IllegalStateException("Failed to retrieve all " + IWVWObjectiveNameDTO.class.getSimpleName() + " from cache for lang=" + key, e);
@@ -204,9 +208,9 @@ final class WVWService implements IWVWService {
 		final Locale key = ServiceUtils.normalizeLocaleForAPIUsage(locale);
 		try {
 			// retrieve value from cache
-			return Optional.fromNullable(this.getOrCreateObjectiveNameCache(key).get(id, new Callable<IWVWObjectiveNameDTO>() {
+			return this.getOrCreateObjectiveNameCache(key).get(id, new Callable<Optional<IWVWObjectiveNameDTO>>() {
 				@Override
-				public IWVWObjectiveNameDTO call() throws Exception {
+				public Optional<IWVWObjectiveNameDTO> call() throws Exception {
 					final IWVWObjectiveNameDTO[] names = WVWService.this.retrieveAllObjectiveNames(key);
 					int index = 0;
 					IWVWObjectiveNameDTO result = null;
@@ -217,9 +221,9 @@ final class WVWService implements IWVWService {
 					if (LOGGER.isTraceEnabled()) {
 						LOGGER.trace("Retrieved " + IWVWObjectiveNameDTO.class.getSimpleName() + " for id=" + id + " and lang=" + key + ": " + result);
 					}
-					return result;
+					return Optional.fromNullable(result);
 				}
-			}));
+			});
 		} catch (ExecutionException e) {
 			LOGGER.error("Failed to retrieve " + IWorldNameDTO.class.getSimpleName() + " from cache for id=" + id + " lang=" + key, e);
 			throw new IllegalStateException("Failed to retrieve all " + IWorldNameDTO.class.getSimpleName() + " from cache for worldId=" + id + " lang=" + locale, e);
@@ -232,9 +236,9 @@ final class WVWService implements IWVWService {
 		checkNotNull(matchId);
 		try {
 			// retrieve value from cache
-			return Optional.fromNullable(this.matchCache.get(matchId, new Callable<IWVWMatchDTO>() {
+			return this.matchCache.get(matchId, new Callable<Optional<IWVWMatchDTO>>() {
 				@Override
-				public IWVWMatchDTO call() throws Exception {
+				public Optional<IWVWMatchDTO> call() throws Exception {
 					final IWVWMatchDTO[] matches = WVWService.this.retrieveAllMatches().getMatches();
 					int index = 0;
 					IWVWMatchDTO result = null;
@@ -245,9 +249,9 @@ final class WVWService implements IWVWService {
 					if (LOGGER.isTraceEnabled()) {
 						LOGGER.trace("Retrieved " + IWVWMatchDTO.class.getSimpleName() + " for matchId=" + matchId + ": " + result);
 					}
-					return result;
+					return Optional.fromNullable(result);
 				}
-			}));
+			});
 		} catch (ExecutionException e) {
 			LOGGER.error("Failed to retrieve " + IWVWMatchDTO.class.getSimpleName() + " from cache for matchId=" + matchId, e);
 			throw new IllegalStateException("Failed to retrieve all " + IWVWMatchDTO.class.getSimpleName() + " from cache for matchId=" + matchId, e);

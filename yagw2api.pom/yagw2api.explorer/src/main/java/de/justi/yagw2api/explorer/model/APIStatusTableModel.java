@@ -1,5 +1,6 @@
 package de.justi.yagw2api.explorer.model;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.util.ArrayList;
@@ -13,18 +14,19 @@ import javax.swing.table.AbstractTableModel;
 
 import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.AbstractScheduledService;
+import com.google.inject.Inject;
 
-import de.justi.yagw2api.gw2stats.YAGW2APIGW2Stats;
 import de.justi.yagw2api.gw2stats.dto.IAPIStateDTO;
 import de.justi.yagw2api.gw2stats.service.IGW2StatsService;
 
 public class APIStatusTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = -5095699668587612370L;
-
-	private static final IGW2StatsService SERVICE = YAGW2APIGW2Stats.getInjector().getInstance(IGW2StatsService.class);
 	private Map<String, IAPIStateDTO> states = null;
+	private final IGW2StatsService gw2statsService;
 
-	public APIStatusTableModel() {
+	@Inject
+	public APIStatusTableModel(IGW2StatsService gw2statsService) {
+		this.gw2statsService = checkNotNull(gw2statsService);
 		// TODO refactor this to an event based system -> wrap it
 		final AbstractScheduledService service = new AbstractScheduledService() {
 			@Override
@@ -34,7 +36,7 @@ public class APIStatusTableModel extends AbstractTableModel {
 
 			@Override
 			protected void runOneIteration() throws Exception {
-				APIStatusTableModel.this.states = SERVICE.retrieveAPIStates();
+				APIStatusTableModel.this.states = APIStatusTableModel.this.gw2statsService.retrieveAPIStates();
 				APIStatusTableModel.this.fireTableDataChanged();
 			}
 		};

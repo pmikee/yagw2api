@@ -17,6 +17,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientHandlerException;
+import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
 
 import de.justi.yagw2api.arenanet.IGuildDTOFactory;
@@ -38,7 +39,7 @@ final class GuildService implements IGuildService {
 	}
 
 	// FIELDS
-	private final Cache<String, IGuildDetailsDTO> guildDetailsCache = CacheBuilder.newBuilder().expireAfterWrite(GUILD_DETAILS_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build();
+	private final Cache<String, Optional<IGuildDetailsDTO>> guildDetailsCache = CacheBuilder.newBuilder().expireAfterWrite(GUILD_DETAILS_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build();
 	private final IGuildDTOFactory guildDTOFactory;
 
 	// METHODS
@@ -51,9 +52,9 @@ final class GuildService implements IGuildService {
 	public Optional<IGuildDetailsDTO> retrieveGuildDetails(final String id) {
 		checkNotNull(id);
 		try {
-			return Optional.fromNullable(this.guildDetailsCache.get(id, new Callable<IGuildDetailsDTO>() {
+			return this.guildDetailsCache.get(id, new Callable<Optional<IGuildDetailsDTO>>() {
 				@Override
-				public IGuildDetailsDTO call() throws Exception {
+				public Optional<IGuildDetailsDTO> call() throws Exception {
 					final WebResource resource = ServiceUtils.REST_CLIENT.resource(GUILD_DETAILS_URL.toExternalForm()).queryParam("guild_id", id);
 					resource.addFilter(new RetryClientFilter(ServiceUtils.REST_RETRY_COUNT));
 					final WebResource.Builder builder = resource.accept(MediaType.APPLICATION_JSON_TYPE);
@@ -62,13 +63,13 @@ final class GuildService implements IGuildService {
 						LOGGER.trace("Retrieved response=" + response);
 						final IGuildDetailsDTO result = GuildService.this.guildDTOFactory.newGuildDetailsOf(response);
 						LOGGER.debug("Built result=" + result);
-						return result;
-					} catch (ClientHandlerException e) {
+						return Optional.of(result);
+					} catch (ClientHandlerException | UniformInterfaceException e) {
 						LOGGER.fatal("Exception thrown while quering " + resource.getURI(), e);
-						return null;
+						return Optional.absent();
 					}
 				}
-			}));
+			});
 		} catch (ExecutionException e) {
 			LOGGER.error("Failed to retrieve " + IGuildDetailsDTO.class.getSimpleName() + " from cache for id=" + id, e);
 			throw new IllegalStateException("Failed to retrieve " + IGuildDetailsDTO.class.getSimpleName() + " from cache for id=" + id, e);

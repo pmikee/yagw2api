@@ -61,6 +61,7 @@ import de.justi.yagw2api.explorer.model.MatchDetailsTableModel;
 import de.justi.yagw2api.explorer.model.MatchesTableModel;
 import de.justi.yagw2api.explorer.renderer.MatchDetailsTableCellRenderer;
 import de.justi.yagw2api.explorer.renderer.ObjectiveTableCellRenderer;
+import de.justi.yagw2api.gw2stats.YAGW2APIGW2Stats;
 import de.justi.yagw2api.wrapper.IWVWMapListener;
 import de.justi.yagw2api.wrapper.IWVWWrapper;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
@@ -187,7 +188,7 @@ public final class MainWindow extends AbstractWindow implements IWVWMapListener 
 		this.redMapModel = new MapObjectivesTableModel();
 		this.allMapsModel = new MapObjectivesTableModel();
 		this.matchDetailsTableModel = new MatchDetailsTableModel();
-		this.apiStatusTableModel = new APIStatusTableModel();
+		this.apiStatusTableModel = YAGW2APIGW2Stats.INSTANCE.getInjector().getInstance(APIStatusTableModel.class);
 
 		this.getContentPanel().add(this.builtMainMenuBar(), BorderLayout.NORTH);
 

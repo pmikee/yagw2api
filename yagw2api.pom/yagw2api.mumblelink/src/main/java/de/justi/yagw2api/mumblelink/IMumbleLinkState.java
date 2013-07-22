@@ -24,8 +24,6 @@ public interface IMumbleLinkState {
 
 	Optional<IMumbleLinkPosition> getCameraTop();
 
-	Optional<Integer> getContextLength();
-
 	Optional<Integer> getRegionId();
 
 	Optional<Integer> getBuild();
