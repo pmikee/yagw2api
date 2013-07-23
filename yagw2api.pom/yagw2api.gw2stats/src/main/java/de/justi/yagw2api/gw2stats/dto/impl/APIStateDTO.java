@@ -18,7 +18,7 @@ import de.justi.yagw2api.gw2stats.service.IGW2StatsService;
 
 final class APIStateDTO implements IAPIStateDTO {
 	static final transient Logger LOGGER = Logger.getLogger(APIStateDTO.class);
-	static final transient IGW2StatsService SERVICE = YAGW2APIGW2Stats.INSTANCE.getInjector().getInstance(IGW2StatsService.class);
+	static final transient IGW2StatsService SERVICE = YAGW2APIGW2Stats.INSTANCE.getGW2StatsService();
 
 	@SerializedName("status")
 	@Since(1.0)

@@ -17,7 +17,7 @@ import de.justi.yagw2api.gw2stats.dto.IAPIStateDTO;
 import de.justi.yagw2api.gw2stats.dto.IAPIStateDescriptionDTO;
 import de.justi.yagw2api.gw2stats.dto.IGW2StatsDTOFactory;
 
-public class GW2StatsDTOFactory implements IGW2StatsDTOFactory {
+final class GW2StatsDTOFactory implements IGW2StatsDTOFactory {
 	private static final Logger LOGGER = Logger.getLogger(GW2StatsDTOFactory.class);
 
 	private Gson createGSON() {

@@ -20,10 +20,6 @@ public enum YAGW2APIMumbleLink {
 		this.mumbleLink = checkNotNull(this.injector.getInstance(IMumbleLink.class));
 	}
 
-	public Injector getInjector() {
-		return this.injector;
-	}
-
 	public IMumbleLink getMumbleLink() {
 		return this.mumbleLink;
 	}

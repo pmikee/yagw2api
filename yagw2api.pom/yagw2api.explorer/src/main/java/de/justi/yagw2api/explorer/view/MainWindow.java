@@ -194,8 +194,8 @@ public final class MainWindow extends AbstractWindow implements IWVWMapListener 
 		this.redMapModel = new MapObjectivesTableModel();
 		this.allMapsModel = new MapObjectivesTableModel();
 		this.matchDetailsTableModel = new MatchDetailsTableModel();
-		this.apiStatusTableModel = YAGW2APIGW2Stats.INSTANCE.getInjector().getInstance(APIStatusTableModel.class);
-		this.mumbleLinkTableModel = YAGW2APIMumbleLink.INSTANCE.getInjector().getInstance(MumbleLinkTableModel.class);
+		this.apiStatusTableModel = new APIStatusTableModel(YAGW2APIGW2Stats.INSTANCE.getGW2StatsService());
+		this.mumbleLinkTableModel = new MumbleLinkTableModel(YAGW2APIMumbleLink.INSTANCE.getMumbleLink());
 
 		this.getContentPanel().add(this.builtMainMenuBar(), BorderLayout.NORTH);
 

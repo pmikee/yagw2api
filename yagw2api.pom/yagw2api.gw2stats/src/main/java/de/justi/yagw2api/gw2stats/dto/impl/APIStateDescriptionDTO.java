@@ -6,7 +6,7 @@ import com.google.gson.annotations.Since;
 
 import de.justi.yagw2api.gw2stats.dto.IAPIStateDescriptionDTO;
 
-class APIStateDescriptionDTO implements IAPIStateDescriptionDTO {
+final class APIStateDescriptionDTO implements IAPIStateDescriptionDTO {
 	@SerializedName("description")
 	@Since(1.0)
 	private String description;
