@@ -16,8 +16,8 @@ import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.AbstractScheduledService;
 import com.google.inject.Inject;
 
-import de.justi.yagw2api.gw2stats.dto.IAPIStateDTO;
-import de.justi.yagw2api.gw2stats.service.IGW2StatsService;
+import de.justi.yagw2api.gw2stats.IAPIStateDTO;
+import de.justi.yagw2api.gw2stats.IGW2StatsService;
 
 public class APIStatusTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = -5095699668587612370L;

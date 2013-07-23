@@ -31,10 +31,10 @@ import de.justi.yagw2api.analyzer.entities.IWorldEntity;
 import de.justi.yagw2api.analyzer.entities.wvw.IWVWMatchEntity;
 import de.justi.yagw2api.analyzer.entities.wvw.impl.WVWMatchEntity;
 import de.justi.yagw2api.analyzer.utils.converter.LocaleConverter;
-import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
-import de.justi.yagw2api.wrapper.model.IWorld;
-import de.justi.yagw2api.wrapper.model.types.IWorldLocationType;
-import de.justi.yagw2api.wrapper.model.types.WorldLocationType;
+import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
+import de.justi.yagw2api.wrapper.IWorld;
+import de.justi.yagw2api.wrapper.IWorldLocationType;
+import de.justi.yagw2api.wrapper.impl.WorldLocationType;
 
 @ObjectTypeConverters({ @ObjectTypeConverter(name = "WorldLocationTypeConverter", objectType = WorldLocationType.class, dataType = String.class, conversionValues = {
 		@ConversionValue(objectValue = "NORTH_AMERICA", dataValue = "NA"), @ConversionValue(objectValue = "EUROPE", dataValue = "EU") }) })
@@ -133,7 +133,7 @@ public final class WorldEntity extends AbstractEntity implements IWorldEntity {
 			// compatible ids
 			this.originWorldId = model.getId();
 			if (model.getName().isPresent()) {
-				this.setName(YAGW2APIWrapper.getCurrentLocale(), model.getName().get());
+				this.setName(YAGW2APIArenanet.INSTANCE.getCurrentLocale(), model.getName().get());
 			}
 			this.worldLocale = model.getWorldLocale().orNull();
 			this.location = model.getWorldLocation();
@@ -187,7 +187,7 @@ public final class WorldEntity extends AbstractEntity implements IWorldEntity {
 
 	@Override
 	public Optional<String> getName() {
-		return this.getName(YAGW2APIWrapper.getCurrentLocale());
+		return this.getName(YAGW2APIArenanet.INSTANCE.getCurrentLocale());
 	}
 
 	@Override

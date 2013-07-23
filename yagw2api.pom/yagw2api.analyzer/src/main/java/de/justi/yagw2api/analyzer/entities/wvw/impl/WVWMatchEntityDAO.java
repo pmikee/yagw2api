@@ -22,9 +22,9 @@ import de.justi.yagw2api.analyzer.entities.YAGW2APIAnalyzerPersistence;
 import de.justi.yagw2api.analyzer.entities.wvw.IWVWMatchEntity;
 import de.justi.yagw2api.analyzer.entities.wvw.IWVWMatchEntityDAO;
 import de.justi.yagw2api.analyzer.entities.wvw.IWVWScoresEmbeddable;
-import de.justi.yagw2api.wrapper.model.IWorld;
-import de.justi.yagw2api.wrapper.model.wvw.IWVWMatch;
-import de.justi.yagw2api.wrapper.model.wvw.IWVWScores;
+import de.justi.yagw2api.wrapper.IWVWMatch;
+import de.justi.yagw2api.wrapper.IWVWScores;
+import de.justi.yagw2api.wrapper.IWorld;
 
 public final class WVWMatchEntityDAO implements IWVWMatchEntityDAO {
 	private static final Logger LOGGER = Logger.getLogger(WVWMatchEntityDAO.class);

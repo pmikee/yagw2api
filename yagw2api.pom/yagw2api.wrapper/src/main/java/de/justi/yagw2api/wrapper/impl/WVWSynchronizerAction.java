@@ -20,21 +20,20 @@ import de.justi.yagw2api.arenanet.IWVWObjectiveDTO;
 import de.justi.yagw2api.arenanet.IWVWService;
 import de.justi.yagw2api.arenanet.IWorldNameDTO;
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
+import de.justi.yagw2api.wrapper.IGuild;
+import de.justi.yagw2api.wrapper.IModelFactory;
+import de.justi.yagw2api.wrapper.IWVWMap;
+import de.justi.yagw2api.wrapper.IWVWMatch;
+import de.justi.yagw2api.wrapper.IWVWObjective;
+import de.justi.yagw2api.wrapper.IWorld;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
-import de.justi.yagw2api.wrapper.model.IGuild;
-import de.justi.yagw2api.wrapper.model.IModelFactory;
-import de.justi.yagw2api.wrapper.model.IWorld;
-import de.justi.yagw2api.wrapper.model.wvw.IWVWMap;
-import de.justi.yagw2api.wrapper.model.wvw.IWVWMatch;
-import de.justi.yagw2api.wrapper.model.wvw.IWVWObjective;
-import de.justi.yagw2api.wrapper.model.wvw.types.WVWMapType;
 
 final class WVWSynchronizerAction extends AbstractSynchronizerAction<String, WVWSynchronizerAction> {
 	private static final long serialVersionUID = 8391498327079686666L;
 	private static final int MAX_CHUNK_SIZE = 1;
 	private static final Logger LOGGER = Logger.getLogger(WVWSynchronizerAction.class);
-	private static final IWVWService WVW_SERVICE = YAGW2APIArenanet.getInstance().getWVWService();
-	private static final IModelFactory MODEL_FACTORY = YAGW2APIWrapper.getInjector().getInstance(IModelFactory.class);
+	private static final IWVWService WVW_SERVICE = YAGW2APIArenanet.INSTANCE.getWVWService();
+	private static final IModelFactory MODEL_FACTORY = YAGW2APIWrapper.INSTANCE.getModelFactory();
 
 	private final Map<String, IWVWMatch> matchesMappedById;
 
@@ -88,9 +87,9 @@ final class WVWSynchronizerAction extends AbstractSynchronizerAction<String, WVW
 	}
 
 	private void synchronizeWorldNames(IWVWMatch matchModel, IWVWMatchDTO matchDTO) {
-		final Optional<IWorldNameDTO> greenName = matchDTO.getGreenWorldName(YAGW2APIWrapper.getCurrentLocale());
-		final Optional<IWorldNameDTO> redName = matchDTO.getRedWorldName(YAGW2APIWrapper.getCurrentLocale());
-		final Optional<IWorldNameDTO> blueName = matchDTO.getBlueWorldName(YAGW2APIWrapper.getCurrentLocale());
+		final Optional<IWorldNameDTO> greenName = matchDTO.getGreenWorldName(YAGW2APIArenanet.INSTANCE.getCurrentLocale());
+		final Optional<IWorldNameDTO> redName = matchDTO.getRedWorldName(YAGW2APIArenanet.INSTANCE.getCurrentLocale());
+		final Optional<IWorldNameDTO> blueName = matchDTO.getBlueWorldName(YAGW2APIArenanet.INSTANCE.getCurrentLocale());
 		if (greenName.isPresent()) {
 			matchModel.getGreenWorld().setName(greenName.get().getNameWithoutLocale());
 		}

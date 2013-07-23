@@ -65,15 +65,14 @@ import de.justi.yagw2api.explorer.renderer.ObjectiveTableCellRenderer;
 import de.justi.yagw2api.gw2stats.YAGW2APIGW2Stats;
 import de.justi.yagw2api.mumblelink.YAGW2APIMumbleLink;
 import de.justi.yagw2api.wrapper.IWVWMapListener;
+import de.justi.yagw2api.wrapper.IWVWMapScoresChangedEvent;
+import de.justi.yagw2api.wrapper.IWVWMatch;
+import de.justi.yagw2api.wrapper.IWVWObjectiveCaptureEvent;
+import de.justi.yagw2api.wrapper.IWVWObjectiveClaimedEvent;
+import de.justi.yagw2api.wrapper.IWVWObjectiveEndOfBuffEvent;
+import de.justi.yagw2api.wrapper.IWVWObjectiveUnclaimedEvent;
 import de.justi.yagw2api.wrapper.IWVWWrapper;
-import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
-import de.justi.yagw2api.wrapper.model.wvw.IWVWMatch;
-import de.justi.yagw2api.wrapper.model.wvw.events.IWVWMapScoresChangedEvent;
-import de.justi.yagw2api.wrapper.model.wvw.events.IWVWObjectiveCaptureEvent;
-import de.justi.yagw2api.wrapper.model.wvw.events.IWVWObjectiveClaimedEvent;
-import de.justi.yagw2api.wrapper.model.wvw.events.IWVWObjectiveEndOfBuffEvent;
-import de.justi.yagw2api.wrapper.model.wvw.events.IWVWObjectiveUnclaimedEvent;
-import de.justi.yagwapi.common.utils.TTSUtils;
+import de.justi.yagwapi.common.TTSUtils;
 
 public final class MainWindow extends AbstractWindow implements IWVWMapListener {
 	private static final Locale LOCALE_ES = Locale.forLanguageTag("es");
@@ -386,38 +385,38 @@ public final class MainWindow extends AbstractWindow implements IWVWMapListener 
 		enLocaleMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				YAGW2APIWrapper.setCurrentLocale(Locale.ENGLISH);
+				YAGW2APIArenanet.INSTANCE.setCurrentLocale(Locale.ENGLISH);
 			}
 		});
 
-		enLocaleMenuItem.setSelected(YAGW2APIWrapper.getCurrentLocale().equals(Locale.ENGLISH));
+		enLocaleMenuItem.setSelected(YAGW2APIArenanet.INSTANCE.getCurrentLocale().equals(Locale.ENGLISH));
 		settingLocaleMenu.add(enLocaleMenuItem);
 		final JMenuItem deLocaleMenuItem = new JRadioButtonMenuItem(Locale.GERMANY.getLanguage());
 		deLocaleMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				YAGW2APIWrapper.setCurrentLocale(Locale.GERMANY);
+				YAGW2APIArenanet.INSTANCE.setCurrentLocale(Locale.GERMANY);
 			}
 		});
-		deLocaleMenuItem.setSelected(YAGW2APIWrapper.getCurrentLocale().getLanguage().equals(Locale.GERMANY.getLanguage()));
+		deLocaleMenuItem.setSelected(YAGW2APIArenanet.INSTANCE.getCurrentLocale().getLanguage().equals(Locale.GERMANY.getLanguage()));
 		settingLocaleMenu.add(deLocaleMenuItem);
 		final JMenuItem frLocaleMenuItem = new JRadioButtonMenuItem(Locale.FRANCE.getLanguage());
 		frLocaleMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				YAGW2APIWrapper.setCurrentLocale(Locale.FRANCE);
+				YAGW2APIArenanet.INSTANCE.setCurrentLocale(Locale.FRANCE);
 			}
 		});
-		frLocaleMenuItem.setSelected(YAGW2APIWrapper.getCurrentLocale().getLanguage().equals(Locale.FRANCE.getLanguage()));
+		frLocaleMenuItem.setSelected(YAGW2APIArenanet.INSTANCE.getCurrentLocale().getLanguage().equals(Locale.FRANCE.getLanguage()));
 		settingLocaleMenu.add(frLocaleMenuItem);
 		final JMenuItem esLocaleMenuItem = new JRadioButtonMenuItem(LOCALE_ES.getLanguage());
 		esLocaleMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				YAGW2APIWrapper.setCurrentLocale(LOCALE_ES);
+				YAGW2APIArenanet.INSTANCE.setCurrentLocale(LOCALE_ES);
 			}
 		});
-		esLocaleMenuItem.setSelected(YAGW2APIWrapper.getCurrentLocale().getLanguage().equals(LOCALE_ES.getLanguage()));
+		esLocaleMenuItem.setSelected(YAGW2APIArenanet.INSTANCE.getCurrentLocale().getLanguage().equals(LOCALE_ES.getLanguage()));
 		settingLocaleMenu.add(esLocaleMenuItem);
 
 		final ButtonGroup group = new ButtonGroup();

@@ -7,9 +7,8 @@ import org.apache.log4j.Logger;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-import de.justi.yagw2api.gw2stats.dto.impl.GW2StatsDTOModule;
-import de.justi.yagw2api.gw2stats.service.IGW2StatsService;
-import de.justi.yagw2api.gw2stats.service.impl.GW2StatsServiceModule;
+import de.justi.yagw2api.gw2stats.impl.GW2StatsDTOModule;
+import de.justi.yagw2api.gw2stats.impl.GW2StatsServiceModule;
 
 public enum YAGW2APIGW2Stats {
 	INSTANCE;

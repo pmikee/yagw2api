@@ -12,10 +12,10 @@ import com.google.common.base.Optional;
 
 import de.justi.yagw2api.explorer.model.MapObjectivesTableModel;
 import de.justi.yagw2api.explorer.view.MainWindow;
-import de.justi.yagw2api.wrapper.model.IWorld;
-import de.justi.yagw2api.wrapper.model.wvw.IWVWMap;
-import de.justi.yagw2api.wrapper.model.wvw.IWVWMatch;
-import de.justi.yagw2api.wrapper.model.wvw.IWVWObjective;
+import de.justi.yagw2api.wrapper.IWVWMap;
+import de.justi.yagw2api.wrapper.IWVWMatch;
+import de.justi.yagw2api.wrapper.IWVWObjective;
+import de.justi.yagw2api.wrapper.IWorld;
 
 public final class ObjectiveTableCellRenderer extends DefaultTableCellRenderer {
 	private static final long serialVersionUID = -8506469778783597659L;

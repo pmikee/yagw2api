@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import de.justi.yagw2api.analyzer.IWVWAnalyzer;
 import de.justi.yagw2api.analyzer.YAGW2APIAnalyzer;
 import de.justi.yagw2api.analyzer.entities.YAGW2APIAnalyzerPersistence;
+import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
 import de.justi.yagw2api.explorer.view.MainWindow;
 import de.justi.yagw2api.wrapper.IWVWWrapper;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
@@ -42,8 +43,8 @@ public final class Main {
 	 * @throws IOException
 	 */
 	public static void main(String[] args) {
-		YAGW2APIWrapper.setCurrentLocale(Locale.getDefault());
-		final IWVWWrapper apiWrapper = YAGW2APIWrapper.getWVWWrapper();
+		YAGW2APIArenanet.INSTANCE.setCurrentLocale(Locale.getDefault());
+		final IWVWWrapper apiWrapper = YAGW2APIWrapper.INSTANCE.getWVWWrapper();
 		final IWVWAnalyzer analyzer = YAGW2APIAnalyzer.getAnalyzer();
 		YAGW2APIAnalyzerPersistence.getDefaultEM(); // startup db connection
 		final MainWindow mainWindow = new MainWindow();

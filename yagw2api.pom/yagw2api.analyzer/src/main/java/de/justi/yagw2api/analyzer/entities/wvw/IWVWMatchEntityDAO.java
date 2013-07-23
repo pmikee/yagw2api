@@ -4,7 +4,7 @@ import java.util.Date;
 
 import com.google.common.base.Optional;
 
-import de.justi.yagw2api.wrapper.model.wvw.IWVWMatch;
+import de.justi.yagw2api.wrapper.IWVWMatch;
 
 public interface IWVWMatchEntityDAO {
 	Optional<IWVWMatchEntity> newMatchEntityOf(IWVWMatch match);

@@ -31,7 +31,7 @@ import com.sun.jersey.api.client.WebResource;
 import de.justi.yagw2api.arenanet.IWorldDTOFactory;
 import de.justi.yagw2api.arenanet.IWorldNameDTO;
 import de.justi.yagw2api.arenanet.IWorldService;
-import de.justi.yagwapi.common.utils.RetryClientFilter;
+import de.justi.yagwapi.common.RetryClientFilter;
 
 final class WorldService implements IWorldService {
 	private static final Logger LOGGER = Logger.getLogger(WorldService.class);

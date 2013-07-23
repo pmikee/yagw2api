@@ -32,8 +32,8 @@ import de.justi.yagw2api.analyzer.entities.AbstractEntity;
 import de.justi.yagw2api.analyzer.entities.wvw.IWVWMapEntity;
 import de.justi.yagw2api.analyzer.entities.wvw.IWVWMatchEntity;
 import de.justi.yagw2api.analyzer.entities.wvw.IWVWScoresEmbeddable;
-import de.justi.yagw2api.wrapper.model.wvw.types.IWVWMapType;
-import de.justi.yagw2api.wrapper.model.wvw.types.WVWMapType;
+import de.justi.yagw2api.wrapper.IWVWMapType;
+import de.justi.yagw2api.wrapper.impl.WVWMapType;
 
 @ObjectTypeConverters({ @ObjectTypeConverter(name = "MapTypeConverter", objectType = WVWMapType.class, dataType = String.class, conversionValues = {
 		@ConversionValue(objectValue = "CENTER", dataValue = "CENTER"), @ConversionValue(objectValue = "RED", dataValue = "RED"), @ConversionValue(objectValue = "GREEN", dataValue = "GREEN"),

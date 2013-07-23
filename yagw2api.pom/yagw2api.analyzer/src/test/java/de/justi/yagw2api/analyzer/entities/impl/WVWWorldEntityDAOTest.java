@@ -9,14 +9,15 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.justi.yagw2api.analyzer.AbstractAnalyzerTest;
+import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
+import de.justi.yagw2api.wrapper.IModelFactory;
+import de.justi.yagw2api.wrapper.IWorld;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
-import de.justi.yagw2api.wrapper.model.IModelFactory;
-import de.justi.yagw2api.wrapper.model.IWorld;
-import de.justi.yagw2api.wrapper.model.types.WorldLocationType;
+import de.justi.yagw2api.wrapper.impl.WorldLocationType;
 
 public final class WVWWorldEntityDAOTest extends AbstractAnalyzerTest {
 
-	private IModelFactory modelFactory = YAGW2APIWrapper.getInjector().getInstance(IModelFactory.class);
+	private IModelFactory modelFactory = YAGW2APIWrapper.INSTANCE.getModelFactory();
 
 	private IWorld world1;
 	private IWorld world2;
@@ -63,17 +64,17 @@ public final class WVWWorldEntityDAOTest extends AbstractAnalyzerTest {
 	public void testFindWorldEntityByName() {
 		final WorldEntityDAO dao = new WorldEntityDAO();
 
-		assertFalse(dao.findWorldEntityByName(YAGW2APIWrapper.getCurrentLocale(), "test").isPresent());
-		assertFalse(dao.findWorldEntityByName(YAGW2APIWrapper.getCurrentLocale(), "test2").isPresent());
-		assertFalse(dao.findWorldEntityByName(YAGW2APIWrapper.getCurrentLocale(), "test3").isPresent());
-		assertFalse(dao.findWorldEntityByName(YAGW2APIWrapper.getCurrentLocale(), "test4").isPresent());
+		assertFalse(dao.findWorldEntityByName(YAGW2APIArenanet.INSTANCE.getCurrentLocale(), "test").isPresent());
+		assertFalse(dao.findWorldEntityByName(YAGW2APIArenanet.INSTANCE.getCurrentLocale(), "test2").isPresent());
+		assertFalse(dao.findWorldEntityByName(YAGW2APIArenanet.INSTANCE.getCurrentLocale(), "test3").isPresent());
+		assertFalse(dao.findWorldEntityByName(YAGW2APIArenanet.INSTANCE.getCurrentLocale(), "test4").isPresent());
 		assertTrue(dao.newWorldEntityOf(this.world1).isPresent());
 		assertTrue(dao.newWorldEntityOf(this.world2).isPresent());
 		assertTrue(dao.newWorldEntityOf(this.world3).isPresent());
-		assertTrue(dao.findWorldEntityByName(YAGW2APIWrapper.getCurrentLocale(), "test").isPresent());
-		assertTrue(dao.findWorldEntityByName(YAGW2APIWrapper.getCurrentLocale(), "test2").isPresent());
-		assertTrue(dao.findWorldEntityByName(YAGW2APIWrapper.getCurrentLocale(), "test3").isPresent());
-		assertFalse(dao.findWorldEntityByName(YAGW2APIWrapper.getCurrentLocale(), "test4").isPresent());
+		assertTrue(dao.findWorldEntityByName(YAGW2APIArenanet.INSTANCE.getCurrentLocale(), "test").isPresent());
+		assertTrue(dao.findWorldEntityByName(YAGW2APIArenanet.INSTANCE.getCurrentLocale(), "test2").isPresent());
+		assertTrue(dao.findWorldEntityByName(YAGW2APIArenanet.INSTANCE.getCurrentLocale(), "test3").isPresent());
+		assertFalse(dao.findWorldEntityByName(YAGW2APIArenanet.INSTANCE.getCurrentLocale(), "test4").isPresent());
 	}
 
 	@Test

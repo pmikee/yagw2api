@@ -9,7 +9,7 @@ import java.util.TimeZone;
 
 import com.sun.jersey.api.client.Client;
 
-import de.justi.yagwapi.common.utils.JerseyClientHelper;
+import de.justi.yagwapi.common.JerseyClientHelper;
 
 final class ServiceUtils {
 	public static final int REST_RETRY_COUNT = 10;

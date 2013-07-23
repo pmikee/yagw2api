@@ -21,7 +21,7 @@ import com.google.common.base.Optional;
 import de.justi.yagw2api.analyzer.entities.IWorldEnityDAO;
 import de.justi.yagw2api.analyzer.entities.IWorldEntity;
 import de.justi.yagw2api.analyzer.entities.YAGW2APIAnalyzerPersistence;
-import de.justi.yagw2api.wrapper.model.IWorld;
+import de.justi.yagw2api.wrapper.IWorld;
 
 final class WorldEntityDAO implements IWorldEnityDAO {
 	private static final Logger LOGGER = Logger.getLogger(WorldEntityDAO.class);

@@ -20,10 +20,10 @@ import com.sun.jersey.client.impl.CopyOnWriteHashMap;
 import de.justi.yagw2api.arenanet.IWVWMatchesDTO;
 import de.justi.yagw2api.arenanet.IWVWService;
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
+import de.justi.yagw2api.wrapper.IWVWInitializedMatchEvent;
+import de.justi.yagw2api.wrapper.IWVWMatch;
+import de.justi.yagw2api.wrapper.IWorld;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
-import de.justi.yagw2api.wrapper.model.IWorld;
-import de.justi.yagw2api.wrapper.model.wvw.IWVWMatch;
-import de.justi.yagw2api.wrapper.model.wvw.events.IWVWInitializedMatchEvent;
 import de.justi.yagwapi.common.IEvent;
 import de.justi.yagwapi.common.IHasChannel;
 
@@ -65,7 +65,7 @@ final class WVWSynchronizer extends AbstractScheduledService implements IHasChan
 				@Override
 				public void run() {
 					try {
-						YAGW2APIWrapper.getForkJoinPool().invoke(initAction);
+						YAGW2APIWrapper.INSTANCE.getForkJoinPool().invoke(initAction);
 						final long endTimestamp = System.currentTimeMillis();
 						if (LOGGER.isInfoEnabled()) {
 							LOGGER.info("Initialized " + this.getClass().getSimpleName() + " in " + (endTimestamp - startTimestamp) + "ms");
@@ -127,7 +127,7 @@ final class WVWSynchronizer extends AbstractScheduledService implements IHasChan
 			}
 			final long startTimestamp = System.currentTimeMillis();
 			final WVWSynchronizerAction action = new WVWSynchronizerAction(defensiveCopyOfMatchesMappedById);
-			YAGW2APIWrapper.getForkJoinPool().invoke(action);
+			YAGW2APIWrapper.INSTANCE.getForkJoinPool().invoke(action);
 
 			final long endTime = System.currentTimeMillis();
 			final long executionTime = endTime - startTimestamp;

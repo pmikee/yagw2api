@@ -15,11 +15,12 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.eventbus.EventBus;
 
 import de.justi.yagw2api.arenanet.IWVWMatchDTO;
+import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
+import de.justi.yagw2api.wrapper.IWVWMatch;
+import de.justi.yagw2api.wrapper.IWVWModelEventFactory;
+import de.justi.yagw2api.wrapper.IWVWModelFactory;
+import de.justi.yagw2api.wrapper.IWorld;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
-import de.justi.yagw2api.wrapper.model.IWorld;
-import de.justi.yagw2api.wrapper.model.wvw.IWVWMatch;
-import de.justi.yagw2api.wrapper.model.wvw.IWVWModelFactory;
-import de.justi.yagw2api.wrapper.model.wvw.events.IWVWModelEventFactory;
 import de.justi.yagwapi.common.IHasChannel;
 
 final class WVWSynchronizerInitAction extends AbstractSynchronizerAction<IWVWMatchDTO, WVWSynchronizerInitAction> implements IHasChannel {
@@ -27,8 +28,8 @@ final class WVWSynchronizerInitAction extends AbstractSynchronizerAction<IWVWMat
 	private static final long serialVersionUID = 2446713690087630720L;
 	private static final int MAX_CHUNK_SIZE = 100; // init all matches with one
 													// thread
-	private static final IWVWModelFactory WVW_MODEL_FACTORY = YAGW2APIWrapper.getInjector().getInstance(IWVWModelFactory.class);
-	private static final IWVWModelEventFactory WVW_MODEL_EVENT_FACTORY = YAGW2APIWrapper.getInjector().getInstance(IWVWModelEventFactory.class);
+	private static final IWVWModelFactory WVW_MODEL_FACTORY = YAGW2APIWrapper.INSTANCE.getWVWModelFactory();
+	private static final IWVWModelEventFactory WVW_MODEL_EVENT_FACTORY = YAGW2APIWrapper.INSTANCE.getWVWModelEventFactory();
 
 	final Set<IWVWMatch> matchReferencesBuffer;
 	final Set<IWorld> worldReferencesBuffer;
@@ -65,7 +66,7 @@ final class WVWSynchronizerInitAction extends AbstractSynchronizerAction<IWVWMat
 		if (LOGGER.isTraceEnabled()) {
 			LOGGER.trace("Going to perform " + this.getClass().getSimpleName() + " using content=" + content);
 		}
-		final IWVWMatch match = WVW_MODEL_FACTORY.newMatchBuilder().fromMatchDTO(content, YAGW2APIWrapper.getCurrentLocale()).build();
+		final IWVWMatch match = WVW_MODEL_FACTORY.newMatchBuilder().fromMatchDTO(content, YAGW2APIArenanet.INSTANCE.getCurrentLocale()).build();
 		final long completedMatchModelBuildTimestamp = System.currentTimeMillis();
 		if (LOGGER.isTraceEnabled()) {
 			LOGGER.trace("Done with build of " + IWVWMatch.class.getSimpleName() + " for content=" + content + " after " + (completedMatchModelBuildTimestamp - startTimestamp) + "ms");

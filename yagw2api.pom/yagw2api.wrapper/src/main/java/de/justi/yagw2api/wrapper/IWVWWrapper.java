@@ -3,10 +3,6 @@ package de.justi.yagw2api.wrapper;
 import java.util.Map;
 import java.util.Set;
 
-import de.justi.yagw2api.wrapper.model.IWorld;
-import de.justi.yagw2api.wrapper.model.wvw.IWVWMap;
-import de.justi.yagw2api.wrapper.model.wvw.IWVWMatch;
-
 
 public interface IWVWWrapper{
 	/**
