@@ -47,10 +47,10 @@ import com.google.common.util.concurrent.Service;
 
 public final class TTSUtils {
 	private static final int DEFAULT_PRIORITY = 0;
+	private static final double DEFAULT_RATE = 1.2d;
 	private static final String MP3_SUFFIX = ".mp3";
 	private static final int MAXIMUM_PLAY_TIME_PER_MP3 = 15000;
 	private static final int MAX_TEXT_LENGTH_PER_REQUEST = 100;
-	private static final double RATE = 1.5d;
 	private static final Logger LOGGER = Logger.getLogger(TTSUtils.class);
 	private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:11.0) " + "Gecko/20100101 Firefox/11.0";
 	private static final long MP3_CACHE_EXPIRE_HOURS = 24;
@@ -61,12 +61,15 @@ public final class TTSUtils {
 		private final Locale locale;
 		private final int priority;
 		private final Date creationTimestamp;
+		private final double rate;
 
-		public TTSTask(String text, Locale locale, int priority) {
+		public TTSTask(String text, Locale locale, int priority, double rate) {
+			checkArgument(rate > 0);
 			this.text = checkNotNull(text);
 			this.locale = checkNotNull(locale);
 			this.creationTimestamp = new Date();
 			this.priority = priority;
+			this.rate = rate;
 		}
 
 		/**
@@ -98,14 +101,22 @@ public final class TTSUtils {
 		}
 
 		@Override
-		public int compareTo(TTSTask o) {
+		public final int compareTo(TTSTask o) {
 			return DoubleMath.roundToInt(
 					(Math.signum(new Integer(this.getPriority()).compareTo(o.getPriority())) * 10d) + Math.signum(this.getCreationTimestamp().compareTo(o.getCreationTimestamp())), RoundingMode.FLOOR);
 		}
 
+		/**
+		 * @return the rate
+		 */
+		public final double getRate() {
+			return rate;
+		}
+
 		@Override
 		public String toString() {
-			return Objects.toStringHelper(this).add("priority", this.getPriority()).add("timestamp", this.getCreationTimestamp()).add("locale", this.getLocale()).addValue(this.getText()).toString();
+			return Objects.toStringHelper(this).add("priority", this.getPriority()).add("timestamp", this.getCreationTimestamp()).add("locale", this.getLocale()).add("rate", this.getRate())
+					.addValue(this.getText()).toString();
 		}
 	}
 
@@ -158,7 +169,7 @@ public final class TTSUtils {
 						mp3s.add(retrieveMP3File(block, task.getLocale()));
 					}
 					for (File mp3 : mp3s) {
-						playMP3File(mp3);
+						playMP3File(mp3, task.getRate());
 					}
 					if (LOGGER.isDebugEnabled()) {
 						LOGGER.debug("Handled " + task);
@@ -239,10 +250,11 @@ public final class TTSUtils {
 		out.close();
 	}
 
-	private static void playMP3File(final File mp3File) {
+	private static void playMP3File(final File mp3File, final double rate) {
 		checkNotNull(mp3File);
 		checkArgument(mp3File.exists());
 		checkArgument(mp3File.isFile());
+		checkArgument(rate > 0);
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Going to play " + mp3File);
 		}
@@ -251,7 +263,7 @@ public final class TTSUtils {
 			final MediaPlayer mediaPlayer = new MediaPlayer(mp3Media);
 			synchronized (mediaPlayer) {
 				mediaPlayer.setAutoPlay(false);
-				mediaPlayer.setRate(RATE);
+				mediaPlayer.setRate(rate);
 				mediaPlayer.setOnEndOfMedia(new Runnable() {
 					@Override
 					public void run() {
@@ -341,12 +353,25 @@ public final class TTSUtils {
 	public static synchronized void readOut(final String text, final Locale locale) {
 		checkNotNull(text);
 		checkNotNull(locale);
-		readOut(text, locale, DEFAULT_PRIORITY);
+		readOut(text, locale, DEFAULT_PRIORITY, DEFAULT_RATE);
 	}
 
 	public static synchronized void readOut(final String text, final Locale locale, int priority) {
 		checkNotNull(text);
 		checkNotNull(locale);
-		TASK_QUEUE.add(new TTSTask(text, locale, priority));
+		readOut(text, locale, priority, DEFAULT_RATE);
+	}
+
+	public static synchronized void readOut(final String text, final Locale locale, double rate) {
+		checkNotNull(text);
+		checkNotNull(locale);
+		readOut(text, locale, DEFAULT_PRIORITY, rate);
+	}
+
+	public static synchronized void readOut(final String text, final Locale locale, int priority, double rate) {
+		checkNotNull(text);
+		checkNotNull(locale);
+		checkArgument(rate > 0);
+		TASK_QUEUE.add(new TTSTask(text, locale, priority, rate));
 	}
 }

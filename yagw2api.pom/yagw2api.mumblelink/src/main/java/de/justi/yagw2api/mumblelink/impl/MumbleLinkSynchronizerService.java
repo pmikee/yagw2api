@@ -20,7 +20,7 @@ import de.justi.yagwapi.common.IHasChannel;
 
 final class MumbleLinkSynchronizerService extends AbstractScheduledService implements IHasChannel {
 	private static final int INITIAL_UI_TICK_VALUE = -1;
-	private static final int DELAY_MILLIS = 500;
+	private static final int DELAY_MILLIS = 1000;
 	private static final Logger LOGGER = Logger.getLogger(MumbleLinkSynchronizerService.class);
 	private volatile Pointer sharedMemory = null;
 	private volatile HANDLE sharedFile = null;

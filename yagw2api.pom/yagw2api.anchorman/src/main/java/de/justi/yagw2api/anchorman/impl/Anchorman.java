@@ -2,6 +2,10 @@ package de.justi.yagw2api.anchorman.impl;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
+
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 import de.justi.yagw2api.anchorman.IAnchorman;
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
 import de.justi.yagw2api.mumblelink.IMumbleLink;
@@ -58,21 +62,26 @@ class Anchorman implements IAnchorman, IMumbleLinkListener, IWVWMatchListener, I
 		return this.running;
 	}
 
-	private void readOut(String text) {
-		TTSUtils.readOut(text, YAGW2APIArenanet.INSTANCE.getCurrentLocale());
+	private void readOut(String bundleName, String textKey, Object... arguments) {
+		final Locale locale = YAGW2APIArenanet.INSTANCE.getCurrentLocale();
+		final ResourceBundle bundle = ResourceBundle.getBundle(bundleName, locale);
+		final String rawText = bundle.getString(textKey);
+		final String text = String.format(rawText, arguments);
+		System.out.println(text);
+		TTSUtils.readOut(text, locale);
 	}
 
 	@Override
 	public void onAvatarChange(IMumbleLinkAvatarChangeEvent event) {
 		if (this.isRunning()) {
 			if (event.getOldAvatarName().isPresent() && event.getNewAvatarName().isPresent()) {
-				this.readOut("Sie haben den Charakter von " + event.getOldAvatarName().get() + " auf " + event.getNewAvatarName().get() + " gewechselt.");
+				this.readOut("anchorman", "changed_character", event.getOldAvatarName().get(), event.getNewAvatarName().get());
 			} else if (event.getOldAvatarName().isPresent()) {
 				checkState(!event.getNewAvatarName().isPresent());
-				this.readOut("Sie haben bisher " + event.getOldAvatarName().get() + " gespielt, sich jetzt aber ausgeloggt.");
+				this.readOut("anchorman", "logged_out", event.getOldAvatarName().get());
 			} else if (event.getNewAvatarName().isPresent()) {
 				checkState(!event.getOldAvatarName().isPresent());
-				this.readOut("Sie sich als " + event.getNewAvatarName().get() + " eingeloggt.");
+				this.readOut("anchorman", "logged_in", event.getNewAvatarName().get());
 			} else {
 				throw new IllegalStateException(this + " is unable to handle " + event);
 			}
@@ -81,15 +90,16 @@ class Anchorman implements IAnchorman, IMumbleLinkListener, IWVWMatchListener, I
 
 	@Override
 	public void onMapChange(IMumbleLinkMapChangeEvent event) {
+
 		if (this.isRunning()) {
 			if (event.getOldMapId().isPresent() && event.getNewMapId().isPresent()) {
-				this.readOut("Sie haben von Karte " + event.getOldMapId().get() + " auf Karte " + event.getNewMapId().get() + " gewechselt.");
+				this.readOut("anchorman", "changed_map", event.getOldMapId().get(), event.getNewMapId().get());
 			} else if (event.getOldMapId().isPresent()) {
 				checkState(!event.getNewMapId().isPresent());
-				this.readOut("Sie haben Karte " + event.getOldMapId().get() + " verlassen.");
+				this.readOut("anchorman", "left_map", event.getOldMapId().get());
 			} else if (event.getNewMapId().isPresent()) {
 				checkState(!event.getOldMapId().isPresent());
-				this.readOut("Sie haben Karte " + event.getNewMapId().get() + " betreten.");
+				this.readOut("anchorman", "entered_map", event.getNewMapId().get());
 			} else {
 				throw new IllegalStateException(this + " is unable to handle " + event);
 			}
