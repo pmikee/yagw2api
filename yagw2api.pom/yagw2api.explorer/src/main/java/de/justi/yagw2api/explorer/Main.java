@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
 
 import de.justi.yagw2api.analyzer.IWVWAnalyzer;
 import de.justi.yagw2api.analyzer.YAGW2APIAnalyzer;
-import de.justi.yagw2api.analyzer.entities.YAGW2APIAnalyzerPersistence;
+import de.justi.yagw2api.analyzer.YAGW2APIAnalyzerPersistence;
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
 import de.justi.yagw2api.explorer.view.MainWindow;
 import de.justi.yagw2api.wrapper.IWVWWrapper;

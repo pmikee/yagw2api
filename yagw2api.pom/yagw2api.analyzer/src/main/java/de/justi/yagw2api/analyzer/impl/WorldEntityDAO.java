@@ -1,4 +1,4 @@
-package de.justi.yagw2api.analyzer.entities.impl;
+package de.justi.yagw2api.analyzer.impl;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -18,9 +18,9 @@ import org.apache.log4j.Logger;
 
 import com.google.common.base.Optional;
 
-import de.justi.yagw2api.analyzer.entities.IWorldEnityDAO;
-import de.justi.yagw2api.analyzer.entities.IWorldEntity;
-import de.justi.yagw2api.analyzer.entities.YAGW2APIAnalyzerPersistence;
+import de.justi.yagw2api.analyzer.IWorldEnityDAO;
+import de.justi.yagw2api.analyzer.IWorldEntity;
+import de.justi.yagw2api.analyzer.YAGW2APIAnalyzerPersistence;
 import de.justi.yagw2api.wrapper.IWorld;
 
 final class WorldEntityDAO implements IWorldEnityDAO {

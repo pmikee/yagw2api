@@ -1,4 +1,4 @@
-package de.justi.yagw2api.analyzer.entities;
+package de.justi.yagw2api.analyzer;
 
 import com.google.inject.AbstractModule;
 

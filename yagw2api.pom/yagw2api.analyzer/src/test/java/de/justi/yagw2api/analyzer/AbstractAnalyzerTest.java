@@ -5,7 +5,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 
-import de.justi.yagw2api.analyzer.entities.YAGW2APIAnalyzerPersistence;
 import de.justi.yagw2api.test.AbstractYAGW2APITest;
 
 public abstract class AbstractAnalyzerTest extends AbstractYAGW2APITest {

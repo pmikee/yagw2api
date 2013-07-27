@@ -1,4 +1,4 @@
-package de.justi.yagw2api.analyzer.utils.converter;
+package de.justi.yagw2api.analyzer.utils;
 
 import static com.google.common.base.Preconditions.checkArgument;
 

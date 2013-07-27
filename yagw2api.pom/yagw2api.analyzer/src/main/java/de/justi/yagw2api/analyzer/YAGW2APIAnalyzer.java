@@ -5,17 +5,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-import de.justi.yagw2api.analyzer.entities.IWorldEnityDAO;
-import de.justi.yagw2api.analyzer.entities.YAGWAPIAnalyzerPersistenceModule;
-import de.justi.yagw2api.analyzer.entities.impl.AnalyzerEntitiesModule;
-import de.justi.yagw2api.analyzer.entities.wvw.IWVWMatchEntityDAO;
-import de.justi.yagw2api.analyzer.entities.wvw.impl.AnalyzerWVWEntitiesModule;
-import de.justi.yagw2api.analyzer.impl.AnalyzerWVWModule;
+import de.justi.yagw2api.analyzer.impl.Module;
 import de.justi.yagw2api.analyzer.utils.DerbyServerHelper;
 
 public enum YAGW2APIAnalyzer {
-	DEFAULT(Guice.createInjector(new AnalyzerWVWModule(), new AnalyzerEntitiesModule(), new AnalyzerWVWEntitiesModule(), new YAGWAPIAnalyzerPersistenceModule(false))), TEST(Guice.createInjector(
-			new AnalyzerWVWModule(), new AnalyzerEntitiesModule(), new AnalyzerWVWEntitiesModule(), new YAGWAPIAnalyzerPersistenceModule(true)));
+	DEFAULT(Guice.createInjector(new Module(), new YAGWAPIAnalyzerPersistenceModule(false))), TEST(Guice.createInjector(new Module(), new YAGWAPIAnalyzerPersistenceModule(true)));
 
 	static {
 		// launch the db server

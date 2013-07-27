@@ -6,6 +6,8 @@ import org.apache.derby.drda.NetworkServerControl;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
+import de.justi.yagwapi.common.LogOutputStream;
+
 public final class DerbyServerHelper extends Thread implements Runnable {
 	private static final Logger LOGGER = Logger.getLogger(DerbyServerHelper.class);
 

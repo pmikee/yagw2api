@@ -1,4 +1,4 @@
-package de.justi.yagw2api.analyzer.entities;
+package de.justi.yagw2api.analyzer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
@@ -15,7 +15,6 @@ import org.eclipse.persistence.config.SystemProperties;
 import org.eclipse.persistence.exceptions.PersistenceUnitLoadingException;
 import org.eclipse.persistence.jpa.ArchiveFactory;
 
-import de.justi.yagw2api.analyzer.YAGW2APIAnalyzer;
 import de.justi.yagw2api.analyzer.utils.ArchiveFactoryImpl;
 
 public enum YAGW2APIAnalyzerPersistence {

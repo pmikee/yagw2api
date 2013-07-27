@@ -1,4 +1,4 @@
-package de.justi.yagw2api.analyzer.entities;
+package de.justi.yagw2api.analyzer;
 
 import java.util.Collection;
 import java.util.Locale;

@@ -1,4 +1,4 @@
-package de.justi.yagw2api.analyzer.entities.wvw.impl;
+package de.justi.yagw2api.analyzer.impl;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -7,7 +7,7 @@ import javax.persistence.Embeddable;
 
 import com.google.common.base.Objects;
 
-import de.justi.yagw2api.analyzer.entities.wvw.IWVWScoresEmbeddable;
+import de.justi.yagw2api.analyzer.IWVWScoresEmbeddable;
 
 @Embeddable
 final class WVWScoresEmbeddable implements IWVWScoresEmbeddable {

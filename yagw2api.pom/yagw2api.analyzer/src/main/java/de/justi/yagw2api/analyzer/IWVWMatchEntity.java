@@ -1,12 +1,9 @@
-package de.justi.yagw2api.analyzer.entities.wvw;
+package de.justi.yagw2api.analyzer;
 
 import java.util.Date;
 import java.util.Map;
 
 import com.google.common.base.Optional;
-
-import de.justi.yagw2api.analyzer.entities.IEntity;
-import de.justi.yagw2api.analyzer.entities.IWorldEntity;
 
 public interface IWVWMatchEntity extends IEntity {
 	void setOriginMatchId(String originMatchId);

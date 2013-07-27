@@ -1,4 +1,4 @@
-package de.justi.yagw2api.analyzer.entities.impl;
+package de.justi.yagw2api.analyzer.impl;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -26,11 +26,9 @@ import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 
-import de.justi.yagw2api.analyzer.entities.AbstractEntity;
-import de.justi.yagw2api.analyzer.entities.IWorldEntity;
-import de.justi.yagw2api.analyzer.entities.wvw.IWVWMatchEntity;
-import de.justi.yagw2api.analyzer.entities.wvw.impl.WVWMatchEntity;
-import de.justi.yagw2api.analyzer.utils.converter.LocaleConverter;
+import de.justi.yagw2api.analyzer.IWVWMatchEntity;
+import de.justi.yagw2api.analyzer.IWorldEntity;
+import de.justi.yagw2api.analyzer.utils.LocaleConverter;
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
 import de.justi.yagw2api.wrapper.IWorld;
 import de.justi.yagw2api.wrapper.IWorldLocationType;

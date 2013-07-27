@@ -10,7 +10,7 @@ public abstract class AbstractYAGW2APITest {
 	private static final Logger LOGGER = Logger.getLogger(AbstractYAGW2APITest.class);
 
 	@Rule
-	public TestName testMethodName = new TestName();
+	public final TestName testMethodName = new TestName();
 
 	@Before
 	public final void beforeAbstractYAGW2APITest() {

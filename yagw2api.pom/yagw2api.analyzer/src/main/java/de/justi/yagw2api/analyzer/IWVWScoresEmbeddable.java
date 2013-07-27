@@ -1,4 +1,4 @@
-package de.justi.yagw2api.analyzer.entities.wvw;
+package de.justi.yagw2api.analyzer;
 
 
 public interface IWVWScoresEmbeddable{

@@ -1,4 +1,4 @@
-package de.justi.yagw2api.analyzer.entities.wvw.impl;
+package de.justi.yagw2api.analyzer.impl;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
@@ -28,10 +28,9 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSortedSet;
 import com.sun.jersey.client.impl.CopyOnWriteHashMap;
 
-import de.justi.yagw2api.analyzer.entities.AbstractEntity;
-import de.justi.yagw2api.analyzer.entities.wvw.IWVWMapEntity;
-import de.justi.yagw2api.analyzer.entities.wvw.IWVWMatchEntity;
-import de.justi.yagw2api.analyzer.entities.wvw.IWVWScoresEmbeddable;
+import de.justi.yagw2api.analyzer.IWVWMapEntity;
+import de.justi.yagw2api.analyzer.IWVWMatchEntity;
+import de.justi.yagw2api.analyzer.IWVWScoresEmbeddable;
 import de.justi.yagw2api.wrapper.IWVWMapType;
 import de.justi.yagw2api.wrapper.impl.WVWMapType;
 

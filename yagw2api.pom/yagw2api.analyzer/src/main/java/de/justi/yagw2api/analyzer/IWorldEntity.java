@@ -1,11 +1,10 @@
-package de.justi.yagw2api.analyzer.entities;
+package de.justi.yagw2api.analyzer;
 
 import java.util.List;
 import java.util.Locale;
 
 import com.google.common.base.Optional;
 
-import de.justi.yagw2api.analyzer.entities.wvw.IWVWMatchEntity;
 import de.justi.yagw2api.wrapper.IWorld;
 import de.justi.yagw2api.wrapper.IWorldLocationType;
 

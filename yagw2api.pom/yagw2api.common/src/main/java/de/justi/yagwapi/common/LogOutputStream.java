@@ -1,4 +1,4 @@
-package de.justi.yagw2api.analyzer.utils;
+package de.justi.yagwapi.common;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

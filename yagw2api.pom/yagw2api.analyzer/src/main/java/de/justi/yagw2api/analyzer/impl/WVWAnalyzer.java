@@ -10,10 +10,10 @@ import org.apache.log4j.Logger;
 import com.google.inject.Inject;
 
 import de.justi.yagw2api.analyzer.IWVWAnalyzer;
-import de.justi.yagw2api.analyzer.entities.IWorldEnityDAO;
-import de.justi.yagw2api.analyzer.entities.IWorldEntity;
-import de.justi.yagw2api.analyzer.entities.wvw.IWVWMatchEntity;
-import de.justi.yagw2api.analyzer.entities.wvw.IWVWMatchEntityDAO;
+import de.justi.yagw2api.analyzer.IWVWMatchEntity;
+import de.justi.yagw2api.analyzer.IWVWMatchEntityDAO;
+import de.justi.yagw2api.analyzer.IWorldEnityDAO;
+import de.justi.yagw2api.analyzer.IWorldEntity;
 import de.justi.yagw2api.wrapper.IWVWInitializedMatchEvent;
 import de.justi.yagw2api.wrapper.IWVWMapScoresChangedEvent;
 import de.justi.yagw2api.wrapper.IWVWMatch;
