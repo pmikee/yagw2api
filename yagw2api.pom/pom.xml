@@ -34,6 +34,7 @@
 		<de.justi.yagw2api.analyzer.version>0.0.1-SNAPSHOT</de.justi.yagw2api.analyzer.version>
 		<de.justi.yagw2api.explorer.version>0.0.1-SNAPSHOT</de.justi.yagw2api.explorer.version>
 		<de.justi.yagw2api.webapp.version>0.0.1-SNAPSHOT</de.justi.yagw2api.webapp.version>
+		<de.justi.yagw2api.anchorman.version>0.0.1-SNAPSHOT</de.justi.yagw2api.anchorman.version>
 	</properties>
 
 	<modules>
@@ -45,27 +46,8 @@
 		<module>yagw2api.wrapper</module>
 		<module>yagw2api.analyzer</module>
 		<module>yagw2api.explorer</module>
+		<module>yagw2api.anchorman</module>
 	</modules>
-
-	<profiles>
-		<profile>
-			<id>complete</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<modules>
-				<module>yagw2api.test</module>
-				<module>yagw2api.common</module>
-				<module>yagw2api.gw2stats</module>
-				<module>yagw2api.mumblelink</module>
-				<module>yagw2api.arenanet</module>
-				<module>yagw2api.wrapper</module>
-				<module>yagw2api.analyzer</module>
-				<module>yagw2api.explorer</module>
-				<module>yagw2api.webapp</module>
-			</modules>
-		</profile>
-	</profiles>
 
 	<build>
 		<plugins>
@@ -230,6 +212,11 @@
 				<artifactId>yagw2api.explorer</artifactId>
 				<groupId>de.justi</groupId>
 				<version>${de.justi.yagw2api.explorer.version}</version>
+			</dependency>
+			<dependency>
+				<artifactId>yagw2api.anchorman</artifactId>
+				<groupId>de.justi</groupId>
+				<version>${de.justi.yagw2api.anchorman.version}</version>
 			</dependency>
 
 			<dependency>

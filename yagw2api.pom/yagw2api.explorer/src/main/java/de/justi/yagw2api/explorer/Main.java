@@ -11,8 +11,11 @@ import org.apache.log4j.Logger;
 import de.justi.yagw2api.analyzer.IWVWAnalyzer;
 import de.justi.yagw2api.analyzer.YAGW2APIAnalyzer;
 import de.justi.yagw2api.analyzer.YAGW2APIAnalyzerPersistence;
+import de.justi.yagw2api.anchorman.IAnchorman;
+import de.justi.yagw2api.anchorman.YAGW2APIAnchorman;
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
 import de.justi.yagw2api.explorer.view.MainWindow;
+import de.justi.yagw2api.mumblelink.YAGW2APIMumbleLink;
 import de.justi.yagw2api.wrapper.IWVWWrapper;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
 
@@ -61,5 +64,9 @@ public final class Main {
 		} catch (Exception e) {
 			LOGGER.fatal("Uncought exception while running " + Main.class.getName() + "#main(String[])", e);
 		}
+
+		final IAnchorman anchorman = YAGW2APIAnchorman.INSTANCE.getAnchorman();
+		anchorman.init(apiWrapper, YAGW2APIMumbleLink.INSTANCE.getMumbleLink());
+		anchorman.start();
 	}
 }

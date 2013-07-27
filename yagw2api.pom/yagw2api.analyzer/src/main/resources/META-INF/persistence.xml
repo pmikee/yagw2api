@@ -5,9 +5,9 @@
 	<persistence-unit name="yagw2api" transaction-type="RESOURCE_LOCAL">
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
-		<class>de.justi.yagw2api.analyzer.entities.impl.WorldEntity</class>
-		<class>de.justi.yagw2api.analyzer.entities.wvw.impl.WVWMatchEntity</class>
-		<class>de.justi.yagw2api.analyzer.entities.wvw.impl.WVWMapEntity</class>
+		<class>de.justi.yagw2api.analyzer.impl.WorldEntity</class>
+		<class>de.justi.yagw2api.analyzer.impl.WVWMatchEntity</class>
+		<class>de.justi.yagw2api.analyzer.impl.WVWMapEntity</class>
 		<properties>
 			<property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.EmbeddedDriver" />
 			<property name="javax.persistence.jdbc.url" value="jdbc:derby:yagw2api;create=true" />

@@ -121,8 +121,8 @@
 			<artifactId>mydoggy-api</artifactId>
 		</dependency>
 		<dependency>
-			<artifactId>yagw2api.wrapper</artifactId>
 			<groupId>de.justi</groupId>
+			<artifactId>yagw2api.wrapper</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>de.justi</groupId>
@@ -133,8 +133,12 @@
 			<artifactId>yagw2api.mumblelink</artifactId>
 		</dependency>
 		<dependency>
-			<artifactId>yagw2api.analyzer</artifactId>
 			<groupId>de.justi</groupId>
+			<artifactId>yagw2api.analyzer</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.justi</groupId>
+			<artifactId>yagw2api.anchorman</artifactId>
 		</dependency>
 	</dependencies>
 </project>

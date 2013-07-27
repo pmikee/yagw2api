@@ -72,7 +72,6 @@ import de.justi.yagw2api.wrapper.IWVWObjectiveClaimedEvent;
 import de.justi.yagw2api.wrapper.IWVWObjectiveEndOfBuffEvent;
 import de.justi.yagw2api.wrapper.IWVWObjectiveUnclaimedEvent;
 import de.justi.yagw2api.wrapper.IWVWWrapper;
-import de.justi.yagwapi.common.TTSUtils;
 
 public final class MainWindow extends AbstractWindow implements IWVWMapListener {
 	private static final Locale LOCALE_ES = Locale.forLanguageTag("es");
@@ -566,17 +565,14 @@ public final class MainWindow extends AbstractWindow implements IWVWMapListener 
 
 	@Override
 	public void onObjectiveCapturedEvent(IWVWObjectiveCaptureEvent event) {
-		TTSUtils.readOut(event.getObjective().getLabel().get() + " wurde von " + event.getNewOwningWorld().getName().get() + " erobert.", YAGW2APIArenanet.getInstance().getCurrentLocale(), 3);
 	}
 
 	@Override
 	public void onObjectiveEndOfBuffEvent(IWVWObjectiveEndOfBuffEvent event) {
-		TTSUtils.readOut(event.getObjective().getLabel().get() + " hat keinen Buff mehr.", YAGW2APIArenanet.getInstance().getCurrentLocale(), 2);
 	}
 
 	@Override
 	public void onObjectiveClaimedEvent(IWVWObjectiveClaimedEvent event) {
-		TTSUtils.readOut(event.getObjective().getLabel().get() + " wurde von " + event.getClaimingGuild().getName() + " eingenommen.", YAGW2APIArenanet.getInstance().getCurrentLocale(), -1);
 	}
 
 	@Override
