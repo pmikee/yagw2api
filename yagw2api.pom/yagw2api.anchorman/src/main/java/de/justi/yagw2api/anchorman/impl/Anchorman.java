@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
+import java.util.Collections;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -57,7 +58,7 @@ class Anchorman implements IAnchorman, IMumbleLinkListener, IWVWMatchListener, I
 	private Optional<IMumbleLink> mumbleLink = Optional.absent();
 	private Optional<IWVWWrapper> wrapper = Optional.absent();
 
-	private Optional<Set<IWVWMatch>> matchFilter = Optional.absent();
+	private Optional<Set<IWVWMatch>> matchFilter = Optional.of(Collections.<IWVWMatch> emptySet());
 	private Optional<Set<IWVWMapType>> mapTypeFilter = Optional.absent();
 
 	@Override
