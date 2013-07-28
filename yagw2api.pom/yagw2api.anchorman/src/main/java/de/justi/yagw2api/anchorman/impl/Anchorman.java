@@ -101,13 +101,13 @@ class Anchorman implements IAnchorman, IMumbleLinkListener, IWVWMatchListener, I
 		checkNotNull(event);
 		if (this.isRunning()) {
 			if (event.getOldAvatarName().isPresent() && event.getNewAvatarName().isPresent()) {
-				this.readOut(BUNDLE_KEY_CHANGED_CHARACTER, 0, event.getOldAvatarName().get(), event.getNewAvatarName().get());
+				this.readOut(BUNDLE_KEY_CHANGED_CHARACTER, Integer.MAX_VALUE, event.getOldAvatarName().get(), event.getNewAvatarName().get());
 			} else if (event.getOldAvatarName().isPresent()) {
 				checkState(!event.getNewAvatarName().isPresent());
-				this.readOut(BUNDLE_KEY_LOGGED_OUT, 0, event.getOldAvatarName().get());
+				this.readOut(BUNDLE_KEY_LOGGED_OUT, Integer.MAX_VALUE, event.getOldAvatarName().get());
 			} else if (event.getNewAvatarName().isPresent()) {
 				checkState(!event.getOldAvatarName().isPresent());
-				this.readOut(BUNDLE_KEY_LOGGED_IN, 0, event.getNewAvatarName().get());
+				this.readOut(BUNDLE_KEY_LOGGED_IN, Integer.MAX_VALUE, event.getNewAvatarName().get());
 			} else {
 				throw new IllegalStateException(this + " is unable to handle " + event);
 			}
@@ -119,13 +119,13 @@ class Anchorman implements IAnchorman, IMumbleLinkListener, IWVWMatchListener, I
 		checkNotNull(event);
 		if (this.isRunning()) {
 			if (event.getOldMapId().isPresent() && event.getNewMapId().isPresent()) {
-				this.readOut(BUNDLE_BASENAME, 0, BUNDLE_KEY_CHANGED_MAP, event.getOldMapId().get(), event.getNewMapId().get());
+				this.readOut(BUNDLE_BASENAME, Integer.MAX_VALUE, BUNDLE_KEY_CHANGED_MAP, event.getOldMapId().get(), event.getNewMapId().get());
 			} else if (event.getOldMapId().isPresent()) {
 				checkState(!event.getNewMapId().isPresent());
-				this.readOut(BUNDLE_BASENAME, 0, BUNDLE_KEY_LEFT_MAP, event.getOldMapId().get());
+				this.readOut(BUNDLE_BASENAME, Integer.MAX_VALUE, BUNDLE_KEY_LEFT_MAP, event.getOldMapId().get());
 			} else if (event.getNewMapId().isPresent()) {
 				checkState(!event.getOldMapId().isPresent());
-				this.readOut(BUNDLE_BASENAME, 0, BUNDLE_KEY_ENTERED_MAP, event.getNewMapId().get());
+				this.readOut(BUNDLE_BASENAME, Integer.MAX_VALUE, BUNDLE_KEY_ENTERED_MAP, event.getNewMapId().get());
 			} else {
 				throw new IllegalStateException(this + " is unable to handle " + event);
 			}
