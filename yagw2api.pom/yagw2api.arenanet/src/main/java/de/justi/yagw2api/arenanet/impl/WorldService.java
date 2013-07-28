@@ -49,9 +49,9 @@ final class WorldService implements IWorldService {
 
 	// FIELDS
 	private final Cache<Locale, Optional<IWorldNameDTO[]>> worldNamesCache = CacheBuilder.newBuilder().expireAfterWrite(WOLRD_NAMES_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS)
-			.removalListener(new RemovalListener<Locale, IWorldNameDTO[]>() {
+			.removalListener(new RemovalListener<Locale, Optional<IWorldNameDTO[]>>() {
 				@Override
-				public void onRemoval(RemovalNotification<Locale, IWorldNameDTO[]> notification) {
+				public void onRemoval(RemovalNotification<Locale, Optional<IWorldNameDTO[]>> notification) {
 					// synchronize worldNamesCache
 					// and worldNameCaches
 					if (WorldService.this.worldNameCaches.containsKey(notification.getKey())) {

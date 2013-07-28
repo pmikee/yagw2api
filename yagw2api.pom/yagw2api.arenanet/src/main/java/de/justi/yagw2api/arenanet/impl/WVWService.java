@@ -59,9 +59,9 @@ final class WVWService implements IWVWService {
 
 	// caches
 	private final Cache<Locale, Optional<IWVWObjectiveNameDTO[]>> objectiveNamesCache = CacheBuilder.newBuilder().expireAfterWrite(OBJECTIVE_NAMES_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS)
-			.removalListener(new RemovalListener<Locale, IWVWObjectiveNameDTO[]>() {
+			.removalListener(new RemovalListener<Locale, Optional<IWVWObjectiveNameDTO[]>>() {
 				@Override
-				public void onRemoval(RemovalNotification<Locale, IWVWObjectiveNameDTO[]> notification) {
+				public void onRemoval(RemovalNotification<Locale, Optional<IWVWObjectiveNameDTO[]>> notification) {
 					// synchronize
 					// objectiveNamesCache and
 					// objectiveNameCaches
