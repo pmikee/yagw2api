@@ -16,13 +16,14 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Queue;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
@@ -40,6 +41,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Queues;
 import com.google.common.math.DoubleMath;
 import com.google.common.util.concurrent.AbstractScheduledService;
@@ -102,8 +104,9 @@ public final class TTSUtils {
 
 		@Override
 		public final int compareTo(TTSTask o) {
-			return DoubleMath.roundToInt(
-					(Math.signum(new Integer(this.getPriority()).compareTo(o.getPriority())) * 10d) + Math.signum(this.getCreationTimestamp().compareTo(o.getCreationTimestamp())), RoundingMode.FLOOR);
+			return DoubleMath
+					.roundToInt((Math.signum(new Integer(this.getPriority()).compareTo(o.getPriority())) * -10d) + Math.signum(this.getCreationTimestamp().compareTo(o.getCreationTimestamp())),
+							RoundingMode.FLOOR);
 		}
 
 		/**
@@ -120,7 +123,7 @@ public final class TTSUtils {
 		}
 	}
 
-	private static final Queue<TTSTask> TASK_QUEUE = Queues.newPriorityBlockingQueue();
+	private static final PriorityBlockingQueue<TTSTask> TASK_QUEUE = Queues.newPriorityBlockingQueue();
 
 	private static volatile boolean initialized = false;
 
@@ -156,8 +159,13 @@ public final class TTSUtils {
 			protected void runOneIteration() throws Exception {
 				initializeIfRequired();
 				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Queue: " + TASK_QUEUE);
+					final List<TTSTask> tasks = Lists.newArrayList(TASK_QUEUE);
+					Collections.sort(tasks);
+					for (TTSTask task : tasks) {
+						LOGGER.debug(task);
+					}
 				}
+
 				final TTSTask task = TASK_QUEUE.poll();
 
 				if (task != null) {
@@ -350,10 +358,26 @@ public final class TTSUtils {
 		return result;
 	}
 
+	public static synchronized void readOut(final String rawText, final Locale locale, Object... arguments) {
+		checkNotNull(rawText);
+		checkNotNull(locale);
+		checkNotNull(arguments);
+		final String text = String.format(rawText, arguments);
+		readOut(text, locale);
+	}
+
 	public static synchronized void readOut(final String text, final Locale locale) {
 		checkNotNull(text);
 		checkNotNull(locale);
 		readOut(text, locale, DEFAULT_PRIORITY, DEFAULT_RATE);
+	}
+
+	public static synchronized void readOut(final String rawText, final Locale locale, int priority, Object... arguments) {
+		checkNotNull(rawText);
+		checkNotNull(locale);
+		checkNotNull(arguments);
+		final String text = String.format(rawText, arguments);
+		readOut(text, locale, priority);
 	}
 
 	public static synchronized void readOut(final String text, final Locale locale, int priority) {
@@ -362,10 +386,29 @@ public final class TTSUtils {
 		readOut(text, locale, priority, DEFAULT_RATE);
 	}
 
+	public static synchronized void readOut(final String rawText, final Locale locale, double rate, Object... arguments) {
+		checkNotNull(rawText);
+		checkNotNull(locale);
+		checkArgument(rate > 0);
+		checkNotNull(arguments);
+		final String text = String.format(rawText, arguments);
+		readOut(text, locale, rate);
+	}
+
 	public static synchronized void readOut(final String text, final Locale locale, double rate) {
 		checkNotNull(text);
 		checkNotNull(locale);
+		checkArgument(rate > 0);
 		readOut(text, locale, DEFAULT_PRIORITY, rate);
+	}
+
+	public static synchronized void readOut(final String rawText, final Locale locale, int priority, double rate, Object... arguments) {
+		checkNotNull(rawText);
+		checkNotNull(locale);
+		checkArgument(rate > 0);
+		checkNotNull(arguments);
+		final String text = String.format(rawText, arguments);
+		readOut(text, locale, priority, rate);
 	}
 
 	public static synchronized void readOut(final String text, final Locale locale, int priority, double rate) {

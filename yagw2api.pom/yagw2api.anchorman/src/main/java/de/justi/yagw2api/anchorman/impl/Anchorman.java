@@ -1,10 +1,15 @@
 package de.justi.yagw2api.anchorman.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.Set;
+
+import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableSet;
 
 import de.justi.yagw2api.anchorman.IAnchorman;
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
@@ -21,6 +26,8 @@ import de.justi.yagw2api.mumblelink.impl.IMumbleLinkListener;
 import de.justi.yagw2api.wrapper.IWVWInitializedMatchEvent;
 import de.justi.yagw2api.wrapper.IWVWMapListener;
 import de.justi.yagw2api.wrapper.IWVWMapScoresChangedEvent;
+import de.justi.yagw2api.wrapper.IWVWMapType;
+import de.justi.yagw2api.wrapper.IWVWMatch;
 import de.justi.yagw2api.wrapper.IWVWMatchListener;
 import de.justi.yagw2api.wrapper.IWVWMatchScoresChangedEvent;
 import de.justi.yagw2api.wrapper.IWVWObjectiveCaptureEvent;
@@ -31,19 +38,39 @@ import de.justi.yagw2api.wrapper.IWVWWrapper;
 import de.justi.yagwapi.common.TTSUtils;
 
 class Anchorman implements IAnchorman, IMumbleLinkListener, IWVWMatchListener, IWVWMapListener {
+	private static final String BUNDLE_KEY_COMPLETED_MATCH_INITIALIZATION = "completed_match_initialization";
+	private static final String BUNDLE_KEY_OBJECTIVE_UNCLAIMED = "objective_unclaimed";
+	private static final String BUNDLE_KEY_OBJECTIVE_CLAIMED = "objective_claimed";
+	private static final String BUNDLE_KEY_OBJECTIVE_OUT_OF_BUFF = "objective_out_of_buff";
+	private static final String BUNDLE_KEY_OBJECTIVE_CAPTURED = "objective_captured";
+	private static final String BUNDLE_KEY_ENTERED_MAP = "entered_map";
+	private static final String BUNDLE_KEY_LEFT_MAP = "left_map";
+	private static final String BUNDLE_KEY_CHANGED_MAP = "changed_map";
+	private static final String BUNDLE_KEY_LOGGED_IN = "logged_in";
+	private static final String BUNDLE_KEY_LOGGED_OUT = "logged_out";
+	private static final String BUNDLE_KEY_CHANGED_CHARACTER = "changed_character";
+	private static final String BUNDLE_BASENAME = "anchorman";
 
 	private volatile boolean running = false;
 	private volatile boolean initialized = false;
 
+	private Optional<IMumbleLink> mumbleLink = Optional.absent();
+	private Optional<IWVWWrapper> wrapper = Optional.absent();
+
+	private Optional<Set<IWVWMatch>> matchFilter = Optional.absent();
+	private Optional<Set<IWVWMapType>> mapTypeFilter = Optional.absent();
+
 	@Override
-	public void init(IWVWWrapper wrapper, IMumbleLink mumblelink) {
+	public void init(IWVWWrapper wrapper, IMumbleLink mumbleLink) {
 		checkNotNull(wrapper);
-		checkNotNull(mumblelink);
+		checkNotNull(mumbleLink);
 		synchronized (this) {
 			checkState(!this.initialized, "%s is already initialized.", this);
-			// wrapper.registerWVWMatchListener(this);
-			// wrapper.registerWVWMapListener(this);
-			mumblelink.registerMumbleLinkListener(this);
+			this.mumbleLink = Optional.of(mumbleLink);
+			this.mumbleLink.get().registerMumbleLinkListener(this);
+			this.wrapper = Optional.of(wrapper);
+			this.wrapper.get().registerWVWMatchListener(this);
+			this.wrapper.get().registerWVWMapListener(this);
 		}
 	}
 
@@ -62,26 +89,24 @@ class Anchorman implements IAnchorman, IMumbleLinkListener, IWVWMatchListener, I
 		return this.running;
 	}
 
-	private void readOut(String bundleName, String textKey, Object... arguments) {
+	private void readOut(String textKey, int priority, Object... arguments) {
 		final Locale locale = YAGW2APIArenanet.INSTANCE.getCurrentLocale();
-		final ResourceBundle bundle = ResourceBundle.getBundle(bundleName, locale);
-		final String rawText = bundle.getString(textKey);
-		final String text = String.format(rawText, arguments);
-		System.out.println(text);
-		TTSUtils.readOut(text, locale);
+		final ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE_BASENAME, locale);
+		TTSUtils.readOut(bundle.getString(textKey), locale, priority, arguments);
 	}
 
 	@Override
 	public void onAvatarChange(IMumbleLinkAvatarChangeEvent event) {
+		checkNotNull(event);
 		if (this.isRunning()) {
 			if (event.getOldAvatarName().isPresent() && event.getNewAvatarName().isPresent()) {
-				this.readOut("anchorman", "changed_character", event.getOldAvatarName().get(), event.getNewAvatarName().get());
+				this.readOut(BUNDLE_KEY_CHANGED_CHARACTER, 0, event.getOldAvatarName().get(), event.getNewAvatarName().get());
 			} else if (event.getOldAvatarName().isPresent()) {
 				checkState(!event.getNewAvatarName().isPresent());
-				this.readOut("anchorman", "logged_out", event.getOldAvatarName().get());
+				this.readOut(BUNDLE_KEY_LOGGED_OUT, 0, event.getOldAvatarName().get());
 			} else if (event.getNewAvatarName().isPresent()) {
 				checkState(!event.getOldAvatarName().isPresent());
-				this.readOut("anchorman", "logged_in", event.getNewAvatarName().get());
+				this.readOut(BUNDLE_KEY_LOGGED_IN, 0, event.getNewAvatarName().get());
 			} else {
 				throw new IllegalStateException(this + " is unable to handle " + event);
 			}
@@ -90,16 +115,16 @@ class Anchorman implements IAnchorman, IMumbleLinkListener, IWVWMatchListener, I
 
 	@Override
 	public void onMapChange(IMumbleLinkMapChangeEvent event) {
-
+		checkNotNull(event);
 		if (this.isRunning()) {
 			if (event.getOldMapId().isPresent() && event.getNewMapId().isPresent()) {
-				this.readOut("anchorman", "changed_map", event.getOldMapId().get(), event.getNewMapId().get());
+				this.readOut(BUNDLE_BASENAME, 0, BUNDLE_KEY_CHANGED_MAP, event.getOldMapId().get(), event.getNewMapId().get());
 			} else if (event.getOldMapId().isPresent()) {
 				checkState(!event.getNewMapId().isPresent());
-				this.readOut("anchorman", "left_map", event.getOldMapId().get());
+				this.readOut(BUNDLE_BASENAME, 0, BUNDLE_KEY_LEFT_MAP, event.getOldMapId().get());
 			} else if (event.getNewMapId().isPresent()) {
 				checkState(!event.getOldMapId().isPresent());
-				this.readOut("anchorman", "entered_map", event.getNewMapId().get());
+				this.readOut(BUNDLE_BASENAME, 0, BUNDLE_KEY_ENTERED_MAP, event.getNewMapId().get());
 			} else {
 				throw new IllegalStateException(this + " is unable to handle " + event);
 			}
@@ -143,8 +168,11 @@ class Anchorman implements IAnchorman, IMumbleLinkListener, IWVWMatchListener, I
 
 	@Override
 	public void onInitializedMatchForWrapper(IWVWInitializedMatchEvent event) {
-		// TODO Auto-generated method stub
-
+		checkNotNull(event);
+		if (this.isRunning()) {
+			this.readOut(BUNDLE_KEY_COMPLETED_MATCH_INITIALIZATION, Integer.MAX_VALUE - 3, event.getMatch().getGreenWorld().getName().get(), event.getMatch().getBlueWorld().getName().get(), event
+					.getMatch().getRedWorld().getName().get());
+		}
 	}
 
 	@Override
@@ -154,22 +182,64 @@ class Anchorman implements IAnchorman, IMumbleLinkListener, IWVWMatchListener, I
 
 	@Override
 	public void onObjectiveCapturedEvent(IWVWObjectiveCaptureEvent event) {
-		TTSUtils.readOut(event.getObjective().getLabel().get() + " wurde von " + event.getNewOwningWorld().getName().get() + " erobert.", YAGW2APIArenanet.getInstance().getCurrentLocale(), 3);
+		checkNotNull(event);
+		checkArgument(event.getMap().getMatch().isPresent());
+		if (this.isRunning() && this.checkWVWMatchFilter(event.getMap().getMatch().get()) && this.checkWVWMapTypeFilter(event.getMap().getType())) {
+			this.readOut(BUNDLE_KEY_OBJECTIVE_CAPTURED, Integer.MAX_VALUE, event.getObjective().getLabel().get(),
+					event.getMap().getType().getLabel(YAGW2APIArenanet.INSTANCE.getCurrentLocale()).get(), event.getNewOwningWorld().getName().get());
+		}
 	}
 
 	@Override
 	public void onObjectiveEndOfBuffEvent(IWVWObjectiveEndOfBuffEvent event) {
-		TTSUtils.readOut(event.getObjective().getLabel().get() + " hat keinen Buff mehr.", YAGW2APIArenanet.getInstance().getCurrentLocale(), 2);
+		checkNotNull(event);
+		checkArgument(event.getMap().getMatch().isPresent());
+		if (this.isRunning() && this.checkWVWMatchFilter(event.getMap().getMatch().get()) && this.checkWVWMapTypeFilter(event.getMap().getType())) {
+			this.readOut(BUNDLE_KEY_OBJECTIVE_OUT_OF_BUFF, Integer.MAX_VALUE - 1, event.getObjective().getLabel().get(), event.getMap().getType()
+					.getLabel(YAGW2APIArenanet.INSTANCE.getCurrentLocale()).get());
+		}
 	}
 
 	@Override
 	public void onObjectiveClaimedEvent(IWVWObjectiveClaimedEvent event) {
-		TTSUtils.readOut(event.getObjective().getLabel().get() + " wurde von " + event.getClaimingGuild().getName() + " eingenommen.", YAGW2APIArenanet.getInstance().getCurrentLocale(), -1);
+		checkNotNull(event);
+		checkArgument(event.getMap().getMatch().isPresent());
+		if (this.isRunning() && this.checkWVWMatchFilter(event.getMap().getMatch().get()) && this.checkWVWMapTypeFilter(event.getMap().getType())) {
+			this.readOut(BUNDLE_KEY_OBJECTIVE_CLAIMED, -1, event.getObjective().getLabel().get(), event.getMap().getType().getLabel(YAGW2APIArenanet.INSTANCE.getCurrentLocale()).get(), event
+					.getClaimingGuild().getName());
+		}
 	}
 
 	@Override
 	public void onObjectiveUnclaimedEvent(IWVWObjectiveUnclaimedEvent event) {
-		TTSUtils.readOut(event.getObjective().getLabel().get() + " wurde von " + event.previousClaimedByGuild().get().getName() + " aufgegeben.", YAGW2APIArenanet.getInstance().getCurrentLocale(), -1);
+		checkNotNull(event);
+		checkArgument(event.getMap().getMatch().isPresent());
+		if (this.isRunning() && this.checkWVWMatchFilter(event.getMap().getMatch().get()) && this.checkWVWMapTypeFilter(event.getMap().getType())) {
+			this.readOut(BUNDLE_KEY_OBJECTIVE_UNCLAIMED, -1, event.getObjective().getLabel().get(), event.getMap().getType().getLabel(YAGW2APIArenanet.INSTANCE.getCurrentLocale()).get(), event
+					.previousClaimedByGuild().get().getName());
+		}
+	}
+
+	private boolean checkWVWMatchFilter(IWVWMatch match) {
+		checkNotNull(match);
+		return !this.matchFilter.isPresent() || this.matchFilter.get().contains(match);
+	}
+
+	private boolean checkWVWMapTypeFilter(IWVWMapType type) {
+		checkNotNull(type);
+		return !this.mapTypeFilter.isPresent() || this.mapTypeFilter.get().contains(type);
+	}
+
+	@Override
+	public void setWVWMatchFilter(IWVWMatch... matches) {
+		checkNotNull(matches);
+		this.matchFilter = Optional.<Set<IWVWMatch>> of(ImmutableSet.copyOf(matches));
+	}
+
+	@Override
+	public void setWVWMapTypeFilter(IWVWMapType... mapTypes) {
+		checkNotNull(mapTypes);
+		this.mapTypeFilter = Optional.<Set<IWVWMapType>> of(ImmutableSet.copyOf(mapTypes));
 	}
 
 }

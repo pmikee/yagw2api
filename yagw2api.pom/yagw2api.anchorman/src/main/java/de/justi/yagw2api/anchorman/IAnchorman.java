@@ -1,10 +1,16 @@
 package de.justi.yagw2api.anchorman;
 
 import de.justi.yagw2api.mumblelink.IMumbleLink;
+import de.justi.yagw2api.wrapper.IWVWMapType;
+import de.justi.yagw2api.wrapper.IWVWMatch;
 import de.justi.yagw2api.wrapper.IWVWWrapper;
 
 public interface IAnchorman {
 	void init(IWVWWrapper wrapper, IMumbleLink mumblelink);
+
+	void setWVWMatchFilter(IWVWMatch... matches);
+
+	void setWVWMapTypeFilter(IWVWMapType... mapTypes);
 
 	void start();
 

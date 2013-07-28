@@ -54,6 +54,7 @@ import com.google.common.base.Optional;
 import com.google.common.io.Closer;
 import com.google.common.math.DoubleMath;
 
+import de.justi.yagw2api.anchorman.YAGW2APIAnchorman;
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
 import de.justi.yagw2api.explorer.model.APIStatusTableModel;
 import de.justi.yagw2api.explorer.model.MapObjectivesTableModel;
@@ -524,6 +525,7 @@ public final class MainWindow extends AbstractWindow implements IWVWMapListener 
 								} else {
 									MainWindow.this.redMapToolWindow.setTitle("Red Borderlands");
 								}
+								YAGW2APIAnchorman.INSTANCE.getAnchorman().setWVWMatchFilter(match);
 								LOGGER.debug("Wired everything up for new selected match=" + match.getId());
 							} else {
 								LOGGER.debug("Already selected match=" + matchOptional.get().getId());

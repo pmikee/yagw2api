@@ -20,6 +20,7 @@ import com.google.common.base.Optional;
 import com.google.common.util.concurrent.AbstractScheduledService;
 import com.google.common.util.concurrent.Service;
 
+import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
 import de.justi.yagw2api.wrapper.IWVWMap;
 import de.justi.yagw2api.wrapper.IWVWMapListener;
 import de.justi.yagw2api.wrapper.IWVWMapScoresChangedEvent;
@@ -126,7 +127,7 @@ public final class MapObjectivesTableModel extends AbstractTableModel implements
 		checkArgument(objective.isPresent());
 		switch (columnIndex) {
 			case 0:
-				return objective.get().getMap().get().getType().getLabel();
+				return objective.get().getMap().get().getType().getLabel(YAGW2APIArenanet.INSTANCE.getCurrentLocale()).or("");
 			case 1:
 				return objective.get().getLabel().get();
 			case 2:
