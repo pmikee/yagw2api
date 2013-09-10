@@ -119,13 +119,13 @@ class Anchorman implements IAnchorman, IMumbleLinkListener, IWVWMatchListener, I
 		checkNotNull(event);
 		if (this.isRunning()) {
 			if (event.getOldMapId().isPresent() && event.getNewMapId().isPresent()) {
-				this.readOut(BUNDLE_BASENAME, Integer.MAX_VALUE, BUNDLE_KEY_CHANGED_MAP, event.getOldMapId().get(), event.getNewMapId().get());
+				this.readOut(BUNDLE_KEY_CHANGED_MAP, Integer.MAX_VALUE, event.getOldMapId().get(), event.getNewMapId().get());
 			} else if (event.getOldMapId().isPresent()) {
 				checkState(!event.getNewMapId().isPresent());
-				this.readOut(BUNDLE_BASENAME, Integer.MAX_VALUE, BUNDLE_KEY_LEFT_MAP, event.getOldMapId().get());
+				this.readOut(BUNDLE_KEY_LEFT_MAP, Integer.MAX_VALUE, event.getOldMapId().get());
 			} else if (event.getNewMapId().isPresent()) {
 				checkState(!event.getOldMapId().isPresent());
-				this.readOut(BUNDLE_BASENAME, Integer.MAX_VALUE, BUNDLE_KEY_ENTERED_MAP, event.getNewMapId().get());
+				this.readOut(BUNDLE_KEY_ENTERED_MAP, Integer.MAX_VALUE, event.getNewMapId().get());
 			} else {
 				throw new IllegalStateException(this + " is unable to handle " + event);
 			}
