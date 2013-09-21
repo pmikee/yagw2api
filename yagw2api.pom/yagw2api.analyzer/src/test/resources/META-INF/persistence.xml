@@ -5,7 +5,6 @@
 	<persistence-unit name="yagw2api_test"
 		transaction-type="RESOURCE_LOCAL">
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-		<exclude-unlisted-classes>true</exclude-unlisted-classes
 		<class>de.justi.yagw2api.analyzer.impl.WorldEntity</class>
 		<class>de.justi.yagw2api.analyzer.impl.WVWMatchEntity</class>
 		<class>de.justi.yagw2api.analyzer.impl.WVWMapEntity</class>
@@ -15,7 +14,6 @@
 			<property name="javax.persistence.jdbc.user" value="yagw2apitest" />
 			<property name="javax.persistence.jdbc.password" value="yagw2apitest" />
 
-			<!-- EclipseLink should create the database schema automatically -->
 			<property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
 			<property name="eclipselink.target-database" value="Derby" />
 

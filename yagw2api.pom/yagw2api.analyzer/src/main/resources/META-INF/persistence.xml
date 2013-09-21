@@ -4,7 +4,6 @@
 	version="2.0" xmlns="http://java.sun.com/xml/ns/persistence">
 	<persistence-unit name="yagw2api" transaction-type="RESOURCE_LOCAL">
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<class>de.justi.yagw2api.analyzer.impl.WorldEntity</class>
 		<class>de.justi.yagw2api.analyzer.impl.WVWMatchEntity</class>
 		<class>de.justi.yagw2api.analyzer.impl.WVWMapEntity</class>
@@ -14,16 +13,8 @@
 			<property name="javax.persistence.jdbc.user" value="yagw2api" />
 			<property name="javax.persistence.jdbc.password" value="yagw2api" />
 
-			<!-- EclipseLink should create the database schema automatically -->
 			<property name="eclipselink.ddl-generation" value="create-or-extend-tables" />
 			<property name="eclipselink.target-database" value="Derby" />
-
-			<!-- flushgmode -->
-			<!-- If you would like to control the way a flush() call executes, you 
-				may call setFlushMode() before hand. The flush modes are as follows: -->
-			<!-- COMMIT - Flushing occurs only at transaction commit, or when flush() 
-				is called. -->
-			<!-- AUTO - (Default) Flushing occurs before any query execution. -->
 			<property name="eclipselink.persistence-context.flush-mode"
 				value="commit" />
 		</properties>
