@@ -82,7 +82,7 @@
 							<canUpdateLicense>true</canUpdateLicense>
 							<addJavaLicenseAfterPackage>true</addJavaLicenseAfterPackage>
 							<processStartTag><![CDATA[<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~]]></processStartTag>
-							<sectionDelimiter><![CDATA[-------------------------------------------------------------]]></sectionDelimiter>
+							<sectionDelimiter><![CDATA[_____________________________________________________________]]></sectionDelimiter>
 							<processEndTag><![CDATA[~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>]]></processEndTag>
 						</configuration>
 					</execution>
