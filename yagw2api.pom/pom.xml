@@ -72,7 +72,7 @@
 									<failIfWarning>true</failIfWarning>
 									<roots>
 										<root>src/main/java</root>
-										<root>src/test</root>
+										<root>src/test/java</root>
 									</roots>
 									<canUpdateCopyright>true</canUpdateCopyright>
 									<canUpdateDescription>true</canUpdateDescription>
