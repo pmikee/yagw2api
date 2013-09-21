@@ -3,9 +3,9 @@ package de.justi.yagw2api.mumblelink.impl;
 /*
  * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-MumbleLink
- * -------------------------------------------------------------
+ * _____________________________________________________________
  * Copyright (C) 2012 - 2013 Julian Stitz
- * -------------------------------------------------------------
+ * _____________________________________________________________
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
