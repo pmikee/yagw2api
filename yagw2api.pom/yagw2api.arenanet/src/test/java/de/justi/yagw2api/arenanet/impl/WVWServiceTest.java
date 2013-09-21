@@ -20,7 +20,6 @@ package de.justi.yagw2api.arenanet.impl;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
  */
 
-
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -50,7 +49,7 @@ public final class WVWServiceTest extends AbstractYAGW2APITest {
 	private static final Locale SUPPORTED_LOCALE_A2 = Locale.GERMANY;
 	private static final int NUMBER_OF_MAPS = 4;
 	private static final String EXISTING_MATCH_ID_4_TEST = "1-1";
-	private static final int NUMBER_OF_OBJECTIVE_NAMES = 61;
+	private static final int NUMBER_OF_OBJECTIVE_NAMES = 76;
 
 	private static final void assertConsistencyOfMapArray(IWVWMapDTO[] maps) {
 		checkNotNull(maps);
