@@ -48,6 +48,48 @@
 		<module>yagw2api.explorer</module>
 	</modules>
 
+	<profiles>
+		<profile>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<id>update-licence-headers</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>license-maven-plugin</artifactId>
+						<version>1.5</version>
+						<executions>
+							<execution>
+								<id>add-licence-headers</id>
+								<phase>process-sources</phase>
+								<goals>
+									<goal>update-file-header</goal>
+									<goal>check-file-header</goal>
+								</goals>
+								<configuration>
+									<failIfWarning>true</failIfWarning>
+									<roots>
+										<root>src/main/java</root>
+										<root>src/test</root>
+									</roots>
+									<canUpdateCopyright>true</canUpdateCopyright>
+									<canUpdateDescription>true</canUpdateDescription>
+									<canUpdateLicense>true</canUpdateLicense>
+									<addJavaLicenseAfterPackage>true</addJavaLicenseAfterPackage>
+									<processStartTag><![CDATA[<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~]]></processStartTag>
+									<sectionDelimiter><![CDATA[_____________________________________________________________]]></sectionDelimiter>
+									<processEndTag><![CDATA[~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>]]></processEndTag>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -66,26 +108,6 @@
 				<artifactId>license-maven-plugin</artifactId>
 				<version>1.5</version>
 				<executions>
-					<execution>
-						<id>add-licence-headers</id>
-						<goals>
-							<goal>update-file-header</goal>
-							<goal>check-file-header</goal>
-						</goals>
-						<configuration>
-							<roots>
-								<root>src/main/java</root>
-								<root>src/test</root>
-							</roots>
-							<canUpdateCopyright>true</canUpdateCopyright>
-							<canUpdateDescription>true</canUpdateDescription>
-							<canUpdateLicense>true</canUpdateLicense>
-							<addJavaLicenseAfterPackage>true</addJavaLicenseAfterPackage>
-							<processStartTag><![CDATA[<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~]]></processStartTag>
-							<sectionDelimiter><![CDATA[_____________________________________________________________]]></sectionDelimiter>
-							<processEndTag><![CDATA[~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>]]></processEndTag>
-						</configuration>
-					</execution>
 					<execution>
 						<goals>
 							<goal>update-project-license</goal>
