@@ -20,7 +20,6 @@ package de.justi.yagw2api.wrapper.impl;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
  */
 
-
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
@@ -178,7 +177,7 @@ final class WVWMap extends AbstractHasChannel implements IWVWMap {
 
 		private BuildObjectivesFromDTOsAction(List<IWVWObjectiveDTO> dtos, List<IWVWObjective> results) {
 			checkNotNull(dtos);
-			this.results = checkNotNull(results);
+			this.results = checkNotNull(results, "Missing objective list.");
 			this.objectiveDTOs = dtos;
 		}
 

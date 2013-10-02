@@ -13,7 +13,7 @@
 			<property name="javax.persistence.jdbc.user" value="yagw2api" />
 			<property name="javax.persistence.jdbc.password" value="yagw2api" />
 
-			<property name="eclipselink.ddl-generation" value="create-or-extend-tables" />
+			<property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
 			<property name="eclipselink.target-database" value="Derby" />
 			<property name="eclipselink.persistence-context.flush-mode"
 				value="commit" />

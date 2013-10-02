@@ -20,7 +20,6 @@ package de.justi.yagw2api.wrapper.impl;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
  */
 
-
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
@@ -107,6 +106,12 @@ public enum WVWLocationType implements IWVWLocationType {
 	ASTRALHOLME(51, WVWObjectiveType.CAMP, WVWMapType.RED),
 	ARAHS_HOPE(52, WVWObjectiveType.CAMP, WVWMapType.RED),
 	GREENVALE_REFUGE(53, WVWObjectiveType.CAMP, WVWMapType.RED),
+	RED_TEMPLE_OF_LOST_PRAYERS(62, WVWObjectiveType.RUINS, WVWMapType.RED),
+	RED_BATTLES_HOLLOW(63, WVWObjectiveType.RUINS, WVWMapType.RED),
+	RED_BAUERS_ESTATE(64, WVWObjectiveType.RUINS, WVWMapType.RED),
+	RED_ORCHARD_OVERLOOK(65, WVWObjectiveType.RUINS, WVWMapType.RED),
+	RED_CARVERS_ASCENT(66, WVWObjectiveType.RUINS, WVWMapType.RED),
+
 	// blue -> spawn
 	/**
 	 * blue spawn
@@ -134,6 +139,12 @@ public enum WVWLocationType implements IWVWLocationType {
 	REDVALE_REFUGE(59, WVWObjectiveType.CAMP, WVWMapType.BLUE),
 	STARGROVE(60, WVWObjectiveType.CAMP, WVWMapType.BLUE),
 	GREEMWATER_LOWLANDS(61, WVWObjectiveType.CAMP, WVWMapType.BLUE),
+	BLUE_CARVERS_ASCENT(67, WVWObjectiveType.RUINS, WVWMapType.BLUE),
+	BLUE_ORCHARD_OVERLOOK(68, WVWObjectiveType.RUINS, WVWMapType.BLUE),
+	BLUE_BAUERS_ESTATE(69, WVWObjectiveType.RUINS, WVWMapType.BLUE),
+	BLUE_BATTLES_HOLLOW(70, WVWObjectiveType.RUINS, WVWMapType.BLUE),
+	BLUE_TEMPLE_OF_LOST_PRAYERS(71, WVWObjectiveType.RUINS, WVWMapType.BLUE),
+
 	// green -> spawn
 	/**
 	 * green spawn
@@ -160,7 +171,12 @@ public enum WVWLocationType implements IWVWLocationType {
 	FOGHAVEN(54, WVWObjectiveType.CAMP, WVWMapType.GREEN),
 	REDWATER_LOWLANDS(55, WVWObjectiveType.CAMP, WVWMapType.GREEN),
 	THE_TITANPAW(56, WVWObjectiveType.CAMP, WVWMapType.GREEN),
-	CRAGTOP(57, WVWObjectiveType.TOWER, WVWMapType.GREEN);
+	CRAGTOP(57, WVWObjectiveType.TOWER, WVWMapType.GREEN),
+	GREEN_CARVERS_ASCENT(72, WVWObjectiveType.RUINS, WVWMapType.GREEN),
+	GREEN_ORCHARD_OVERLOOK(73, WVWObjectiveType.RUINS, WVWMapType.GREEN),
+	GREEN_BAUERS_ESTATE(74, WVWObjectiveType.RUINS, WVWMapType.GREEN),
+	GREEN_BATTLES_HOLLOW(75, WVWObjectiveType.RUINS, WVWMapType.GREEN),
+	GREEN_TEMPLE_OF_LOST_PRAYERS(76, WVWObjectiveType.RUINS, WVWMapType.GREEN);
 
 	private static final IWVWMapType CENTER_MAPTYPE = WVWMapType.CENTER;
 	private static final IWVWMapType RED_MAPTYPE = WVWMapType.RED;
@@ -248,7 +264,11 @@ public enum WVWLocationType implements IWVWLocationType {
 	}
 
 	public static Optional<IWVWLocationType> forObjectiveId(int objectiveId) {
-		return Optional.fromNullable(LOCATIONTYPES_MAPPED_BY_OBJECTIVE_ID.get(objectiveId));
+		final Optional<IWVWLocationType> location = Optional.fromNullable(LOCATIONTYPES_MAPPED_BY_OBJECTIVE_ID.get(objectiveId));
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Determined location " + location + " for " + objectiveId);
+		}
+		return location;
 	}
 
 	public static Optional<Set<IWVWLocationType>> forMapTyp(IWVWMapType mapType) {

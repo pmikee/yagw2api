@@ -20,7 +20,6 @@ package de.justi.yagw2api.wrapper.impl;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
  */
 
-
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
@@ -31,52 +30,58 @@ import com.google.common.base.Objects;
 
 import de.justi.yagw2api.wrapper.IWVWObjectiveType;
 
-
 public enum WVWObjectiveType implements IWVWObjectiveType {
-	CAMP(5, TimeUnit.MINUTES, 5), TOWER(5, TimeUnit.MINUTES, 10), KEEP(5, TimeUnit.MINUTES, 25), CASTLE(5, TimeUnit.MINUTES, 35);
+	RUINS(0, TimeUnit.MINUTES, 0), CAMP(5, TimeUnit.MINUTES, 5), TOWER(5, TimeUnit.MINUTES, 10), KEEP(5, TimeUnit.MINUTES, 25), CASTLE(5, TimeUnit.MINUTES, 35);
 
-	private final long	buffDurationMillis;
-	private final int	points;
+	private final long buffDurationMillis;
+	private final int points;
 
 	private WVWObjectiveType(long buffDuration, TimeUnit buffDurationTimeUnit, int points) {
-		checkArgument(buffDuration > 0);
+		checkArgument(buffDuration >= 0);
 		checkNotNull(buffDurationTimeUnit);
 		this.buffDurationMillis = buffDurationTimeUnit.toMillis(buffDuration);
-		checkArgument(points > 0);
+		checkArgument(points >= 0);
 		this.points = points;
 	}
 
+	@Override
 	public String getLabel() {
 		return this.name();
 	}
 
+	@Override
 	public long getBuffDuration(TimeUnit timeUnit) {
 		checkNotNull(timeUnit);
-		checkState(this.buffDurationMillis > 0);
+		checkState(this.buffDurationMillis >= 0);
 		return timeUnit.convert(this.buffDurationMillis, TimeUnit.MILLISECONDS);
 	}
 
+	@Override
 	public int getPoints() {
 		return this.points;
 	}
 
+	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("label", this.getLabel()).add("buffDuration", this.buffDurationMillis + "ms").add("points", this.points)
-				.toString();
+		return Objects.toStringHelper(this).add("label", this.getLabel()).add("buffDuration", this.buffDurationMillis + "ms").add("points", this.points).toString();
 	}
 
+	@Override
 	public boolean isCamp() {
 		return this.equals(CAMP);
 	}
 
+	@Override
 	public boolean isTower() {
 		return this.equals(TOWER);
 	}
 
+	@Override
 	public boolean isKeep() {
 		return this.equals(KEEP);
 	}
 
+	@Override
 	public boolean isCastle() {
 		return this.equals(CASTLE);
 	}
