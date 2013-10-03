@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.justi</groupId>
 	<artifactId>yagw2api.pom</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>YAGW2API</name>
 	<organization>
@@ -36,6 +36,7 @@
 		<module>yagw2api.analyzer</module>
 		<module>yagw2api.anchorman</module>
 		<module>yagw2api.explorer</module>
+		<module>yagw2api.webapp</module>
 	</modules>
 
 	<profiles>

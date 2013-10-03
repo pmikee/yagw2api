@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>de.justi</groupId>
 		<artifactId>yagw2api.pom</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.0.3-SNAPSHOT</version>
 	</parent>
 	<artifactId>yagw2api.webapp</artifactId>
 	<packaging>war</packaging>
@@ -37,7 +37,7 @@
 								<jarResource>
 									<groupId>de.justi</groupId>
 									<artifactId>yagw2api.explorer</artifactId>
-									<version>${de.justi.yagw2api.explorer.version}</version>
+									<version>${project.version}</version>
 									<mainClass>de.justi.yagw2api.explorer.Main</mainClass>
 								</jarResource>
 							</jarResources>
