@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>yagw2api.pom</artifactId>
 		<groupId>de.justi</groupId>
-		<version>0.0.3-SNAPSHOT</version>
+		<version>0.0.4-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
 

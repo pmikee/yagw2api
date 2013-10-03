@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>de.justi</groupId>
 		<artifactId>yagw2api.pom</artifactId>
-		<version>0.0.3-SNAPSHOT</version>
+		<version>0.0.4-SNAPSHOT</version>
 	</parent>
 	<name>YAGW2API-Explorer-Application</name>
 	<artifactId>yagw2api.explorer</artifactId>
