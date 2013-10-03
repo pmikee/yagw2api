@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.justi</groupId>
 	<artifactId>yagw2api.pom</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>YAGW2API</name>
 	<organization>
@@ -24,16 +24,6 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<de.justi.yagw2api.test.version>0.0.1-SNAPSHOT</de.justi.yagw2api.test.version>
-		<de.justi.yagw2api.common.version>0.0.1-SNAPSHOT</de.justi.yagw2api.common.version>
-		<de.justi.yagw2api.arenanet.version>0.0.1-SNAPSHOT</de.justi.yagw2api.arenanet.version>
-		<de.justi.yagw2api.mumblelink.version>0.0.1-SNAPSHOT</de.justi.yagw2api.mumblelink.version>
-		<de.justi.yagw2api.gw2stats.version>0.0.1-SNAPSHOT</de.justi.yagw2api.gw2stats.version>
-		<de.justi.yagw2api.wrapper.version>0.0.1-SNAPSHOT</de.justi.yagw2api.wrapper.version>
-		<de.justi.yagw2api.analyzer.version>0.0.1-SNAPSHOT</de.justi.yagw2api.analyzer.version>
-		<de.justi.yagw2api.explorer.version>0.0.1-SNAPSHOT</de.justi.yagw2api.explorer.version>
-		<de.justi.yagw2api.webapp.version>0.0.1-SNAPSHOT</de.justi.yagw2api.webapp.version>
-		<de.justi.yagw2api.anchorman.version>0.0.1-SNAPSHOT</de.justi.yagw2api.anchorman.version>
 	</properties>
 
 	<modules>
@@ -166,6 +156,11 @@
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>2.4.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.1</version>
 				</plugin>
@@ -268,49 +263,49 @@
 			<dependency>
 				<artifactId>yagw2api.test</artifactId>
 				<groupId>de.justi</groupId>
-				<version>${de.justi.yagw2api.test.version}</version>
+				<version>${project.version}</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<artifactId>yagw2api.common</artifactId>
 				<groupId>de.justi</groupId>
-				<version>${de.justi.yagw2api.common.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<artifactId>yagw2api.arenanet</artifactId>
 				<groupId>de.justi</groupId>
-				<version>${de.justi.yagw2api.arenanet.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>de.justi</groupId>
 				<artifactId>yagw2api.gw2stats</artifactId>
-				<version>${de.justi.yagw2api.gw2stats.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>de.justi</groupId>
 				<artifactId>yagw2api.mumblelink</artifactId>
-				<version>${de.justi.yagw2api.mumblelink.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<artifactId>yagw2api.wrapper</artifactId>
 				<groupId>de.justi</groupId>
-				<version>${de.justi.yagw2api.wrapper.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<artifactId>yagw2api.analyzer</artifactId>
 				<groupId>de.justi</groupId>
-				<version>${de.justi.yagw2api.analyzer.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<artifactId>yagw2api.explorer</artifactId>
 				<groupId>de.justi</groupId>
-				<version>${de.justi.yagw2api.explorer.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<artifactId>yagw2api.anchorman</artifactId>
 				<groupId>de.justi</groupId>
-				<version>${de.justi.yagw2api.anchorman.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 
 			<dependency>
