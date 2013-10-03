@@ -216,7 +216,7 @@
 						<excludeTransitive>false</excludeTransitive>
 						<unsignAlreadySignedJars>true</unsignAlreadySignedJars>
 						<sign>
-							<keystore>${project.build.directory}/yagw2api.jks</keystore>
+							<keystore>${basedir}/yagw2api.jks</keystore>
 							<keypass>gwodh!</keypass>
 							<storepass>wvwitb!</storepass>
 							<alias>yagw2api</alias>
@@ -228,7 +228,7 @@
 							<dnameC>DE</dnameC>
 							<verify>true</verify>
 							<keystoreConfig>
-								<delete>true</delete>
+								<delete>false</delete>
 								<gen>true</gen>
 							</keystoreConfig>
 						</sign>
