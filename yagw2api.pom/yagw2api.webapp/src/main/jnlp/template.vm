@@ -25,7 +25,7 @@
 	
 	<icon href="yagw2api_splash.jpg" kind="splash"/>
 </information>
-<update check="always" policy="prompt-update"/>
+<update check="always" policy="always"/>
 <security>
      <all-permissions/>
 </security>
