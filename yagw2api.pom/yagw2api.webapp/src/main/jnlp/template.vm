@@ -24,7 +24,7 @@
   	</shortcut>
 	
 	<icon href="yagw2api_splash.jpg" kind="splash"/>
-	<update check="timeout" policy="always"/>
+	<update check="always" policy="always"/>
 </information>
 
 <security>
