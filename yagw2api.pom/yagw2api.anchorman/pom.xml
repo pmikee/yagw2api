@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>de.justi</groupId>
 		<artifactId>yagw2api.pom</artifactId>
-		<version>0.0.4-SNAPSHOT</version>
+		<version>0.0.5-SNAPSHOT</version>
 	</parent>
 	<artifactId>yagw2api.anchorman</artifactId>
 	<dependencies>
