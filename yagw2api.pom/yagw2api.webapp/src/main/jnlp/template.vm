@@ -24,9 +24,8 @@
   	</shortcut>
 	
 	<icon href="yagw2api_splash.jpg" kind="splash"/>
-	<update check="always" policy="always"/>
 </information>
-
+<update check="always" policy="prompt-update"/>
 <security>
      <all-permissions/>
 </security>
