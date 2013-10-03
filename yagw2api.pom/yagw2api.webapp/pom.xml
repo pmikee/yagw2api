@@ -10,6 +10,8 @@
 	<packaging>war</packaging>
 	<name>JNLP Download Page for GoogleAppEngine</name>
 	<url>http://yagw2api.appspot.com</url>
+	
+	
 	<build>
 		<plugins>
 			<plugin>
@@ -27,7 +29,6 @@
 						</goals>
 					</execution>
 				</executions>
-
 				<configuration>
 					<jnlpFiles>
 						<jnlpFile>

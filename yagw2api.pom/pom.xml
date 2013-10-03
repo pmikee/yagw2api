@@ -234,7 +234,7 @@
 						</sign>
 						<pack200>true</pack200>
 						<gzip>true</gzip>
-						<outputJarVersions>false</outputJarVersions>
+						<outputJarVersions>true</outputJarVersions>
 						<verbose>false</verbose>
 					</configuration>
 				</plugin>
