@@ -26,6 +26,7 @@ import javax.annotation.Nullable;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 
+import de.justi.yagw2api.mumblelink.IMumbleLinkAvatar;
 import de.justi.yagw2api.mumblelink.IMumbleLinkPosition;
 import de.justi.yagw2api.mumblelink.IMumbleLinkState;
 
@@ -49,8 +50,8 @@ abstract class AbstractForwardingMumbleLinkState implements IMumbleLinkState {
 	}
 
 	@Override
-	public final Optional<String> getAvatarName() {
-		return this.getForwardTo() != null ? this.getForwardTo().getAvatarName() : Optional.<String> absent();
+	public final Optional<IMumbleLinkAvatar> getAvatar() {
+		return this.getForwardTo() != null ? this.getForwardTo().getAvatar() : Optional.<IMumbleLinkAvatar> absent();
 	}
 
 	@Override

@@ -30,10 +30,12 @@ import javax.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.sun.jna.Pointer;
 
+import de.justi.yagw2api.mumblelink.IMumbleLinkAvatar;
 import de.justi.yagw2api.mumblelink.IMumbleLinkPosition;
 import de.justi.yagw2api.mumblelink.IMumbleLinkState;
 
@@ -84,11 +86,12 @@ final class MumbleLinkState implements IMumbleLinkState {
 			LOGGER.trace("Invalid cameraTop={}", cameraTop);
 			return null;
 		}
-		final String avatarName = String.copyValueOf(memMapFileData.getCharArray(592, 256)).trim();
-		if ((avatarName == null) || (avatarName.length() == 0)) {
-			LOGGER.trace("Invalid avatarName={}", avatarName);
+		final String avatarJSON = String.copyValueOf(memMapFileData.getCharArray(592, 256)).trim();
+		if ((avatarJSON == null) || (avatarJSON.length() == 0)) {
+			LOGGER.trace("Invalid avatarJSON={}", avatarJSON);			
 			return null;
 		}
+		final IMumbleLinkAvatar avatar = MumbleLinkAvatar.of(avatarJSON);
 		final String gameName = String.copyValueOf(memMapFileData.getCharArray(44, 256)).trim();
 		if ((gameName == null) || (!"Guild Wars 2".equals(gameName))) {
 			LOGGER.trace("Invalid gameName={}", gameName);
@@ -116,7 +119,7 @@ final class MumbleLinkState implements IMumbleLinkState {
 		final int build = memMapFileData.getInt(1108 + 44); // affirmed
 		final int mapId = memMapFileData.getInt(1108 + 28); // affirmed
 
-		return new MumbleLinkState(uiVersion, uiTick, avatarPosition.get(), avatarFront.get(), avatarTop.get(), cameraPosition.get(), cameraFront.get(), cameraTop.get(), avatarName, gameName,
+		return new MumbleLinkState(uiVersion, uiTick, avatarPosition.get(), avatarFront.get(), avatarTop.get(), cameraPosition.get(), cameraFront.get(), cameraTop.get(), avatar, gameName,
 				regionId, build, mapId);
 	}
 
@@ -132,21 +135,21 @@ final class MumbleLinkState implements IMumbleLinkState {
 	private final Optional<IMumbleLinkPosition> cameraPosition;
 	private final Optional<IMumbleLinkPosition> cameraFront;
 	private final Optional<IMumbleLinkPosition> cameraTop;
-	private final Optional<String> avatarName;
+	private final Optional<IMumbleLinkAvatar> avatar;
 	private final Optional<String> gameName;
 	private final Optional<Integer> regionId;
 	private final Optional<Integer> build;
 	private final Optional<Integer> mapId;
 
 	private MumbleLinkState(int uiVersion, int uiTick, IMumbleLinkPosition avatarPosition, IMumbleLinkPosition avatarFront, IMumbleLinkPosition avatarTop, IMumbleLinkPosition cameraPosition,
-			IMumbleLinkPosition cameraFront, IMumbleLinkPosition cameraTop, String avatarName, String gameName, int regionId, int build, int mapId) {
+			IMumbleLinkPosition cameraFront, IMumbleLinkPosition cameraTop, IMumbleLinkAvatar avatar, String gameName, int regionId, int build, int mapId) {
 		checkNotNull(avatarPosition);
 		checkNotNull(avatarFront);
 		checkNotNull(avatarTop);
 		checkNotNull(cameraPosition);
 		checkNotNull(cameraFront);
 		checkNotNull(cameraTop);
-		checkNotNull(avatarName);
+		checkNotNull(avatar);
 		checkNotNull(gameName);
 
 		this.uiVersion = Optional.of(uiVersion);
@@ -157,7 +160,7 @@ final class MumbleLinkState implements IMumbleLinkState {
 		this.cameraPosition = Optional.of(cameraPosition);
 		this.cameraFront = Optional.of(cameraFront);
 		this.cameraTop = Optional.of(cameraTop);
-		this.avatarName = Optional.of(avatarName);
+		this.avatar = Optional.of(avatar);
 		this.gameName = Optional.of(gameName);
 		this.regionId = Optional.of(regionId);
 		this.build = Optional.of(build);
@@ -180,8 +183,8 @@ final class MumbleLinkState implements IMumbleLinkState {
 	}
 
 	@Override
-	public final Optional<String> getAvatarName() {
-		return this.avatarName;
+	public final Optional<IMumbleLinkAvatar> getAvatar() {
+		return this.avatar;
 	}
 
 	@Override
@@ -214,94 +217,107 @@ final class MumbleLinkState implements IMumbleLinkState {
 		return this.cameraTop;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = (prime * result) + ((avatarFront == null) ? 0 : avatarFront.hashCode());
-		result = (prime * result) + ((avatarName == null) ? 0 : avatarName.hashCode());
-		result = (prime * result) + ((avatarPosition == null) ? 0 : avatarPosition.hashCode());
-		result = (prime * result) + ((avatarTop == null) ? 0 : avatarTop.hashCode());
-		result = (prime * result) + ((cameraFront == null) ? 0 : cameraFront.hashCode());
-		result = (prime * result) + ((cameraPosition == null) ? 0 : cameraPosition.hashCode());
-		result = (prime * result) + ((cameraTop == null) ? 0 : cameraTop.hashCode());
-		result = (prime * result) + ((gameName == null) ? 0 : gameName.hashCode());
-		result = (prime * result) + ((uiTick == null) ? 0 : uiTick.hashCode());
-		result = (prime * result) + ((uiVersion == null) ? 0 : uiVersion.hashCode());
-		result = (prime * result) + ((regionId == null) ? 0 : regionId.hashCode());
-		result = (prime * result) + ((build == null) ? 0 : build.hashCode());
-		result = (prime * result) + ((mapId == null) ? 0 : mapId.hashCode());
+		result = prime * result + ((avatar == null) ? 0 : avatar.hashCode());
+		result = prime * result + ((avatarFront == null) ? 0 : avatarFront.hashCode());
+		result = prime * result + ((avatarPosition == null) ? 0 : avatarPosition.hashCode());
+		result = prime * result + ((avatarTop == null) ? 0 : avatarTop.hashCode());
+		result = prime * result + ((build == null) ? 0 : build.hashCode());
+		result = prime * result + ((cameraFront == null) ? 0 : cameraFront.hashCode());
+		result = prime * result + ((cameraPosition == null) ? 0 : cameraPosition.hashCode());
+		result = prime * result + ((cameraTop == null) ? 0 : cameraTop.hashCode());
+		result = prime * result + ((gameName == null) ? 0 : gameName.hashCode());
+		result = prime * result + ((mapId == null) ? 0 : mapId.hashCode());
+		result = prime * result + ((regionId == null) ? 0 : regionId.hashCode());
+		result = prime * result + ((uiTick == null) ? 0 : uiTick.hashCode());
+		result = prime * result + ((uiVersion == null) ? 0 : uiVersion.hashCode());
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
+		if (this == obj)
 			return true;
-		}
-		if (obj == null) {
+		if (obj == null)
 			return false;
-		}
-		if (!(obj instanceof IMumbleLinkState)) {
+		if (getClass() != obj.getClass())
 			return false;
-		}
-		IMumbleLinkState other = (IMumbleLinkState) obj;
-		if (!Objects.equal(this.avatarFront, other.getAvatarFront())) {
+		MumbleLinkState other = (MumbleLinkState) obj;
+		if (avatar == null) {
+			if (other.avatar != null)
+				return false;
+		} else if (!avatar.equals(other.avatar))
 			return false;
-		}
-		if (!Objects.equal(this.avatarName, other.getAvatarName())) {
+		if (avatarFront == null) {
+			if (other.avatarFront != null)
+				return false;
+		} else if (!avatarFront.equals(other.avatarFront))
 			return false;
-		}
-		if (!Objects.equal(this.avatarPosition, other.getAvatarPosition())) {
+		if (avatarPosition == null) {
+			if (other.avatarPosition != null)
+				return false;
+		} else if (!avatarPosition.equals(other.avatarPosition))
 			return false;
-		}
-		if (!Objects.equal(this.avatarTop, other.getAvatarTop())) {
+		if (avatarTop == null) {
+			if (other.avatarTop != null)
+				return false;
+		} else if (!avatarTop.equals(other.avatarTop))
 			return false;
-		}
-		if (!Objects.equal(this.cameraFront, other.getCameraFront())) {
+		if (build == null) {
+			if (other.build != null)
+				return false;
+		} else if (!build.equals(other.build))
 			return false;
-		}
-		if (!Objects.equal(this.cameraPosition, other.getCameraPosition())) {
+		if (cameraFront == null) {
+			if (other.cameraFront != null)
+				return false;
+		} else if (!cameraFront.equals(other.cameraFront))
 			return false;
-		}
-		if (!Objects.equal(this.cameraTop, other.getCameraTop())) {
+		if (cameraPosition == null) {
+			if (other.cameraPosition != null)
+				return false;
+		} else if (!cameraPosition.equals(other.cameraPosition))
 			return false;
-		}
-		if (!Objects.equal(this.gameName, other.getGameName())) {
+		if (cameraTop == null) {
+			if (other.cameraTop != null)
+				return false;
+		} else if (!cameraTop.equals(other.cameraTop))
 			return false;
-		}
-		if (!Objects.equal(this.uiTick, other.getUITick())) {
+		if (gameName == null) {
+			if (other.gameName != null)
+				return false;
+		} else if (!gameName.equals(other.gameName))
 			return false;
-		}
-		if (!Objects.equal(this.uiVersion, other.getUIVersion())) {
+		if (mapId == null) {
+			if (other.mapId != null)
+				return false;
+		} else if (!mapId.equals(other.mapId))
 			return false;
-		}
-		if (!Objects.equal(this.regionId, other.getRegionId())) {
+		if (regionId == null) {
+			if (other.regionId != null)
+				return false;
+		} else if (!regionId.equals(other.regionId))
 			return false;
-		}
-		if (!Objects.equal(this.build, other.getBuild())) {
+		if (uiTick == null) {
+			if (other.uiTick != null)
+				return false;
+		} else if (!uiTick.equals(other.uiTick))
 			return false;
-		}
-		if (!Objects.equal(this.mapId, other.getMapId())) {
+		if (uiVersion == null) {
+			if (other.uiVersion != null)
+				return false;
+		} else if (!uiVersion.equals(other.uiVersion))
 			return false;
-		}
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("uiVersion", this.uiVersion).add("uiTick", this.uiTick).add("avatarPosition", this.avatarPosition).add("avatarFront", this.avatarFront)
-				.add("avatarTop", this.avatarTop).add("cameraPosition", this.cameraPosition).add("cameraFront", this.cameraFront).add("cameraTop", this.cameraTop).add("avatarName", this.avatarName)
+		return MoreObjects.toStringHelper(this).add("uiVersion", this.uiVersion).add("uiTick", this.uiTick).add("avatarPosition", this.avatarPosition).add("avatarFront", this.avatarFront)
+				.add("avatarTop", this.avatarTop).add("cameraPosition", this.cameraPosition).add("cameraFront", this.cameraFront).add("cameraTop", this.cameraTop).add("avatar", this.avatar)
 				.add("gameName", this.gameName).add("regionId", this.regionId).add("build", this.build).add("mapId", this.mapId).toString();
 	}
 

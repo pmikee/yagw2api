@@ -30,6 +30,7 @@ import com.google.common.base.Optional;
 import com.google.inject.Inject;
 
 import de.justi.yagw2api.mumblelink.IMumbleLink;
+import de.justi.yagw2api.mumblelink.IMumbleLinkAvatar;
 import de.justi.yagw2api.mumblelink.IMumbleLinkAvatarChangeEvent;
 import de.justi.yagw2api.mumblelink.IMumbleLinkAvatarFrontChangeEvent;
 import de.justi.yagw2api.mumblelink.IMumbleLinkAvatarPositionChangeEvent;
@@ -45,7 +46,7 @@ public class MumbleLinkTableModel extends AbstractTableModel implements IMumbleL
 	private static final long serialVersionUID = -5095699668587612370L;
 	private final IMumbleLink mumbleLink;
 
-	private Optional<String> avatarName = Optional.absent();
+	private Optional<IMumbleLinkAvatar> avatar = Optional.absent();
 	private Optional<Integer> mapId = Optional.absent();
 	private Optional<IMumbleLinkPosition> avatarPosition = Optional.absent();
 
@@ -70,7 +71,11 @@ public class MumbleLinkTableModel extends AbstractTableModel implements IMumbleL
 		checkArgument(rowIndex == 0);
 		switch (columnIndex) {
 			case 0:
-				return this.avatarName.or("");
+				if(this.avatar.isPresent()){
+					return this.avatar.get().getName();
+				}else{
+					return "";
+				}
 			case 1:
 				return this.mapId.orNull();
 			case 2:
@@ -94,7 +99,7 @@ public class MumbleLinkTableModel extends AbstractTableModel implements IMumbleL
 
 	@Override
 	public void onAvatarChange(IMumbleLinkAvatarChangeEvent event) {
-		this.avatarName = event.getNewAvatarName();
+		this.avatar = event.getNewAvatar();
 		this.fireTableDataChanged();
 	}
 

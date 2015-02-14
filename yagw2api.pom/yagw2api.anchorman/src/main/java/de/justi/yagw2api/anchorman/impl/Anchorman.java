@@ -20,7 +20,6 @@ package de.justi.yagw2api.anchorman.impl;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
  */
 
-
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
@@ -74,7 +73,9 @@ class Anchorman implements IAnchorman, IMumbleLinkListener, IWVWMatchListener, I
 	private static final String BUNDLE_KEY_CHANGED_CHARACTER = "changed_character";
 	private static final String BUNDLE_BASENAME = "anchorman";
 	private static final IArenanet ARENANET = YAGW2APIArenanet.INSTANCE;
+	private static final boolean BUNDLE_KEY_COMPLETED_MATCH_INITIALIZATION_TOGGLE = false;
 
+	// FIXME make this atomicbooleans
 	private volatile boolean running = false;
 	private volatile boolean initialized = false;
 
@@ -123,14 +124,14 @@ class Anchorman implements IAnchorman, IMumbleLinkListener, IWVWMatchListener, I
 	public void onAvatarChange(IMumbleLinkAvatarChangeEvent event) {
 		checkNotNull(event);
 		if (this.isRunning()) {
-			if (event.getOldAvatarName().isPresent() && event.getNewAvatarName().isPresent()) {
-				this.readOut(BUNDLE_KEY_CHANGED_CHARACTER, Integer.MAX_VALUE, event.getOldAvatarName().get(), event.getNewAvatarName().get());
-			} else if (event.getOldAvatarName().isPresent()) {
-				checkState(!event.getNewAvatarName().isPresent());
-				this.readOut(BUNDLE_KEY_LOGGED_OUT, Integer.MAX_VALUE, event.getOldAvatarName().get());
-			} else if (event.getNewAvatarName().isPresent()) {
-				checkState(!event.getOldAvatarName().isPresent());
-				this.readOut(BUNDLE_KEY_LOGGED_IN, Integer.MAX_VALUE, event.getNewAvatarName().get());
+			if (event.getOldAvatar().isPresent() && event.getNewAvatar().isPresent()) {
+				this.readOut(BUNDLE_KEY_CHANGED_CHARACTER, Integer.MAX_VALUE, event.getOldAvatar().get().getName(), event.getNewAvatar().get().getName());
+			} else if (event.getOldAvatar().isPresent()) {
+				checkState(!event.getNewAvatar().isPresent());
+				this.readOut(BUNDLE_KEY_LOGGED_OUT, Integer.MAX_VALUE, event.getOldAvatar().get().getName());
+			} else if (event.getNewAvatar().isPresent()) {
+				checkState(!event.getOldAvatar().isPresent());
+				this.readOut(BUNDLE_KEY_LOGGED_IN, Integer.MAX_VALUE, event.getNewAvatar().get().getName());
 			} else {
 				throw new IllegalStateException(this + " is unable to handle " + event);
 			}
@@ -193,9 +194,11 @@ class Anchorman implements IAnchorman, IMumbleLinkListener, IWVWMatchListener, I
 	@Override
 	public void onInitializedMatchForWrapper(IWVWInitializedMatchEvent event) {
 		checkNotNull(event);
-		if (this.isRunning()) {
-			this.readOut(BUNDLE_KEY_COMPLETED_MATCH_INITIALIZATION, Integer.MAX_VALUE - 3, event.getMatch().getGreenWorld().getName().get(), event.getMatch().getBlueWorld().getName().get(), event
-					.getMatch().getRedWorld().getName().get());
+		if (BUNDLE_KEY_COMPLETED_MATCH_INITIALIZATION_TOGGLE) {
+			if (this.isRunning()) {
+				this.readOut(BUNDLE_KEY_COMPLETED_MATCH_INITIALIZATION, Integer.MAX_VALUE - 3, event.getMatch().getGreenWorld().getName().get(), event.getMatch().getBlueWorld()
+						.getName().get(), event.getMatch().getRedWorld().getName().get());
+			}
 		}
 	}
 
@@ -209,8 +212,8 @@ class Anchorman implements IAnchorman, IMumbleLinkListener, IWVWMatchListener, I
 		checkNotNull(event);
 		checkArgument(event.getMap().getMatch().isPresent());
 		if (this.isRunning() && this.checkWVWMatchFilter(event.getMap().getMatch().get()) && this.checkWVWMapTypeFilter(event.getMap().getType())) {
-			this.readOut(BUNDLE_KEY_OBJECTIVE_CAPTURED, Integer.MAX_VALUE, event.getObjective().getLabel().get(),
-					event.getMap().getType().getLabel(ARENANET.getCurrentLocale()).get(), event.getNewOwningWorld().getName().get());
+			this.readOut(BUNDLE_KEY_OBJECTIVE_CAPTURED, Integer.MAX_VALUE, event.getObjective().getLabel().get(), event.getMap().getType().getLabel(ARENANET.getCurrentLocale())
+					.get(), event.getNewOwningWorld().getName().get());
 		}
 	}
 
@@ -219,8 +222,8 @@ class Anchorman implements IAnchorman, IMumbleLinkListener, IWVWMatchListener, I
 		checkNotNull(event);
 		checkArgument(event.getMap().getMatch().isPresent());
 		if (this.isRunning() && this.checkWVWMatchFilter(event.getMap().getMatch().get()) && this.checkWVWMapTypeFilter(event.getMap().getType())) {
-			this.readOut(BUNDLE_KEY_OBJECTIVE_OUT_OF_BUFF, Integer.MAX_VALUE - 1, event.getObjective().getLabel().get(), event.getMap().getType()
-					.getLabel(ARENANET.getCurrentLocale()).get());
+			this.readOut(BUNDLE_KEY_OBJECTIVE_OUT_OF_BUFF, Integer.MAX_VALUE - 1, event.getObjective().getLabel().get(),
+					event.getMap().getType().getLabel(ARENANET.getCurrentLocale()).get());
 		}
 	}
 

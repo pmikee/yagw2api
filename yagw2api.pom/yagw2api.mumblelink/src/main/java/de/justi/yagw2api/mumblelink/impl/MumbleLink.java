@@ -29,9 +29,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
+import com.google.common.base.Optional;
 import com.google.common.eventbus.Subscribe;
 
 import de.justi.yagw2api.mumblelink.IMumbleLink;
+import de.justi.yagw2api.mumblelink.IMumbleLinkAvatar;
 import de.justi.yagw2api.mumblelink.IMumbleLinkAvatarChangeEvent;
 import de.justi.yagw2api.mumblelink.IMumbleLinkAvatarFrontChangeEvent;
 import de.justi.yagw2api.mumblelink.IMumbleLinkAvatarPositionChangeEvent;

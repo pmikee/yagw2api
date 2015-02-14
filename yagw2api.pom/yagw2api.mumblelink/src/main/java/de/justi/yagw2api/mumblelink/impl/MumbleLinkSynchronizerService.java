@@ -103,8 +103,8 @@ final class MumbleLinkSynchronizerService extends AbstractScheduledService imple
 				if (this.currentState.isPresent() && this.lastState.isPresent()) {
 					// current and last state are present -> create selective events
 					LOGGER.trace(this + " synchronized state with game.");
-					if (!this.currentState.get().getAvatarName().equals(this.lastState.get().getAvatarName())) {
-						this.getChannel().post(new MumbleLinkAvatarChangeEvent(this.lastState.get().getAvatarName().get(), this.currentState.get().getAvatarName().get()));
+					if (!this.currentState.get().getAvatar().equals(this.lastState.get().getAvatar())) {
+						this.getChannel().post(new MumbleLinkAvatarChangeEvent(this.lastState.get().getAvatar().orNull(), this.currentState.get().getAvatar().orNull()));
 					}
 					if (!this.currentState.get().getMapId().equals(this.lastState.get().getMapId())) {
 						this.getChannel().post(new MumbleLinkMapChangeEvent(this.lastState.get().getMapId().get(), this.currentState.get().getMapId().get()));
@@ -130,7 +130,7 @@ final class MumbleLinkSynchronizerService extends AbstractScheduledService imple
 				} else if (this.currentState.isPresent()) {
 					// now value present til now -> create all events
 					LOGGER.info(this + " established connection to game.");
-					this.getChannel().post(new MumbleLinkAvatarChangeEvent(null, this.currentState.get().getAvatarName().get()));
+					this.getChannel().post(new MumbleLinkAvatarChangeEvent(null, this.currentState.get().getAvatar().orNull()));
 					this.getChannel().post(new MumbleLinkMapChangeEvent(null, this.currentState.get().getMapId().get()));
 
 					this.getChannel().post(new MumbleLinkAvatarFrontChangeEvent(null, this.currentState.get().getAvatarFront().get()));
@@ -142,7 +142,7 @@ final class MumbleLinkSynchronizerService extends AbstractScheduledService imple
 				} else if (this.lastState.isPresent()) {
 					// new state is absent -> create all events
 					LOGGER.warn(this + " lost connection to game.");
-					this.getChannel().post(new MumbleLinkAvatarChangeEvent(this.lastState.get().getAvatarName().get(), null));
+					this.getChannel().post(new MumbleLinkAvatarChangeEvent(this.lastState.get().getAvatar().orNull(), null));
 					this.getChannel().post(new MumbleLinkMapChangeEvent(this.lastState.get().getMapId().get(), null));
 
 					this.getChannel().post(new MumbleLinkAvatarFrontChangeEvent(this.lastState.get().getAvatarFront().get(), null));
@@ -155,7 +155,7 @@ final class MumbleLinkSynchronizerService extends AbstractScheduledService imple
 			} else if (this.currentState.isPresent()) {
 				// non dirty state but lost connectivity
 				LOGGER.warn(this + " lost connection to game.");
-				this.getChannel().post(new MumbleLinkAvatarChangeEvent(this.currentState.get().getAvatarName().get(), null));
+				this.getChannel().post(new MumbleLinkAvatarChangeEvent(this.currentState.get().getAvatar().orNull(), null));
 				this.getChannel().post(new MumbleLinkMapChangeEvent(this.currentState.get().getMapId().get(), null));
 
 				this.getChannel().post(new MumbleLinkAvatarFrontChangeEvent(this.currentState.get().getAvatarFront().get(), null));

@@ -31,7 +31,7 @@ public interface IMumbleLinkState {
 
 	Optional<String> getGameName();
 
-	Optional<String> getAvatarName();
+	Optional<IMumbleLinkAvatar> getAvatar();
 
 	Optional<IMumbleLinkPosition> getAvatarPosition();
 
