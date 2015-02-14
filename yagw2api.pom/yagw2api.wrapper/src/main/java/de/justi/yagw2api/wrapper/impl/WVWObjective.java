@@ -20,16 +20,26 @@ package de.justi.yagw2api.wrapper.impl;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
  */
 
-
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalField;
+import java.time.temporal.TemporalUnit;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.eventbus.EventBus;
@@ -53,7 +63,7 @@ import de.justi.yagwapi.common.AbstractHasChannel;
 import de.justi.yagwapi.common.IUnmodifiable;
 
 final class WVWObjective extends AbstractHasChannel implements IWVWObjective {
-	private static final Logger LOGGER = Logger.getLogger(WVWObjective.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(WVWObjective.class);
 	private static final IWVWModelEventFactory WVW_MODEL_EVENTS_FACTORY = YAGW2APIWrapper.INSTANCE.getWVWModelEventFactory();
 	private static final IModelFactory MODEL_FACTORY = YAGW2APIWrapper.INSTANCE.getModelFactory();
 
@@ -71,7 +81,8 @@ final class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 
 		@Override
 		public EventBus getChannel() {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName() + " and therefore can not be modified.");
+			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName()
+					+ " and therefore can not be modified.");
 		}
 
 		@Override
@@ -92,7 +103,8 @@ final class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 
 		@Override
 		public void capture(IWorld capturingWorld) {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName() + " and therefore can not be modified.");
+			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName()
+					+ " and therefore can not be modified.");
 		}
 
 		@Override
@@ -108,26 +120,29 @@ final class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 
 		@Override
 		public void connectWithMap(IWVWMap map) {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName() + " and therefore can not be modified.");
+			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName()
+					+ " and therefore can not be modified.");
 		}
 
 		@Override
 		public String toString() {
-			return Objects.toStringHelper(this).addValue(WVWObjective.this.toString()).toString();
+			return MoreObjects.toStringHelper(this).addValue(WVWObjective.this.toString()).toString();
 		}
 
 		@Override
 		public void updateOnSynchronization() {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName() + " and therefore can not be modified.");
+			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName()
+					+ " and therefore can not be modified.");
 		}
 
 		@Override
 		public void initializeOwner(IWorld owningWorld) {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName() + " and therefore can not be modified.");
+			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName()
+					+ " and therefore can not be modified.");
 		}
 
 		@Override
-		public Optional<Calendar> getEndOfBuffTimestamp() {
+		public Optional<LocalDateTime> getEndOfBuffTimestamp() {
 			return WVWObjective.this.getEndOfBuffTimestamp();
 		}
 
@@ -148,12 +163,14 @@ final class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 
 		@Override
 		public void claim(IGuild guild) {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName() + " and therefore can not be modified.");
+			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName()
+					+ " and therefore can not be modified.");
 		}
 
 		@Override
 		public void initializeClaimedByGuild(IGuild guild) {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName() + " and therefore can not be modified.");
+			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName()
+					+ " and therefore can not be modified.");
 		}
 	}
 
@@ -216,7 +233,7 @@ final class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 
 	private final IWVWLocationType location;
 	private Optional<IWorld> owningWorld = Optional.absent();
-	private Optional<Calendar> lastCaptureEventTimestamp = Optional.absent();
+	private Optional<LocalDateTime> lastCaptureEventTimestamp = Optional.absent();
 	private boolean postedEndOfBuffEvent = true;
 	private Optional<IGuild> claimedByGuild = Optional.absent();
 	private Optional<IWVWMap> map = Optional.absent();
@@ -240,7 +257,7 @@ final class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("type", this.getType()).add("name", this.getLabel()).add("location", this.location).toString();
+		return MoreObjects.toStringHelper(this).add("type", this.getType()).add("name", this.getLabel()).add("location", this.location).toString();
 	}
 
 	@Override
@@ -258,14 +275,9 @@ final class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 
 	@Override
 	public long getRemainingBuffDuration(TimeUnit unit) {
-		if (this.lastCaptureEventTimestamp.isPresent()) {
-			final Calendar now = Calendar.getInstance();
-			return unit.convert(Math.max(0, this.getType().getBuffDuration(TimeUnit.MILLISECONDS) - Math.max(0, now.getTimeInMillis() - this.lastCaptureEventTimestamp.get().getTimeInMillis())),
-					TimeUnit.MILLISECONDS);
-		} else {
-			// not capture yet
-			return 0;
-		}
+		final LocalDateTime now = LocalDateTime.now();
+		final Duration duration = Duration.between(this.lastCaptureEventTimestamp.or(now),now);
+		return unit.convert(this.getType().getBuffDuration(TimeUnit.SECONDS) - duration.get(ChronoUnit.SECONDS),TimeUnit.SECONDS);
 	}
 
 	@Override
@@ -306,10 +318,9 @@ final class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 	}
 
 	@Override
-	public Optional<Calendar> getEndOfBuffTimestamp() {
+	public Optional<LocalDateTime> getEndOfBuffTimestamp() {
 		if (this.lastCaptureEventTimestamp.isPresent()) {
-			final Calendar timestamp = Calendar.getInstance();
-			timestamp.setTimeInMillis(this.lastCaptureEventTimestamp.get().getTimeInMillis() + this.getType().getBuffDuration(TimeUnit.MILLISECONDS));
+			final LocalDateTime timestamp = this.lastCaptureEventTimestamp.get().plus(this.getType().getBuffDuration(TimeUnit.SECONDS), ChronoUnit.SECONDS);
 			return Optional.of(timestamp);
 		} else {
 			return Optional.absent();
@@ -341,7 +352,8 @@ final class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 		if ((guild != null) && (!this.claimedByGuild.isPresent() || !this.claimedByGuild.get().equals(guild))) {
 			// changed claiming guild
 			final IWVWObjectiveClaimedEvent event = WVW_MODEL_EVENTS_FACTORY.newObjectiveClaimedEvent(this, guild, this.claimedByGuild);
-			LOGGER.info(this.getLocation().getLabel(YAGW2APIArenanet.INSTANCE.getCurrentLocale()) + " has been claimed by: " + guild.getName() + " | previous claimed by " + this.claimedByGuild);
+			LOGGER.info(this.getLocation().getLabel(YAGW2APIArenanet.INSTANCE.getCurrentLocale()) + " has been claimed by: " + guild.getName() + " | previous claimed by "
+					+ this.claimedByGuild);
 			this.claimedByGuild = Optional.of(guild);
 			this.getChannel().post(event);
 		} else if ((guild == null) && this.claimedByGuild.isPresent()) {

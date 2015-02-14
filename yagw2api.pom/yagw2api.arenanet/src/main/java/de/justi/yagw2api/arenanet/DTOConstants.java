@@ -30,4 +30,5 @@ public final class DTOConstants {
 	public static final String OWNER_RED_STRING = "RED";
 	public static final String OWNER_GREEN_STRING = "GREEN";
 	public static final String OWNER_BLUE_STRING = "BLUE";
+	public static final String OWNER_NEUTRAL_STRING = "NEUTRAL";
 }

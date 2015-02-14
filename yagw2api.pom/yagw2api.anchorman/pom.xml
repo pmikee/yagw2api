@@ -8,9 +8,14 @@
 	</parent>
 	<artifactId>yagw2api.anchorman</artifactId>
 	<dependencies>
+		<!-- MODULES -->
 		<dependency>
 			<groupId>de.justi</groupId>
 			<artifactId>yagw2api.common</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.justi</groupId>
+			<artifactId>yagw2api.arenanet</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>de.justi</groupId>
@@ -21,6 +26,7 @@
 			<artifactId>yagw2api.mumblelink</artifactId>
 		</dependency>
 		
+		<!-- UTILS -->
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>

@@ -28,7 +28,8 @@ import static com.google.common.base.Preconditions.checkState;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Optional;
 
@@ -38,7 +39,7 @@ import de.justi.yagw2api.wrapper.IWorld;
 import de.justi.yagw2api.wrapper.IWorld.IWorldBuilder;
 
 final class ModelFactory implements IModelFactory {
-	private static final Logger LOGGER = Logger.getLogger(ModelFactory.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ModelFactory.class);
 	private final Map<String, IGuild> guildsMappedById = new HashMap<String, IGuild>();
 	private final Map<Integer, IWorld> worldsMappedById = new HashMap<Integer, IWorld>();
 	
@@ -68,7 +69,7 @@ final class ModelFactory implements IModelFactory {
 
 	@Override
 	public void clearCache() {
-		LOGGER.warn("Going to clear cache of "+this.toString());
+		LOGGER.info("Going to clear cache of {}",this);
 		this.guildsMappedById.clear();
 		this.worldsMappedById.clear();
 	}

@@ -20,14 +20,14 @@ package de.justi.yagw2api.arenanet;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
  */
 
-
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Locale;
 import java.util.concurrent.ForkJoinPool;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.inject.CreationException;
 import com.google.inject.Guice;
@@ -35,7 +35,7 @@ import com.google.inject.Injector;
 
 import de.justi.yagw2api.arenanet.impl.Module;
 
-public enum YAGW2APIArenanet {
+public enum YAGW2APIArenanet implements IArenanet {
 	/**
 	 * <p>
 	 * Use {@link YAGW2APIArenanet#getInstance} instead.
@@ -44,6 +44,7 @@ public enum YAGW2APIArenanet {
 	INSTANCE;
 
 	// CONSTS
+	private static final Logger LOGGER = LoggerFactory.getLogger(YAGW2APIArenanet.class);
 	private static final int THREAD_COUNT_PER_PROCESSOR = 2;
 
 	// STATIC METHODS
@@ -61,25 +62,18 @@ public enum YAGW2APIArenanet {
 
 	// CONSTRUCTOR
 	private YAGW2APIArenanet() {
-
-		try {
-			final Injector injector = Guice.createInjector(new Module());
-			this.forkJoinPool = new ForkJoinPool(Runtime.getRuntime().availableProcessors() * THREAD_COUNT_PER_PROCESSOR, ForkJoinPool.defaultForkJoinWorkerThreadFactory,
-					new Thread.UncaughtExceptionHandler() {
-						@Override
-						public void uncaughtException(Thread t, Throwable e) {
-							Logger.getLogger(YAGW2APIArenanet.class).fatal("Uncought exception thrown in " + t.getName(), e);
-						}
-					}, false);
-			this.guildService = injector.getInstance(IGuildService.class);
-			this.wvwService = injector.getInstance(IWVWService.class);
-			this.worldService = injector.getInstance(IWorldService.class);
-			this.currentLocale = injector.getInstance(Locale.class);
-		} catch (CreationException e) {
-			Logger.getLogger(YAGW2APIArenanet.class).fatal("Failed to create " + Injector.class.getSimpleName() + " for " + Module.class.getSimpleName(), e);
-			throw new IllegalStateException("Failed to create " + Injector.class.getSimpleName() + " for " + Module.class.getSimpleName(), e);
-		}
-
+		final Injector injector = Guice.createInjector(new Module());
+		this.forkJoinPool = new ForkJoinPool(Runtime.getRuntime().availableProcessors() * THREAD_COUNT_PER_PROCESSOR, ForkJoinPool.defaultForkJoinWorkerThreadFactory,
+				new Thread.UncaughtExceptionHandler() {
+					@Override
+					public void uncaughtException(Thread t, Throwable e) {
+						LOGGER.error("Uncought exception thrown in {}", t, e);
+					}
+				}, false);
+		this.guildService = injector.getInstance(IGuildService.class);
+		this.wvwService = injector.getInstance(IWVWService.class);
+		this.worldService = injector.getInstance(IWorldService.class);
+		this.currentLocale = injector.getInstance(Locale.class);
 	}
 
 	// METHODS
@@ -89,43 +83,42 @@ public enum YAGW2APIArenanet {
 		return getInstance().forkJoinPool;
 	}
 
-	/**
-	 * <p>
-	 * access to low level api calls returning dtos
-	 * <p>
-	 * 
-	 * @return
+	/* (non-Javadoc)
+	 * @see de.justi.yagw2api.arenanet.Arenanet#getWVWService()
 	 */
+	@Override
 	public IWVWService getWVWService() {
 		return this.wvwService;
 	}
 
-	/**
-	 * <p>
-	 * access to low level api calls returning dtos
-	 * <p>
-	 * 
-	 * @return
+	/* (non-Javadoc)
+	 * @see de.justi.yagw2api.arenanet.Arenanet#getWorldService()
 	 */
+	@Override
 	public IWorldService getWorldService() {
 		return this.worldService;
 	}
 
-	/**
-	 * <p>
-	 * access to low level api calls returning dtos
-	 * <p>
-	 * 
-	 * @return
+	/* (non-Javadoc)
+	 * @see de.justi.yagw2api.arenanet.Arenanet#getGuildService()
 	 */
+	@Override
 	public IGuildService getGuildService() {
 		return this.guildService;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.justi.yagw2api.arenanet.Arenanet#getCurrentLocale()
+	 */
+	@Override
 	public Locale getCurrentLocale() {
 		return getInstance().currentLocale;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.justi.yagw2api.arenanet.Arenanet#setCurrentLocale(java.util.Locale)
+	 */
+	@Override
 	public void setCurrentLocale(Locale locale) {
 		getInstance().currentLocale = checkNotNull(locale);
 	}

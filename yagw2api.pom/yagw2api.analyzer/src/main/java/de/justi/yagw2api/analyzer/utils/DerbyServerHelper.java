@@ -24,13 +24,11 @@ package de.justi.yagw2api.analyzer.utils;
 import java.io.PrintWriter;
 
 import org.apache.derby.drda.NetworkServerControl;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-
-import de.justi.yagwapi.common.LogOutputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class DerbyServerHelper extends Thread implements Runnable {
-	private static final Logger LOGGER = Logger.getLogger(DerbyServerHelper.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DerbyServerHelper.class);
 
 	public DerbyServerHelper() {
 
@@ -41,7 +39,7 @@ public final class DerbyServerHelper extends Thread implements Runnable {
 		NetworkServerControl server;
 		try {
 			server = new NetworkServerControl();
-			server.start(new PrintWriter(new LogOutputStream(LOGGER, Level.INFO)));
+			server.start(new PrintWriter(System.out));
 		} catch (Exception e) {
 			LOGGER.error("Exception thrown while starting server.", e);
 		}

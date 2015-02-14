@@ -27,6 +27,7 @@ import static com.google.common.base.Preconditions.checkState;
 import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.eventbus.Subscribe;
 
@@ -59,7 +60,7 @@ final class MumbleLink extends AbstractForwardingMumbleLinkState implements IMum
 	MumbleLink() {
 		this.mumbleLinkUpdater = new MumbleLinkSynchronizerService();
 		this.mumbleLinkUpdater.getChannel().register(this);
-		this.mumbleLinkUpdater.start();
+		this.mumbleLinkUpdater.startAsync();
 	}
 
 	@Subscribe
@@ -122,16 +123,16 @@ final class MumbleLink extends AbstractForwardingMumbleLinkState implements IMum
 	public void setActive(boolean active) {
 		if (active != this.isActive()) {
 			if (active) {
-				this.mumbleLinkUpdater.startAndWait();
+				this.mumbleLinkUpdater.stopAsync();
 			} else {
-				this.mumbleLinkUpdater.stopAndWait();
+				this.mumbleLinkUpdater.startAsync();
 			}
 		}
 	}
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("active", this.isActive()).addValue(super.toString()).toString();
+		return MoreObjects.toStringHelper(this).add("active", this.isActive()).addValue(super.toString()).toString();
 	}
 
 	@Override

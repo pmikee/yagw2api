@@ -11,6 +11,7 @@
 	</parent>
 
 	<dependencies>
+		<!-- MODULES -->
 		<dependency>
 			<groupId>de.justi</groupId>
 			<artifactId>yagw2api.common</artifactId>
@@ -19,18 +20,12 @@
 			<groupId>de.justi</groupId>
 			<artifactId>yagw2api.arenanet</artifactId>
 		</dependency>
-		<dependency>
-			<artifactId>junit</artifactId>
-			<groupId>junit</groupId>
-		</dependency>
+		
+		<!-- UTILS -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-		</dependency>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>		
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-client</artifactId>
@@ -46,6 +41,13 @@
 		<dependency>
 			<groupId>com.google.inject</groupId>
 			<artifactId>guice</artifactId>
+		</dependency>
+		
+		<!-- TEST -->
+		<dependency>
+			<artifactId>junit</artifactId>
+			<groupId>junit</groupId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>

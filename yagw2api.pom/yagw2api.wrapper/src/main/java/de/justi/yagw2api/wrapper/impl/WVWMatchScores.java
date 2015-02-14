@@ -24,7 +24,8 @@ package de.justi.yagw2api.wrapper.impl;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.justi.yagw2api.wrapper.IWVWMatch;
 import de.justi.yagw2api.wrapper.IWVWMatchScoresChangedEvent;
@@ -32,7 +33,7 @@ import de.justi.yagw2api.wrapper.IWVWModelEventFactory;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
 
 final class WVWMatchScores extends AbstractWVWScores {
-	private static final Logger LOGGER = Logger.getLogger(WVWMatchScores.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(WVWMatchScores.class);
 	private static final IWVWModelEventFactory WVW_MODEL_EVENT_FACTORY = YAGW2APIWrapper.INSTANCE.getWVWModelEventFactory();
 
 	private final IWVWMatch match;

@@ -20,28 +20,31 @@ package de.justi.yagw2api.arenanet.impl;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
  */
 
-
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.text.ParseException;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Locale;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 
+import de.justi.yagw2api.arenanet.IArenanet;
 import de.justi.yagw2api.arenanet.IWVWMatchDTO;
 import de.justi.yagw2api.arenanet.IWVWMatchDetailsDTO;
 import de.justi.yagw2api.arenanet.IWorldNameDTO;
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
 
 final class WVWMatchDTO implements IWVWMatchDTO {
-	static final transient Logger LOGGER = Logger.getLogger(WVWMapDTO.class);
+	private static final transient Logger LOGGER = LoggerFactory.getLogger(WVWMapDTO.class);
+	private static final transient IArenanet ARENANET = YAGW2APIArenanet.INSTANCE;
 
 	@Since(1.0)
 	@SerializedName("wvw_match_id")
@@ -64,9 +67,10 @@ final class WVWMatchDTO implements IWVWMatchDTO {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("id", this.id).add("redWorldId", this.redWorldId).add("redWorld", this.getRedWorldName(YAGW2APIArenanet.getInstance().getCurrentLocale()))
-				.add("blueWorldId", this.blueWorldId).add("blueWorld", this.getBlueWorldName(Locale.getDefault())).add("greenWorldId", this.greenWorldId)
-				.add("greenWorld", this.getGreenWorldName(Locale.getDefault())).add("start", this.getStartTime()).add("end", this.getEndTime()).toString();
+		return MoreObjects.toStringHelper(this).add("id", this.id).add("redWorldId", this.redWorldId)
+				.add("redWorld", this.getRedWorldName(YAGW2APIArenanet.getInstance().getCurrentLocale())).add("blueWorldId", this.blueWorldId)
+				.add("blueWorld", this.getBlueWorldName(Locale.getDefault())).add("greenWorldId", this.greenWorldId).add("greenWorld", this.getGreenWorldName(Locale.getDefault()))
+				.add("start", this.getStartTime()).add("end", this.getEndTime()).toString();
 	}
 
 	@Override
@@ -116,13 +120,14 @@ final class WVWMatchDTO implements IWVWMatchDTO {
 		return YAGW2APIArenanet.getInstance().getWVWService().retrieveMatchDetails(this.id);
 	}
 
+	// FIXME make this return optional
 	@Override
-	public Date getStartTime() {
+	public LocalDateTime getStartTime() {
 		if (this.startTimeString != null) {
 			try {
-				return ServiceUtils.ZULU_DATE_FORMAT.parse(this.startTimeString);
-			} catch (NumberFormatException | ParseException e) {
-				LOGGER.debug("Failed to parse " + this.startTimeString + " using " + ServiceUtils.ZULU_DATE_FORMAT + " of " + WVWMatchDTO.class.getSimpleName() + " with id=" + this.id, e);
+				return ServiceUtils.parseZULUTimestampString(this.startTimeString);
+			} catch (ParseException e) {
+				LOGGER.warn("Invalid startTimeString: {}", this.startTimeString);
 				return null;
 			}
 		} else {
@@ -131,13 +136,15 @@ final class WVWMatchDTO implements IWVWMatchDTO {
 		}
 	}
 
+	// FIXME make this return optional
 	@Override
-	public Date getEndTime() {
+	public LocalDateTime getEndTime() {
 		if (this.endTimeString != null) {
 			try {
-				return ServiceUtils.ZULU_DATE_FORMAT.parse(this.endTimeString);
-			} catch (NumberFormatException | ParseException e) {
-				LOGGER.debug("Failed to parse " + this.endTimeString + " using " + ServiceUtils.ZULU_DATE_FORMAT + " of " + WVWMatchDTO.class.getSimpleName() + " with id=" + this.id, e);
+
+				return ServiceUtils.parseZULUTimestampString(this.endTimeString);
+			} catch (ParseException e) {
+				LOGGER.warn("Invalid endTimeString: {}", this.startTimeString);
 				return null;
 			}
 		} else {

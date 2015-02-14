@@ -20,14 +20,14 @@ package de.justi.yagw2api.explorer;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
  */
 
-
 import java.io.IOException;
 import java.util.Locale;
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.justi.yagw2api.analyzer.IWVWAnalyzer;
 import de.justi.yagw2api.analyzer.YAGW2APIAnalyzer;
@@ -41,7 +41,7 @@ import de.justi.yagw2api.wrapper.IWVWWrapper;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
 
 public final class Main {
-	private static final Logger LOGGER = Logger.getLogger(Main.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
 	static {
 		try {
@@ -72,22 +72,19 @@ public final class Main {
 		final IWVWAnalyzer analyzer = YAGW2APIAnalyzer.getAnalyzer();
 		YAGW2APIAnalyzerPersistence.getDefaultEM(); // startup db connection
 		final MainWindow mainWindow = new MainWindow();
-		try {
-			mainWindow.setVisible(true);
+		mainWindow.setVisible(true);
 
-			// start the api wrapper
-			apiWrapper.start();
-			mainWindow.wireUp(apiWrapper);
+		// start the api wrapper
+		apiWrapper.start();
+		mainWindow.wireUp(apiWrapper);
 
-			// wire everything up
-			apiWrapper.registerWVWMapListener(analyzer);
-			apiWrapper.registerWVWMatchListener(analyzer);
-		} catch (Exception e) {
-			LOGGER.fatal("Uncought exception while running " + Main.class.getName() + "#main(String[])", e);
-		}
+		// wire everything up
+		apiWrapper.registerWVWMapListener(analyzer);
+		apiWrapper.registerWVWMatchListener(analyzer);
 
 		final IAnchorman anchorman = YAGW2APIAnchorman.INSTANCE.getAnchorman();
 		anchorman.init(apiWrapper, YAGW2APIMumbleLink.INSTANCE.getMumbleLink());
 		anchorman.start();
+
 	}
 }

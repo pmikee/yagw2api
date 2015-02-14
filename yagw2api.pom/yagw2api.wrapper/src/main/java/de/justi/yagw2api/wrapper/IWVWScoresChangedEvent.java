@@ -1,5 +1,7 @@
 package de.justi.yagw2api.wrapper;
 
+import de.justi.yagwapi.common.IEvent;
+
 /*
  * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Wrapper
@@ -22,7 +24,7 @@ package de.justi.yagw2api.wrapper;
 
 
 
-public interface IWVWScoresChangedEvent {
+public interface IWVWScoresChangedEvent extends IEvent {
 	IWVWScores getScores();
 	int getDeltaRed();
 	int getDeltaGreen();

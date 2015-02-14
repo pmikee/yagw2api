@@ -31,7 +31,8 @@ import java.util.concurrent.TimeUnit;
 
 import javax.ws.rs.core.MediaType;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Optional;
 import com.google.common.cache.Cache;
@@ -47,7 +48,7 @@ import de.justi.yagw2api.arenanet.IGuildService;
 import de.justi.yagwapi.common.RetryClientFilter;
 
 final class GuildService implements IGuildService {
-	private static final Logger LOGGER = Logger.getLogger(GuildService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(GuildService.class);
 	private static final long GUILD_DETAILS_CACHE_EXPIRE_MILLIS = 1000 * 60 * 5; // 5m
 
 	private static final URL GUILD_DETAILS_URL;
@@ -86,7 +87,7 @@ final class GuildService implements IGuildService {
 						LOGGER.debug("Built result=" + result);
 						return Optional.of(result);
 					} catch (ClientHandlerException | UniformInterfaceException e) {
-						LOGGER.fatal("Exception thrown while quering " + resource.getURI(), e);
+						LOGGER.error("Exception thrown while quering {}",resource, e);
 						return Optional.absent();
 					}
 				}

@@ -35,9 +35,10 @@ import java.util.logging.Logger;
 import org.eclipse.persistence.config.PersistenceUnitProperties;
 import org.eclipse.persistence.internal.jpa.deployment.ArchiveBase;
 import org.eclipse.persistence.jpa.Archive;
+import org.slf4j.LoggerFactory;
 
 public final class HTTPClasspathForWebStartArchive extends ArchiveBase implements Archive {
-	private static final org.apache.log4j.Logger LOGGER = org.apache.log4j.Logger.getLogger(HTTPClasspathForWebStartArchive.class);
+	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(HTTPClasspathForWebStartArchive.class);
 	private static final String[] POSSIBLE_ENTRIES = new String[] { PersistenceUnitProperties.ECLIPSELINK_PERSISTENCE_XML_DEFAULT };
 	
 	private final URL url;

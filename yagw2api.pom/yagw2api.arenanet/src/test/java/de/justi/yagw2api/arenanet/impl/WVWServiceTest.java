@@ -26,6 +26,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.text.ParseException;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -67,9 +68,9 @@ public final class WVWServiceTest extends AbstractYAGW2APITest {
 						|| ((objective.getGuildId().trim().length() > 0) && (objective.getGuildId().length() == objective.getGuildId().trim().length())));
 				assertTrue(objective.getId() > 0);
 				assertTrue("Owner of " + objective + " should either be null or equal to one of the following strings: " + DTOConstants.OWNER_BLUE_STRING + ", " + DTOConstants.OWNER_GREEN_STRING
-						+ ", " + DTOConstants.OWNER_RED_STRING,
+						+ ", " + DTOConstants.OWNER_RED_STRING+","+DTOConstants.OWNER_NEUTRAL_STRING,
 						(objective.getOwner() == null) || objective.getOwner().equals(DTOConstants.OWNER_BLUE_STRING) || objective.getOwner().equals(DTOConstants.OWNER_GREEN_STRING)
-								|| objective.getOwner().equals(DTOConstants.OWNER_RED_STRING));
+								|| objective.getOwner().equals(DTOConstants.OWNER_RED_STRING) || objective.getOwner().equals(DTOConstants.OWNER_NEUTRAL_STRING));
 				assertNotNull(objective.getGuildDetails());
 				if (objective.getGuildDetails().isPresent()) {
 					assertNotNull(objective.getGuildDetails().get());
@@ -134,22 +135,6 @@ public final class WVWServiceTest extends AbstractYAGW2APITest {
 
 		assertConsistencyOfMapTypsForMatchDetails(matchDetails);
 		assertConsistencyOfMapArray(matchDetails.getMaps());
-	}
-
-	@Test
-	public void testZuluTimeFormat() throws ParseException {
-		final Calendar cal = Calendar.getInstance(Locale.US);
-		cal.clear();
-		cal.set(2013, 5, 8);
-		cal.set(Calendar.HOUR, 3);
-		Date result = ServiceUtils.ZULU_DATE_FORMAT.parse("2013-06-08T01:00:00Z");
-		assertEquals(ServiceUtils.ZULU_DATE_FORMAT.format(cal.getTime()) + " != " + ServiceUtils.ZULU_DATE_FORMAT.format(result), cal.getTime(), result);
-
-		cal.clear();
-		cal.set(2013, 5, 14);
-		cal.set(Calendar.HOUR, 20);
-		result = ServiceUtils.ZULU_DATE_FORMAT.parse("2013-06-14T18:00:00Z");
-		assertEquals(ServiceUtils.ZULU_DATE_FORMAT.format(cal.getTime()) + " != " + ServiceUtils.ZULU_DATE_FORMAT.format(result), cal.getTime(), result);
 	}
 
 	@Test

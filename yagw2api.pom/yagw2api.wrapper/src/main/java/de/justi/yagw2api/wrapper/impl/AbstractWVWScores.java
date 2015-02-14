@@ -23,8 +23,10 @@ package de.justi.yagw2api.wrapper.impl;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.eventbus.EventBus;
 
@@ -34,7 +36,7 @@ import de.justi.yagwapi.common.IUnmodifiable;
 
 abstract class AbstractWVWScores extends AbstractHasChannel implements IWVWScores {
 	
-	private static final Logger LOGGER = Logger.getLogger(AbstractWVWScores.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractWVWScores.class);
 
 	final class UnmodifiableWVWScores implements IWVWScores, IUnmodifiable{
 		@Override
@@ -93,7 +95,7 @@ abstract class AbstractWVWScores extends AbstractHasChannel implements IWVWScore
 	}
 
 	public String toString() {
-		return Objects.toStringHelper(this).add("red",this.redScore).add("green", this.greenScore).add("blue", this.blueScore).toString();
+		return MoreObjects.toStringHelper(this).add("red",this.redScore).add("green", this.greenScore).add("blue", this.blueScore).toString();
 	}
 
 	@Override

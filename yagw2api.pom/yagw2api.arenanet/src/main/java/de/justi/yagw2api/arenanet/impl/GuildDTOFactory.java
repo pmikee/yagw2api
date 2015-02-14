@@ -24,7 +24,8 @@ package de.justi.yagw2api.arenanet.impl;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -34,7 +35,7 @@ import de.justi.yagw2api.arenanet.IGuildDTOFactory;
 import de.justi.yagw2api.arenanet.IGuildDetailsDTO;
 
 final class GuildDTOFactory implements IGuildDTOFactory {
-	private static final Logger LOGGER = Logger.getLogger(GuildDTOFactory.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(GuildDTOFactory.class);
 
 	public GuildDTOFactory() {
 
@@ -51,11 +52,10 @@ final class GuildDTOFactory implements IGuildDTOFactory {
 		try {
 			result = this.createGSON().fromJson(checkNotNull(json), GuildDetailsDTO.class);
 		} catch (JsonSyntaxException e) {
-			result = null;
-			LOGGER.fatal("Invalid response: " + json, e);
+			LOGGER.error("Invalid json received: {}",json);
+			throw e;
 		}
-		checkState(result != null);
-		LOGGER.debug("Built " + result);
+		LOGGER.debug("Built {}", result);
 		return result;
 	}
 }

@@ -20,35 +20,32 @@ package de.justi.yagw2api.analyzer.impl;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
  */
 
-
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
-import java.sql.Timestamp;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.Query;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Optional;
 
 import de.justi.yagw2api.analyzer.IWVWMatchEntity;
 import de.justi.yagw2api.analyzer.IWVWMatchEntityDAO;
 import de.justi.yagw2api.analyzer.IWVWScoresEmbeddable;
-import de.justi.yagw2api.analyzer.IWorldEntity;
 import de.justi.yagw2api.analyzer.YAGW2APIAnalyzer;
 import de.justi.yagw2api.analyzer.YAGW2APIAnalyzerPersistence;
 import de.justi.yagw2api.wrapper.IWVWMatch;
 import de.justi.yagw2api.wrapper.IWVWScores;
-import de.justi.yagw2api.wrapper.IWorld;
 
 public final class WVWMatchEntityDAO implements IWVWMatchEntityDAO {
-	private static final Logger LOGGER = Logger.getLogger(WVWMatchEntityDAO.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(WVWMatchEntityDAO.class);
 
 	@Override
 	public synchronized Optional<IWVWMatchEntity> newMatchEntityOf(IWVWMatch match) {
@@ -62,24 +59,18 @@ public final class WVWMatchEntityDAO implements IWVWMatchEntityDAO {
 				tx.begin();
 			}
 			newEntity = new WVWMatchEntity();
-			this.synchronizeEntityWithModel(newEntity, new Date(), match);
+			this.synchronizeEntityWithModel(newEntity, LocalDateTime.now(), match);
 			YAGW2APIAnalyzerPersistence.getDefaultEM().persist(newEntity);
 			YAGW2APIAnalyzerPersistence.getDefaultEM().flush();
 			if (newTransaction) {
 				tx.commit();
 			}
 		} catch (Exception e) {
-			LOGGER.error(
-					"Exception cought while creating new " + WVWMatchEntity.class.getName() + " out of " + match.getClass().getSimpleName() + "[matchId=" + match.getId() + ",redWorld="
-							+ match.getRedWorld() + ", greenWorld=" + match.getGreenWorld() + ", blueWorld=" + match.getBlueWorld() + "]", e);
-			newEntity = null;
+			LOGGER.error("Exception cought while creating new {}  out of {}", WVWMatchEntity.class, match, e);
 			if (tx.isActive()) {
-				if (LOGGER.isTraceEnabled()) {
-					LOGGER.trace("Going to rollback " + EntityTransaction.class.getSimpleName() + " for new " + IWorldEntity.class.getSimpleName() + " creation out of " + IWorld.class.getSimpleName()
-							+ " for " + newEntity);
-				}
 				tx.rollback();
 			}
+			newEntity = null;
 		}
 		return Optional.<IWVWMatchEntity> fromNullable(newEntity);
 	}
@@ -100,11 +91,8 @@ public final class WVWMatchEntityDAO implements IWVWMatchEntityDAO {
 			}
 			success = true;
 		} catch (Exception e) {
-			LOGGER.error("Exception cought while saving " + entity, e);
+			LOGGER.error("Exception cought while saving {}", entity, e);
 			if (tx.isActive() && !tx.getRollbackOnly()) {
-				if (LOGGER.isTraceEnabled()) {
-					LOGGER.trace("Going to rollback " + EntityTransaction.class.getSimpleName() + " for saving " + IWVWMatchEntity.class.getSimpleName() + ": " + entity);
-				}
 				tx.rollback();
 			}
 			success = false;
@@ -113,7 +101,7 @@ public final class WVWMatchEntityDAO implements IWVWMatchEntityDAO {
 	}
 
 	@Override
-	public synchronized Optional<IWVWMatchEntity> findWVWMatchEntity(Date start, Date end, String originMatchId) {
+	public synchronized Optional<IWVWMatchEntity> findWVWMatchEntity(LocalDateTime start, LocalDateTime end, String originMatchId) {
 		checkNotNull(start);
 		checkNotNull(end);
 		checkNotNull(originMatchId);
@@ -121,17 +109,15 @@ public final class WVWMatchEntityDAO implements IWVWMatchEntityDAO {
 		final Query q = YAGW2APIAnalyzerPersistence.getDefaultEM().createQuery(
 				"SELECT DISTINCT m FROM wvw_match m WHERE m.matchId=:matchId AND m.startTimestamp=:startTimestamp AND m.endTimestamp=:endTimestamp");
 		q.setParameter("matchId", originMatchId);
-		q.setParameter("startTimestamp", new Timestamp(start.getTime()));
-		q.setParameter("endTimestamp", new Timestamp(end.getTime()));
+		q.setParameter("startTimestamp", start);
+		q.setParameter("endTimestamp", end);
 		try {
 			return Optional.<IWVWMatchEntity> of((IWVWMatchEntity) q.getSingleResult());
 		} catch (NoResultException e) {
 			return Optional.absent();
 		} catch (NonUniqueResultException e) {
-			LOGGER.fatal("More that result returned for query that should return only one single " + IWVWMatchEntity.class.getSimpleName() + " identified by start=" + start + ", end=" + end
-					+ " and originMatchId=" + originMatchId, e);
-			throw new IllegalStateException("More that result returned for query that should return only one single " + IWVWMatchEntity.class.getSimpleName() + " identified by start=" + start
-					+ ", end=" + end + " and originMatchId=" + originMatchId, e);
+			throw new IllegalStateException("More that result returned for query that should return only one single " + IWVWMatchEntity.class.getSimpleName()
+					+ " identified by start=" + start + ", end=" + end + " and originMatchId=" + originMatchId, e);
 		}
 	}
 
@@ -139,28 +125,25 @@ public final class WVWMatchEntityDAO implements IWVWMatchEntityDAO {
 	public synchronized IWVWMatchEntity findOrCreateWVWMatchEntityOf(IWVWMatch match) {
 		checkNotNull(match);
 		checkState(YAGW2APIAnalyzerPersistence.getDefaultEM().isOpen());
-		final Optional<IWVWMatchEntity> alreadyThere = this.findWVWMatchEntity(match.getStartTimestamp().getTime(), match.getEndTimestamp().getTime(), match.getId());
+		final Optional<IWVWMatchEntity> alreadyThere = this.findWVWMatchEntity(match.getStartTimestamp(), match.getEndTimestamp(), match.getId());
 		if (alreadyThere.isPresent()) {
-			if (LOGGER.isInfoEnabled()) {
-				LOGGER.info("Found already existing " + IWVWMatchEntity.class.getSimpleName() + " for " + IWVWMatch.class.getSimpleName() + " matchId=" + match.getId());
-			}
+			LOGGER.trace("Found match: {}", match);
 			return alreadyThere.get();
 		} else {
 			final Optional<IWVWMatchEntity> newCreated = this.newMatchEntityOf(match);
 			checkState(newCreated.isPresent());
-			if (LOGGER.isInfoEnabled()) {
-				LOGGER.info("Created new not persisted " + IWVWMatchEntity.class.getSimpleName() + " for " + IWVWMatch.class.getSimpleName() + " matchId=" + match.getId());
-			}
+			LOGGER.trace("Created new match: {}",match);
 			return newCreated.get();
 		}
 	}
 
 	private boolean doesModelScoreDiffFromEntityScore(IWVWScoresEmbeddable scoreEntity, IWVWScores scoreModel) {
-		return (scoreEntity.getBlueScore() != scoreModel.getBlueScore()) || (scoreEntity.getGreenScore() != scoreModel.getGreenScore()) || (scoreEntity.getRedScore() != scoreModel.getRedScore());
+		return (scoreEntity.getBlueScore() != scoreModel.getBlueScore()) || (scoreEntity.getGreenScore() != scoreModel.getGreenScore())
+				|| (scoreEntity.getRedScore() != scoreModel.getRedScore());
 	}
 
 	@Override
-	public synchronized void synchronizeEntityWithModel(IWVWMatchEntity entity, Date timestamp, IWVWMatch model) {
+	public synchronized void synchronizeEntityWithModel(IWVWMatchEntity entity, LocalDateTime timestamp, IWVWMatch model) {
 		checkNotNull(entity);
 		checkNotNull(timestamp);
 		checkNotNull(model);
@@ -205,43 +188,49 @@ public final class WVWMatchEntityDAO implements IWVWMatchEntityDAO {
 		entity.getBlueMap().setType(model.getBlueMap().getType());
 		final Optional<IWVWScoresEmbeddable> latestBlueMapScores = entity.getBlueMap().getLatestScores();
 		if (!latestBlueMapScores.isPresent() || (this.doesModelScoreDiffFromEntityScore(latestBlueMapScores.get(), model.getBlueMap().getScores()))) {
-			entity.getBlueMap().addScores(timestamp,
-					new WVWScoresEmbeddable(model.getBlueMap().getScores().getRedScore(), model.getBlueMap().getScores().getGreenScore(), model.getBlueMap().getScores().getBlueScore()));
+			entity.getBlueMap().addScores(
+					timestamp,
+					new WVWScoresEmbeddable(model.getBlueMap().getScores().getRedScore(), model.getBlueMap().getScores().getGreenScore(), model.getBlueMap().getScores()
+							.getBlueScore()));
 		}
 		checkState(entity.getGreenMap() != null);
 		entity.getGreenMap().setType(model.getGreenMap().getType());
 		final Optional<IWVWScoresEmbeddable> latestGreenMapScores = entity.getGreenMap().getLatestScores();
 		if (!latestGreenMapScores.isPresent() || (this.doesModelScoreDiffFromEntityScore(latestGreenMapScores.get(), model.getGreenMap().getScores()))) {
-			entity.getGreenMap().addScores(timestamp,
-					new WVWScoresEmbeddable(model.getGreenMap().getScores().getRedScore(), model.getGreenMap().getScores().getGreenScore(), model.getGreenMap().getScores().getBlueScore()));
+			entity.getGreenMap().addScores(
+					timestamp,
+					new WVWScoresEmbeddable(model.getGreenMap().getScores().getRedScore(), model.getGreenMap().getScores().getGreenScore(), model.getGreenMap().getScores()
+							.getBlueScore()));
 		}
 		checkState(entity.getRedMap() != null);
 		entity.getRedMap().setType(model.getRedMap().getType());
 		final Optional<IWVWScoresEmbeddable> latestRedMapScores = entity.getRedMap().getLatestScores();
 		if (!latestRedMapScores.isPresent() || (this.doesModelScoreDiffFromEntityScore(latestRedMapScores.get(), model.getRedMap().getScores()))) {
-			entity.getRedMap().addScores(timestamp,
-					new WVWScoresEmbeddable(model.getRedMap().getScores().getRedScore(), model.getRedMap().getScores().getGreenScore(), model.getRedMap().getScores().getBlueScore()));
+			entity.getRedMap().addScores(
+					timestamp,
+					new WVWScoresEmbeddable(model.getRedMap().getScores().getRedScore(), model.getRedMap().getScores().getGreenScore(), model.getRedMap().getScores()
+							.getBlueScore()));
 		}
 		checkState(entity.getCenterMap() != null);
 		entity.getCenterMap().setType(model.getCenterMap().getType());
 		final Optional<IWVWScoresEmbeddable> latestCenterMapScores = entity.getCenterMap().getLatestScores();
 		if (!latestCenterMapScores.isPresent() || (this.doesModelScoreDiffFromEntityScore(latestCenterMapScores.get(), model.getCenterMap().getScores()))) {
-			entity.getCenterMap().addScores(timestamp,
-					new WVWScoresEmbeddable(model.getCenterMap().getScores().getRedScore(), model.getCenterMap().getScores().getGreenScore(), model.getCenterMap().getScores().getBlueScore()));
+			entity.getCenterMap().addScores(
+					timestamp,
+					new WVWScoresEmbeddable(model.getCenterMap().getScores().getRedScore(), model.getCenterMap().getScores().getGreenScore(), model.getCenterMap().getScores()
+							.getBlueScore()));
 		}
 
 		// synchronize timestamps
-		entity.setStartTimestamp(model.getStartTimestamp().getTime());
-		entity.setEndTimestamp(model.getEndTimestamp().getTime());
+		entity.setStartTimestamp(model.getStartTimestamp());
+		entity.setEndTimestamp(model.getEndTimestamp());
 
 		final Optional<IWVWScoresEmbeddable> latestScores = entity.getLatestScores();
-		if (LOGGER.isDebugEnabled() && latestScores.isPresent()) {
-			LOGGER.debug("Latest score=" + latestScores.get());
-		}
+		LOGGER.trace("Latest score={}", latestScores.orNull());
 		if (!latestScores.isPresent() || (this.doesModelScoreDiffFromEntityScore(latestScores.get(), model.getScores()))) {
 			entity.addScores(timestamp, new WVWScoresEmbeddable(model.getScores().getRedScore(), model.getScores().getGreenScore(), model.getScores().getBlueScore()));
 		}
 
-		LOGGER.trace("Synchronized " + entity.getId() + " with " + model.getId() + " @ " + timestamp);
+		LOGGER.trace("Synchronized {} with {} @{}",entity,model,timestamp);
 	}
 }

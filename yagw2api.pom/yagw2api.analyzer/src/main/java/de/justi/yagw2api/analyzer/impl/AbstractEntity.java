@@ -21,12 +21,15 @@ package de.justi.yagw2api.analyzer.impl;
  */
 
 
+import javax.annotation.Nullable;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
+import com.google.common.base.Optional;
 
 import de.justi.yagw2api.analyzer.IEntity;
 
@@ -34,15 +37,20 @@ import de.justi.yagw2api.analyzer.IEntity;
 abstract class AbstractEntity implements IEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
-	public long id;
+	@Nullable
+	public Long id = null;
 
 	@Override
-	public final long getId() {
-		return this.id;
+	public final Optional<Long> getId() {
+		return Optional.fromNullable(this.id);
 	}
 
+	protected ToStringHelper toStringHelper(){
+		return MoreObjects.toStringHelper(this).add("id", this.id);
+	}
+	
 	@Override
-	public String toString() {
-		return Objects.toStringHelper(this).add("id", this.id).toString();
+	public final String toString() {
+		return this.toStringHelper().toString();
 	}
 }

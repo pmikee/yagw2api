@@ -21,7 +21,7 @@ package de.justi.yagw2api.analyzer;
  */
 
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import com.google.common.base.Optional;
 
@@ -32,7 +32,7 @@ public interface IWVWMatchEntityDAO {
 
 	boolean save(IWVWMatchEntity entity);
 
-	Optional<IWVWMatchEntity> findWVWMatchEntity(Date start, Date end, String originMatchId);
+	Optional<IWVWMatchEntity> findWVWMatchEntity(LocalDateTime start, LocalDateTime end, String originMatchId);
 
 	/**
 	 * <p>
@@ -61,5 +61,5 @@ public interface IWVWMatchEntityDAO {
 	 * @param timestamp
 	 * @param model
 	 */
-	void synchronizeEntityWithModel(IWVWMatchEntity entity, Date timestamp, IWVWMatch model);
+	void synchronizeEntityWithModel(IWVWMatchEntity entity, LocalDateTime timestamp, IWVWMatch model);
 }

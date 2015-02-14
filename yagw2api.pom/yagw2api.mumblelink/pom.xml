@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>de.justi</groupId>
@@ -10,40 +11,36 @@
 	<description>JNA based implementation of the Mumble memory-mapped-file IPC interface.</description>
 
 	<dependencies>
-
-		<dependency>
-			<artifactId>yagw2api.test</artifactId>
-			<groupId>de.justi</groupId>
-		</dependency>
+		<!-- MODULES -->
 		<dependency>
 			<artifactId>yagw2api.common</artifactId>
 			<groupId>de.justi</groupId>
 		</dependency>
 
+		<!-- UTILS -->
 		<dependency>
 			<groupId>net.java.dev.jna</groupId>
-			<artifactId>platform</artifactId>
+			<artifactId>jna-platform</artifactId>
 		</dependency>
-
-
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 		</dependency>
-
-
 		<dependency>
 			<groupId>com.google.inject</groupId>
 			<artifactId>guice</artifactId>
 		</dependency>
 
+		<!-- TEST -->
 		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
+			<artifactId>yagw2api.test</artifactId>
+			<groupId>de.justi</groupId>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<artifactId>junit</artifactId>
 			<groupId>junit</groupId>
+			<scope>test</scope>
 		</dependency>
 
 	</dependencies>

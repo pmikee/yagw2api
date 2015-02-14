@@ -29,7 +29,8 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
@@ -183,7 +184,7 @@ public enum WVWLocationType implements IWVWLocationType {
 	private static final IWVWMapType GREEN_MAPTYPE = WVWMapType.GREEN;
 	private static final IWVWMapType BLUE_MAPTYPE = WVWMapType.BLUE;
 
-	private static final Logger LOGGER = Logger.getLogger(WVWLocationType.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(WVWLocationType.class);
 	private static final Map<Integer, IWVWLocationType> LOCATIONTYPES_MAPPED_BY_OBJECTIVE_ID;
 	private static final Map<IWVWMapType, Set<IWVWLocationType>> LOCATIONTYPES_MAPPED_BY_MAPTYPE;
 	static {
@@ -206,7 +207,6 @@ public enum WVWLocationType implements IWVWLocationType {
 			} else if (location.getMapType().isRed()) {
 				redLocationSetBuilder.add(location);
 			} else {
-				LOGGER.fatal("Invalid map type(" + location.getMapType() + ") for location " + location);
 				throw new IllegalStateException("Invalid map type(" + location.getMapType() + ") for location " + location);
 			}
 		}

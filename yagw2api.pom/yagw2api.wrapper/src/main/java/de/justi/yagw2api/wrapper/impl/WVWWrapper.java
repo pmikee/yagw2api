@@ -32,7 +32,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.eventbus.Subscribe;
@@ -54,7 +55,7 @@ import de.justi.yagw2api.wrapper.IWVWWrapper;
 import de.justi.yagw2api.wrapper.IWorld;
 
 final class WVWWrapper implements IWVWWrapper {
-	private static final Logger LOGGER = Logger.getLogger(WVWWrapper.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(WVWWrapper.class);
 	private WVWSynchronizer deamon = null;
 	private final Map<IWVWMatch, Collection<IWVWMatchListener>> singleMatchListeners = new CopyOnWriteHashMap<IWVWMatch, Collection<IWVWMatchListener>>();
 	private final Collection<IWVWMatchListener> allMatchesListeners = new CopyOnWriteArrayList<IWVWMatchListener>();
@@ -81,29 +82,16 @@ final class WVWWrapper implements IWVWWrapper {
 		this.initDemaonIfRequired();
 		checkState(this.deamon != null);
 		checkState(!this.deamon.isRunning());
-		this.deamon.start();
+		this.deamon.startAsync();
 	}
 
-	@Override
-	public void startAndWait() {
-		this.initDemaonIfRequired();
-		checkState(this.deamon != null);
-		checkState(!this.deamon.isRunning());
-		this.deamon.startAndWait();
-	}
 
-	@Override
-	public void stopAndWait() {
-		checkState(this.deamon != null);
-		checkState(this.deamon.isRunning());
-		this.deamon.stopAndWait();
-	}
 
 	@Override
 	public void stop() {
 		checkState(this.deamon != null);
 		checkState(this.deamon.isRunning());
-		this.deamon.stop();
+		this.deamon.stopAsync();
 	}
 
 	@Override

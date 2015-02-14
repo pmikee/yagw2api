@@ -9,25 +9,28 @@
 	<artifactId>yagw2api.explorer</artifactId>
 
 	<dependencies>
+		<!-- MODULES -->
+		
 		<dependency>
-			<groupId>org.swinglabs</groupId>
-			<artifactId>swingx-core</artifactId>
+			<groupId>de.justi</groupId>
+			<artifactId>yagw2api.wrapper</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.swinglabs</groupId>
-			<artifactId>swingx-ws</artifactId>
+			<groupId>de.justi</groupId>
+			<artifactId>yagw2api.mumblelink</artifactId>
 		</dependency>
 		<dependency>
-			<artifactId>junit</artifactId>
-			<groupId>junit</groupId>
+			<groupId>de.justi</groupId>
+			<artifactId>yagw2api.analyzer</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>de.justi</groupId>
+			<artifactId>yagw2api.anchorman</artifactId>
+		</dependency>
+		<!-- UTILS -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
+			<artifactId>slf4j-api</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.miglayout</groupId>
@@ -45,25 +48,13 @@
 			<groupId>net.sourceforge.mydoggy</groupId>
 			<artifactId>mydoggy-api</artifactId>
 		</dependency>
+		
+		
+		<!-- TEST -->
 		<dependency>
-			<groupId>de.justi</groupId>
-			<artifactId>yagw2api.wrapper</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>de.justi</groupId>
-			<artifactId>yagw2api.gw2stats</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>de.justi</groupId>
-			<artifactId>yagw2api.mumblelink</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>de.justi</groupId>
-			<artifactId>yagw2api.analyzer</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>de.justi</groupId>
-			<artifactId>yagw2api.anchorman</artifactId>
+			<artifactId>junit</artifactId>
+			<groupId>junit</groupId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>

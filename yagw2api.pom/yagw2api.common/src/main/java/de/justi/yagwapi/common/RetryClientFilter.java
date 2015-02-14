@@ -23,7 +23,8 @@ package de.justi.yagwapi.common;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientRequest;
@@ -31,7 +32,7 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.filter.ClientFilter;
 
 public final class RetryClientFilter extends ClientFilter {
-	private static final Logger LOGGER = Logger.getLogger(RetryClientFilter.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(RetryClientFilter.class);
 	private final int maximumRetryCount;
 
 	public RetryClientFilter(int maximumRetryCount) {

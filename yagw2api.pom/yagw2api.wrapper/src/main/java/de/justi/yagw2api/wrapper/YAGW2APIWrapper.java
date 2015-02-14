@@ -23,7 +23,8 @@ package de.justi.yagw2api.wrapper;
 
 import java.util.concurrent.ForkJoinPool;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -32,7 +33,7 @@ import de.justi.yagw2api.wrapper.impl.Module;
 
 public enum YAGW2APIWrapper {
 	INSTANCE;
-	private static final Logger LOGGER = Logger.getLogger(YAGW2APIWrapper.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(YAGW2APIWrapper.class);
 	private static final int THREAD_COUNT_PER_PROCESSOR = 2;
 
 	private final ForkJoinPool forkJoinPool;
@@ -47,7 +48,7 @@ public enum YAGW2APIWrapper {
 				new Thread.UncaughtExceptionHandler() {
 					@Override
 					public void uncaughtException(Thread t, Throwable e) {
-						LOGGER.fatal("Uncought exception thrown in " + t.getName(), e);
+						LOGGER.error("Uncought exception thrown in {}",t, e);
 					}
 				}, false);
 		this.modelFactory = injector.getInstance(IModelFactory.class);

@@ -48,18 +48,21 @@ public final class ObjectiveTableCellRenderer extends DefaultTableCellRenderer {
 		final Optional<IWVWObjective> objective = model.getObjectiveForRow(table.convertRowIndexToModel(row));
 		checkArgument(objective.isPresent());
 		final Optional<IWorld> owner = objective.get().getOwner();
-		checkArgument(owner.isPresent());
 		final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 		final Optional<IWVWMap> map = objective.get().getMap();
 		if (map.isPresent()) {
 			final Optional<IWVWMatch> match = map.get().getMatch();
 			if (match.isPresent()) {
-				if (match.get().getBlueWorld().equals(owner.get())) {
-					c.setBackground(isSelected ? MainWindow.BLUE_WORLD_FG : MainWindow.BLUE_WORLD_BG);
-				} else if (match.get().getGreenWorld().equals(owner.get())) {
-					c.setBackground(isSelected ? MainWindow.GREEN_WORLD_FG : MainWindow.GREEN_WORLD_BG);
-				} else if (match.get().getRedWorld().equals(owner.get())) {
-					c.setBackground(isSelected ? MainWindow.RED_WORLD_FG : MainWindow.RED_WORLD_BG);
+				if(!owner.isPresent()){
+					c.setBackground(isSelected ? MainWindow.NEUTRAL_FG : MainWindow.NEUTRAL_BG);
+				}else{
+					if (match.get().getBlueWorld().equals(owner.get())) {
+						c.setBackground(isSelected ? MainWindow.BLUE_WORLD_FG : MainWindow.BLUE_WORLD_BG);
+					} else if (match.get().getGreenWorld().equals(owner.get())) {
+						c.setBackground(isSelected ? MainWindow.GREEN_WORLD_FG : MainWindow.GREEN_WORLD_BG);
+					} else if (match.get().getRedWorld().equals(owner.get())) {
+						c.setBackground(isSelected ? MainWindow.RED_WORLD_FG : MainWindow.RED_WORLD_BG);
+					}
 				}
 			}
 		}

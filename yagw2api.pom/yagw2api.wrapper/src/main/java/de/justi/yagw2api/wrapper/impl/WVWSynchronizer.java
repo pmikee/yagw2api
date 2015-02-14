@@ -31,7 +31,8 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -51,7 +52,7 @@ import de.justi.yagwapi.common.IHasChannel;
 final class WVWSynchronizer extends AbstractScheduledService implements IHasChannel {
 	private static final IWVWService SERVICE = YAGW2APIArenanet.getInstance().getWVWService();
 	private static final long DELAY_MILLIS = 500;
-	private static final Logger LOGGER = Logger.getLogger(WVWSynchronizer.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(WVWSynchronizer.class);
 
 	private Map<String, IWVWMatch> matchesMappedById = new CopyOnWriteHashMap<String, IWVWMatch>();
 
@@ -72,14 +73,9 @@ final class WVWSynchronizer extends AbstractScheduledService implements IHasChan
 
 		try {
 			final long startTimestamp = System.currentTimeMillis();
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Will now initialize new " + this.getClass().getSimpleName());
-			}
 			final IWVWMatchesDTO matchesDto = SERVICE.retrieveAllMatches();
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Retrieved " + IWVWMatchesDTO.class.getSimpleName() + " after " + (System.currentTimeMillis() - startTimestamp) + "ms");
-				LOGGER.debug("Going to initialize new " + this.getClass().getSimpleName() + " for " + matchesDto);
-			}
+
+			LOGGER.debug("Retrieved {} after {}ms",matchesDto,(System.currentTimeMillis() - startTimestamp));
 			final WVWSynchronizerInitAction initAction = new WVWSynchronizerInitAction(Arrays.asList(matchesDto.getMatches()));
 			initAction.getChannel().register(this);
 			final Thread asyncStartup = new Thread() {
@@ -88,18 +84,16 @@ final class WVWSynchronizer extends AbstractScheduledService implements IHasChan
 					try {
 						YAGW2APIWrapper.INSTANCE.getForkJoinPool().invoke(initAction);
 						final long endTimestamp = System.currentTimeMillis();
-						if (LOGGER.isInfoEnabled()) {
-							LOGGER.info("Initialized " + this.getClass().getSimpleName() + " in " + (endTimestamp - startTimestamp) + "ms");
-						}
+						LOGGER.info("Initialized {} in {}ms", WVWSynchronizer.this,(endTimestamp - startTimestamp));
 					} catch (Exception e) {
-						LOGGER.fatal("Exception thrown during initialization of " + WVWSynchronizer.this);
+						LOGGER.error("Exception thrown during initialization of {}",WVWSynchronizer.this);
 					}
 				}
 			};
 			asyncStartup.setDaemon(true);
 			asyncStartup.start();
 		} catch (Exception e) {
-			LOGGER.fatal("Cought exception while initializing " + this, e);
+			LOGGER.error("Cought exception while initializing {}", this, e);
 			throw e;
 		}
 	}
@@ -134,7 +128,7 @@ final class WVWSynchronizer extends AbstractScheduledService implements IHasChan
 			}
 			this.channel.post(event);
 		} catch (Exception e) {
-			LOGGER.fatal("Cought exception while handling of " + event, e);
+			LOGGER.error("Cought exception while handling of {}",event, e);
 			throw e;
 		}
 	}
@@ -143,20 +137,15 @@ final class WVWSynchronizer extends AbstractScheduledService implements IHasChan
 	protected void runOneIteration() throws Exception {
 		try {
 			final Map<String, IWVWMatch> defensiveCopyOfMatchesMappedById = Collections.unmodifiableMap(new HashMap<String, IWVWMatch>(this.getMatchesMappedById()));
-			if (LOGGER.isInfoEnabled()) {
-				LOGGER.info("Going to synchronize " + defensiveCopyOfMatchesMappedById.keySet());
-			}
 			final long startTimestamp = System.currentTimeMillis();
 			final WVWSynchronizerAction action = new WVWSynchronizerAction(defensiveCopyOfMatchesMappedById);
 			YAGW2APIWrapper.INSTANCE.getForkJoinPool().invoke(action);
 
 			final long endTime = System.currentTimeMillis();
 			final long executionTime = endTime - startTimestamp;
-			if (LOGGER.isInfoEnabled()) {
-				LOGGER.info("Done with " + this.getClass().getSimpleName() + " iteration after " + executionTime + "ms");
-			}
+			LOGGER.trace("Done with iteration of {} after {}ms",this,executionTime);
 		} catch (Exception e) {
-			LOGGER.fatal("Cought exception during run of iteration of " + this.getClass().getSimpleName(), e);
+			LOGGER.error("Cought exception during run of iteration of {}",this, e);
 			throw e;
 		}
 	}

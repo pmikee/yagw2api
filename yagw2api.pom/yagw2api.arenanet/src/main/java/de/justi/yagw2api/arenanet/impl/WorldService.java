@@ -37,13 +37,15 @@ import java.util.concurrent.TimeUnit;
 
 import javax.ws.rs.core.MediaType;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Optional;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
+import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.UniformInterfaceException;
@@ -55,7 +57,7 @@ import de.justi.yagw2api.arenanet.IWorldService;
 import de.justi.yagwapi.common.RetryClientFilter;
 
 final class WorldService implements IWorldService {
-	private static final Logger LOGGER = Logger.getLogger(WorldService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(WorldService.class);
 	private static final long WOLRD_NAMES_CACHE_EXPIRE_MILLIS = 1000 * 60 * 60 * 12; // 12h
 	private static final IWorldNameDTO[] EMPTY_WORLD_NAME_ARRAY = new IWorldNameDTO[0];
 	private static final URL WORL_NAMES_URL;
@@ -73,14 +75,13 @@ final class WorldService implements IWorldService {
 			.removalListener(new RemovalListener<Locale, Optional<IWorldNameDTO[]>>() {
 				@Override
 				public void onRemoval(RemovalNotification<Locale, Optional<IWorldNameDTO[]>> notification) {
-					// synchronize worldNamesCache
-					// and worldNameCaches
+					// synchronize worldNamesCache with worldNameCaches
 					if (WorldService.this.worldNameCaches.containsKey(notification.getKey())) {
 						WorldService.this.worldNameCaches.get(notification.getKey()).invalidateAll();
 					}
 				}
 			}).build();
-	private final Map<Locale, Cache<Integer, Optional<IWorldNameDTO>>> worldNameCaches = new HashMap<Locale, Cache<Integer, Optional<IWorldNameDTO>>>();
+	private final Map<Locale, Cache<Integer, Optional<IWorldNameDTO>>> worldNameCaches = Maps.newHashMap();
 	private final IWorldDTOFactory worldDTOFactory;
 
 	// METHODS
@@ -125,21 +126,20 @@ final class WorldService implements IWorldService {
 					final WebResource.Builder builder = resource.accept(MediaType.APPLICATION_JSON_TYPE);
 					try {
 						final String response = builder.get(String.class);
-						LOGGER.trace("Retrieved response=" + response);
+						LOGGER.trace("Retrieved response={}", response);
 						final IWorldNameDTO[] result = WorldService.this.worldDTOFactory.newWorldNamesOf(response);
 						if (LOGGER.isDebugEnabled()) {
-							LOGGER.debug("Built result=" + Arrays.deepToString(result));
+							LOGGER.debug("Built result={}", Arrays.deepToString(result));
 						}
 						return Optional.of(result);
 					} catch (ClientHandlerException | UniformInterfaceException e) {
-						LOGGER.fatal("Exception thrown while quering " + resource.getURI(), e);
+						LOGGER.error("Exception thrown while quering {}", resource, e);
 						return Optional.absent();
 					}
 				}
 			}).or(EMPTY_WORLD_NAME_ARRAY);
 		} catch (ExecutionException e) {
-			LOGGER.error("Failed to retrieve all " + IWorldNameDTO.class.getSimpleName() + " from cache for lang=" + locale, e);
-			throw new IllegalStateException("Failed to retrieve all " + IWorldNameDTO.class.getSimpleName() + " from cache for lang=" + locale, e);
+			throw new Error("Failed to retrieve all " + IWorldNameDTO.class.getSimpleName() + " from cache for lang=" + locale, e);
 		}
 	}
 
@@ -160,15 +160,11 @@ final class WorldService implements IWorldService {
 						result = names[index].getId() == worldId ? names[index] : null;
 						index++;
 					}
-					if (LOGGER.isTraceEnabled()) {
-						LOGGER.trace("Retrieved " + IWorldNameDTO.class.getSimpleName() + " for worldId=" + worldId + " and lang=" + locale + ": " + result);
-					}
 					return Optional.fromNullable(result);
 				}
 			});
 		} catch (ExecutionException e) {
-			LOGGER.error("Failed to retrieve " + IWorldNameDTO.class.getSimpleName() + " from cache for worldId=" + worldId + " lang=" + locale, e);
-			throw new IllegalStateException("Failed to retrieve all " + IWorldNameDTO.class.getSimpleName() + " from cache for worldId=" + worldId + " lang=" + locale, e);
+			throw new Error("Failed to retrieve all " + IWorldNameDTO.class.getSimpleName() + " from cache for worldId=" + worldId + " lang=" + locale, e);
 		}
 	}
 }

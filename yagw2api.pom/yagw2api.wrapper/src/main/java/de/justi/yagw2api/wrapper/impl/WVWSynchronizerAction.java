@@ -27,7 +27,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
@@ -38,6 +39,7 @@ import de.justi.yagw2api.arenanet.IWVWMapDTO;
 import de.justi.yagw2api.arenanet.IWVWMatchDTO;
 import de.justi.yagw2api.arenanet.IWVWMatchDetailsDTO;
 import de.justi.yagw2api.arenanet.IWVWObjectiveDTO;
+import de.justi.yagw2api.arenanet.IWVWObjectiveNameDTO;
 import de.justi.yagw2api.arenanet.IWVWService;
 import de.justi.yagw2api.arenanet.IWorldNameDTO;
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
@@ -52,7 +54,7 @@ import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
 final class WVWSynchronizerAction extends AbstractSynchronizerAction<String, WVWSynchronizerAction> {
 	private static final long serialVersionUID = 8391498327079686666L;
 	private static final int MAX_CHUNK_SIZE = 1;
-	private static final Logger LOGGER = Logger.getLogger(WVWSynchronizerAction.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(WVWSynchronizerAction.class);
 	private static final IWVWService WVW_SERVICE = YAGW2APIArenanet.INSTANCE.getWVWService();
 	private static final IModelFactory MODEL_FACTORY = YAGW2APIWrapper.INSTANCE.getModelFactory();
 
@@ -82,7 +84,6 @@ final class WVWSynchronizerAction extends AbstractSynchronizerAction<String, WVW
 	@Override
 	protected void perform(String matchId) {
 		final long startTimestamp = System.currentTimeMillis();
-		LOGGER.trace("Going to synchronize matchId=" + matchId);
 		final Optional<IWVWMatchDTO> matchDTOOptional = WVW_SERVICE.retrieveMatch(matchId);
 		if (matchDTOOptional.isPresent() && matchDTOOptional.get().getDetails().isPresent()) {
 			final IWVWMatchDTO matchDTO = matchDTOOptional.get();
@@ -104,7 +105,7 @@ final class WVWSynchronizerAction extends AbstractSynchronizerAction<String, WVW
 		}
 		final long endTimestamp = System.currentTimeMillis();
 		final long duration = endTimestamp - startTimestamp;
-		LOGGER.info("Synchronized matchId=" + matchId + " in " + duration + "ms.");
+		LOGGER.trace("Synchronized matchId=" + matchId + " in " + duration + "ms.");
 	}
 
 	private void synchronizeWorldNames(IWVWMatch matchModel, IWVWMatchDTO matchDTO) {
@@ -143,9 +144,6 @@ final class WVWSynchronizerAction extends AbstractSynchronizerAction<String, WVW
 			if (optionalObjectiveModel.isPresent()) {
 				objectiveModel = optionalObjectiveModel.get();
 				objectiveModel.updateOnSynchronization();
-				if (LOGGER.isTraceEnabled()) {
-					LOGGER.trace("Going to synchronize model=" + objectiveModel + " with dto=" + objectiveDTO);
-				}
 
 				// 1.1 synchronize owner
 				potentialNewOwner = match.getWorldByDTOOwnerString(objectiveDTO.getOwner());
@@ -159,7 +157,7 @@ final class WVWSynchronizerAction extends AbstractSynchronizerAction<String, WVW
 					objectiveModel.claim(null);
 				}
 			} else {
-				LOGGER.error("Missing " + IWVWObjective.class.getSimpleName() + " for objectiveId=" + objectiveDTO.getId());
+				LOGGER.error("Missing {} for objectiveId={}", IWVWObjectiveNameDTO.class, objectiveDTO.getId());
 			}
 		}
 

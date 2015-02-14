@@ -27,11 +27,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.List;
 import java.util.concurrent.RecursiveAction;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 abstract class AbstractSynchronizerAction<T, A extends AbstractSynchronizerAction<T, ?>> extends RecursiveAction {
 	private static final long serialVersionUID = -2838650978601355556L;
-	private static final Logger LOGGER = Logger.getLogger(AbstractSynchronizerAction.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractSynchronizerAction.class);
 
 	private final int chunkSize;
 	private final List<T> content;
@@ -47,9 +48,7 @@ abstract class AbstractSynchronizerAction<T, A extends AbstractSynchronizerActio
 		this.content = content;
 		this.fromInclusive = fromInclusive;
 		this.toExclusive = toExclusive;
-		if (LOGGER.isTraceEnabled()) {
-			LOGGER.trace("New " + this.getClass().getSimpleName() + " that handles content " + this.fromInclusive + " - " + this.toExclusive);
-		}
+		LOGGER.trace("New {} that handels content {}-{}",this.getClass(), this.fromInclusive, this.toExclusive);
 	}
 
 	@Override
@@ -59,19 +58,15 @@ abstract class AbstractSynchronizerAction<T, A extends AbstractSynchronizerActio
 		if ((this.toExclusive - this.fromInclusive) <= this.chunkSize) {
 			try {
 				// compute directly
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug(this.getClass().getSimpleName() + " is going to perform on " + this.fromInclusive + " to " + this.toExclusive);
-				}
+				LOGGER.debug("{} is going to perform on {}-{}",this, this.fromInclusive,this.toExclusive);
 				T content = null;
 				for (int index = this.fromInclusive; index < this.toExclusive; index++) {
 					content = this.content.get(index);
-					if (LOGGER.isTraceEnabled()) {
-						LOGGER.trace(this.getClass().getSimpleName() + " is going to perform on " + index + " -> " + content);
-					}
+					LOGGER.trace("{} is going to perform on {} -> {}",this, index,content);
 					this.perform(content);
 				}
 			} catch (Throwable t) {
-				LOGGER.error("Failed during execution of " + this.getClass().getSimpleName() + " computing " + this.fromInclusive + "-" + this.toExclusive, t);
+				LOGGER.error("{} failed", t);
 			}
 		} else {
 			// fork
@@ -80,8 +75,9 @@ abstract class AbstractSynchronizerAction<T, A extends AbstractSynchronizerActio
 		}
 		final long endTimestamp = System.currentTimeMillis();
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Computed " + this.getClass().getSimpleName() + " that handled content " + this.fromInclusive + " - " + this.toExclusive + " in " + (endTimestamp - startTimestamp) + "ms");
+			
 		}
+		LOGGER.debug("{} handled content {}-{} in {}ms",this,this.fromInclusive, this.toExclusive, (endTimestamp - startTimestamp));
 	}
 
 	protected abstract A createSubTask(List<T> content, int chunkSize, int fromInclusive, int toExclusive);

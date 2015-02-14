@@ -55,8 +55,10 @@ import javafx.scene.media.MediaPlayer;
 import javax.ws.rs.ext.RuntimeDelegate;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -74,7 +76,7 @@ public final class TTSUtils {
 	private static final String MP3_SUFFIX = ".mp3";
 	private static final int MAXIMUM_PLAY_TIME_PER_MP3 = 15000;
 	private static final int MAX_TEXT_LENGTH_PER_REQUEST = 100;
-	private static final Logger LOGGER = Logger.getLogger(TTSUtils.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(TTSUtils.class);
 	private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:11.0) " + "Gecko/20100101 Firefox/11.0";
 	private static final long MP3_CACHE_EXPIRE_HOURS = 24;
 	private static final File YAGW2API_TEMP_FILE;
@@ -139,7 +141,7 @@ public final class TTSUtils {
 
 		@Override
 		public String toString() {
-			return Objects.toStringHelper(this).add("priority", this.getPriority()).add("timestamp", this.getCreationTimestamp()).add("locale", this.getLocale()).add("rate", this.getRate())
+			return MoreObjects.toStringHelper(this).add("priority", this.getPriority()).add("timestamp", this.getCreationTimestamp()).add("locale", this.getLocale()).add("rate", this.getRate())
 					.addValue(this.getText()).toString();
 		}
 	}
@@ -166,7 +168,6 @@ public final class TTSUtils {
 			YAGW2API_TEMP_FILE = new File(tempDirDetectionFile.getParentFile(), "yagw2api");
 			checkState((YAGW2API_TEMP_FILE.exists() && YAGW2API_TEMP_FILE.isDirectory()) || YAGW2API_TEMP_FILE.mkdirs());
 		} catch (IOException e) {
-			LOGGER.fatal("Failed to initialize " + TTSUtils.class.getSimpleName(), e);
 			throw new RuntimeException("Failed to initialize " + TTSUtils.class.getSimpleName(), e);
 		}
 
@@ -179,20 +180,11 @@ public final class TTSUtils {
 			@Override
 			protected void runOneIteration() throws Exception {
 				initializeIfRequired();
-				if (LOGGER.isDebugEnabled()) {
-					final List<TTSTask> tasks = Lists.newArrayList(TASK_QUEUE);
-					Collections.sort(tasks);
-					for (TTSTask task : tasks) {
-						LOGGER.debug(task);
-					}
-				}
 
 				final TTSTask task = TASK_QUEUE.poll();
 
 				if (task != null) {
-					if (LOGGER.isDebugEnabled()) {
-						LOGGER.debug("Going to handle " + task);
-					}
+					LOGGER.debug("Going to handle {}", task);
 					final List<File> mp3s = new ArrayList<File>();
 					for (String block : divideInTextBlocks(task.getText())) {
 						mp3s.add(retrieveMP3File(block, task.getLocale()));
@@ -200,13 +192,11 @@ public final class TTSUtils {
 					for (File mp3 : mp3s) {
 						playMP3File(mp3, task.getRate());
 					}
-					if (LOGGER.isDebugEnabled()) {
-						LOGGER.debug("Handled " + task);
-					}
+					LOGGER.debug("Handled {}", task);					
 				}
 			}
 		};
-		ttsService.startAndWait();
+		ttsService.startAsync();
 	}
 
 	private TTSUtils() {
@@ -313,7 +303,6 @@ public final class TTSUtils {
 			}
 
 		} catch (MalformedURLException e) {
-			LOGGER.fatal("Unable to handle mp3file location: " + mp3File);
 			throw new RuntimeException("Unable to handle mp3file location: " + mp3File, e);
 		}
 

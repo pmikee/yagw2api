@@ -23,8 +23,10 @@ package de.justi.yagw2api.mumblelink.impl;
 
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.eventbus.EventBus;
@@ -42,7 +44,7 @@ import de.justi.yagwapi.common.IHasChannel;
 final class MumbleLinkSynchronizerService extends AbstractScheduledService implements IHasChannel {
 	private static final int INITIAL_UI_TICK_VALUE = -1;
 	private static final int DELAY_MILLIS = 1000;
-	private static final Logger LOGGER = Logger.getLogger(MumbleLinkSynchronizerService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MumbleLinkSynchronizerService.class);
 	private volatile Pointer sharedMemory = null;
 	private volatile HANDLE sharedFile = null;
 
@@ -165,17 +167,14 @@ final class MumbleLinkSynchronizerService extends AbstractScheduledService imple
 				this.lastState = this.currentState;
 				this.currentState = Optional.absent();
 			}
-
-		} catch (Exception e) {
-			LOGGER.error("Failed to run iteration of " + this.getClass().getSimpleName(), e);
 		} catch (Throwable t) {
-			LOGGER.fatal("Failed to run iteration of " + this.getClass().getSimpleName(), t);
+			LOGGER.error("Failed to run iteration of {}",this, t);
 		}
 	}
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("lastState", this.lastState).add("currentState", this.currentState).toString();
+		return MoreObjects.toStringHelper(this).add("lastState", this.lastState).add("currentState", this.currentState).toString();
 	}
 
 	@Override

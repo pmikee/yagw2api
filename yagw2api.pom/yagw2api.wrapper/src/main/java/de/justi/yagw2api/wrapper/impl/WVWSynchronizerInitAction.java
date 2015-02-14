@@ -30,7 +30,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.eventbus.EventBus;
@@ -45,7 +46,7 @@ import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
 import de.justi.yagwapi.common.IHasChannel;
 
 final class WVWSynchronizerInitAction extends AbstractSynchronizerAction<IWVWMatchDTO, WVWSynchronizerInitAction> implements IHasChannel {
-	private static final Logger LOGGER = Logger.getLogger(WVWSynchronizerInitAction.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(WVWSynchronizerInitAction.class);
 	private static final long serialVersionUID = 2446713690087630720L;
 	private static final int MAX_CHUNK_SIZE = 100; // init all matches with one
 													// thread

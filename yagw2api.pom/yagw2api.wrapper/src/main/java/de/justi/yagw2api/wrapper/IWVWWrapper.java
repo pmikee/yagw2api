@@ -33,21 +33,10 @@ public interface IWVWWrapper{
 	void start();	
 	
 	/**
-	 * <p>start the arenanet api sync deamon</p>
-	 * <p>initialization is performed synchronously</p>
-	 */
-	void startAndWait();
-	/**
 	 * <p>stop the arenanet api sync deamon</p>
 	 * <p>shutdown is performed asynchronously</p>
 	 */
 	void stop();
-	/**
-	 * <p>stop the arenanet api sync deamon</p>
-	 * <p>shutdown is performed synchronously</p>
-	 */
-	void stopAndWait();
-	
 	/**
 	 * check if the arenanet api sync deamon is running
 	 * @return

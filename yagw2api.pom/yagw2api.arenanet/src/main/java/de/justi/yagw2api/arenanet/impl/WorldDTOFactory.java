@@ -26,7 +26,8 @@ import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Arrays;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -36,7 +37,7 @@ import de.justi.yagw2api.arenanet.IWorldDTOFactory;
 import de.justi.yagw2api.arenanet.IWorldNameDTO;
 
 final class WorldDTOFactory implements IWorldDTOFactory {
-	private static final Logger LOGGER = Logger.getLogger(WorldDTOFactory.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(WorldDTOFactory.class);
 
 	public WorldDTOFactory() {
 
@@ -48,17 +49,16 @@ final class WorldDTOFactory implements IWorldDTOFactory {
 
 	@Override
 	public IWorldNameDTO[] newWorldNamesOf(String json) {
-		LOGGER.trace("Going to built " + IWorldNameDTO.class.getSimpleName());
 		WorldNameDTO[] result;
 		try {
 			result = this.createGSON().fromJson(checkNotNull(json), WorldNameDTO[].class);
 		} catch (JsonSyntaxException e) {
 			result = null;
-			LOGGER.fatal("Invalid response: " + json, e);
+			LOGGER.error("received invalid json: {}", json, e);
 		}
 		checkState(result != null);
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Built " + Arrays.deepToString(result));
+			LOGGER.debug("Built {}", Arrays.deepToString(result));
 		}
 		return result;
 	}

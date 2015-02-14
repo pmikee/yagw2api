@@ -20,13 +20,13 @@ package de.justi.yagw2api.arenanet.impl;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
  */
 
-
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Arrays;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -38,7 +38,7 @@ import de.justi.yagw2api.arenanet.IWVWMatchesDTO;
 import de.justi.yagw2api.arenanet.IWVWObjectiveNameDTO;
 
 final class WVWDTOFactory implements IWVWDTOFactory {
-	private static final Logger LOGGER = Logger.getLogger(WVWDTOFactory.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(WVWDTOFactory.class);
 
 	public WVWDTOFactory() {
 
@@ -51,46 +51,43 @@ final class WVWDTOFactory implements IWVWDTOFactory {
 	@Override
 	public IWVWMatchesDTO newMatchesOf(String json) {
 		LOGGER.trace("Going to built " + IWVWMatchesDTO.class.getSimpleName());
-		WVWMatchesDTO result;
+		final WVWMatchesDTO result;
 		try {
 			result = this.createGSON().fromJson(checkNotNull(json), WVWMatchesDTO.class);
 		} catch (JsonSyntaxException e) {
-			result = null;
-			LOGGER.fatal("Invalid response: " + json, e);
+			LOGGER.error("Invalid response: {}", json, e);
+			throw e;
 		}
-		checkState(result != null);
-		LOGGER.debug("Built " + result);
+		LOGGER.debug("Built {}", result);
 		return result;
 	}
 
 	@Override
 	public IWVWMatchDetailsDTO newMatchDetailsOf(String json) {
 		LOGGER.trace("Going to built " + IWVWMatchDetailsDTO.class.getSimpleName());
-		WVWMatchDetailsDTO result;
+		final WVWMatchDetailsDTO result;
 		try {
 			result = this.createGSON().fromJson(checkNotNull(json), WVWMatchDetailsDTO.class);
 		} catch (JsonSyntaxException e) {
-			result = null;
-			LOGGER.fatal("Invalid response: " + json, e);
+			LOGGER.error("Invalid response: {}", json, e);
+			throw e;
 		}
-		checkState(result != null);
-		LOGGER.debug("Built " + result);
+		LOGGER.debug("Built {}", result);
 		return result;
 	}
 
 	@Override
 	public IWVWObjectiveNameDTO[] newObjectiveNamesOf(String json) {
 		LOGGER.trace("Going to built all " + IWVWObjectiveNameDTO.class.getSimpleName());
-		WVWObjectiveNameDTO[] result;
+		final WVWObjectiveNameDTO[] result;
 		try {
 			result = this.createGSON().fromJson(checkNotNull(json), WVWObjectiveNameDTO[].class);
 		} catch (JsonSyntaxException e) {
-			result = null;
-			LOGGER.fatal("Invalid response: " + json, e);
+			LOGGER.error("Invalid response: {}", json, e);
+			throw e;
 		}
-		checkState(result != null);
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Built " + Arrays.deepToString(result));
+			LOGGER.debug("Built {}", Arrays.deepToString(result));
 		}
 		return result;
 	}

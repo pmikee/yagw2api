@@ -21,6 +21,7 @@ package de.justi.yagw2api.wrapper;
  */
 
 
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
@@ -64,7 +65,7 @@ public interface IWVWObjective extends IHasWVWLocation<IWVWObjective>, IHasChann
 
 	long getRemainingBuffDuration(TimeUnit unit);
 
-	Optional<Calendar> getEndOfBuffTimestamp();
+	Optional<LocalDateTime> getEndOfBuffTimestamp();
 
 	Optional<IWVWMap> getMap();
 

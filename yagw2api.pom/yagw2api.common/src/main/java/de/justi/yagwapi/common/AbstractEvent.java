@@ -22,24 +22,25 @@ package de.justi.yagwapi.common;
 
 
 import java.text.DateFormat;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 
 public abstract class AbstractEvent implements IEvent {
-	private final Calendar timestamp;
+	private final LocalDateTime timestamp;
 
 	public AbstractEvent() {
-		this.timestamp = Calendar.getInstance();
+		this.timestamp = LocalDateTime.now();
 	}
 
-	public final Calendar getTimestamp() {
+	public final LocalDateTime getTimestamp() {
 		return this.timestamp;
 	}
 
 	public String toString() {
-		final DateFormat df = DateFormat.getDateTimeInstance();
-		return Objects.toStringHelper(this).add("timestamp", df.format(this.timestamp.getTime())).toString();
+		return MoreObjects.toStringHelper(this).add("timestamp", timestamp).toString();
 	}
 }

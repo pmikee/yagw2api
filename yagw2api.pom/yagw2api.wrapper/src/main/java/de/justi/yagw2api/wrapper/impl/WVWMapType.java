@@ -27,7 +27,8 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Optional;
 
@@ -38,7 +39,7 @@ public enum WVWMapType implements IWVWMapType {
 	CENTER, RED, GREEN, BLUE;
 
 	private static final String BUNDLE_BASENAME = "maptypes";
-	private static final Logger LOGGER = Logger.getLogger(WVWMapType.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(WVWMapType.class);
 
 	public static WVWMapType fromDTOString(String dtoString) {
 		switch (dtoString.toUpperCase()) {

@@ -35,21 +35,25 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
-import org.apache.log4j.Logger;
 import org.eclipse.persistence.annotations.ConversionValue;
 import org.eclipse.persistence.annotations.Convert;
 import org.eclipse.persistence.annotations.Converter;
 import org.eclipse.persistence.annotations.Converters;
 import org.eclipse.persistence.annotations.ObjectTypeConverter;
 import org.eclipse.persistence.annotations.ObjectTypeConverters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.collect.Iterables;
 
 import de.justi.yagw2api.analyzer.IWVWMatchEntity;
 import de.justi.yagw2api.analyzer.IWorldEntity;
 import de.justi.yagw2api.analyzer.utils.LocaleConverter;
+import de.justi.yagw2api.arenanet.IArenanet;
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
 import de.justi.yagw2api.wrapper.IWorld;
 import de.justi.yagw2api.wrapper.IWorldLocationType;
@@ -60,7 +64,8 @@ import de.justi.yagw2api.wrapper.impl.WorldLocationType;
 @Converters({ @Converter(converterClass = LocaleConverter.class, name = "LocaleConverter") })
 @Entity(name = "world")
 public final class WorldEntity extends AbstractEntity implements IWorldEntity {
-	private static final Logger LOGGER = Logger.getLogger(WorldEntity.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(WorldEntity.class);
+	private static final IArenanet ARENANET = YAGW2APIArenanet.INSTANCE;
 
 	@Column(name = "name_de", unique = true, nullable = true)
 	private String nameDE;
@@ -152,7 +157,7 @@ public final class WorldEntity extends AbstractEntity implements IWorldEntity {
 			// compatible ids
 			this.originWorldId = model.getId();
 			if (model.getName().isPresent()) {
-				this.setName(YAGW2APIArenanet.INSTANCE.getCurrentLocale(), model.getName().get());
+				this.setName(ARENANET.getCurrentLocale(), model.getName().get());
 			}
 			this.worldLocale = model.getWorldLocale().orNull();
 			this.location = model.getWorldLocation();
@@ -206,7 +211,7 @@ public final class WorldEntity extends AbstractEntity implements IWorldEntity {
 
 	@Override
 	public Optional<String> getName() {
-		return this.getName(YAGW2APIArenanet.INSTANCE.getCurrentLocale());
+		return this.getName(ARENANET.getCurrentLocale());
 	}
 
 	@Override
@@ -231,9 +236,9 @@ public final class WorldEntity extends AbstractEntity implements IWorldEntity {
 	}
 
 	@Override
-	public String toString() {
-		return Objects.toStringHelper(this).add("super", super.toString()).add("nameDE", this.getNameDE()).add("nameEN", this.getNameEN()).add("nameES", this.getNameES()).add("nameFR", this.nameFR)
-				.add("origin", this.getOriginWorldId()).toString();
+	public ToStringHelper toStringHelper() {
+		return super.toStringHelper().add("nameDE", this.getNameDE()).add("nameEN", this.getNameEN()).add("nameES", this.getNameES()).add("nameFR", this.nameFR)
+				.add("origin", this.getOriginWorldId());
 	}
 
 	@Override

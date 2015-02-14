@@ -21,6 +21,7 @@ package de.justi.yagw2api.wrapper;
  */
 
 
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -44,9 +45,9 @@ public interface IWVWMatch extends IHasChannel {
 
 		IWVWMatchBuilder greenScore(int score);
 
-		IWVWMatchBuilder start(Date date);
+		IWVWMatchBuilder start(LocalDateTime date);
 
-		IWVWMatchBuilder end(Date date);
+		IWVWMatchBuilder end(LocalDateTime date);
 	}
 
 	Set<IWorld> searchWorldsByNamePattern(Pattern searchPattern);
@@ -73,9 +74,9 @@ public interface IWVWMatch extends IHasChannel {
 
 	IWVWScores getScores();
 
-	Calendar getStartTimestamp();
+	LocalDateTime getStartTimestamp();
 
-	Calendar getEndTimestamp();
+	LocalDateTime getEndTimestamp();
 
 	int calculateGreenTick();
 

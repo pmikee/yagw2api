@@ -29,6 +29,7 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -37,7 +38,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import javax.swing.SwingUtilities;
 import javax.swing.table.AbstractTableModel;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Optional;
 
@@ -48,10 +50,10 @@ import de.justi.yagw2api.wrapper.IWVWMatchScoresChangedEvent;
 import de.justi.yagw2api.wrapper.IWVWWrapper;
 
 public final class MatchesTableModel extends AbstractTableModel implements IWVWMatchListener {
-	private static final Logger LOGGER = Logger.getLogger(MatchesTableModel.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MatchesTableModel.class);
 	private static final long serialVersionUID = 267092039654136315L;
 	private static final NumberFormat NF = new DecimalFormat("#,###,##0");
-	private static final DateFormat DF = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT);
+	private static final DateTimeFormatter DF = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
 	private final List<IWVWMatch> matches = Collections.synchronizedList(new CopyOnWriteArrayList<IWVWMatch>());
 
@@ -139,10 +141,10 @@ public final class MatchesTableModel extends AbstractTableModel implements IWVWM
 				return NF.format(this.matches.get(matchIndex).getScores().getRedScore());
 			case 8:
 				checkState(this.matches.get(matchIndex).getStartTimestamp() != null);
-				return DF.format(this.matches.get(matchIndex).getStartTimestamp().getTime());
+				return this.matches.get(matchIndex).getStartTimestamp().format(DF);
 			case 9:
 				checkState(this.matches.get(matchIndex).getEndTimestamp() != null);
-				return DF.format(this.matches.get(matchIndex).getEndTimestamp().getTime());
+				return this.matches.get(matchIndex).getEndTimestamp().format(DF);
 			default:
 				throw new IllegalArgumentException("Unknown column: " + columnIndex);
 		}

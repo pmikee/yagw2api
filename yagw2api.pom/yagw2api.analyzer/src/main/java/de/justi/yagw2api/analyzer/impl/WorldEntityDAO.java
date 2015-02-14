@@ -35,7 +35,8 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Optional;
 
@@ -45,7 +46,7 @@ import de.justi.yagw2api.analyzer.YAGW2APIAnalyzerPersistence;
 import de.justi.yagw2api.wrapper.IWorld;
 
 final class WorldEntityDAO implements IWorldEnityDAO {
-	private static final Logger LOGGER = Logger.getLogger(WorldEntityDAO.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(WorldEntityDAO.class);
 
 	@Override
 	public synchronized Collection<IWorldEntity> retrieveAllWorldEntities() {
@@ -167,13 +168,9 @@ final class WorldEntityDAO implements IWorldEnityDAO {
 				tx.commit();
 			}
 		} catch (Exception e) {
-			LOGGER.error("Exception cought while creating new " + WorldEntity.class.getName() + " out of " + world, e);
+			LOGGER.error("Exception cought while creating new {} out of {}",newEntity,world, e);
 			newEntity = null;
 			if (tx.isActive()) {
-				if (LOGGER.isTraceEnabled()) {
-					LOGGER.trace("Going to rollback " + EntityTransaction.class.getSimpleName() + " for new " + IWorldEntity.class.getSimpleName() + " creation out of " + IWorld.class.getSimpleName()
-							+ " for " + newEntity);
-				}
 				tx.rollback();
 			}
 		}
@@ -218,11 +215,8 @@ final class WorldEntityDAO implements IWorldEnityDAO {
 			}
 			success = true;
 		} catch (Exception e) {
-			LOGGER.error("Exception cought while saving " + entity, e);
+			LOGGER.error("Exception cought while saving {}", entity, e);
 			if (tx.isActive() && !tx.getRollbackOnly()) {
-				if (LOGGER.isTraceEnabled()) {
-					LOGGER.trace("Going to rollback " + EntityTransaction.class.getSimpleName() + " for saving " + IWorldEntity.class.getSimpleName() + ": " + entity);
-				}
 				tx.rollback();
 			}
 			success = false;

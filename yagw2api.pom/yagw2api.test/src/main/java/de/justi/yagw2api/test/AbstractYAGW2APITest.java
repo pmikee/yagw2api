@@ -21,14 +21,15 @@ package de.justi.yagw2api.test;
  */
 
 
-import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TestName;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class AbstractYAGW2APITest {
-	private static final Logger LOGGER = Logger.getLogger(AbstractYAGW2APITest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractYAGW2APITest.class);
 
 	@Rule
 	public final TestName testMethodName = new TestName();

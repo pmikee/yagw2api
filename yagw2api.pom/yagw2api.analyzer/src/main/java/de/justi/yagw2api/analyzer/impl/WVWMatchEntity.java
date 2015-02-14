@@ -24,6 +24,7 @@ package de.justi.yagw2api.analyzer.impl;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
@@ -32,6 +33,7 @@ import java.util.SortedSet;
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -43,10 +45,15 @@ import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.eclipse.persistence.annotations.Converter;
+import org.eclipse.persistence.annotations.MapKeyConvert;
+
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.collect.ImmutableSortedSet;
-import com.sun.jersey.client.impl.CopyOnWriteHashMap;
+import com.google.common.collect.Maps;
 
 import de.justi.yagw2api.analyzer.IWVWMapEntity;
 import de.justi.yagw2api.analyzer.IWVWMatchEntity;
@@ -56,6 +63,7 @@ import de.justi.yagw2api.wrapper.IWVWMapType;
 import de.justi.yagw2api.wrapper.impl.WVWMapType;
 
 @Entity(name = "wvw_match")
+@Converter(name="localdatetime_converter", converterClass=LocalDateTimeConverter.class)
 public final class WVWMatchEntity extends AbstractEntity implements IWVWMatchEntity {
 
 	@Column(name = "match_id", nullable = false)
@@ -76,22 +84,25 @@ public final class WVWMatchEntity extends AbstractEntity implements IWVWMatchEnt
 	@OneToMany(targetEntity = WVWMapEntity.class, mappedBy = "match", cascade = { CascadeType.ALL })
 	@MapKeyColumn(name = "mapType")
 	@MapKeyClass(WVWMapType.class)
-	private Map<IWVWMapType, IWVWMapEntity> maps = new CopyOnWriteHashMap<IWVWMapType, IWVWMapEntity>();
+	private Map<IWVWMapType, IWVWMapEntity> maps = Maps.newHashMap();
 
 	@Column(name = "startOfMatch")
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date startTimestamp = null;
+	@Convert(converter=LocalDateTimeConverter.class)
+	private LocalDateTime startTimestamp = null;
 
 	@Column(name = "endOfMatch")
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date endTimestamp = null;
+	@Convert(converter=LocalDateTimeConverter.class)
+	private LocalDateTime endTimestamp = null;
 
 	@ElementCollection(targetClass = WVWScoresEmbeddable.class)
 	@MapKeyColumn(name = "timestamp")
 	@MapKeyTemporal(TemporalType.TIMESTAMP)
+	@MapKeyConvert("localdatetime_converter")
 	@Column(name = "scores")
-	@CollectionTable()
-	private final Map<Date, IWVWScoresEmbeddable> scoresMappedByTimestamp = new CopyOnWriteHashMap<Date, IWVWScoresEmbeddable>();
+	@CollectionTable
+	private final Map<LocalDateTime, IWVWScoresEmbeddable> scoresMappedByTimestamp = Maps.newHashMap();
 
 	@Override
 	public String getOriginMatchId() {
@@ -99,12 +110,12 @@ public final class WVWMatchEntity extends AbstractEntity implements IWVWMatchEnt
 	}
 
 	@Override
-	public Date getStartTimestamp() {
+	public LocalDateTime getStartTimestamp() {
 		return this.startTimestamp;
 	}
 
 	@Override
-	public Date getEndTimestamp() {
+	public LocalDateTime getEndTimestamp() {
 		return this.endTimestamp;
 	}
 
@@ -124,13 +135,13 @@ public final class WVWMatchEntity extends AbstractEntity implements IWVWMatchEnt
 	}
 
 	@Override
-	public Map<Date, IWVWScoresEmbeddable> getScores() {
+	public Map<LocalDateTime, IWVWScoresEmbeddable> getScores() {
 		checkState(this.scoresMappedByTimestamp != null);
 		return Collections.unmodifiableMap(this.scoresMappedByTimestamp);
 	}
 
 	@Override
-	public void addScores(Date timestamp, IWVWScoresEmbeddable scores) {
+	public void addScores(LocalDateTime timestamp, IWVWScoresEmbeddable scores) {
 		this.scoresMappedByTimestamp.put(checkNotNull(timestamp), checkNotNull(scores));
 	}
 
@@ -140,7 +151,7 @@ public final class WVWMatchEntity extends AbstractEntity implements IWVWMatchEnt
 		if (this.scoresMappedByTimestamp.isEmpty()) {
 			return Optional.absent();
 		} else {
-			final SortedSet<Date> keys = ImmutableSortedSet.copyOf(this.scoresMappedByTimestamp.keySet());
+			final SortedSet<LocalDateTime> keys = ImmutableSortedSet.copyOf(this.scoresMappedByTimestamp.keySet());
 			return Optional.of(this.scoresMappedByTimestamp.get(keys.last()));
 		}
 	}
@@ -166,9 +177,9 @@ public final class WVWMatchEntity extends AbstractEntity implements IWVWMatchEnt
 	}
 
 	@Override
-	public String toString() {
-		return Objects.toStringHelper(this).add("matchId", this.matchId).add("latestScores", this.getLatestScores().orNull()).add("scoreHistorySize", this.scoresMappedByTimestamp.size())
-				.add("start", this.startTimestamp).add("end", this.endTimestamp).toString();
+	public ToStringHelper toStringHelper() {
+		return super.toStringHelper().add("matchId", this.matchId).add("latestScores", this.getLatestScores().orNull()).add("scoreHistorySize", this.scoresMappedByTimestamp.size())
+				.add("start", this.startTimestamp).add("end", this.endTimestamp);
 	}
 
 	@Override
@@ -226,12 +237,12 @@ public final class WVWMatchEntity extends AbstractEntity implements IWVWMatchEnt
 	}
 
 	@Override
-	public void setStartTimestamp(Date date) {
+	public void setStartTimestamp(LocalDateTime date) {
 		this.startTimestamp = checkNotNull(date);
 	}
 
 	@Override
-	public void setEndTimestamp(Date date) {
+	public void setEndTimestamp(LocalDateTime date) {
 		this.endTimestamp = checkNotNull(date);
 	}
 }

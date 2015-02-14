@@ -26,6 +26,8 @@ import static com.google.common.base.Preconditions.checkState;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.DateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
@@ -35,7 +37,8 @@ import java.util.concurrent.TimeUnit;
 import javax.swing.SwingUtilities;
 import javax.swing.table.AbstractTableModel;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.AbstractScheduledService;
@@ -51,12 +54,13 @@ import de.justi.yagw2api.wrapper.IWVWObjectiveClaimedEvent;
 import de.justi.yagw2api.wrapper.IWVWObjectiveEndOfBuffEvent;
 import de.justi.yagw2api.wrapper.IWVWObjectiveUnclaimedEvent;
 import de.justi.yagw2api.wrapper.IWVWWrapper;
+import de.justi.yagw2api.wrapper.IWorld;
 
 public final class MapObjectivesTableModel extends AbstractTableModel implements IWVWMapListener {
 	private static final long serialVersionUID = -4657108157862724940L;
-	private static final Logger LOGGER = Logger.getLogger(MapObjectivesTableModel.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MapObjectivesTableModel.class);
 
-	final DateFormat DF = DateFormat.getTimeInstance(DateFormat.MEDIUM);
+	final DateTimeFormatter DF = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
 	private final List<IWVWObjective> content = new CopyOnWriteArrayList<IWVWObjective>();
 
@@ -81,7 +85,7 @@ public final class MapObjectivesTableModel extends AbstractTableModel implements
 			}
 
 		};
-		this.service.startAndWait();
+		this.service.startAsync();
 	}
 
 	public void wireUp(IWVWWrapper wrapper, IWVWMap map, IWVWMap... maps) {
@@ -156,11 +160,16 @@ public final class MapObjectivesTableModel extends AbstractTableModel implements
 			case 3:
 				return objective.get().getType().getPoints();
 			case 4:
-				return objective.get().getOwner().get().getName().get();
+				final Optional<IWorld> owner = objective.get().getOwner();
+				if(owner.isPresent()){
+					return objective.get().getOwner().get().getName().get();
+				}else{
+					return "";
+				}
 			case 5:
-				final Optional<Calendar> calendar = objective.get().getEndOfBuffTimestamp();
-				if (calendar.isPresent()) {
-					return DF.format(calendar.get().getTime());
+				final Optional<LocalDateTime> endOfBuff = objective.get().getEndOfBuffTimestamp();
+				if (endOfBuff.isPresent()) {
+					return endOfBuff.get().format(DF);
 				} else {
 					return "";
 				}

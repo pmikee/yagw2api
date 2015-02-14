@@ -34,8 +34,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.RecursiveAction;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
@@ -65,7 +67,7 @@ import de.justi.yagwapi.common.IUnmodifiable;
 
 final class WVWMap extends AbstractHasChannel implements IWVWMap {
 
-	private static final Logger LOGGER = Logger.getLogger(WVWMap.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(WVWMap.class);
 	private static final IWVWModelFactory WVW_MODEL_FACTORY = YAGW2APIWrapper.INSTANCE.getWVWModelFactory();
 
 	class UnmodifiableWVWMap implements IWVWMap, IUnmodifiable {
@@ -212,7 +214,7 @@ final class WVWMap extends AbstractHasChannel implements IWVWMap {
 
 		@Override
 		public String toString() {
-			return Objects.toStringHelper(this).add("dtoCount", this.objectiveDTOs.size()).add("presentResultsCount", this.results.size()).toString();
+			return MoreObjects.toStringHelper(this).add("dtoCount", this.objectiveDTOs.size()).add("presentResultsCount", this.results.size()).toString();
 		}
 	}
 
@@ -386,7 +388,7 @@ final class WVWMap extends AbstractHasChannel implements IWVWMap {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("type", this.type).add("contentCount", this.content.size()).add("scored", this.scores).toString();
+		return MoreObjects.toStringHelper(this).add("type", this.type).add("contentCount", this.content.size()).add("scored", this.scores).toString();
 	}
 
 	@Override
@@ -431,7 +433,7 @@ final class WVWMap extends AbstractHasChannel implements IWVWMap {
 	private int calculateTickOfWorld(IWorld world) {
 		int tick = 0;
 		for (IWVWObjective objective : this.getObjectives()) {
-			if (objective.getOwner().get().equals(world)) {
+			if (world.equals(objective.getOwner().orNull())) {
 				tick += objective.getType().getPoints();
 			}
 		}

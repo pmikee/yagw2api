@@ -26,6 +26,7 @@ import static com.google.common.base.Preconditions.checkState;
 
 import java.util.concurrent.TimeUnit;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 import de.justi.yagw2api.wrapper.IWVWObjectiveType;
@@ -63,7 +64,7 @@ public enum WVWObjectiveType implements IWVWObjectiveType {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("label", this.getLabel()).add("buffDuration", this.buffDurationMillis + "ms").add("points", this.points).toString();
+		return MoreObjects.toStringHelper(this).add("label", this.getLabel()).add("buffDuration", this.buffDurationMillis + "ms").add("points", this.points).toString();
 	}
 
 	@Override

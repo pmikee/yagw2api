@@ -31,17 +31,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import org.apache.log4j.Logger;
-import org.eclipse.persistence.config.SystemProperties;
-import org.eclipse.persistence.exceptions.PersistenceUnitLoadingException;
-import org.eclipse.persistence.jpa.ArchiveFactory;
-
-import de.justi.yagw2api.analyzer.utils.ArchiveFactoryImpl;
-
 public enum YAGW2APIAnalyzerPersistence {
 	DEFAULT("yagw2api"), TEST("yagw2api_test");
-
-	private static final Logger LOGGER = Logger.getLogger(YAGW2APIAnalyzerPersistence.class);
 
 	public static EntityManager getDefaultEM() {
 		return YAGW2APIAnalyzer.getInjector().getInstance(YAGW2APIAnalyzerPersistence.class).getEM();
@@ -53,65 +44,55 @@ public enum YAGW2APIAnalyzerPersistence {
 
 	private final String persistenceUnitName;
 	private EntityManagerFactory emf = null;
-	private EntityManager em = null;
+	private EntityManager sharedEntityManager = null;
 
 	private YAGW2APIAnalyzerPersistence(String persistenceUnitName) {
 		checkNotNull(persistenceUnitName);
 		this.persistenceUnitName = persistenceUnitName;
 	}
 
+	// FIXME the auto recreation of the emf is a major design flaw
 	public final EntityManagerFactory getEMF() {
 		checkState(this.persistenceUnitName != null);
 		if (this.emf == null) {
 			synchronized (this) {
 				if (this.emf == null) {
-					if (LOGGER.isInfoEnabled()) {
-						System.setProperty(SystemProperties.ARCHIVE_FACTORY, ArchiveFactoryImpl.class.getName());
-						LOGGER.info("Going to initialize " + EntityManagerFactory.class.getSimpleName() + " for persistenceUnitName=" + this.persistenceUnitName);
-						final String factoryClassName = System.getProperty(SystemProperties.ARCHIVE_FACTORY, null);
-						LOGGER.info(ArchiveFactory.class.getName() + " to use from vmarg: " + factoryClassName);
-					}
-					try {
-						Map<String, String> properties = new HashMap<String, String>();
-						this.emf = Persistence.createEntityManagerFactory(this.persistenceUnitName, properties);
-					} catch (PersistenceUnitLoadingException e) {
-						LOGGER.fatal("Unexpected Exception thrown during creation of " + EntityManagerFactory.class.getSimpleName() + ". Resource name was " + e.getResourceName(), e);
-						this.emf = null;
-					}
+					Map<String, String> properties = new HashMap<String, String>();
+					this.emf = Persistence.createEntityManagerFactory(this.persistenceUnitName, properties);
 				}
 			}
 		}
 		checkState(this.emf != null);
-		if (!this.emf.isOpen()) {
-			synchronized (this) {
-				if (!this.emf.isOpen()) {
+		if(!this.emf.isOpen()){
+			synchronized (this.emf) {
+				if(!this.emf.isOpen()){
 					this.emf = null;
-					this.emf = this.getEMF();
+					return this.getEMF();
 				}
 			}
 		}
-		checkState(this.emf != null);
 		return this.emf;
 	}
-
+	// FIXME the auto recreation of the shared em is a major design flaw
 	public final EntityManager getEM() {
-		if (this.em == null) {
+		if (this.sharedEntityManager == null) {
 			synchronized (this) {
-				if (this.em == null) {
-					this.em = this.getEMF().createEntityManager();
+				if (this.sharedEntityManager == null) {
+					this.sharedEntityManager = this.getEMF().createEntityManager();
 				}
 			}
 		}
-		checkState(this.em != null);
-		if (!this.em.isOpen()) {
-			synchronized (this) {
-				if (!this.em.isOpen()) {
-					this.em = null;
-					this.em = this.getEM();
+		checkState(this.sharedEntityManager != null);
+		if(!this.sharedEntityManager.isOpen()){
+			synchronized (this.sharedEntityManager) {
+				if(!this.sharedEntityManager.isOpen()){
+					this.sharedEntityManager = null;
+					return this.getEM();
 				}
 			}
 		}
-		checkState(this.em != null);
-		return em;
+		
+
+		return this.sharedEntityManager;
 	}
 }

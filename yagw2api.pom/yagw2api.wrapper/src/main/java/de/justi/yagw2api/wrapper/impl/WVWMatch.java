@@ -26,6 +26,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.text.DateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -36,8 +37,10 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
@@ -65,10 +68,9 @@ import de.justi.yagwapi.common.IEvent;
 import de.justi.yagwapi.common.IUnmodifiable;
 
 final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
-	private static final Logger LOGGER = Logger.getLogger(WVWMatch.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(WVWMatch.class);
 	private static final IWVWModelFactory WVW_MODEL_FACTORY = YAGW2APIWrapper.INSTANCE.getWVWModelFactory();
 	private static final IModelFactory MODEL_FACTORY = YAGW2APIWrapper.INSTANCE.getModelFactory();
-	private static final DateFormat DF = DateFormat.getDateTimeInstance();
 
 	final class UnmodifiableWVWMatch implements IWVWMatch, IUnmodifiable {
 
@@ -153,7 +155,7 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 
 		@Override
 		public String toString() {
-			return Objects.toStringHelper(this).addValue(WVWMatch.this.toString()).toString();
+			return MoreObjects.toStringHelper(this).addValue(WVWMatch.this.toString()).toString();
 		}
 
 		@Override
@@ -167,12 +169,12 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 		}
 
 		@Override
-		public Calendar getStartTimestamp() {
+		public LocalDateTime getStartTimestamp() {
 			return WVWMatch.this.getStartTimestamp();
 		}
 
 		@Override
-		public Calendar getEndTimestamp() {
+		public LocalDateTime getEndTimestamp() {
 			return WVWMatch.this.getEndTimestamp();
 		}
 
@@ -205,8 +207,8 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 		private Optional<Integer> redScore = Optional.absent();
 		private Optional<Integer> greenScore = Optional.absent();
 		private Optional<Integer> blueScore = Optional.absent();
-		private Optional<Date> start = Optional.absent();
-		private Optional<Date> end = Optional.absent();
+		private Optional<LocalDateTime> start = Optional.absent();
+		private Optional<LocalDateTime> end = Optional.absent();
 
 		@Override
 		public IWVWMatch build() {
@@ -251,14 +253,16 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 			checkNotNull(match);
 			checkNotNull(map);
 			checkNotNull(matchDTO);
-			Optional<IWVWObjective> objective;
-			IWorld owner;
+			
+			
 			for (IWVWObjectiveDTO objectiveDTO : mapDTO.getObjectives()) {
 				if (objectiveDTO.getOwner() != null) {
-					owner = match.getWorldByDTOOwnerString(objectiveDTO.getOwner()).get();
-					objective = map.getByObjectiveId(objectiveDTO.getId());
+					final Optional<IWorld>owner = match.getWorldByDTOOwnerString(objectiveDTO.getOwner());
+					
+					final Optional<IWVWObjective> objective = map.getByObjectiveId(objectiveDTO.getId());
 					checkState(objective.isPresent());
-					objective.get().initializeOwner(owner);
+					
+					objective.get().initializeOwner(owner.orNull());
 				}
 			}
 		}
@@ -273,7 +277,7 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 
 			@Override
 			public String toString() {
-				return Objects.toStringHelper(this).add("dto", this.dto).add("resultPresent", this.result.isPresent()).toString();
+				return MoreObjects.toStringHelper(this).add("dto", this.dto).add("resultPresent", this.result.isPresent()).toString();
 			}
 
 			@Override
@@ -281,7 +285,7 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 				try {
 					this.result = Optional.of(WVW_MODEL_FACTORY.newMapBuilder().fromDTO(this.dto).build());
 				} catch (Exception e) {
-					LOGGER.fatal("Uncought exception thrown during execution of " + this, e);
+					LOGGER.error("Uncought exception thrown during execution of {}", this, e);
 					throw e;
 				}
 				return null;
@@ -302,7 +306,7 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 
 			@Override
 			public String toString() {
-				return Objects.toStringHelper(this).add("dto", this.dto).add("resultPresent", this.result.isPresent()).toString();
+				return MoreObjects.toStringHelper(this).add("dto", this.dto).add("resultPresent", this.result.isPresent()).toString();
 			}
 
 			@Override
@@ -310,7 +314,7 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 				try {
 					this.result = Optional.of(MODEL_FACTORY.newWorldBuilder().fromDTO(this.dto).build());
 				} catch (Exception e) {
-					LOGGER.fatal("Uncought exception thrown during execution of " + this, e);
+					LOGGER.error("Uncought exception thrown during execution of {}", this, e);
 					throw e;
 				}
 				return null;
@@ -421,13 +425,13 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 		}
 
 		@Override
-		public IWVWMatchBuilder start(Date date) {
+		public IWVWMatchBuilder start(LocalDateTime date) {
 			this.start = Optional.fromNullable(date);
 			return this;
 		}
 
 		@Override
-		public IWVWMatchBuilder end(Date date) {
+		public IWVWMatchBuilder end(LocalDateTime date) {
 			this.end = Optional.fromNullable(date);
 			return this;
 		}
@@ -450,10 +454,10 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 	private final IWVWMap greenMap;
 	private final IWVWMap blueMap;
 	private final IWVWScores scores;
-	private final Calendar startTime;
-	private final Calendar endTime;
+	private final LocalDateTime startTime;
+	private final LocalDateTime endTime;
 
-	private WVWMatch(String id, IWorld redWorld, IWorld greenWorld, IWorld blueWorld, IWVWMap centerMap, IWVWMap redMap, IWVWMap greenMap, IWVWMap blueMap, Date start, Date end) {
+	private WVWMatch(String id, IWorld redWorld, IWorld greenWorld, IWorld blueWorld, IWVWMap centerMap, IWVWMap redMap, IWVWMap greenMap, IWVWMap blueMap, LocalDateTime start, LocalDateTime end) {
 		this.id = checkNotNull(id);
 		this.redWorld = checkNotNull(redWorld);
 		this.greenWorld = checkNotNull(greenWorld);
@@ -482,20 +486,14 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 		// register as listener to scores
 		this.scores.getChannel().register(this);
 
-		// start / end time
-		checkNotNull(start);
-		checkNotNull(end);
-		this.startTime = Calendar.getInstance();
-		this.startTime.setTime(start);
-		this.endTime = Calendar.getInstance();
-		this.endTime.setTime(end);
+		// start / end time		
+		this.startTime = checkNotNull(start);
+		this.endTime = checkNotNull(end);
 	}
 
 	@Subscribe
 	public void onEvent(IEvent event) {
-		if (LOGGER.isTraceEnabled()) {
-			LOGGER.trace(this.getClass().getSimpleName() + " is going to forward " + event);
-		}
+		LOGGER.trace("{} is going to forward {}", event);
 		this.getChannel().post(event);
 	}
 
@@ -551,9 +549,9 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("id", this.id).add("scores", this.scores).add("redWorld", this.redWorld).add("greenWorld", this.greenWorld).add("blueWorld", this.blueWorld)
-				.add("centerMap", this.centerMap).add("redMap", this.redMap).add("greenMap", this.greenMap).add("blueMap", this.blueMap).add("start", DF.format(this.startTime.getTime()))
-				.add("end", DF.format(this.endTime.getTime())).toString();
+		return MoreObjects.toStringHelper(this).add("id", this.id).add("scores", this.scores).add("redWorld", this.redWorld).add("greenWorld", this.greenWorld).add("blueWorld", this.blueWorld)
+				.add("centerMap", this.centerMap).add("redMap", this.redMap).add("greenMap", this.greenMap).add("blueMap", this.blueMap).add("start",this.startTime)
+				.add("end", this.endTime).toString();
 	}
 
 	@Override
@@ -566,6 +564,8 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 				return Optional.of(this.greenWorld);
 			case DTOConstants.OWNER_BLUE_STRING:
 				return Optional.of(this.blueWorld);
+			case DTOConstants.OWNER_NEUTRAL_STRING:
+				return Optional.absent();
 			default:
 				LOGGER.error("Invalid dtoOwnerString: " + dtoOwnerString);
 				return Optional.absent();
@@ -612,12 +612,12 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 	}
 
 	@Override
-	public Calendar getStartTimestamp() {
+	public LocalDateTime getStartTimestamp() {
 		return this.startTime;
 	}
 
 	@Override
-	public Calendar getEndTimestamp() {
+	public LocalDateTime getEndTimestamp() {
 		return this.endTime;
 	}
 

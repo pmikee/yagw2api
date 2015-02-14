@@ -21,7 +21,7 @@ package de.justi.yagw2api.analyzer;
  */
 
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 import com.google.common.base.Optional;
@@ -31,13 +31,13 @@ public interface IWVWMatchEntity extends IEntity {
 
 	String getOriginMatchId();
 
-	void setStartTimestamp(Date date);
+	void setStartTimestamp(LocalDateTime date);
 
-	Date getStartTimestamp();
+	LocalDateTime getStartTimestamp();
 
-	void setEndTimestamp(Date date);
+	void setEndTimestamp(LocalDateTime date);
 
-	Date getEndTimestamp();
+	LocalDateTime getEndTimestamp();
 
 	void setRedMap(IWVWMapEntity map);
 
@@ -67,9 +67,9 @@ public interface IWVWMatchEntity extends IEntity {
 
 	IWorldEntity getBlueWorld();
 
-	void addScores(Date timestamp, IWVWScoresEmbeddable scores);
+	void addScores(LocalDateTime timestamp, IWVWScoresEmbeddable scores);
 
-	Map<Date, IWVWScoresEmbeddable> getScores();
+	Map<LocalDateTime, IWVWScoresEmbeddable> getScores();
 
 	Optional<IWVWScoresEmbeddable> getLatestScores();
 }

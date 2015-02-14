@@ -20,7 +20,6 @@ package de.justi.yagw2api.arenanet.impl;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
  */
 
-
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
@@ -37,7 +36,8 @@ import java.util.concurrent.TimeUnit;
 
 import javax.ws.rs.core.MediaType;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Optional;
 import com.google.common.cache.Cache;
@@ -59,7 +59,7 @@ import de.justi.yagw2api.arenanet.IWorldNameDTO;
 import de.justi.yagwapi.common.RetryClientFilter;
 
 final class WVWService implements IWVWService {
-	private static final Logger LOGGER = Logger.getLogger(WVWService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(WVWService.class);
 	private static final long MATCH_CACHE_EXPIRE_MILLIS = 1000 * 60 * 10; // 10m
 	private static final long MATCH_DETAILS_CACHE_EXPIRE_MILLIS = 1000 * 3; // 3s
 	private static final long OBJECTIVE_NAMES_CACHE_EXPIRE_MILLIS = 1000 * 60 * 60 * 12; // 12h
@@ -79,8 +79,8 @@ final class WVWService implements IWVWService {
 	}
 
 	// caches
-	private final Cache<Locale, Optional<IWVWObjectiveNameDTO[]>> objectiveNamesCache = CacheBuilder.newBuilder().expireAfterWrite(OBJECTIVE_NAMES_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS)
-			.removalListener(new RemovalListener<Locale, Optional<IWVWObjectiveNameDTO[]>>() {
+	private final Cache<Locale, Optional<IWVWObjectiveNameDTO[]>> objectiveNamesCache = CacheBuilder.newBuilder()
+			.expireAfterWrite(OBJECTIVE_NAMES_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).removalListener(new RemovalListener<Locale, Optional<IWVWObjectiveNameDTO[]>>() {
 				@Override
 				public void onRemoval(RemovalNotification<Locale, Optional<IWVWObjectiveNameDTO[]>> notification) {
 					// synchronize
@@ -92,9 +92,10 @@ final class WVWService implements IWVWService {
 				}
 			}).build();
 	private final Map<Locale, Cache<Integer, Optional<IWVWObjectiveNameDTO>>> objectiveNameCaches = new HashMap<Locale, Cache<Integer, Optional<IWVWObjectiveNameDTO>>>();
-	private final Cache<String, Optional<IWVWMatchDetailsDTO>> matchDetailsCache = CacheBuilder.newBuilder().expireAfterWrite(MATCH_DETAILS_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build();
-	private final Cache<String, Optional<IWVWMatchesDTO>> matchesCache = CacheBuilder.newBuilder().initialCapacity(1).maximumSize(1).expireAfterWrite(MATCH_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS)
-			.removalListener(new RemovalListener<String, Optional<IWVWMatchesDTO>>() {
+	private final Cache<String, Optional<IWVWMatchDetailsDTO>> matchDetailsCache = CacheBuilder.newBuilder()
+			.expireAfterWrite(MATCH_DETAILS_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build();
+	private final Cache<String, Optional<IWVWMatchesDTO>> matchesCache = CacheBuilder.newBuilder().initialCapacity(1).maximumSize(1)
+			.expireAfterWrite(MATCH_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).removalListener(new RemovalListener<String, Optional<IWVWMatchesDTO>>() {
 				@Override
 				public void onRemoval(RemovalNotification<String, Optional<IWVWMatchesDTO>> notification) {
 					// synchronize matchesCache and
@@ -125,7 +126,8 @@ final class WVWService implements IWVWService {
 		if (!this.objectiveNameCaches.containsKey(key)) {
 			synchronized (this) {
 				if (!this.objectiveNameCaches.containsKey(key)) {
-					final Cache<Integer, Optional<IWVWObjectiveNameDTO>> newCache = CacheBuilder.newBuilder().expireAfterWrite(OBJECTIVE_NAMES_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build();
+					final Cache<Integer, Optional<IWVWObjectiveNameDTO>> newCache = CacheBuilder.newBuilder()
+							.expireAfterWrite(OBJECTIVE_NAMES_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build();
 					this.objectiveNameCaches.put(key, newCache);
 				}
 			}
@@ -151,7 +153,7 @@ final class WVWService implements IWVWService {
 						LOGGER.debug("Built result=" + result);
 						return Optional.of(result);
 					} catch (ClientHandlerException | UniformInterfaceException e) {
-						LOGGER.fatal("Exception thrown while quering " + resource.getURI(), e);
+						LOGGER.error("Exception thrown while quering {}", resource, e);
 						return Optional.absent();
 					}
 				}
@@ -179,7 +181,7 @@ final class WVWService implements IWVWService {
 						LOGGER.debug("Built result=" + result);
 						return Optional.of(result);
 					} catch (ClientHandlerException | UniformInterfaceException e) {
-						LOGGER.fatal("Exception thrown while quering " + resource.getURI(), e);
+						LOGGER.error("Exception thrown while quering {}", resource, e);
 						return Optional.absent();
 					}
 				}
@@ -211,7 +213,7 @@ final class WVWService implements IWVWService {
 						}
 						return Optional.of(result);
 					} catch (ClientHandlerException | UniformInterfaceException e) {
-						LOGGER.fatal("Exception thrown while quering " + resource.getURI(), e);
+						LOGGER.error("Exception thrown while quering {}", resource, e);
 						return Optional.absent();
 					}
 				}

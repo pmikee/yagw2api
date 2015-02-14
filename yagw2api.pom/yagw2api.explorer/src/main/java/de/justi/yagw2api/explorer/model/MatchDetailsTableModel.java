@@ -29,7 +29,8 @@ import java.text.NumberFormat;
 
 import javax.swing.table.AbstractTableModel;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
 import de.justi.yagw2api.wrapper.IWVWInitializedMatchEvent;
@@ -46,7 +47,7 @@ import de.justi.yagw2api.wrapper.IWVWObjectiveUnclaimedEvent;
 import de.justi.yagw2api.wrapper.IWVWWrapper;
 
 public final class MatchDetailsTableModel extends AbstractTableModel implements IWVWMatchListener, IWVWMapListener {
-	private static final Logger LOGGER = Logger.getLogger(MatchDetailsTableModel.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MatchDetailsTableModel.class);
 	private static NumberFormat NF = new DecimalFormat("###,###,##0", DecimalFormatSymbols.getInstance(YAGW2APIArenanet.INSTANCE.getCurrentLocale()));
 	static final long serialVersionUID = -8573658641105845856L;
 

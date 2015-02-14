@@ -32,7 +32,6 @@ import java.awt.event.ActionListener;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -53,13 +52,6 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
 
-import org.apache.log4j.Logger;
-import org.jdesktop.swingx.JXMapKit;
-import org.jdesktop.swingx.JXMapKit.DefaultProviders;
-import org.jdesktop.swingx.mapviewer.DefaultTileFactory;
-import org.jdesktop.swingx.mapviewer.TileFactory;
-import org.jdesktop.swingx.mapviewer.TileFactoryInfo;
-import org.noos.xing.mydoggy.ContentManager;
 import org.noos.xing.mydoggy.DockedTypeDescriptor;
 import org.noos.xing.mydoggy.PersistenceDelegate.MergePolicy;
 import org.noos.xing.mydoggy.PushAwayMode;
@@ -70,21 +62,20 @@ import org.noos.xing.mydoggy.ToolWindowManagerDescriptor;
 import org.noos.xing.mydoggy.ToolWindowType;
 import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 import org.noos.xing.mydoggy.plaf.ui.DockableDescriptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Optional;
 import com.google.common.io.Closer;
-import com.google.common.math.DoubleMath;
 
 import de.justi.yagw2api.anchorman.YAGW2APIAnchorman;
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
-import de.justi.yagw2api.explorer.model.APIStatusTableModel;
 import de.justi.yagw2api.explorer.model.MapObjectivesTableModel;
 import de.justi.yagw2api.explorer.model.MatchDetailsTableModel;
 import de.justi.yagw2api.explorer.model.MatchesTableModel;
 import de.justi.yagw2api.explorer.model.MumbleLinkTableModel;
 import de.justi.yagw2api.explorer.renderer.MatchDetailsTableCellRenderer;
 import de.justi.yagw2api.explorer.renderer.ObjectiveTableCellRenderer;
-import de.justi.yagw2api.gw2stats.YAGW2APIGW2Stats;
 import de.justi.yagw2api.mumblelink.YAGW2APIMumbleLink;
 import de.justi.yagw2api.wrapper.IWVWMapListener;
 import de.justi.yagw2api.wrapper.IWVWMapScoresChangedEvent;
@@ -99,9 +90,12 @@ public final class MainWindow extends AbstractWindow implements IWVWMapListener 
 	private static final Locale LOCALE_ES = Locale.forLanguageTag("es");
 	private static final String WORKSPACE_XML_FILENAME = "workspace.xml";
 	private static final long serialVersionUID = -6500541020042114865L;
-	private static final Logger LOGGER = Logger.getLogger(MainWindow.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MainWindow.class);
 	public static final Color ETERNAL_BATTLEGROUNDS_FG = new Color(200, 130, 0);
 	public static final Color ETERNAL_BATTLEGROUNDS_BG = new Color(200, 130, 0, 100);
+
+	public static final Color NEUTRAL_FG = new Color(0,0,0);
+	public static final Color NEUTRAL_BG = new Color(255, 255, 255, 100);
 	public static final Color GREEN_WORLD_FG = new Color(70, 152, 42);
 	public static final Color GREEN_WORLD_BG = new Color(70, 152, 42, 100);
 	public static final Color BLUE_WORLD_FG = new Color(35, 129, 199);
@@ -139,66 +133,10 @@ public final class MainWindow extends AbstractWindow implements IWVWMapListener 
 	private final MyDoggyToolWindowManager toolWindowManager;
 	private final ToolWindowGroup singleMapTableToolWindows;
 
-	private final JTable apiStatusTable;
-	private final APIStatusTableModel apiStatusTableModel;
-	private final ToolWindow apiStatusToolWindow;
-
 	private final JTable mumbleLinkTable;
 	private final MumbleLinkTableModel mumbleLinkTableModel;
 	private final ToolWindow mumbleLinkToolWindow;
 
-	private static final class GW2TileFactoryInfo extends TileFactoryInfo {
-		private static final int MAX_ZOOM = 6;
-		private static final int MIN_ZOOM = 0;
-
-		public GW2TileFactoryInfo() {
-			super(MIN_ZOOM, MAX_ZOOM - 1, MAX_ZOOM, 256, false, true, "https://tiles.guildwars2.com/2/3", "", "", "");
-		}
-
-		@Override
-		public int getTileSize(int zoom) {
-			return 256;
-		}
-
-		@Override
-		public int getDefaultZoomLevel() {
-			return MIN_ZOOM;
-		}
-
-		@Override
-		public String getTileUrl(int x, int y, int zoom) {
-			final int x2use = x;
-			final int y2use = y;
-			final int zoom2use = MAX_ZOOM - zoom;
-			final String url = this.baseURL + "/" + zoom2use + "/" + x2use + "/" + y2use + ".jpg";
-			return url;
-		}
-
-		@Override
-		public int getMapWidthInTilesAtZoom(int zoom) {
-			return DoubleMath.roundToInt(Math.pow(2, MAX_ZOOM - zoom), RoundingMode.UP);
-		}
-
-		/**
-		 * 
-		 * @param zoom
-		 * @return
-		 */
-		@Override
-		public double getLongitudeDegreeWidthInPixels(int zoom) {
-			return this.getTileSize(zoom) / 360d;
-		}
-
-		/**
-		 * 
-		 * @param zoom
-		 * @return
-		 */
-		@Override
-		public double getLongitudeRadianWidthInPixels(int zoom) {
-			return this.getTileSize(zoom) / (2d * Math.PI);
-		}
-	}
 
 	public MainWindow() {
 		super();
@@ -214,7 +152,6 @@ public final class MainWindow extends AbstractWindow implements IWVWMapListener 
 		this.redMapModel = new MapObjectivesTableModel();
 		this.allMapsModel = new MapObjectivesTableModel();
 		this.matchDetailsTableModel = new MatchDetailsTableModel();
-		this.apiStatusTableModel = new APIStatusTableModel(YAGW2APIGW2Stats.INSTANCE.getGW2StatsService());
 		this.mumbleLinkTableModel = new MumbleLinkTableModel(YAGW2APIMumbleLink.INSTANCE.getMumbleLink());
 
 		this.getContentPanel().add(this.builtMainMenuBar(), BorderLayout.NORTH);
@@ -226,8 +163,6 @@ public final class MainWindow extends AbstractWindow implements IWVWMapListener 
 		toolWindowManagerDesc.setPushAwayMode(PushAwayMode.MOST_RECENT);
 
 		this.toolWindowManager.resetMainContent();
-		final ContentManager contentManager = this.toolWindowManager.getContentManager();
-		contentManager.addContent("Worldmap", "Worldmap", null, this.buildMap(), "Worldmap");
 
 		this.singleMapTableToolWindows = this.toolWindowManager.getToolWindowGroup("mapTableToolWindows");
 
@@ -279,14 +214,6 @@ public final class MainWindow extends AbstractWindow implements IWVWMapListener 
 		mumbleLinkToolWindowDescriptor.setTitleBarButtonsVisible(false);
 		mumbleLinkToolWindowDescriptor.setTitleBarVisible(false);
 
-		this.apiStatusTable = this.initAPIStatusTable(this.apiStatusTableModel);
-		this.apiStatusToolWindow = this.toolWindowManager.registerToolWindow("API Status", "API Status", null, new JScrollPane(this.apiStatusTable), ToolWindowAnchor.BOTTOM);
-		this.apiStatusToolWindow.setVisible(true);
-		this.apiStatusToolWindow.setAggregateMode(true);
-		final DockedTypeDescriptor apiStatusToolWindowDescriptor = (DockedTypeDescriptor) this.apiStatusToolWindow.getTypeDescriptor(ToolWindowType.DOCKED);
-		apiStatusToolWindowDescriptor.setIdVisibleOnTitleBar(false);
-		apiStatusToolWindowDescriptor.setTitleBarButtonsVisible(false);
-		apiStatusToolWindowDescriptor.setTitleBarVisible(false);
 
 		this.matchDetailslTable = this.initMatchDetailsTable(this.matchDetailsTableModel);
 		this.matchDetailsToolWindow = this.toolWindowManager.registerToolWindow("Match Details", "Match Details", null, new JScrollPane(this.matchDetailslTable), ToolWindowAnchor.BOTTOM);
@@ -322,61 +249,31 @@ public final class MainWindow extends AbstractWindow implements IWVWMapListener 
 		return table;
 	}
 
-	private JTable initAPIStatusTable(final APIStatusTableModel tableModel) {
-		final String[] header = { "API", "State", "Description", "Ping", "Retrieve", "Record", "Time" };
-		final JTable table = new JTable(tableModel, newTCM(header));
-		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		final TableRowSorter<APIStatusTableModel> sorter = new TableRowSorter<APIStatusTableModel>(tableModel);
-		table.setRowSorter(sorter);
-		sorter.setSortsOnUpdates(true);
-		for (int col = 0; col < tableModel.getColumnCount(); col++) {
-			sorter.setComparator(col, tableModel.getColumnComparator(col));
-		}
-		return table;
-	}
 
 	private boolean loadWorkspaceSettings() {
-		boolean success;
-		Closer closer = Closer.create();
-		try {
-			try {
-				final FileInputStream loadSource = closer.register(new FileInputStream(WORKSPACE_XML_FILENAME));
+		try{
+			try(final FileInputStream loadSource = new FileInputStream(WORKSPACE_XML_FILENAME)){
 				MainWindow.this.toolWindowManager.getPersistenceDelegate().merge(loadSource, MergePolicy.RESET);
-				LOGGER.info("Successfull loaded workspace settings.");
-				success = true;
-			} catch (Throwable ex) {
-				success = false;
-				closer.rethrow(ex);
-			} finally {
-				closer.close();
+				LOGGER.info("Successfull loaded workspace settings.");	
+				return true;
 			}
 		} catch (IOException ex) {
-			LOGGER.error("Exeption thrown while loading workspace settings.", ex);
-			success = false;
+			LOGGER.error("Failed to load workspace settings");
+			return false;
 		}
-		return success;
 	}
 
 	private boolean saveWorskapceSettings() {
-		boolean success;
-		Closer closer = Closer.create();
 		try {
-			try {
-				final FileOutputStream saveDestination = closer.register(new FileOutputStream(WORKSPACE_XML_FILENAME));
+			try(final FileOutputStream saveDestination = new FileOutputStream(WORKSPACE_XML_FILENAME)) {
 				MainWindow.this.toolWindowManager.getPersistenceDelegate().save(saveDestination);
 				LOGGER.info("Successfull saved workspace settings.");
-				success = true;
-			} catch (Throwable ex) {
-				closer.rethrow(ex);
-				success = false;
-			} finally {
-				closer.close();
+				return true;
 			}
 		} catch (IOException ex) {
-			LOGGER.error("Exeption thrown while saving workspace settings.", ex);
-			success = false;
+			LOGGER.error("Failed to save workspace settings");
+			return false;
 		}
-		return success;
 	}
 
 	private JMenuBar builtMainMenuBar() {
@@ -451,21 +348,6 @@ public final class MainWindow extends AbstractWindow implements IWVWMapListener 
 		return mainMenuBar;
 	}
 
-	private JXMapKit buildMap() {
-		final JXMapKit mapkit = new JXMapKit();
-		mapkit.setDefaultProvider(DefaultProviders.Custom);
-		mapkit.setAddressLocationShown(false);
-		final TileFactory factory = new DefaultTileFactory(new GW2TileFactoryInfo());
-		mapkit.setTileFactory(factory);
-		mapkit.setMiniMapVisible(false);
-		mapkit.setPreferredSize(new Dimension(640, 480));
-
-		mapkit.getMainMap().setDrawTileBorders(true);
-		mapkit.getMainMap().setRestrictOutsidePanning(true);
-		mapkit.getMainMap().setHorizontalWrapped(false);
-		mapkit.getMainMap().setRecenterOnClickEnabled(true);
-		return mapkit;
-	}
 
 	private TableColumnModel newTCM(String[] header) {
 

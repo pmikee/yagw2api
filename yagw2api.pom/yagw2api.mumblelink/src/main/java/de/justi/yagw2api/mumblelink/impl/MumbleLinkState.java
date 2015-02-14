@@ -27,7 +27,8 @@ import java.util.Arrays;
 
 import javax.annotation.Nullable;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
@@ -37,94 +38,71 @@ import de.justi.yagw2api.mumblelink.IMumbleLinkPosition;
 import de.justi.yagw2api.mumblelink.IMumbleLinkState;
 
 final class MumbleLinkState implements IMumbleLinkState {
-	private static final Logger LOGGER = Logger.getLogger(MumbleLinkState.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MumbleLinkState.class);
 
 	@Nullable
 	public static final IMumbleLinkState of(Pointer memMapFileData) {
 		checkNotNull(memMapFileData);
 		final Integer uiVersion = memMapFileData.getInt(0);
 		if ((uiVersion == null) || (uiVersion < 0)) {
-			if (LOGGER.isTraceEnabled()) {
-				LOGGER.trace("Invalid uiVersion=" + uiVersion);
-			}
+			LOGGER.trace("Invalid uiVersion={}", uiVersion);
 			return null;
 		}
 		final Integer uiTick = memMapFileData.getInt(4);
 		if ((uiTick == null) || (uiTick < 0)) {
-			if (LOGGER.isTraceEnabled()) {
-				LOGGER.trace("Invalid uiTick=" + uiTick);
-			}
+			LOGGER.trace("Invalid uiTick={}", uiTick);
 			return null;
 		}
 		final Optional<IMumbleLinkPosition> avatarPosition = MumbleLinkPosition.of(memMapFileData.getFloatArray(8, 3));
 		if (!avatarPosition.isPresent()) {
-			if (LOGGER.isTraceEnabled()) {
-				LOGGER.trace("Invalid avatarPosition=" + avatarPosition);
-			}
+			LOGGER.trace("Invalid avatarPosition={}", avatarPosition);
 			return null;
 		}
 		final Optional<IMumbleLinkPosition> avatarFront = MumbleLinkPosition.of(memMapFileData.getFloatArray(20, 3));
 		if (!avatarFront.isPresent()) {
-			if (LOGGER.isTraceEnabled()) {
-				LOGGER.trace("Invalid avatarFront=" + avatarFront);
-			}
+			LOGGER.trace("Invalid avatarFront={}", avatarFront);
 			return null;
 		}
 		final Optional<IMumbleLinkPosition> avatarTop = MumbleLinkPosition.of(memMapFileData.getFloatArray(32, 3));
 		if (!avatarTop.isPresent()) {
-			if (LOGGER.isTraceEnabled()) {
-				LOGGER.trace("Invalid avatarTop=" + avatarTop);
-			}
+			LOGGER.trace("Invalid avatarTop={}", avatarTop);
 			return null;
 		}
 		final Optional<IMumbleLinkPosition> cameraPosition = MumbleLinkPosition.of(memMapFileData.getFloatArray(556, 3));
 		if (!cameraPosition.isPresent()) {
-			if (LOGGER.isTraceEnabled()) {
-				LOGGER.trace("Invalid cameraPosition=" + cameraPosition);
-			}
+
+			LOGGER.trace("Invalid cameraPosition={}", cameraPosition);
 			return null;
 		}
 		final Optional<IMumbleLinkPosition> cameraFront = MumbleLinkPosition.of(memMapFileData.getFloatArray(568, 3));
 		if (!cameraFront.isPresent()) {
-			if (LOGGER.isTraceEnabled()) {
-				LOGGER.trace("Invalid cameraFront=" + cameraFront);
-			}
+			LOGGER.trace("Invalid cameraFront={]", cameraFront);
 			return null;
 		}
 		final Optional<IMumbleLinkPosition> cameraTop = MumbleLinkPosition.of(memMapFileData.getFloatArray(580, 3));
 		if (!cameraTop.isPresent()) {
-			if (LOGGER.isTraceEnabled()) {
-				LOGGER.trace("Invalid cameraTop=" + cameraTop);
-			}
+			LOGGER.trace("Invalid cameraTop={}", cameraTop);
 			return null;
 		}
 		final String avatarName = String.copyValueOf(memMapFileData.getCharArray(592, 256)).trim();
 		if ((avatarName == null) || (avatarName.length() == 0)) {
-			if (LOGGER.isTraceEnabled()) {
-				LOGGER.trace("Invalid avatarName=" + avatarName);
-			}
+			LOGGER.trace("Invalid avatarName={}", avatarName);
 			return null;
 		}
 		final String gameName = String.copyValueOf(memMapFileData.getCharArray(44, 256)).trim();
 		if ((gameName == null) || (!"Guild Wars 2".equals(gameName))) {
-			if (LOGGER.isTraceEnabled()) {
-				LOGGER.trace("Invalid gameName=" + gameName);
-			}
+			LOGGER.trace("Invalid gameName={}", gameName);
 			return null;
 		}
 		final Integer contextLength = memMapFileData.getInt(1104);
 		if ((contextLength == null) || (contextLength < 0)) {
-			if (LOGGER.isTraceEnabled()) {
-				LOGGER.trace("Invalid contextLength=" + contextLength);
-			}
+			LOGGER.trace("Invalid contextLength={}", contextLength);
 			return null;
 		}
 
 		final byte[] context = memMapFileData.getByteArray(1108, 256);
 		if (context == null) {
-			if (LOGGER.isTraceEnabled()) {
-				LOGGER.trace("Invalid context=" + Arrays.toString(context));
-			}
+			LOGGER.trace("Invalid context={}", Arrays.toString(context));
 			return null;
 		}
 

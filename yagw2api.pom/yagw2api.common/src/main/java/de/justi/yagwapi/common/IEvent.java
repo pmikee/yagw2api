@@ -21,8 +21,8 @@ package de.justi.yagwapi.common;
  */
 
 
-import java.util.Calendar;
+import java.time.LocalDateTime;
 
 public interface IEvent extends IImmutable {
-	Calendar getTimestamp();
+	LocalDateTime getTimestamp();
 }

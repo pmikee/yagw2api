@@ -1,5 +1,7 @@
 package de.justi.yagw2api.analyzer;
 
+import com.google.common.base.Optional;
+
 /*
  * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Analyzer
@@ -22,5 +24,5 @@ package de.justi.yagw2api.analyzer;
 
 
 public interface IEntity {
-	long getId();
+	Optional<Long> getId();
 }

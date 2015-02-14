@@ -34,6 +34,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 
 import de.justi.yagw2api.anchorman.IAnchorman;
+import de.justi.yagw2api.arenanet.IArenanet;
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
 import de.justi.yagw2api.mumblelink.IMumbleLink;
 import de.justi.yagw2api.mumblelink.IMumbleLinkAvatarChangeEvent;
@@ -72,6 +73,7 @@ class Anchorman implements IAnchorman, IMumbleLinkListener, IWVWMatchListener, I
 	private static final String BUNDLE_KEY_LOGGED_OUT = "logged_out";
 	private static final String BUNDLE_KEY_CHANGED_CHARACTER = "changed_character";
 	private static final String BUNDLE_BASENAME = "anchorman";
+	private static final IArenanet ARENANET = YAGW2APIArenanet.INSTANCE;
 
 	private volatile boolean running = false;
 	private volatile boolean initialized = false;
@@ -112,7 +114,7 @@ class Anchorman implements IAnchorman, IMumbleLinkListener, IWVWMatchListener, I
 	}
 
 	private void readOut(String textKey, int priority, Object... arguments) {
-		final Locale locale = YAGW2APIArenanet.INSTANCE.getCurrentLocale();
+		final Locale locale = ARENANET.getCurrentLocale();
 		final ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE_BASENAME, locale);
 		TTSUtils.readOut(bundle.getString(textKey), locale, priority, arguments);
 	}
@@ -208,7 +210,7 @@ class Anchorman implements IAnchorman, IMumbleLinkListener, IWVWMatchListener, I
 		checkArgument(event.getMap().getMatch().isPresent());
 		if (this.isRunning() && this.checkWVWMatchFilter(event.getMap().getMatch().get()) && this.checkWVWMapTypeFilter(event.getMap().getType())) {
 			this.readOut(BUNDLE_KEY_OBJECTIVE_CAPTURED, Integer.MAX_VALUE, event.getObjective().getLabel().get(),
-					event.getMap().getType().getLabel(YAGW2APIArenanet.INSTANCE.getCurrentLocale()).get(), event.getNewOwningWorld().getName().get());
+					event.getMap().getType().getLabel(ARENANET.getCurrentLocale()).get(), event.getNewOwningWorld().getName().get());
 		}
 	}
 
@@ -218,7 +220,7 @@ class Anchorman implements IAnchorman, IMumbleLinkListener, IWVWMatchListener, I
 		checkArgument(event.getMap().getMatch().isPresent());
 		if (this.isRunning() && this.checkWVWMatchFilter(event.getMap().getMatch().get()) && this.checkWVWMapTypeFilter(event.getMap().getType())) {
 			this.readOut(BUNDLE_KEY_OBJECTIVE_OUT_OF_BUFF, Integer.MAX_VALUE - 1, event.getObjective().getLabel().get(), event.getMap().getType()
-					.getLabel(YAGW2APIArenanet.INSTANCE.getCurrentLocale()).get());
+					.getLabel(ARENANET.getCurrentLocale()).get());
 		}
 	}
 
@@ -227,7 +229,7 @@ class Anchorman implements IAnchorman, IMumbleLinkListener, IWVWMatchListener, I
 		checkNotNull(event);
 		checkArgument(event.getMap().getMatch().isPresent());
 		if (this.isRunning() && this.checkWVWMatchFilter(event.getMap().getMatch().get()) && this.checkWVWMapTypeFilter(event.getMap().getType())) {
-			this.readOut(BUNDLE_KEY_OBJECTIVE_CLAIMED, -1, event.getObjective().getLabel().get(), event.getMap().getType().getLabel(YAGW2APIArenanet.INSTANCE.getCurrentLocale()).get(), event
+			this.readOut(BUNDLE_KEY_OBJECTIVE_CLAIMED, -1, event.getObjective().getLabel().get(), event.getMap().getType().getLabel(ARENANET.getCurrentLocale()).get(), event
 					.getClaimingGuild().getName());
 		}
 	}
@@ -237,7 +239,7 @@ class Anchorman implements IAnchorman, IMumbleLinkListener, IWVWMatchListener, I
 		checkNotNull(event);
 		checkArgument(event.getMap().getMatch().isPresent());
 		if (this.isRunning() && this.checkWVWMatchFilter(event.getMap().getMatch().get()) && this.checkWVWMapTypeFilter(event.getMap().getType())) {
-			this.readOut(BUNDLE_KEY_OBJECTIVE_UNCLAIMED, -1, event.getObjective().getLabel().get(), event.getMap().getType().getLabel(YAGW2APIArenanet.INSTANCE.getCurrentLocale()).get(), event
+			this.readOut(BUNDLE_KEY_OBJECTIVE_UNCLAIMED, -1, event.getObjective().getLabel().get(), event.getMap().getType().getLabel(ARENANET.getCurrentLocale()).get(), event
 					.previousClaimedByGuild().get().getName());
 		}
 	}
