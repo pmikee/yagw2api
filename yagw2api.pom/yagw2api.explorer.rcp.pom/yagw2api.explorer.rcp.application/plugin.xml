@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         id="yagw2api.explorer.rcp.application"
+         point="org.eclipse.core.runtime.applications">
+      <application>
+         <run
+               class="yagw2api.explorer.rcp.Application">
+         </run>
+      </application>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="yagw2api.explorer.rcp.Perspective"
+            fixed="true"
+            id="yagw2api.explorer.rcp.perspective"
+            name="RCP Perspective">
+      </perspective>
+   </extension>
+   <extension
+         id="yagw2api"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="yagw2api.explorer.rcp.application"
+            name="YAGW2API Explorer">
+         <property
+               name="appName"
+               value="YAGW2API Explorer">
+         </property>
+      </product>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="yagw2api.explorer.rcp.wvw.MatchSelector"
+            id="yagw2api.explorer.rcp.wvw.MatchSelector"
+            name="Match Selector">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="yagw2api.explorer.rcp.perspective">
+         <view
+               closeable="true"
+               id="yagw2api.explorer.rcp.wvw.MatchSelector"
+               minimized="false"
+               relationship="left"
+               relative="org.eclipse.ui.editorss"
+               visible="true">
+         </view>
+      </perspectiveExtension>
+   </extension>
+
+</plugin>
