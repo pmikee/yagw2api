@@ -9,9 +9,9 @@ package yagw2api.explorer.rcp.wvw;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,24 +21,24 @@ package yagw2api.explorer.rcp.wvw;
  */
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.layout.TableColumnLayout;
-import org.eclipse.jface.viewers.ColumnPixelData;
+import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -46,6 +46,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 import yagw2api.explorer.rcp.Activator;
 
@@ -57,19 +58,19 @@ import de.justi.yagw2api.wrapper.IWVWMatchListener;
 import de.justi.yagw2api.wrapper.IWVWMatchScoresChangedEvent;
 import de.justi.yagw2api.wrapper.IWVWWrapper;
 
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.swt.graphics.Image;
-
 public class MatchSelector extends ViewPart implements IWVWMatchListener {
 	private static final NumberFormat NF = new DecimalFormat("#,###,##0");
+
 	private class TableLabelProvider extends LabelProvider implements ITableLabelProvider {
-		public Image getColumnImage(Object element, int columnIndex) {
+		@Override
+		public Image getColumnImage(final Object element, final int columnIndex) {
 			return null;
 		}
-		public String getColumnText(Object element, int columnIndex) {
+
+		@Override
+		public String getColumnText(final Object element, final int columnIndex) {
 			checkArgument(element instanceof IWVWMatch);
-			final IWVWMatch match = (IWVWMatch)element;
+			final IWVWMatch match = (IWVWMatch) element;
 			switch (columnIndex) {
 				case 0:
 					return (match.getRedWorld().getName().get());
@@ -88,18 +89,22 @@ public class MatchSelector extends ViewPart implements IWVWMatchListener {
 			}
 		}
 	}
+
 	private static final class ContentProvider implements IStructuredContentProvider, IWVWMatchListener {
 
 		private final List<IWVWMatch> matches = Collections.synchronizedList(Lists.newCopyOnWriteArrayList());
-		
-		public Object[] getElements(Object inputElement) {
-			return matches.toArray(new IWVWMatch[this.matches.size()]);
+
+		@Override
+		public Object[] getElements(final Object inputElement) {
+			return this.matches.toArray(new IWVWMatch[this.matches.size()]);
 		}
 
+		@Override
 		public void dispose() {
 		}
 
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		@Override
+		public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
 			this.matches.clear();
 			if (oldInput != null) {
 				checkArgument(oldInput instanceof IWVWWrapper);
@@ -112,13 +117,13 @@ public class MatchSelector extends ViewPart implements IWVWMatchListener {
 		}
 
 		@Override
-		public void onInitializedMatchForWrapper(IWVWInitializedMatchEvent e) {
+		public void onInitializedMatchForWrapper(final IWVWInitializedMatchEvent e) {
 			this.matches.add(e.getMatch());
-			
+
 		}
 
 		@Override
-		public void onMatchScoreChangedEvent(IWVWMatchScoresChangedEvent e) {
+		public void onMatchScoreChangedEvent(final IWVWMatchScoresChangedEvent e) {
 			// NOP
 		}
 	}
@@ -128,75 +133,78 @@ public class MatchSelector extends ViewPart implements IWVWMatchListener {
 	private Table table = null;
 	private TableViewer tableViewer = null;
 
-	public MatchSelector() {	
+	public MatchSelector() {
 		Activator.getDefault().getWVW().registerWVWMatchListener(this);
 	}
 
 	/**
 	 * Create contents of the view part.
-	 * 
+	 *
 	 * @param parent
 	 */
 	@Override
-	public void createPartControl(Composite parent) {
+	public void createPartControl(final Composite parent) {
+		parent.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		Composite container = new Composite(parent, SWT.NONE);
+		container.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		container.setLayout(new GridLayout(1, false));
 		{
 			Composite composite = new Composite(container, SWT.NONE);
+			composite.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 			composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 			TableColumnLayout tcl_composite = new TableColumnLayout();
 			composite.setLayout(tcl_composite);
 			{
-				tableViewer = new TableViewer(composite, SWT.BORDER | SWT.FULL_SELECTION);
-				table = tableViewer.getTable();
-				table.setHeaderVisible(true);
-				table.setLinesVisible(true);
+				this.tableViewer = new TableViewer(composite, SWT.BORDER | SWT.FULL_SELECTION);
+				this.table = this.tableViewer.getTable();
+				this.table.setHeaderVisible(true);
+				this.table.setLinesVisible(true);
 				{
-					TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+					TableViewerColumn tableViewerColumn = new TableViewerColumn(this.tableViewer, SWT.NONE);
 					TableColumn tblclmnRedworld = tableViewerColumn.getColumn();
-					tcl_composite.setColumnData(tblclmnRedworld, new ColumnPixelData(150, true, true));
+					tcl_composite.setColumnData(tblclmnRedworld, new ColumnWeightData(1, true));
 					tblclmnRedworld.setText("Red-World");
 				}
 				{
-					TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+					TableViewerColumn tableViewerColumn = new TableViewerColumn(this.tableViewer, SWT.NONE);
 					TableColumn tblclmnGreenworld = tableViewerColumn.getColumn();
-					tcl_composite.setColumnData(tblclmnGreenworld, new ColumnPixelData(150, true, true));
+					tcl_composite.setColumnData(tblclmnGreenworld, new ColumnWeightData(1, true));
 					tblclmnGreenworld.setText("Green-World");
 				}
 				{
-					TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+					TableViewerColumn tableViewerColumn = new TableViewerColumn(this.tableViewer, SWT.NONE);
 					TableColumn tblclmnBlueworld = tableViewerColumn.getColumn();
-					tcl_composite.setColumnData(tblclmnBlueworld, new ColumnPixelData(150, true, true));
+					tcl_composite.setColumnData(tblclmnBlueworld, new ColumnWeightData(1, true));
 					tblclmnBlueworld.setText("Blue-World");
 				}
 				{
-					TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+					TableViewerColumn tableViewerColumn = new TableViewerColumn(this.tableViewer, SWT.NONE);
 					TableColumn tblclmnRedworldpoints = tableViewerColumn.getColumn();
-					tcl_composite.setColumnData(tblclmnRedworldpoints, new ColumnPixelData(150, true, true));
+					tcl_composite.setColumnData(tblclmnRedworldpoints, new ColumnWeightData(1, true));
 					tblclmnRedworldpoints.setText("Red-World-Points");
 				}
 				{
-					TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+					TableViewerColumn tableViewerColumn = new TableViewerColumn(this.tableViewer, SWT.NONE);
 					TableColumn tblclmnGreenworldpoints = tableViewerColumn.getColumn();
-					tcl_composite.setColumnData(tblclmnGreenworldpoints, new ColumnPixelData(150, true, true));
+					tcl_composite.setColumnData(tblclmnGreenworldpoints, new ColumnWeightData(1, true));
 					tblclmnGreenworldpoints.setText("Green-World-Points");
 				}
 				{
-					TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+					TableViewerColumn tableViewerColumn = new TableViewerColumn(this.tableViewer, SWT.NONE);
 					TableColumn tblclmnBlueworldpoints = tableViewerColumn.getColumn();
-					tcl_composite.setColumnData(tblclmnBlueworldpoints, new ColumnPixelData(150, true, true));
+					tcl_composite.setColumnData(tblclmnBlueworldpoints, new ColumnWeightData(1, true));
 					tblclmnBlueworldpoints.setText("Blue-World-Points");
 				}
-				tableViewer.setLabelProvider(new TableLabelProvider());
-				tableViewer.setContentProvider(this.contentProvider);
+				this.tableViewer.setLabelProvider(new TableLabelProvider());
+				this.tableViewer.setContentProvider(this.contentProvider);
 			}
 		}
 
-		createActions();
-		initializeToolBar();
-		initializeMenu();
-		
-		tableViewer.setInput(Activator.getDefault().getWVW());
+		this.createActions();
+		this.initializeToolBar();
+		this.initializeMenu();
+
+		this.tableViewer.setInput(Activator.getDefault().getWVW());
 	}
 
 	/**
@@ -210,14 +218,14 @@ public class MatchSelector extends ViewPart implements IWVWMatchListener {
 	 * Initialize the toolbar.
 	 */
 	private void initializeToolBar() {
-		IToolBarManager toolbarManager = getViewSite().getActionBars().getToolBarManager();
+		IToolBarManager toolbarManager = this.getViewSite().getActionBars().getToolBarManager();
 	}
 
 	/**
 	 * Initialize the menu.
 	 */
 	private void initializeMenu() {
-		IMenuManager menuManager = getViewSite().getActionBars().getMenuManager();
+		IMenuManager menuManager = this.getViewSite().getActionBars().getMenuManager();
 	}
 
 	@Override
@@ -226,19 +234,19 @@ public class MatchSelector extends ViewPart implements IWVWMatchListener {
 	}
 
 	@Override
-	public void onInitializedMatchForWrapper(IWVWInitializedMatchEvent arg0) {
-		if(this.tableViewer != null){
+	public void onInitializedMatchForWrapper(final IWVWInitializedMatchEvent arg0) {
+		if (this.tableViewer != null) {
 			Display.getDefault().asyncExec(() -> {
-				this.tableViewer.refresh();	
+				this.tableViewer.refresh();
 			});
 		}
 	}
 
 	@Override
-	public void onMatchScoreChangedEvent(IWVWMatchScoresChangedEvent arg0) {
-		if(this.tableViewer != null){
+	public void onMatchScoreChangedEvent(final IWVWMatchScoresChangedEvent arg0) {
+		if (this.tableViewer != null) {
 			Display.getDefault().asyncExec(() -> {
-				this.tableViewer.refresh();	
+				this.tableViewer.refresh();
 			});
 		}
 	}
