@@ -70,4 +70,5 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+	<name>YAGW2API-Explorer-RCP</name>
 </project>

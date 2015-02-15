@@ -9,4 +9,5 @@
 	</parent>
 	<artifactId>yagw2api.explorer.rcp.targetplatform</artifactId>
 	<packaging>eclipse-target-definition</packaging>
+	<name>YAGW2API-Explorer-RCP-Targetplatform</name>
 </project>

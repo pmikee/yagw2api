@@ -4,7 +4,7 @@ package de.justi.yagwapi.common.tts;
  * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Commons
  * _____________________________________________________________
- * Copyright (C) 2012 - 2013 Julian Stitz
+ * Copyright (C) 2012 - 2015 Julian Stitz
  * _____________________________________________________________
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

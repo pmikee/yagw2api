@@ -33,4 +33,5 @@
 			</plugin>
 		</plugins>
 	</build>
+	<name>YAGW2API-Explorer-RCP-Product</name>
 </project>

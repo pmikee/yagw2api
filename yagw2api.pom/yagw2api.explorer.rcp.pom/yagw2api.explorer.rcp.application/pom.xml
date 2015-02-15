@@ -11,4 +11,5 @@
 		<relativePath>..</relativePath>
 	</parent>
 
+	<name>YAGW2API-Explorer-RCP-Application</name>
 </project>

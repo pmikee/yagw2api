@@ -8,4 +8,5 @@
   	<artifactId>yagw2api.explorer.rcp.pom</artifactId>
   	<relativePath>..</relativePath>
   </parent>
+  <name>YAGW2API-Explorer-RCP-Feature</name>
 </project>
