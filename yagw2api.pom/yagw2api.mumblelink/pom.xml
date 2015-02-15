@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>de.justi</groupId>
 		<artifactId>yagw2api.pom</artifactId>
-		<version>0.0.5-SNAPSHOT</version>
+		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>yagw2api.mumblelink</artifactId>
 	<name>YAGW2API-MumbleLink</name>

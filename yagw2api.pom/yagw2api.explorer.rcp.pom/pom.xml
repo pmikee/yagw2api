@@ -14,12 +14,14 @@
 		<module>yagw2api.explorer.rcp.feature</module>
 		<module>yagw2api.explorer.rcp.application</module>
 		<module>yagw2api.explorer.rcp.product</module>
+		<module>yagw2api.explorer.rcp.library</module>
 	</modules>
 
 
 
 	<properties>
 		<tycho.version>0.22.0</tycho.version>
+		<maven-bundle-plugin.version>2.5.3</maven-bundle-plugin.version>
 	</properties>
 
 	<build>

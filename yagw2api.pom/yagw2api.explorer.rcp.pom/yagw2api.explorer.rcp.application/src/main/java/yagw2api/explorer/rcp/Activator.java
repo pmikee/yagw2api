@@ -21,9 +21,15 @@ package yagw2api.explorer.rcp;
  */
 
 
+import java.util.Locale;
+
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+
+import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
+import de.justi.yagw2api.wrapper.IWVWWrapper;
+import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -32,9 +38,15 @@ public class Activator extends AbstractUIPlugin {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "yagw2api.explorer.rcp"; //$NON-NLS-1$
+	
+	static{
+		YAGW2APIArenanet.INSTANCE.setCurrentLocale(Locale.getDefault());
+	}
 
 	// The shared instance
 	private static Activator plugin;
+	
+	private final IWVWWrapper wvw = YAGW2APIWrapper.INSTANCE.getWVWWrapper();
 	
 	/**
 	 * The constructor
@@ -49,6 +61,7 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		wvw.start();
 	}
 
 	/*
@@ -58,6 +71,13 @@ public class Activator extends AbstractUIPlugin {
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		super.stop(context);
+		wvw.stop();
+	}
+	
+	
+
+	public IWVWWrapper getWVW() {
+		return wvw;
 	}
 
 	/**

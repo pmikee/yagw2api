@@ -313,7 +313,7 @@ final class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 				}
 			}
 		} else if ((remainingBuffMillis > 0) && LOGGER.isTraceEnabled()) {
-			LOGGER.trace("Remaining buff duration for " + this.toString() + ": " + remainingBuffMillis + "ms");
+			LOGGER.trace("Remaining buff duration for {} is {}ms",this,remainingBuffMillis);
 		}
 	}
 
@@ -352,19 +352,18 @@ final class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 		if ((guild != null) && (!this.claimedByGuild.isPresent() || !this.claimedByGuild.get().equals(guild))) {
 			// changed claiming guild
 			final IWVWObjectiveClaimedEvent event = WVW_MODEL_EVENTS_FACTORY.newObjectiveClaimedEvent(this, guild, this.claimedByGuild);
-			LOGGER.info(this.getLocation().getLabel(YAGW2APIArenanet.INSTANCE.getCurrentLocale()) + " has been claimed by: " + guild.getName() + " | previous claimed by "
-					+ this.claimedByGuild);
+			LOGGER.debug("{} has been claimed by {}",this, guild);
 			this.claimedByGuild = Optional.of(guild);
 			this.getChannel().post(event);
 		} else if ((guild == null) && this.claimedByGuild.isPresent()) {
 			// unclaim (e.g. after capture)
 			final IWVWObjectiveUnclaimedEvent event = WVW_MODEL_EVENTS_FACTORY.newObjectiveUnclaimedEvent(this, this.claimedByGuild);
-			LOGGER.info(this.getLocation().getLabel(YAGW2APIArenanet.INSTANCE.getCurrentLocale()) + " has been unclaimed from " + this.claimedByGuild);
+			LOGGER.debug("{} was unclaimed from {}",this,this.claimedByGuild);
 			this.claimedByGuild = Optional.absent();
 			this.getChannel().post(event);
 		} else {
 			// no change
-			LOGGER.trace(this + " has already been claimed by: " + guild);
+			LOGGER.trace("{} has already been claimed by {}",this, guild);
 		}
 	}
 
@@ -373,14 +372,14 @@ final class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 		if ((capturingWorld != null) && (!this.owningWorld.isPresent() || !this.owningWorld.get().equals(capturingWorld))) {
 			// changed owning world
 			final IWVWObjectiveCaptureEvent event = WVW_MODEL_EVENTS_FACTORY.newObjectiveCapturedEvent(this, capturingWorld, this.owningWorld);
-			LOGGER.debug(capturingWorld + " has captured " + this + " when expected remaining buff duration was " + this.getRemainingBuffDuration(TimeUnit.SECONDS) + "s");
+			LOGGER.debug("{} has captured {} when expected remaining buff duration was {}s",capturingWorld,this, this.getRemainingBuffDuration(TimeUnit.SECONDS));
 			this.owningWorld = Optional.of(capturingWorld);
 			this.lastCaptureEventTimestamp = Optional.of(event.getTimestamp());
 			this.postedEndOfBuffEvent = false;
 			this.getChannel().post(event);
 		} else {
 			// no change
-			LOGGER.trace(this + " has already been captured by: " + capturingWorld);
+			LOGGER.trace("{} has already been captured by {}",this, capturingWorld);
 		}
 	}
 

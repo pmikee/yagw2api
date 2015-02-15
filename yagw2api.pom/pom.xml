@@ -51,6 +51,7 @@
 		<maven-compiler-plugin.version>3.2</maven-compiler-plugin.version>
 		<maven-assembly-plugin.version>2.5.3</maven-assembly-plugin.version>
 		<maven-surefire-plugin.version>2.18.1</maven-surefire-plugin.version>
+		<maven-shade-plugin.version>2.3</maven-shade-plugin.version>
 	</properties>
 
 	<modules>
@@ -63,6 +64,7 @@
 		<module>yagw2api.anchorman</module>
 		<module>yagw2api.explorer</module>
 		<module>yagw2api.explorer.rcp.pom</module>
+		<module>yagw2api.complete</module>
 	</modules>
 
 	<profiles>
@@ -155,6 +157,11 @@
 						<failIfNoTests>false</failIfNoTests>
 					</configuration>
 				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-shade-plugin</artifactId>
+					<version>${maven-shade-plugin.version}</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
@@ -237,6 +244,11 @@
 			<dependency>
 				<artifactId>yagw2api.anchorman</artifactId>
 				<groupId>de.justi</groupId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.justi</groupId>
+				<artifactId>yagw2api.complete</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 
