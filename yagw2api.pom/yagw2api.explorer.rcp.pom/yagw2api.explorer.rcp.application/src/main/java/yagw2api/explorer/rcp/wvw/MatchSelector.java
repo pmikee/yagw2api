@@ -22,7 +22,6 @@ package yagw2api.explorer.rcp.wvw;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jface.action.IMenuManager;
@@ -126,7 +125,7 @@ public class MatchSelector extends ViewPart implements IWVWMatchListener {
 
 	private static final class ContentProvider implements IStructuredContentProvider, IWVWMatchListener {
 		private Optional<IWVWWrapper> currentInput = Optional.absent();
-		private final List<IWVWMatch> matches = Collections.synchronizedList(Lists.newCopyOnWriteArrayList());
+		private final List<IWVWMatch> matches = Lists.newArrayList();
 
 		@Override
 		public Object[] getElements(final Object inputElement) {
