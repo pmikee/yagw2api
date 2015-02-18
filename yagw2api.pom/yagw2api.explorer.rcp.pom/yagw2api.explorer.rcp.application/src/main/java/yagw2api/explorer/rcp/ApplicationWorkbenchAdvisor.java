@@ -9,9 +9,9 @@ package yagw2api.explorer.rcp;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,6 +20,7 @@ package yagw2api.explorer.rcp;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
  */
 
+import org.eclipse.ui.application.IWorkbenchConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
@@ -28,10 +29,17 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 
 	private static final String PERSPECTIVE_ID = "yagw2api.explorer.rcp.perspective"; //$NON-NLS-1$
 
-    public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer) {
-        return new ApplicationWorkbenchWindowAdvisor(configurer);
-    }
+	@Override
+	public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor(final IWorkbenchWindowConfigurer configurer) {
+		return new ApplicationWorkbenchWindowAdvisor(configurer);
+	}
 
+	@Override
+	public void initialize(final IWorkbenchConfigurer configurer) {
+		configurer.setSaveAndRestore(false);
+	}
+
+	@Override
 	public String getInitialWindowPerspectiveId() {
 		return PERSPECTIVE_ID;
 	}

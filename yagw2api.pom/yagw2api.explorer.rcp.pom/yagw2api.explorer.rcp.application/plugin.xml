@@ -15,7 +15,7 @@
          point="org.eclipse.ui.perspectives">
       <perspective
             class="yagw2api.explorer.rcp.Perspective"
-            fixed="true"
+            fixed="false"
             id="yagw2api.explorer.rcp.perspective"
             name="RCP Perspective">
       </perspective>
@@ -35,9 +35,11 @@
    <extension
          point="org.eclipse.ui.views">
       <view
+            allowMultiple="false"
             class="yagw2api.explorer.rcp.wvw.MatchSelector"
             id="yagw2api.explorer.rcp.wvw.MatchSelector"
-            name="Match Selector">
+            name="Match Selector"
+            restorable="true">
       </view>
    </extension>
    <extension
@@ -45,11 +47,13 @@
       <perspectiveExtension
             targetID="yagw2api.explorer.rcp.perspective">
          <view
-               closeable="true"
+               closeable="false"
                id="yagw2api.explorer.rcp.wvw.MatchSelector"
                minimized="false"
+               moveable="true"
                relationship="left"
                relative="org.eclipse.ui.editorss"
+               standalone="false"
                visible="true">
          </view>
       </perspectiveExtension>

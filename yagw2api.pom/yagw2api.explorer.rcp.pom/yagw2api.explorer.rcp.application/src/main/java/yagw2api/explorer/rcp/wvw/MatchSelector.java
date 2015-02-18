@@ -22,8 +22,6 @@ package yagw2api.explorer.rcp.wvw;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.Collections;
 import java.util.List;
 
@@ -32,12 +30,14 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -50,6 +50,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import yagw2api.explorer.rcp.Activator;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 
 import de.justi.yagw2api.wrapper.IWVWInitializedMatchEvent;
@@ -59,9 +60,8 @@ import de.justi.yagw2api.wrapper.IWVWMatchScoresChangedEvent;
 import de.justi.yagw2api.wrapper.IWVWWrapper;
 
 public class MatchSelector extends ViewPart implements IWVWMatchListener {
-	private static final NumberFormat NF = new DecimalFormat("#,###,##0");
 
-	private class TableLabelProvider extends LabelProvider implements ITableLabelProvider {
+	private static class TableLabelProvider extends LabelProvider implements ITableLabelProvider, ITableColorProvider {
 		@Override
 		public Image getColumnImage(final Object element, final int columnIndex) {
 			return null;
@@ -79,19 +79,53 @@ public class MatchSelector extends ViewPart implements IWVWMatchListener {
 				case 2:
 					return (match.getBlueWorld().getName().get());
 				case 3:
-					return NF.format(match.getScores().getGreenScore());
+					return WVWUIConstants.NUMBER_FORMAT_POINTS.format(match.getScores().getRedScore());
 				case 4:
-					return NF.format(match.getScores().getBlueScore());
+					return WVWUIConstants.NUMBER_FORMAT_POINTS.format(match.getScores().getGreenScore());
 				case 5:
-					return NF.format(match.getScores().getRedScore());
+					return WVWUIConstants.NUMBER_FORMAT_POINTS.format(match.getScores().getBlueScore());
 				default:
-					throw new IllegalArgumentException("Unknown column: " + columnIndex);
+					return WVWUIConstants.LABEL_NO_SUCH_DATA;
+			}
+		}
+
+		@Override
+		public Color getForeground(final Object element, final int columnIndex) {
+			switch (columnIndex) {
+				case 0:
+				case 3:
+					return SWTResourceManager.getColor(WVWUIConstants.RGB_RED_WORLD_FG);
+				case 1:
+				case 4:
+					return SWTResourceManager.getColor(WVWUIConstants.RGB_GREEN_WORLD_FG);
+				case 2:
+				case 5:
+					return SWTResourceManager.getColor(WVWUIConstants.RGB_BLUE_WORLD_FG);
+				default:
+					return null;
+			}
+		}
+
+		@Override
+		public Color getBackground(final Object element, final int columnIndex) {
+			switch (columnIndex) {
+				case 0:
+				case 3:
+					return SWTResourceManager.getColor(WVWUIConstants.RGB_RED_WORLD_BG);
+				case 1:
+				case 4:
+					return SWTResourceManager.getColor(WVWUIConstants.RGB_GREEN_WORLD_BG);
+				case 2:
+				case 5:
+					return SWTResourceManager.getColor(WVWUIConstants.RGB_BLUE_WORLD_BG);
+				default:
+					return null;
 			}
 		}
 	}
 
 	private static final class ContentProvider implements IStructuredContentProvider, IWVWMatchListener {
-
+		private Optional<IWVWWrapper> currentInput = Optional.absent();
 		private final List<IWVWMatch> matches = Collections.synchronizedList(Lists.newCopyOnWriteArrayList());
 
 		@Override
@@ -101,6 +135,9 @@ public class MatchSelector extends ViewPart implements IWVWMatchListener {
 
 		@Override
 		public void dispose() {
+			if (this.currentInput.isPresent()) {
+				this.currentInput.get().unregisterWVWMatchListener(this);
+			}
 		}
 
 		@Override
@@ -112,7 +149,8 @@ public class MatchSelector extends ViewPart implements IWVWMatchListener {
 			}
 			if (newInput != null) {
 				checkArgument(newInput instanceof IWVWWrapper);
-				((IWVWWrapper) newInput).registerWVWMatchListener(this);
+				this.currentInput = Optional.of(((IWVWWrapper) newInput));
+				this.currentInput.get().registerWVWMatchListener(this);
 			}
 		}
 
@@ -233,22 +271,29 @@ public class MatchSelector extends ViewPart implements IWVWMatchListener {
 		// Set the focus
 	}
 
-	@Override
-	public void onInitializedMatchForWrapper(final IWVWInitializedMatchEvent arg0) {
+	private void refreshTable() {
 		if (this.tableViewer != null) {
 			Display.getDefault().asyncExec(() -> {
-				this.tableViewer.refresh();
+				if (!this.table.isDisposed()) {
+					this.tableViewer.refresh();
+				}
 			});
 		}
 	}
 
 	@Override
+	public void onInitializedMatchForWrapper(final IWVWInitializedMatchEvent arg0) {
+		this.refreshTable();
+	}
+
+	@Override
 	public void onMatchScoreChangedEvent(final IWVWMatchScoresChangedEvent arg0) {
-		if (this.tableViewer != null) {
-			Display.getDefault().asyncExec(() -> {
-				this.tableViewer.refresh();
-			});
-		}
+		this.refreshTable();
+	}
+
+	@Override
+	public void dispose() {
+		Activator.getDefault().getWVW().unregisterWVWMatchListener(this);
 	}
 
 }
