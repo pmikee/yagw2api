@@ -45,4 +45,5 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		configurer.setShowStatusLine(false);
 		configurer.setTitle("YAGW2API Explorer"); //$NON-NLS-1$
 	}
+
 }

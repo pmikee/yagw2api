@@ -36,10 +36,16 @@
          point="org.eclipse.ui.views">
       <view
             allowMultiple="false"
-            class="yagw2api.explorer.rcp.wvw.MatchSelector"
-            id="yagw2api.explorer.rcp.wvw.MatchSelector"
+            class="yagw2api.explorer.rcp.wvw.MatchSelectorViewPart"
+            id="yagw2api.explorer.rcp.wvw.matchselector"
             name="Match Selector"
             restorable="true">
+      </view>
+      <view
+            allowMultiple="false"
+            class="yagw2api.explorer.rcp.wvw.MatchDetailsViewPart"
+            id="yagw2api.explorer.rcp.wvw.matchdetails"
+            name="Match Details">
       </view>
    </extension>
    <extension
@@ -48,12 +54,20 @@
             targetID="yagw2api.explorer.rcp.perspective">
          <view
                closeable="false"
-               id="yagw2api.explorer.rcp.wvw.MatchSelector"
+               id="yagw2api.explorer.rcp.wvw.matchselector"
                minimized="false"
                moveable="true"
                relationship="left"
                relative="org.eclipse.ui.editorss"
                standalone="false"
+               visible="true">
+         </view>
+         <view
+               id="yagw2api.explorer.rcp.wvw.matchdetails"
+               minimized="false"
+               moveable="true"
+               relationship="right"
+               relative="org.eclipse.ui.editorss"
                visible="true">
          </view>
       </perspectiveExtension>
