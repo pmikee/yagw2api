@@ -175,7 +175,7 @@ public class MatchSelectorViewPart extends ViewPart implements IWVWMatchListener
 					tableViewerColumn.setLabelProvider(new RedWorldColumnLabelProvider() {
 						@Override
 						protected String getTypeSafeText(final IWVWMatch element) {
-							return element.getGreenWorld().getName().or("");
+							return element.getRedWorld().getName().or("");
 						}
 					});
 					new TypeSafeTableViewerColumnSorter<IWVWMatch>(tableViewerColumn, IWVWMatch.class) {
@@ -193,7 +193,7 @@ public class MatchSelectorViewPart extends ViewPart implements IWVWMatchListener
 					tableViewerColumn.setLabelProvider(new GreenWorldColumnLabelProvider() {
 						@Override
 						protected String getTypeSafeText(final IWVWMatch element) {
-							return element.getBlueWorld().getName().or("");
+							return element.getGreenWorld().getName().or("");
 						}
 					});
 					new TypeSafeTableViewerColumnSorter<IWVWMatch>(tableViewerColumn, IWVWMatch.class) {
@@ -211,7 +211,7 @@ public class MatchSelectorViewPart extends ViewPart implements IWVWMatchListener
 					tableViewerColumn.setLabelProvider(new BlueWorldColumnLabelProvider() {
 						@Override
 						protected String getTypeSafeText(final IWVWMatch element) {
-							return element.getRedWorld().getName().or("");
+							return element.getBlueWorld().getName().or("");
 						}
 					});
 					new TypeSafeTableViewerColumnSorter<IWVWMatch>(tableViewerColumn, IWVWMatch.class) {
