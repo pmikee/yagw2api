@@ -64,7 +64,6 @@
 		<module>yagw2api.anchorman</module>
 		<module>yagw2api.explorer</module>
 		<module>yagw2api.explorer.rcp.pom</module>
-		<module>yagw2api.complete</module>
 	</modules>
 
 	<profiles>
