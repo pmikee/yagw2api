@@ -20,18 +20,12 @@ package yagw2api.explorer.rcp.wvw;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
  */
 
-import static com.google.common.base.Preconditions.checkArgument;
-
-import java.util.List;
-
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ColumnWeightData;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -45,62 +39,15 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import yagw2api.explorer.rcp.Activator;
 import yagw2api.explorer.rcp.swt.TypeSafeColumnLabelProvider;
 import yagw2api.explorer.rcp.swt.TypeSafeTableViewerColumnSorter;
-
-import com.google.common.base.Optional;
-import com.google.common.collect.Lists;
-
 import de.justi.yagw2api.wrapper.IWVWInitializedMatchEvent;
 import de.justi.yagw2api.wrapper.IWVWMatch;
 import de.justi.yagw2api.wrapper.IWVWMatchListener;
 import de.justi.yagw2api.wrapper.IWVWMatchScoresChangedEvent;
-import de.justi.yagw2api.wrapper.IWVWWrapper;
 
 public class MatchSelectorViewPart extends ViewPart implements IWVWMatchListener {
 	public static final String ID = "yagw2api.explorer.rcp.wvw.matchselector"; //$NON-NLS-1$
 
-	private static final class MatchContentProvider implements IStructuredContentProvider, IWVWMatchListener {
-		private Optional<IWVWWrapper> currentInput = Optional.absent();
-		private final List<IWVWMatch> matches = Lists.newArrayList();
-
-		@Override
-		public Object[] getElements(final Object inputElement) {
-			return this.matches.toArray(new IWVWMatch[this.matches.size()]);
-		}
-
-		@Override
-		public void dispose() {
-			if (this.currentInput.isPresent()) {
-				this.currentInput.get().unregisterWVWMatchListener(this);
-			}
-		}
-
-		@Override
-		public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
-			this.matches.clear();
-			if (oldInput != null) {
-				checkArgument(oldInput instanceof IWVWWrapper);
-				((IWVWWrapper) oldInput).unregisterWVWMatchListener(this);
-			}
-			if (newInput != null) {
-				checkArgument(newInput instanceof IWVWWrapper);
-				this.currentInput = Optional.of(((IWVWWrapper) newInput));
-				this.currentInput.get().registerWVWMatchListener(this);
-			}
-		}
-
-		@Override
-		public void onInitializedMatchForWrapper(final IWVWInitializedMatchEvent e) {
-			this.matches.add(e.getMatch());
-
-		}
-
-		@Override
-		public void onMatchScoreChangedEvent(final IWVWMatchScoresChangedEvent e) {
-			// NOP
-		}
-	}
-
-	private final MatchContentProvider contentProvider = new MatchContentProvider();
+	private final MatchesContentProvider contentProvider = new MatchesContentProvider();
 	private Table table = null;
 	private TableViewer tableViewer = null;
 
@@ -170,7 +117,7 @@ public class MatchSelectorViewPart extends ViewPart implements IWVWMatchListener
 				}
 				{
 					TableViewerColumn tableViewerColumn = new TableViewerColumn(this.tableViewer, SWT.NONE);
-					tableViewerColumn.setLabelProvider(new RedWorldColumnLabelProvider() {
+					tableViewerColumn.setLabelProvider(new RedWorldColumnLabelProvider<IWVWMatch>(IWVWMatch.class) {
 						@Override
 						protected String getTypeSafeText(final IWVWMatch element) {
 							return element.getRedWorld().getName().or("");
@@ -188,7 +135,7 @@ public class MatchSelectorViewPart extends ViewPart implements IWVWMatchListener
 				}
 				{
 					TableViewerColumn tableViewerColumn = new TableViewerColumn(this.tableViewer, SWT.NONE);
-					tableViewerColumn.setLabelProvider(new GreenWorldColumnLabelProvider() {
+					tableViewerColumn.setLabelProvider(new GreenWorldColumnLabelProvider<IWVWMatch>(IWVWMatch.class) {
 						@Override
 						protected String getTypeSafeText(final IWVWMatch element) {
 							return element.getGreenWorld().getName().or("");
@@ -206,7 +153,7 @@ public class MatchSelectorViewPart extends ViewPart implements IWVWMatchListener
 				}
 				{
 					TableViewerColumn tableViewerColumn = new TableViewerColumn(this.tableViewer, SWT.NONE);
-					tableViewerColumn.setLabelProvider(new BlueWorldColumnLabelProvider() {
+					tableViewerColumn.setLabelProvider(new BlueWorldColumnLabelProvider<IWVWMatch>(IWVWMatch.class) {
 						@Override
 						protected String getTypeSafeText(final IWVWMatch element) {
 							return element.getBlueWorld().getName().or("");
@@ -224,7 +171,7 @@ public class MatchSelectorViewPart extends ViewPart implements IWVWMatchListener
 				}
 				{
 					TableViewerColumn tableViewerColumn = new TableViewerColumn(this.tableViewer, SWT.NONE);
-					tableViewerColumn.setLabelProvider(new RedWorldColumnLabelProvider() {
+					tableViewerColumn.setLabelProvider(new RedWorldColumnLabelProvider<IWVWMatch>(IWVWMatch.class) {
 						@Override
 						protected String getTypeSafeText(final IWVWMatch element) {
 							return WVWUIConstants.NUMBER_FORMAT_POINTS.format(element.getScores().getRedScore());
@@ -242,7 +189,7 @@ public class MatchSelectorViewPart extends ViewPart implements IWVWMatchListener
 				}
 				{
 					TableViewerColumn tableViewerColumn = new TableViewerColumn(this.tableViewer, SWT.NONE);
-					tableViewerColumn.setLabelProvider(new GreenWorldColumnLabelProvider() {
+					tableViewerColumn.setLabelProvider(new GreenWorldColumnLabelProvider<IWVWMatch>(IWVWMatch.class) {
 						@Override
 						protected String getTypeSafeText(final IWVWMatch element) {
 							return WVWUIConstants.NUMBER_FORMAT_POINTS.format(element.getScores().getGreenScore());
@@ -260,7 +207,7 @@ public class MatchSelectorViewPart extends ViewPart implements IWVWMatchListener
 				}
 				{
 					TableViewerColumn tableViewerColumn = new TableViewerColumn(this.tableViewer, SWT.NONE);
-					tableViewerColumn.setLabelProvider(new BlueWorldColumnLabelProvider() {
+					tableViewerColumn.setLabelProvider(new BlueWorldColumnLabelProvider<IWVWMatch>(IWVWMatch.class) {
 						@Override
 						protected String getTypeSafeText(final IWVWMatch element) {
 							return WVWUIConstants.NUMBER_FORMAT_POINTS.format(element.getScores().getBlueScore());
@@ -278,7 +225,7 @@ public class MatchSelectorViewPart extends ViewPart implements IWVWMatchListener
 				}
 				{
 					TableViewerColumn tableViewerColumn = new TableViewerColumn(this.tableViewer, SWT.NONE);
-					tableViewerColumn.setLabelProvider(new RedWorldColumnLabelProvider() {
+					tableViewerColumn.setLabelProvider(new RedWorldColumnLabelProvider<IWVWMatch>(IWVWMatch.class) {
 						@Override
 						protected String getTypeSafeText(final IWVWMatch element) {
 							return WVWUIConstants.NUMBER_FORMAT_POINTS.format(element.calculateRedTick());
@@ -296,7 +243,7 @@ public class MatchSelectorViewPart extends ViewPart implements IWVWMatchListener
 				}
 				{
 					TableViewerColumn tableViewerColumn = new TableViewerColumn(this.tableViewer, SWT.NONE);
-					tableViewerColumn.setLabelProvider(new GreenWorldColumnLabelProvider() {
+					tableViewerColumn.setLabelProvider(new GreenWorldColumnLabelProvider<IWVWMatch>(IWVWMatch.class) {
 						@Override
 						protected String getTypeSafeText(final IWVWMatch element) {
 							return WVWUIConstants.NUMBER_FORMAT_POINTS.format(element.calculateGreenTick());
@@ -314,7 +261,7 @@ public class MatchSelectorViewPart extends ViewPart implements IWVWMatchListener
 				}
 				{
 					TableViewerColumn tableViewerColumn = new TableViewerColumn(this.tableViewer, SWT.NONE);
-					tableViewerColumn.setLabelProvider(new BlueWorldColumnLabelProvider() {
+					tableViewerColumn.setLabelProvider(new BlueWorldColumnLabelProvider<IWVWMatch>(IWVWMatch.class) {
 						@Override
 						protected String getTypeSafeText(final IWVWMatch element) {
 							return WVWUIConstants.NUMBER_FORMAT_POINTS.format(element.calculateBlueTick());
