@@ -2,14 +2,20 @@ package yagw2api.explorer.rcp.wvw;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.wb.swt.SWTResourceManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class MatchDetailsViewPart extends ViewPart {
+public class MatchDetailsViewPart extends ViewPart implements ISelectionListener {
 
 	public static final String ID = "yagw2api.explorer.rcp.wvw.matchdetails"; //$NON-NLS-1$
+	private static final Logger LOGGER = LoggerFactory.getLogger(MatchDetailsViewPart.class);
 
 	public MatchDetailsViewPart() {
 	}
@@ -27,6 +33,8 @@ public class MatchDetailsViewPart extends ViewPart {
 		this.createActions();
 		this.initializeToolBar();
 		this.initializeMenu();
+
+		this.getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(this);
 	}
 
 	/**
@@ -53,6 +61,11 @@ public class MatchDetailsViewPart extends ViewPart {
 	@Override
 	public void setFocus() {
 		// Set the focus
+	}
+
+	@Override
+	public void selectionChanged(final IWorkbenchPart part, final ISelection selection) {
+		LOGGER.info("Selected {} in {}", selection, part);
 	}
 
 }

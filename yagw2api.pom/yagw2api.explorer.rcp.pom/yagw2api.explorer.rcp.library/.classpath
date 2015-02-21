@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.apache.logging.log4j.log4j-slf4j-impl.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.apache.logging.log4j.log4j-api.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry exported="true" kind="lib" path="lib/aopalliance.aopalliance.jar"/>
@@ -22,9 +25,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/net.java.dev.jna.jna.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/org.apache.derby.derby.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/org.apache.derby.derbynet.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/org.apache.logging.log4j.log4j-api.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/org.apache.logging.log4j.log4j-core.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/org.apache.logging.log4j.log4j-slf4j-impl.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/org.eclipse.persistence.javax.persistence.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/org.eclipse.persistence.org.eclipse.persistence.antlr.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/org.eclipse.persistence.org.eclipse.persistence.asm.jar"/>

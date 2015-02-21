@@ -127,9 +127,7 @@ public class MatchSelectorViewPart extends ViewPart implements IWVWMatchListener
 			composite.setLayout(tcl_composite);
 			{
 				this.tableViewer = new TableViewer(composite, SWT.BORDER | SWT.FULL_SELECTION);
-				this.tableViewer.addSelectionChangedListener(event -> {
-					// DO SOMETHING
-					});
+				this.getSite().setSelectionProvider(this.tableViewer);
 				this.table = this.tableViewer.getTable();
 				this.table.setHeaderVisible(true);
 				this.table.setLinesVisible(true);
