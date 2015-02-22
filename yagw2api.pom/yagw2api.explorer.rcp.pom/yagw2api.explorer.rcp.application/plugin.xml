@@ -14,10 +14,10 @@
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            class="yagw2api.explorer.rcp.Perspective"
+            class="yagw2api.explorer.rcp.WVWPerspective"
             fixed="false"
-            id="yagw2api.explorer.rcp.perspective"
-            name="RCP Perspective">
+            id="yagw2api.explorer.rcp.wvw.perspective"
+            name="WVW Perspective">
       </perspective>
    </extension>
    <extension
@@ -47,11 +47,17 @@
             id="yagw2api.explorer.rcp.wvw.matchdetails"
             name="Match Details">
       </view>
+      <view
+            allowMultiple="false"
+            class="yagw2api.explorer.rcp.wvw.MapDetailsViewPart"
+            id="yagw2api.explorer.rcp.wvw.mapdetails"
+            name="Map Details">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.perspectiveExtensions">
       <perspectiveExtension
-            targetID="yagw2api.explorer.rcp.perspective">
+            targetID="yagw2api.explorer.rcp.wvw.perspective">
          <view
                closeable="false"
                id="yagw2api.explorer.rcp.wvw.matchselector"
@@ -63,11 +69,23 @@
                visible="true">
          </view>
          <view
+               closeable="false"
                id="yagw2api.explorer.rcp.wvw.matchdetails"
                minimized="false"
                moveable="true"
                relationship="right"
                relative="org.eclipse.ui.editorss"
+               standalone="false"
+               visible="true">
+         </view>
+         <view
+               closeable="false"
+               id="yagw2api.explorer.rcp.wvw.mapdetails"
+               minimized="false"
+               moveable="true"
+               relationship="bottom"
+               relative="yagw2api.explorer.rcp.wvw.matchdetails"
+               standalone="false"
                visible="true">
          </view>
       </perspectiveExtension>

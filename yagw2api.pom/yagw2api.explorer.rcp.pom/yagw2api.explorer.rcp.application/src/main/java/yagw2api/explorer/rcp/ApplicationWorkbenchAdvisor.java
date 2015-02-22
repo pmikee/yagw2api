@@ -27,7 +27,7 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
 public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 
-	private static final String PERSPECTIVE_ID = "yagw2api.explorer.rcp.perspective"; //$NON-NLS-1$
+	private static final String PERSPECTIVE_ID = "yagw2api.explorer.rcp.wvw.perspective"; //$NON-NLS-1$
 
 	@Override
 	public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor(final IWorkbenchWindowConfigurer configurer) {
