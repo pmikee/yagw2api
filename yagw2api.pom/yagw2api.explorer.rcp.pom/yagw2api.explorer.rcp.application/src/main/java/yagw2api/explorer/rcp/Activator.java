@@ -9,9 +9,9 @@ package yagw2api.explorer.rcp;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,7 +19,6 @@ package yagw2api.explorer.rcp;
  * limitations under the License.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
  */
-
 
 import java.util.Locale;
 
@@ -38,46 +37,52 @@ public class Activator extends AbstractUIPlugin {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "yagw2api.explorer.rcp"; //$NON-NLS-1$
-	
-	static{
+
+	static {
 		YAGW2APIArenanet.INSTANCE.setCurrentLocale(Locale.getDefault());
 	}
 
 	// The shared instance
 	private static Activator plugin;
-	
+
 	private final IWVWWrapper wvw = YAGW2APIWrapper.INSTANCE.getWVWWrapper();
-	
+
 	/**
 	 * The constructor
 	 */
 	public Activator() {
 	}
 
+	public Locale getLocale() {
+		return Locale.getDefault();
+	}
+
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
 	 */
-	public void start(BundleContext context) throws Exception {
+	@Override
+	public void start(final BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		wvw.start();
+		this.wvw.start();
 	}
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
 	 */
-	public void stop(BundleContext context) throws Exception {
+	@Override
+	public void stop(final BundleContext context) throws Exception {
 		plugin = null;
 		super.stop(context);
-		wvw.stop();
+		this.wvw.stop();
 	}
-	
-	
 
 	public IWVWWrapper getWVW() {
-		return wvw;
+		return this.wvw;
 	}
 
 	/**
@@ -90,13 +95,13 @@ public class Activator extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns an image descriptor for the image file at the given
-	 * plug-in relative path
+	 * Returns an image descriptor for the image file at the given plug-in relative path
 	 *
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 * @return the image descriptor
 	 */
-	public static ImageDescriptor getImageDescriptor(String path) {
+	public static ImageDescriptor getImageDescriptor(final String path) {
 		return imageDescriptorFromPlugin(PLUGIN_ID, path);
 	}
 }

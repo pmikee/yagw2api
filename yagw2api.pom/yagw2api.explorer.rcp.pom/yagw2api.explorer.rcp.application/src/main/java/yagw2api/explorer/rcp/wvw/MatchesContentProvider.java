@@ -1,59 +1,30 @@
 package yagw2api.explorer.rcp.wvw;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
-import java.util.List;
+import java.util.Set;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
-import com.google.common.base.Optional;
-import com.google.common.collect.Lists;
-
-import de.justi.yagw2api.wrapper.IWVWInitializedMatchEvent;
+import yagw2api.explorer.rcp.swt.TypeSafeContentProvider;
 import de.justi.yagw2api.wrapper.IWVWMatch;
-import de.justi.yagw2api.wrapper.IWVWMatchListener;
-import de.justi.yagw2api.wrapper.IWVWMatchScoresChangedEvent;
 import de.justi.yagw2api.wrapper.IWVWWrapper;
 
-final class MatchesContentProvider implements IStructuredContentProvider, IWVWMatchListener {
-	private Optional<IWVWWrapper> currentInput = Optional.absent();
-	private final List<IWVWMatch> matches = Lists.newArrayList();
+final class MatchesContentProvider extends TypeSafeContentProvider<IWVWWrapper> implements IStructuredContentProvider {
+	public MatchesContentProvider() {
+		super(IWVWWrapper.class);
+	}
 
 	@Override
-	public Object[] getElements(final Object inputElement) {
-		return this.matches.toArray(new IWVWMatch[this.matches.size()]);
+	public Object[] getTypeSafeElements(final IWVWWrapper inputElement) {
+		final Set<IWVWMatch> matches = inputElement.getAllMatches();
+		return matches.toArray(new IWVWMatch[matches.size()]);
 	}
 
 	@Override
 	public void dispose() {
-		if (this.currentInput.isPresent()) {
-			this.currentInput.get().unregisterWVWMatchListener(this);
-		}
 	}
 
 	@Override
-	public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
-		this.matches.clear();
-		if (oldInput != null) {
-			checkArgument(oldInput instanceof IWVWWrapper);
-			((IWVWWrapper) oldInput).unregisterWVWMatchListener(this);
-		}
-		if (newInput != null) {
-			checkArgument(newInput instanceof IWVWWrapper);
-			this.currentInput = Optional.of(((IWVWWrapper) newInput));
-			this.currentInput.get().registerWVWMatchListener(this);
-		}
-	}
-
-	@Override
-	public void onInitializedMatchForWrapper(final IWVWInitializedMatchEvent e) {
-		this.matches.add(e.getMatch());
-
-	}
-
-	@Override
-	public void onMatchScoreChangedEvent(final IWVWMatchScoresChangedEvent e) {
-		// NOP
+	public void typeSafeInputChanged(final Viewer viewer, final IWVWWrapper oldInput, final IWVWWrapper newInput) {
 	}
 }
