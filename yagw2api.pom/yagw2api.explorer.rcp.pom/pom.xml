@@ -14,7 +14,6 @@
 		<module>yagw2api.explorer.rcp.feature</module>
 		<module>yagw2api.explorer.rcp.application</module>
 		<module>yagw2api.explorer.rcp.product</module>
-		<module>yagw2api.explorer.rcp.library</module>
 	</modules>
 
 

@@ -16,6 +16,7 @@
       <perspective
             class="yagw2api.explorer.rcp.WVWPerspective"
             fixed="false"
+            icon="etc/images/GW2Logo_32x23.png"
             id="yagw2api.explorer.rcp.wvw.perspective"
             name="WVW Perspective">
       </perspective>
@@ -30,6 +31,10 @@
                name="appName"
                value="YAGW2API Explorer">
          </property>
+         <property
+               name="windowImages"
+               value="etc/images/GW2Logo_16x16.png,etc/images/GW2Logo_32x32.png,etc/images/GW2Logo_48x48.png,etc/images/GW2Logo_64x64.png,etc/images/GW2Logo_128x128.png,etc/images/GW2Logo_256x256.png">
+         </property>
       </product>
    </extension>
    <extension
@@ -37,6 +42,7 @@
       <view
             allowMultiple="false"
             class="yagw2api.explorer.rcp.wvw.MatchSelectorViewPart"
+            icon="etc/images/GW2Logo_32x23.png"
             id="yagw2api.explorer.rcp.wvw.matchselector"
             name="Match Selector"
             restorable="true">
@@ -44,12 +50,14 @@
       <view
             allowMultiple="false"
             class="yagw2api.explorer.rcp.wvw.MatchDetailsViewPart"
+            icon="etc/images/GW2Logo_32x23.png"
             id="yagw2api.explorer.rcp.wvw.matchdetails"
             name="Match Details">
       </view>
       <view
             allowMultiple="false"
             class="yagw2api.explorer.rcp.wvw.MapDetailsViewPart"
+            icon="etc/images/GW2Logo_32x23.png"
             id="yagw2api.explorer.rcp.wvw.mapdetails"
             name="Map Details">
       </view>
