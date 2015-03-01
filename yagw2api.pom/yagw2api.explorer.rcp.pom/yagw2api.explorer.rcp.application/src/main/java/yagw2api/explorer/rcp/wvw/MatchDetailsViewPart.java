@@ -1,6 +1,7 @@
 package yagw2api.explorer.rcp.wvw;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -11,6 +12,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
@@ -25,17 +27,24 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import yagw2api.explorer.rcp.Activator;
+import yagw2api.explorer.rcp.swt.AggregatingSelectionProvider;
+import yagw2api.explorer.rcp.swt.FixedColoredTypeSafeColumnLabelProvider;
 import yagw2api.explorer.rcp.swt.TypeSafeColumnLabelProvider;
 import yagw2api.explorer.rcp.swt.TypeSafeContentProvider;
 import yagw2api.explorer.rcp.swt.TypeSafeTableViewerColumnSorter;
 import yagw2api.explorer.rcp.swt.TypeSafeViewerLabelProvider;
+
+import com.google.common.base.Optional;
+
 import de.justi.yagw2api.wrapper.IWVWInitializedMatchEvent;
 import de.justi.yagw2api.wrapper.IWVWMap;
 import de.justi.yagw2api.wrapper.IWVWMatch;
@@ -96,13 +105,16 @@ public class MatchDetailsViewPart extends ViewPart implements ISelectionListener
 	public static final String ID = "yagw2api.explorer.rcp.wvw.matchdetails"; //$NON-NLS-1$
 	private static final Logger LOGGER = LoggerFactory.getLogger(MatchDetailsViewPart.class);
 
-	private final MatchesContentProvider contentProvider = new MatchesContentProvider();
+	private final AggregatingSelectionProvider selectionProvider;
+	private final MatchesContentProvider contentProvider;
 	private ComboViewer matchSelectionComboViewer;
 	private Combo matchSelectionCombo;
 	private Table mapsTable;
 	private TableViewer mapsTableViewer;
 
 	public MatchDetailsViewPart() {
+		this.selectionProvider = new AggregatingSelectionProvider();
+		this.contentProvider = new MatchesContentProvider();
 		Activator.getDefault().getWVW().registerWVWMatchListener(this);
 	}
 
@@ -132,7 +144,9 @@ public class MatchDetailsViewPart extends ViewPart implements ISelectionListener
 				}
 			});
 			this.matchSelectionComboViewer.setContentProvider(this.contentProvider);
+			this.matchSelectionComboViewer.setInput(Activator.getDefault().getWVW());
 			this.matchSelectionComboViewer.addSelectionChangedListener(this);
+			this.matchSelectionComboViewer.addSelectionChangedListener(this.selectionProvider);
 			this.matchSelectionCombo = this.matchSelectionComboViewer.getCombo();
 			this.matchSelectionCombo.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
 			{
@@ -142,7 +156,7 @@ public class MatchDetailsViewPart extends ViewPart implements ISelectionListener
 				composite.setLayout(tcl_composite);
 				{
 					this.mapsTableViewer = new TableViewer(composite, SWT.BORDER | SWT.FULL_SELECTION);
-					this.getSite().setSelectionProvider(this.mapsTableViewer);
+					this.mapsTableViewer.addSelectionChangedListener(this.selectionProvider);
 					this.mapsTable = this.mapsTableViewer.getTable();
 					this.mapsTable.setHeaderVisible(true);
 					this.mapsTable.setLinesVisible(true);
@@ -211,7 +225,8 @@ public class MatchDetailsViewPart extends ViewPart implements ISelectionListener
 					final TableColumn tblclmnBluetick;
 					{
 						TableViewerColumn tableViewerColumn = new TableViewerColumn(this.mapsTableViewer, SWT.NONE);
-						tableViewerColumn.setLabelProvider(new RedWorldColumnLabelProvider<IWVWMap>(IWVWMap.class) {
+						tableViewerColumn.setLabelProvider(new FixedColoredTypeSafeColumnLabelProvider<IWVWMap>(IWVWMap.class, WVWUIConstants.RGB_RED_WORLD_BG,
+								WVWUIConstants.RGB_RED_WORLD_FG) {
 							@Override
 							public String getTypeSafeText(final IWVWMap element) {
 								return WVWUIConstants.NUMBER_FORMAT_POINTS.format(element.getScores().getRedScore());
@@ -229,7 +244,8 @@ public class MatchDetailsViewPart extends ViewPart implements ISelectionListener
 					}
 					{
 						TableViewerColumn tableViewerColumn = new TableViewerColumn(this.mapsTableViewer, SWT.NONE);
-						tableViewerColumn.setLabelProvider(new GreenWorldColumnLabelProvider<IWVWMap>(IWVWMap.class) {
+						tableViewerColumn.setLabelProvider(new FixedColoredTypeSafeColumnLabelProvider<IWVWMap>(IWVWMap.class, WVWUIConstants.RGB_GREEN_WORLD_BG,
+								WVWUIConstants.RGB_GREEN_WORLD_FG) {
 							@Override
 							public String getTypeSafeText(final IWVWMap element) {
 								return WVWUIConstants.NUMBER_FORMAT_POINTS.format(element.getScores().getGreenScore());
@@ -247,7 +263,8 @@ public class MatchDetailsViewPart extends ViewPart implements ISelectionListener
 					}
 					{
 						TableViewerColumn tableViewerColumn = new TableViewerColumn(this.mapsTableViewer, SWT.NONE);
-						tableViewerColumn.setLabelProvider(new BlueWorldColumnLabelProvider<IWVWMap>(IWVWMap.class) {
+						tableViewerColumn.setLabelProvider(new FixedColoredTypeSafeColumnLabelProvider<IWVWMap>(IWVWMap.class, WVWUIConstants.RGB_BLUE_WORLD_BG,
+								WVWUIConstants.RGB_BLUE_WORLD_FG) {
 							@Override
 							public String getTypeSafeText(final IWVWMap element) {
 								return WVWUIConstants.NUMBER_FORMAT_POINTS.format(element.getScores().getBlueScore());
@@ -265,7 +282,8 @@ public class MatchDetailsViewPart extends ViewPart implements ISelectionListener
 					}
 					{
 						TableViewerColumn tableViewerColumn = new TableViewerColumn(this.mapsTableViewer, SWT.NONE);
-						tableViewerColumn.setLabelProvider(new RedWorldColumnLabelProvider<IWVWMap>(IWVWMap.class) {
+						tableViewerColumn.setLabelProvider(new FixedColoredTypeSafeColumnLabelProvider<IWVWMap>(IWVWMap.class, WVWUIConstants.RGB_RED_WORLD_BG,
+								WVWUIConstants.RGB_RED_WORLD_FG) {
 							@Override
 							public String getTypeSafeText(final IWVWMap element) {
 								return WVWUIConstants.NUMBER_FORMAT_POINTS.format(element.calculateRedTick());
@@ -283,7 +301,8 @@ public class MatchDetailsViewPart extends ViewPart implements ISelectionListener
 					}
 					{
 						TableViewerColumn tableViewerColumn = new TableViewerColumn(this.mapsTableViewer, SWT.NONE);
-						tableViewerColumn.setLabelProvider(new GreenWorldColumnLabelProvider<IWVWMap>(IWVWMap.class) {
+						tableViewerColumn.setLabelProvider(new FixedColoredTypeSafeColumnLabelProvider<IWVWMap>(IWVWMap.class, WVWUIConstants.RGB_GREEN_WORLD_BG,
+								WVWUIConstants.RGB_GREEN_WORLD_FG) {
 							@Override
 							public String getTypeSafeText(final IWVWMap element) {
 								return WVWUIConstants.NUMBER_FORMAT_POINTS.format(element.calculateGreenTick());
@@ -301,7 +320,8 @@ public class MatchDetailsViewPart extends ViewPart implements ISelectionListener
 					}
 					{
 						TableViewerColumn tableViewerColumn = new TableViewerColumn(this.mapsTableViewer, SWT.NONE);
-						tableViewerColumn.setLabelProvider(new BlueWorldColumnLabelProvider<IWVWMap>(IWVWMap.class) {
+						tableViewerColumn.setLabelProvider(new FixedColoredTypeSafeColumnLabelProvider<IWVWMap>(IWVWMap.class, WVWUIConstants.RGB_BLUE_WORLD_BG,
+								WVWUIConstants.RGB_BLUE_WORLD_FG) {
 							@Override
 							public String getTypeSafeText(final IWVWMap element) {
 								return WVWUIConstants.NUMBER_FORMAT_POINTS.format(element.calculateBlueTick());
@@ -326,9 +346,14 @@ public class MatchDetailsViewPart extends ViewPart implements ISelectionListener
 		this.createActions();
 		this.initializeToolBar();
 		this.initializeMenu();
+	}
 
-		this.matchSelectionComboViewer.setInput(Activator.getDefault().getWVW());
-		this.getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(this);
+	@Override
+	public void init(final IViewSite site) throws PartInitException {
+		checkNotNull(site, "missing site");
+		super.init(site);
+		site.setSelectionProvider(this.selectionProvider);
+		site.getWorkbenchWindow().getSelectionService().addSelectionListener(this);
 	}
 
 	/**
@@ -357,10 +382,7 @@ public class MatchDetailsViewPart extends ViewPart implements ISelectionListener
 		// Set the focus
 	}
 
-	/**
-	 * refreshes the match selection combo(viewer)
-	 */
-	private void refreshUI() {
+	private void refreshUIForMatchesUpdate() {
 		Display.getDefault().asyncExec(() -> {
 			if (this.matchSelectionCombo != null && !this.matchSelectionCombo.isDisposed()) {
 				this.matchSelectionComboViewer.refresh();
@@ -370,14 +392,24 @@ public class MatchDetailsViewPart extends ViewPart implements ISelectionListener
 		});
 	}
 
-	@Override
-	public void onInitializedMatchForWrapper(final IWVWInitializedMatchEvent e) {
-		this.refreshUI();
+	private Optional<IWVWMatch> getSelectedMatch() {
+		if (this.matchSelectionComboViewer.getSelection().isEmpty()) {
+			return Optional.absent();
+		} else {
+			final IStructuredSelection selection = (IStructuredSelection) this.matchSelectionComboViewer.getSelection();
+			checkState(selection.getFirstElement() instanceof IWVWMatch, "expected %s to be instance of %s", selection.getFirstElement(), IWVWMatch.class);
+			return Optional.of((IWVWMatch) selection.getFirstElement());
+		}
 	}
 
-	@Override
-	public void onMatchScoreChangedEvent(final IWVWMatchScoresChangedEvent e) {
-		this.refreshUI();
+	private Optional<IWVWMap> getSelectedMap() {
+		if (this.mapsTableViewer.getSelection().isEmpty()) {
+			return Optional.absent();
+		} else {
+			final IStructuredSelection selection = (IStructuredSelection) this.mapsTableViewer.getSelection();
+			checkState(selection.getFirstElement() instanceof IWVWMap, "expected %s to be instance of %s", selection.getFirstElement(), IWVWMap.class);
+			return Optional.of((IWVWMap) selection.getFirstElement());
+		}
 	}
 
 	@Override
@@ -386,26 +418,11 @@ public class MatchDetailsViewPart extends ViewPart implements ISelectionListener
 		checkNotNull(part, "missing part");
 		checkNotNull(selection, "missing selection");
 		final IStructuredSelection structuredSelection = (IStructuredSelection) selection;
-		if (structuredSelection.getFirstElement() instanceof IWVWMatch) {
-			LOGGER.trace("Selected {} in {}", selection, part);
-			if (this.matchSelectionComboViewer != null) {
-				this.matchSelectionComboViewer.setSelection(selection);
-				this.selectTableData(structuredSelection);
-			}
-		}
-	}
-
-	/**
-	 * replaces current table content with given {@code selection} if it contains a {@link IWVWMatch} as it's first element
-	 *
-	 * @param selection
-	 *            to replace table content with
-	 */
-	private void selectTableData(final IStructuredSelection selection) {
-		checkNotNull(selection, "missing selection");
-		if (!selection.isEmpty()) {
-			if (selection.getFirstElement() instanceof IWVWMatch) {
-				this.mapsTableViewer.setInput(selection.getFirstElement());
+		if (!structuredSelection.isEmpty()) {
+			if (structuredSelection.getFirstElement() instanceof IWVWMatch) {
+				this.selectMatch((IWVWMatch) structuredSelection.getFirstElement());
+			} else if (structuredSelection.getFirstElement() instanceof IWVWMap) {
+				this.selectMap((IWVWMap) structuredSelection.getFirstElement());
 			}
 		}
 	}
@@ -415,12 +432,43 @@ public class MatchDetailsViewPart extends ViewPart implements ISelectionListener
 		// handle selection of views combo box
 		checkNotNull(event, "missing event");
 		final IStructuredSelection structuredSelection = (IStructuredSelection) event.getSelection();
-		this.selectTableData(structuredSelection);
+		if (!structuredSelection.isEmpty() && structuredSelection.getFirstElement() instanceof IWVWMatch) {
+			this.selectMatch((IWVWMatch) structuredSelection.getFirstElement());
+		}
+	}
+
+	private synchronized void selectMatch(final IWVWMatch match) {
+		checkNotNull(match, "missing match");
+		final Optional<IWVWMatch> currentMatchSelection = this.getSelectedMatch();
+		if (!currentMatchSelection.isPresent() || !currentMatchSelection.get().equals(match)) {
+			LOGGER.trace("Select match: {}", match);
+			this.matchSelectionComboViewer.setSelection(new StructuredSelection(match));
+			this.mapsTableViewer.setInput(match);
+		}
+	}
+
+	private synchronized void selectMap(final IWVWMap map) {
+		checkNotNull(map, "missing map");
+		final Optional<IWVWMap> currentMapSelection = this.getSelectedMap();
+		if (!currentMapSelection.isPresent() || !currentMapSelection.get().equals(map)) {
+			LOGGER.trace("Select map: {}", map);
+			this.mapsTableViewer.setSelection(new StructuredSelection(map));
+		}
 	}
 
 	@Override
 	public void dispose() {
 		Activator.getDefault().getWVW().unregisterWVWMatchListener(this);
+	}
+
+	@Override
+	public void onInitializedMatchForWrapper(final IWVWInitializedMatchEvent e) {
+		this.refreshUIForMatchesUpdate();
+	}
+
+	@Override
+	public void onMatchScoreChangedEvent(final IWVWMatchScoresChangedEvent e) {
+		// NOP
 	}
 
 }

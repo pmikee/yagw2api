@@ -1,6 +1,7 @@
 package yagw2api.explorer.rcp.wvw;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
 import java.util.concurrent.TimeUnit;
 
@@ -27,24 +28,36 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import yagw2api.explorer.rcp.Activator;
+import yagw2api.explorer.rcp.swt.AggregatingSelectionProvider;
 import yagw2api.explorer.rcp.swt.TypeSafeContentProvider;
 import yagw2api.explorer.rcp.swt.TypeSafeTableViewerColumnSorter;
 import yagw2api.explorer.rcp.swt.TypeSafeViewerLabelProvider;
+
+import com.google.common.base.Optional;
+
 import de.justi.yagw2api.wrapper.IWVWInitializedMatchEvent;
 import de.justi.yagw2api.wrapper.IWVWMap;
+import de.justi.yagw2api.wrapper.IWVWMapListener;
+import de.justi.yagw2api.wrapper.IWVWMapScoresChangedEvent;
 import de.justi.yagw2api.wrapper.IWVWMatch;
 import de.justi.yagw2api.wrapper.IWVWMatchListener;
 import de.justi.yagw2api.wrapper.IWVWMatchScoresChangedEvent;
 import de.justi.yagw2api.wrapper.IWVWObjective;
+import de.justi.yagw2api.wrapper.IWVWObjectiveCaptureEvent;
+import de.justi.yagw2api.wrapper.IWVWObjectiveClaimedEvent;
+import de.justi.yagw2api.wrapper.IWVWObjectiveEndOfBuffEvent;
+import de.justi.yagw2api.wrapper.IWVWObjectiveUnclaimedEvent;
 
-public class MapDetailsViewPart extends ViewPart implements ISelectionListener, ISelectionChangedListener, IWVWMatchListener {
+public class MapDetailsViewPart extends ViewPart implements ISelectionListener, ISelectionChangedListener, IWVWMatchListener, IWVWMapListener {
 	private static class MatchMapsContentProvider extends TypeSafeContentProvider<IWVWMatch> {
 		public MatchMapsContentProvider() {
 			super(IWVWMatch.class);
@@ -94,6 +107,8 @@ public class MapDetailsViewPart extends ViewPart implements ISelectionListener, 
 	public static final String ID = "yagw2api.explorer.rcp.wvw.mapdetails"; //$NON-NLS-1$
 	private static final Logger LOGGER = LoggerFactory.getLogger(MapDetailsViewPart.class);
 
+	private final AggregatingSelectionProvider selectionProvider;
+
 	private Table mapObjectivesTable;
 	private TableViewer mapObjectivesTableViewer;
 	private ComboViewer matchSelectionComboViewer;
@@ -102,6 +117,7 @@ public class MapDetailsViewPart extends ViewPart implements ISelectionListener, 
 	private Combo mapSelectionCombo;
 
 	public MapDetailsViewPart() {
+		this.selectionProvider = new AggregatingSelectionProvider();
 		Activator.getDefault().getWVW().registerWVWMatchListener(this);
 	}
 
@@ -122,6 +138,7 @@ public class MapDetailsViewPart extends ViewPart implements ISelectionListener, 
 		}
 		{
 			this.matchSelectionComboViewer = new ComboViewer(container, SWT.READ_ONLY);
+			this.matchSelectionComboViewer.addSelectionChangedListener(this.selectionProvider);
 			this.matchSelectionComboViewer.setLabelProvider(new TypeSafeViewerLabelProvider<IWVWMatch>(IWVWMatch.class) {
 				@Override
 				protected String getTypeSafeText(final IWVWMatch element) {
@@ -132,6 +149,7 @@ public class MapDetailsViewPart extends ViewPart implements ISelectionListener, 
 			this.matchSelectionCombo = this.matchSelectionComboViewer.getCombo();
 			this.matchSelectionCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 			this.matchSelectionComboViewer.setContentProvider(new MatchesContentProvider());
+			this.matchSelectionComboViewer.setInput(Activator.getDefault().getWVW());
 			this.matchSelectionComboViewer.addSelectionChangedListener(this);
 		}
 		{
@@ -141,6 +159,7 @@ public class MapDetailsViewPart extends ViewPart implements ISelectionListener, 
 		}
 		{
 			this.mapSelectionComboViewer = new ComboViewer(container, SWT.READ_ONLY);
+			this.mapSelectionComboViewer.addSelectionChangedListener(this.selectionProvider);
 			this.mapSelectionComboViewer.setLabelProvider(new TypeSafeViewerLabelProvider<IWVWMap>(IWVWMap.class) {
 				@Override
 				protected String getTypeSafeText(final IWVWMap element) {
@@ -315,9 +334,14 @@ public class MapDetailsViewPart extends ViewPart implements ISelectionListener, 
 		this.createActions();
 		this.initializeToolBar();
 		this.initializeMenu();
+	}
 
-		this.matchSelectionComboViewer.setInput(Activator.getDefault().getWVW());
-		this.getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(this);
+	@Override
+	public void init(final IViewSite site) throws PartInitException {
+		checkNotNull(site, "missing site");
+		super.init(site);
+		site.setSelectionProvider(this.selectionProvider);
+		site.getWorkbenchWindow().getSelectionService().addSelectionListener(this);
 	}
 
 	/**
@@ -352,38 +376,10 @@ public class MapDetailsViewPart extends ViewPart implements ISelectionListener, 
 		checkNotNull(selection, "missing selection");
 		final IStructuredSelection structuredSelection = (IStructuredSelection) selection;
 		if (structuredSelection.getFirstElement() instanceof IWVWMatch) {
-			LOGGER.trace("Selected {} in {}", structuredSelection, part);
-			this.mapSelectionComboViewer.setInput(structuredSelection.getFirstElement());
-			this.mapSelectionComboViewer.setSelection(StructuredSelection.EMPTY);
-			this.matchSelectionComboViewer.setSelection(structuredSelection);
+			this.selectMatch((IWVWMatch) structuredSelection.getFirstElement());
 		} else if (structuredSelection.getFirstElement() instanceof IWVWMap) {
-			LOGGER.trace("Selected {} in {}", structuredSelection, part);
-			this.mapObjectivesTableViewer.setInput(structuredSelection.getFirstElement());
-			this.mapSelectionComboViewer.setSelection(structuredSelection);
+			this.selectMap((IWVWMap) structuredSelection.getFirstElement());
 		}
-	}
-
-	/**
-	 * refreshes the match selection combo(viewer)
-	 */
-	private void refreshUI() {
-		Display.getDefault().asyncExec(() -> {
-			if (this.matchSelectionCombo != null && !this.matchSelectionCombo.isDisposed()) {
-				this.matchSelectionComboViewer.refresh();
-			} else {
-				LOGGER.warn("can't refresh match selection combo");
-			}
-		});
-	}
-
-	@Override
-	public void onInitializedMatchForWrapper(final IWVWInitializedMatchEvent e) {
-		this.refreshUI();
-	}
-
-	@Override
-	public void onMatchScoreChangedEvent(final IWVWMatchScoresChangedEvent e) {
-		this.refreshUI();
 	}
 
 	@Override
@@ -391,14 +387,127 @@ public class MapDetailsViewPart extends ViewPart implements ISelectionListener, 
 		checkNotNull(event, "missing selection  event");
 		final IStructuredSelection structuredSelection = (IStructuredSelection) event.getSelection();
 		if (structuredSelection.getFirstElement() instanceof IWVWMatch) {
-			LOGGER.trace("Selected {}", structuredSelection);
-			this.mapSelectionComboViewer.setInput(structuredSelection.getFirstElement());
-			this.mapSelectionComboViewer.setSelection(StructuredSelection.EMPTY);
-			this.mapObjectivesTableViewer.setInput(null);
+			this.selectMatch((IWVWMatch) structuredSelection.getFirstElement());
 		} else if (structuredSelection.getFirstElement() instanceof IWVWMap) {
-			LOGGER.trace("Selected {}", structuredSelection);
-			this.mapObjectivesTableViewer.setInput(structuredSelection.getFirstElement());
+			this.selectMap((IWVWMap) structuredSelection.getFirstElement());
 		}
 	}
 
+	private void refreshUIForMatchUpdate() {
+		Display.getDefault().asyncExec(() -> {
+			if (this.matchSelectionCombo != null && !this.matchSelectionCombo.isDisposed()) {
+				LOGGER.trace("refresh ui for match update");
+				this.matchSelectionComboViewer.refresh();
+			} else {
+				LOGGER.warn("can't refresh ui for match update");
+			}
+		});
+	}
+
+	private void refreshUIForMapUpdate() {
+		Display.getDefault().asyncExec(() -> {
+			if (this.mapObjectivesTable != null && !this.mapObjectivesTable.isDisposed()) {
+				LOGGER.trace("refresh ui for map update");
+				this.mapObjectivesTableViewer.refresh();
+			} else {
+				LOGGER.warn("can't refresh ui for map update");
+			}
+		});
+	}
+
+	private Optional<IWVWMap> getSelectedMap() {
+		if (this.mapSelectionComboViewer.getSelection().isEmpty()) {
+			return Optional.absent();
+		} else {
+			final IStructuredSelection selection = (IStructuredSelection) this.mapSelectionComboViewer.getSelection();
+			checkState(selection.getFirstElement() instanceof IWVWMap, "expected %s to be instance of %s", selection.getFirstElement(), IWVWMap.class);
+			return Optional.of((IWVWMap) selection.getFirstElement());
+		}
+	}
+
+	private Optional<IWVWMatch> getSelectedMatch() {
+		if (this.matchSelectionComboViewer.getSelection().isEmpty()) {
+			return Optional.absent();
+		} else {
+			final IStructuredSelection selection = (IStructuredSelection) this.matchSelectionComboViewer.getSelection();
+			checkState(selection.getFirstElement() instanceof IWVWMatch, "expected %s to be instance of %s", selection.getFirstElement(), IWVWMatch.class);
+			return Optional.of((IWVWMatch) selection.getFirstElement());
+		}
+	}
+
+	private synchronized void selectMatch(final IWVWMatch match) {
+		checkNotNull(match, "missing match");
+		final Optional<IWVWMatch> currentMatchSelection = this.getSelectedMatch();
+		if (!currentMatchSelection.isPresent() || !currentMatchSelection.get().equals(match)) {
+			LOGGER.trace("Select match: {}", match);
+			this.matchSelectionComboViewer.setSelection(new StructuredSelection(match));
+			this.mapSelectionComboViewer.setInput(match);
+		}
+		final Optional<IWVWMap> currentMapSelection = this.getSelectedMap();
+		if (currentMapSelection.isPresent()) {
+			LOGGER.trace("Clear map selection for {}", match);
+			this.mapSelectionComboViewer.setSelection(StructuredSelection.EMPTY);
+			this.mapObjectivesTableViewer.setInput(null);
+			Activator.getDefault().getWVW().unregisterWVWMapListener(this);
+		}
+	}
+
+	private synchronized void selectMap(final IWVWMap map) {
+		checkNotNull(map, "missing map");
+		final Optional<IWVWMap> currentMapSelection = this.getSelectedMap();
+		if (!currentMapSelection.isPresent() || !currentMapSelection.get().equals(map)) {
+			LOGGER.trace("Select map: {}", map);
+			final Optional<IWVWMatch> currentMatchSelection = this.getSelectedMatch();
+			if (!currentMatchSelection.isPresent() && map.getMatch().isPresent()) {
+				this.selectMatch(map.getMatch().get());
+			}
+			this.mapSelectionComboViewer.setSelection(new StructuredSelection(map));
+		}
+		if (this.mapObjectivesTableViewer.getInput() == null || !this.mapObjectivesTableViewer.getInput().equals(map)) {
+			this.mapObjectivesTableViewer.setInput(map);
+			Activator.getDefault().getWVW().unregisterWVWMapListener(this);
+			Activator.getDefault().getWVW().registerWVWMapListener(map, this);
+		}
+	}
+
+	@Override
+	public void dispose() {
+		Activator.getDefault().getWVW().unregisterWVWMatchListener(this);
+		Activator.getDefault().getWVW().unregisterWVWMapListener(this);
+	}
+
+	@Override
+	public void onInitializedMatchForWrapper(final IWVWInitializedMatchEvent e) {
+		this.refreshUIForMatchUpdate();
+	}
+
+	@Override
+	public void onMatchScoreChangedEvent(final IWVWMatchScoresChangedEvent e) {
+		this.refreshUIForMatchUpdate();
+	}
+
+	@Override
+	public void onChangedMapScoreEvent(final IWVWMapScoresChangedEvent e) {
+		this.refreshUIForMapUpdate();
+	}
+
+	@Override
+	public void onObjectiveCapturedEvent(final IWVWObjectiveCaptureEvent e) {
+		this.refreshUIForMapUpdate();
+	}
+
+	@Override
+	public void onObjectiveClaimedEvent(final IWVWObjectiveClaimedEvent e) {
+		this.refreshUIForMapUpdate();
+	}
+
+	@Override
+	public void onObjectiveEndOfBuffEvent(final IWVWObjectiveEndOfBuffEvent e) {
+		this.refreshUIForMapUpdate();
+	}
+
+	@Override
+	public void onObjectiveUnclaimedEvent(final IWVWObjectiveUnclaimedEvent e) {
+		this.refreshUIForMapUpdate();
+	}
 }
