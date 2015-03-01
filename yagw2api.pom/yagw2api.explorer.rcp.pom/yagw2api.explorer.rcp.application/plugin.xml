@@ -5,7 +5,10 @@
    <extension
          id="yagw2api.explorer.rcp.application"
          point="org.eclipse.core.runtime.applications">
-      <application>
+      <application
+            cardinality="singleton-global"
+            icon="etc/images/GW2Logo_32x32.png"
+            thread="main">
          <run
                class="yagw2api.explorer.rcp.Application">
          </run>
