@@ -3,6 +3,8 @@ package yagw2api.explorer.rcp.wvw;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
 
 import org.eclipse.jface.action.IMenuManager;
@@ -42,8 +44,10 @@ import yagw2api.explorer.rcp.swt.TypeSafeContentProvider;
 import yagw2api.explorer.rcp.swt.TypeSafeTableViewerColumnSorter;
 import yagw2api.explorer.rcp.swt.TypeSafeViewerLabelProvider;
 
+import com.google.common.base.Function;
 import com.google.common.base.Optional;
 
+import de.justi.yagw2api.wrapper.IGuild;
 import de.justi.yagw2api.wrapper.IWVWInitializedMatchEvent;
 import de.justi.yagw2api.wrapper.IWVWMap;
 import de.justi.yagw2api.wrapper.IWVWMapListener;
@@ -56,6 +60,7 @@ import de.justi.yagw2api.wrapper.IWVWObjectiveCaptureEvent;
 import de.justi.yagw2api.wrapper.IWVWObjectiveClaimedEvent;
 import de.justi.yagw2api.wrapper.IWVWObjectiveEndOfBuffEvent;
 import de.justi.yagw2api.wrapper.IWVWObjectiveUnclaimedEvent;
+import de.justi.yagw2api.wrapper.IWorld;
 
 public class MapDetailsViewPart extends ViewPart implements ISelectionListener, ISelectionChangedListener, IWVWMatchListener, IWVWMapListener {
 	private static class MatchMapsContentProvider extends TypeSafeContentProvider<IWVWMatch> {
@@ -106,6 +111,9 @@ public class MapDetailsViewPart extends ViewPart implements ISelectionListener, 
 
 	public static final String ID = "yagw2api.explorer.rcp.wvw.mapdetails"; //$NON-NLS-1$
 	private static final Logger LOGGER = LoggerFactory.getLogger(MapDetailsViewPart.class);
+	private static final Function<Optional<IGuild>, String> GUILD_2_STRING = guild -> guild.isPresent() ? "[" + guild.get().getTag() + "] " + guild.get().getName() : "";
+	private static final Function<Optional<IWorld>, String> WORLD_2_STRING = world -> world.isPresent() ? world.get().getName().or(String.valueOf(world.get().getId())) : "";
+	private static final Function<IWVWObjective, String> OBJECTIVE_2_STRING = objective -> objective.getLabel().or(objective.getType().getLabel());
 
 	private final AggregatingSelectionProvider selectionProvider;
 
@@ -199,13 +207,13 @@ public class MapDetailsViewPart extends ViewPart implements ISelectionListener, 
 					tableViewerColumn.setLabelProvider(new OwningWorldMatchingObjectiveColumnLabelProvider() {
 						@Override
 						protected String getTypeSafeText(final IWVWObjective element) {
-							return element.getLabel().or(element.getType().getLabel());
+							return OBJECTIVE_2_STRING.apply(element);
 						}
 					});
 					new TypeSafeTableViewerColumnSorter<IWVWObjective>(tableViewerColumn, IWVWObjective.class) {
 						@Override
 						protected Object getTypeSafeValue(final IWVWObjective o) {
-							return o.getLabel().or(o.getType().getLabel());
+							return OBJECTIVE_2_STRING.apply(o);
 						}
 					};
 					TableColumn tblclmnName = tableViewerColumn.getColumn();
@@ -254,21 +262,13 @@ public class MapDetailsViewPart extends ViewPart implements ISelectionListener, 
 					tableViewerColumn.setLabelProvider(new OwningWorldMatchingObjectiveColumnLabelProvider() {
 						@Override
 						protected String getTypeSafeText(final IWVWObjective element) {
-							if (element.getOwner().isPresent()) {
-								return element.getOwner().get().getName().or(String.valueOf(element.getOwner().get().getId()));
-							} else {
-								return "";
-							}
+							return WORLD_2_STRING.apply(element.getOwner());
 						}
 					});
 					new TypeSafeTableViewerColumnSorter<IWVWObjective>(tableViewerColumn, IWVWObjective.class) {
 						@Override
 						protected Object getTypeSafeValue(final IWVWObjective o) {
-							if (o.getOwner().isPresent()) {
-								return o.getOwner().get().getName().or(String.valueOf(o.getOwner().get().getId()));
-							} else {
-								return "";
-							}
+							return WORLD_2_STRING.apply(o.getOwner());
 						}
 					};
 					TableColumn tblclmnOwner = tableViewerColumn.getColumn();
@@ -280,21 +280,13 @@ public class MapDetailsViewPart extends ViewPart implements ISelectionListener, 
 					tableViewerColumn.setLabelProvider(new OwningWorldMatchingObjectiveColumnLabelProvider() {
 						@Override
 						protected String getTypeSafeText(final IWVWObjective element) {
-							if (element.getClaimedByGuild().isPresent()) {
-								return element.getClaimedByGuild().get().getName();
-							} else {
-								return "";
-							}
+							return GUILD_2_STRING.apply(element.getClaimedByGuild());
 						}
 					});
 					new TypeSafeTableViewerColumnSorter<IWVWObjective>(tableViewerColumn, IWVWObjective.class) {
 						@Override
 						protected Object getTypeSafeValue(final IWVWObjective o) {
-							if (o.getClaimedByGuild().isPresent()) {
-								return o.getClaimedByGuild().get().getName();
-							} else {
-								return "";
-							}
+							return GUILD_2_STRING.apply(o.getClaimedByGuild());
 						}
 					};
 					TableColumn tblclmnClaimed = tableViewerColumn.getColumn();
@@ -306,21 +298,14 @@ public class MapDetailsViewPart extends ViewPart implements ISelectionListener, 
 					tableViewerColumn.setLabelProvider(new OwningWorldMatchingObjectiveColumnLabelProvider() {
 						@Override
 						protected String getTypeSafeText(final IWVWObjective element) {
-							if (element.getClaimedByGuild().isPresent()) {
-								return String.valueOf(element.getRemainingBuffDuration(TimeUnit.SECONDS));
-							} else {
-								return "";
-							}
+							return WVWUIConstants.DURATION_FORMAT.apply(Duration.of(element.getRemainingBuffDuration(TimeUnit.SECONDS), ChronoUnit.SECONDS));
+
 						}
 					});
 					new TypeSafeTableViewerColumnSorter<IWVWObjective>(tableViewerColumn, IWVWObjective.class) {
 						@Override
 						protected Object getTypeSafeValue(final IWVWObjective o) {
-							if (o.getClaimedByGuild().isPresent()) {
-								return String.valueOf(o.getRemainingBuffDuration(TimeUnit.SECONDS));
-							} else {
-								return "";
-							}
+							return o.getRemainingBuffDuration(TimeUnit.SECONDS);
 						}
 					};
 					TableColumn tblclmnBuff = tableViewerColumn.getColumn();
@@ -334,6 +319,21 @@ public class MapDetailsViewPart extends ViewPart implements ISelectionListener, 
 		this.createActions();
 		this.initializeToolBar();
 		this.initializeMenu();
+
+		this.initializeAutoRefresh();
+	}
+
+	private void initializeAutoRefresh() {
+		final Runnable refresh = new Runnable() {
+			@Override
+			public void run() {
+				if (MapDetailsViewPart.this.mapObjectivesTableViewer.getInput() != null) {
+					MapDetailsViewPart.this.mapObjectivesTableViewer.refresh();
+				}
+				Display.getCurrent().timerExec((int) TimeUnit.SECONDS.toMillis(1), this);
+			}
+		};
+		refresh.run();
 	}
 
 	@Override
