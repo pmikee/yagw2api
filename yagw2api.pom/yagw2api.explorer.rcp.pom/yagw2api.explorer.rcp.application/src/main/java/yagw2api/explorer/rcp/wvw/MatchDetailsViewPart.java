@@ -443,6 +443,8 @@ public class MatchDetailsViewPart extends ViewPart implements ISelectionListener
 		if (!currentMatchSelection.isPresent() || !currentMatchSelection.get().equals(match)) {
 			LOGGER.trace("Select match: {}", match);
 			this.matchSelectionComboViewer.setSelection(new StructuredSelection(match));
+		}
+		if (this.mapsTableViewer.getInput() == null || !this.mapsTableViewer.getInput().equals(match)) {
 			this.mapsTableViewer.setInput(match);
 		}
 	}
