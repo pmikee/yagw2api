@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -47,7 +48,8 @@ public final class CharacterServer extends WebMvcConfigurerAdapter implements Cl
 	public void configureMessageConverters(final List<HttpMessageConverter<?>> converters) {
 		checkNotNull(converters, "missing converters");
 		converters.clear();
-		converters.add(new GSONMessageConverter(new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()));
+		converters.add(new GSONMessageConverter(new GsonBuilder().excludeFieldsWithoutExposeAnnotation().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeGSONAdapter())
+				.create()));
 	}
 
 	public boolean isClosed() {
