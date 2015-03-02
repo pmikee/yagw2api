@@ -20,20 +20,19 @@ package de.justi.yagw2api.mumblelink.impl;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
  */
 
-
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
-import com.google.common.base.Optional;
 import com.google.common.eventbus.Subscribe;
 
 import de.justi.yagw2api.mumblelink.IMumbleLink;
-import de.justi.yagw2api.mumblelink.IMumbleLinkAvatar;
 import de.justi.yagw2api.mumblelink.IMumbleLinkAvatarChangeEvent;
 import de.justi.yagw2api.mumblelink.IMumbleLinkAvatarFrontChangeEvent;
 import de.justi.yagw2api.mumblelink.IMumbleLinkAvatarPositionChangeEvent;
@@ -45,7 +44,7 @@ import de.justi.yagw2api.mumblelink.IMumbleLinkMapChangeEvent;
 import de.justi.yagw2api.mumblelink.IMumbleLinkState;
 
 final class MumbleLink extends AbstractForwardingMumbleLinkState implements IMumbleLink {
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(MumbleLink.class);
 	private final MumbleLinkSynchronizerService mumbleLinkUpdater;
 	private final Collection<IMumbleLinkListener> listners = new CopyOnWriteArrayList<IMumbleLinkListener>();
 
@@ -62,72 +61,75 @@ final class MumbleLink extends AbstractForwardingMumbleLinkState implements IMum
 	MumbleLink() {
 		this.mumbleLinkUpdater = new MumbleLinkSynchronizerService();
 		this.mumbleLinkUpdater.getChannel().register(this);
-		this.mumbleLinkUpdater.startAsync();
 	}
 
 	@Subscribe
-	public final void notifyListenersAbout(IMumbleLinkAvatarChangeEvent event) {
+	public final void notifyListenersAbout(final IMumbleLinkAvatarChangeEvent event) {
 		for (IMumbleLinkListener listener : this.listners) {
 			listener.onAvatarChange(event);
 		}
 	}
 
 	@Subscribe
-	public final void notifyListenersAbout(IMumbleLinkMapChangeEvent event) {
+	public final void notifyListenersAbout(final IMumbleLinkMapChangeEvent event) {
 		for (IMumbleLinkListener listener : this.listners) {
 			listener.onMapChange(event);
 		}
 	}
 
 	@Subscribe
-	public final void notifyListenersAbout(IMumbleLinkAvatarPositionChangeEvent event) {
+	public final void notifyListenersAbout(final IMumbleLinkAvatarPositionChangeEvent event) {
 		for (IMumbleLinkListener listener : this.listners) {
 			listener.onAvatarPositionChange(event);
 		}
 	}
 
 	@Subscribe
-	public final void notifyListenersAbout(IMumbleLinkAvatarFrontChangeEvent event) {
+	public final void notifyListenersAbout(final IMumbleLinkAvatarFrontChangeEvent event) {
 		for (IMumbleLinkListener listener : this.listners) {
 			listener.onAvatarFrontChange(event);
 		}
 	}
 
 	@Subscribe
-	public final void notifyListenersAbout(IMumbleLinkAvatarTopChangeEvent event) {
+	public final void notifyListenersAbout(final IMumbleLinkAvatarTopChangeEvent event) {
 		for (IMumbleLinkListener listener : this.listners) {
 			listener.onAvatarTopChange(event);
 		}
 	}
 
 	@Subscribe
-	public final void notifyListenersAbout(IMumbleLinkCameraPositionChangeEvent event) {
+	public final void notifyListenersAbout(final IMumbleLinkCameraPositionChangeEvent event) {
 		for (IMumbleLinkListener listener : this.listners) {
 			listener.onCameraPositionChange(event);
 		}
 	}
 
 	@Subscribe
-	public final void notifyListenersAbout(IMumbleLinkCameraFrontChangeEvent event) {
+	public final void notifyListenersAbout(final IMumbleLinkCameraFrontChangeEvent event) {
 		for (IMumbleLinkListener listener : this.listners) {
 			listener.onCameraFrontChange(event);
 		}
 	}
 
 	@Subscribe
-	public final void notifyListenersAbout(IMumbleLinkCameraTopChangeEvent event) {
+	public final void notifyListenersAbout(final IMumbleLinkCameraTopChangeEvent event) {
 		for (IMumbleLinkListener listener : this.listners) {
 			listener.onCameraTopChange(event);
 		}
 	}
 
 	@Override
-	public void setActive(boolean active) {
+	public void setActive(final boolean active) {
 		if (active != this.isActive()) {
 			if (active) {
-				this.mumbleLinkUpdater.stopAsync();
-			} else {
+				LOGGER.debug("Start {}", this);
 				this.mumbleLinkUpdater.startAsync();
+				this.mumbleLinkUpdater.awaitRunning();
+			} else {
+				LOGGER.debug("Stop {}", this);
+				this.mumbleLinkUpdater.stopAsync();
+				this.mumbleLinkUpdater.awaitTerminated();
 			}
 		}
 	}
@@ -138,14 +140,14 @@ final class MumbleLink extends AbstractForwardingMumbleLinkState implements IMum
 	}
 
 	@Override
-	public void registerMumbleLinkListener(IMumbleLinkListener listener) {
+	public void registerMumbleLinkListener(final IMumbleLinkListener listener) {
 		checkNotNull(listener);
 		checkState(!this.listners.contains(listener));
 		this.listners.add(listener);
 	}
 
 	@Override
-	public void unregisterMumbleLinkListener(IMumbleLinkListener listener) {
+	public void unregisterMumbleLinkListener(final IMumbleLinkListener listener) {
 		checkNotNull(listener);
 		checkState(this.listners.contains(listener));
 		this.listners.remove(listener);

@@ -1,5 +1,25 @@
 package yagw2api.server.character;
 
+/*
+ * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * yagw2api.server
+ * _____________________________________________________________
+ * Copyright (C) 2012 - 2015 Julian Stitz
+ * _____________________________________________________________
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ */
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.Closeable;
@@ -14,6 +34,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.google.gson.GsonBuilder;
@@ -48,8 +69,9 @@ public final class CharacterServer extends WebMvcConfigurerAdapter implements Cl
 	public void configureMessageConverters(final List<HttpMessageConverter<?>> converters) {
 		checkNotNull(converters, "missing converters");
 		converters.clear();
-		converters.add(new GSONMessageConverter(new GsonBuilder().excludeFieldsWithoutExposeAnnotation().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeGSONAdapter())
-				.create()));
+		final GsonHttpMessageConverter gsonConverter = new GsonHttpMessageConverter();
+		gsonConverter.setGson(new GsonBuilder().excludeFieldsWithoutExposeAnnotation().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeGSONAdapter()).create());
+		converters.add(gsonConverter);
 	}
 
 	public boolean isClosed() {

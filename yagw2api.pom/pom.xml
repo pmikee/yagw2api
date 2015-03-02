@@ -67,6 +67,7 @@
 		<module>yagw2api.analyzer</module>
 		<module>yagw2api.anchorman</module>
 		<module>yagw2api.server</module>
+		<module>yagw2api.locationprovider</module>
 		<module>yagw2api.explorer</module>
 		<module>yagw2api.explorer.rcp.pom</module>
 	</modules>
@@ -262,7 +263,17 @@
 			</dependency>
 			<dependency>
 				<groupId>de.justi</groupId>
-				<artifactId>yagw2api.complete</artifactId>
+				<artifactId>yagw2api.server</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.justi</groupId>
+				<artifactId>yagw2api.locationclient</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.justi</groupId>
+				<artifactId>yagw2api.locationprovider</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 
