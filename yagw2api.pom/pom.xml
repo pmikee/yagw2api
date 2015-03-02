@@ -43,6 +43,8 @@
 		<guice.version>3.0</guice.version>
 		<junit.version>4.12</junit.version>
 		<log4j.version>2.1</log4j.version>
+		<springframework.version>4.1.5.RELEASE</springframework.version>
+		<springboot.version>1.2.2.RELEASE</springboot.version>
 
 		<!-- PLUGINS -->
 		<license-maven-plugin.version>1.8</license-maven-plugin.version>
@@ -64,6 +66,7 @@
 		<module>yagw2api.anchorman</module>
 		<module>yagw2api.explorer</module>
 		<module>yagw2api.explorer.rcp.pom</module>
+		<module>yagw2api.location.server</module>
 	</modules>
 
 	<profiles>
@@ -252,19 +255,16 @@
 			</dependency>
 
 			<!-- UTILS -->
-
 			<dependency>
 				<groupId>com.google.code.findbugs</groupId>
 				<artifactId>jsr305</artifactId>
 				<version>${jsr305.version}</version>
 			</dependency>
-
 			<dependency>
 				<groupId>net.java.dev.jna</groupId>
 				<artifactId>jna-platform</artifactId>
 				<version>${jna-platform.version}</version>
 			</dependency>
-
 			<dependency>
 				<groupId>net.sourceforge.mydoggy</groupId>
 				<artifactId>mydoggy-api</artifactId>
@@ -352,7 +352,7 @@
 				<artifactId>guice</artifactId>
 				<version>${guice.version}</version>
 			</dependency>
-
+			<!-- UTILS > LOGGING -->
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
@@ -369,6 +369,27 @@
 				<version>${log4j.version}</version>
 			</dependency>
 
+			<!-- SPRING -->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-context</artifactId>
+				<version>${springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-web</artifactId>
+				<version>${springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-web</artifactId>
+				<version>${springboot.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-tomcat</artifactId>
+				<version>${springboot.version}</version>
+			</dependency>
 			<!-- TEST -->
 			<dependency>
 				<artifactId>junit</artifactId>
