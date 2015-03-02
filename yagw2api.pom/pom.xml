@@ -64,9 +64,9 @@
 		<module>yagw2api.wrapper</module>
 		<module>yagw2api.analyzer</module>
 		<module>yagw2api.anchorman</module>
+		<module>yagw2api.server</module>
 		<module>yagw2api.explorer</module>
 		<module>yagw2api.explorer.rcp.pom</module>
-		<module>yagw2api.location.server</module>
 	</modules>
 
 	<profiles>
