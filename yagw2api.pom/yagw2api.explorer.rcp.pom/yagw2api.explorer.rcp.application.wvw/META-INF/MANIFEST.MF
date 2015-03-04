@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: WVW
+Bundle-SymbolicName: yagw2api.explorer.rcp.application.wvw;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Fragment-Host: yagw2api.explorer.rcp.application;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

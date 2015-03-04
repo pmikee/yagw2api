@@ -41,16 +41,16 @@ import com.google.gson.GsonBuilder;
 
 @ComponentScan
 @EnableAutoConfiguration
-public final class CharacterServer extends WebMvcConfigurerAdapter implements Closeable {
+public final class AvatarServer extends WebMvcConfigurerAdapter implements Closeable {
 
 	// STATICS
 	public static final void main(final String[] args) {
 		startNew();
 	}
 
-	public static final CharacterServer startNew() {
-		ConfigurableApplicationContext ctx = SpringApplication.run(CharacterServer.class);
-		return new CharacterServer(ctx);
+	public static final AvatarServer startNew() {
+		ConfigurableApplicationContext ctx = SpringApplication.run(AvatarServer.class);
+		return new AvatarServer(ctx);
 	}
 
 	// FIELDS
@@ -59,7 +59,7 @@ public final class CharacterServer extends WebMvcConfigurerAdapter implements Cl
 
 	// CONSTRUCTOR
 	@Autowired
-	public CharacterServer(final ConfigurableApplicationContext ctx) {
+	public AvatarServer(final ConfigurableApplicationContext ctx) {
 		this.ctx = checkNotNull(ctx, "missing ctx");
 	}
 

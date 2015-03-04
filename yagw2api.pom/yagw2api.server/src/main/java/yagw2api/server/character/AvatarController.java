@@ -9,9 +9,9 @@ package yagw2api.server.character;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,37 +29,37 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import yagw2api.server.character.Character.CharacterBuilder;
+import yagw2api.server.character.Avatar.AvatarBuilder;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 
 @RestController
 @RequestMapping("/character")
-public final class CharacterController {
+public final class AvatarController {
 
-	private final CharacterDAO dao;
+	private final AvatarDAO dao;
 
 	@Autowired
-	public CharacterController(final CharacterDAO dao) {
+	public AvatarController(final AvatarDAO dao) {
 		this.dao = checkNotNull(dao, "missing dao");
 	}
 
 	@RequestMapping(value = "/all", method = { RequestMethod.GET })
-	public Character[] getAllCharacters() {
-		return Iterables.toArray(this.dao.getAllCharacter(), Character.class);
+	public Avatar[] getAll() {
+		return Iterables.toArray(this.dao.getAll(), Avatar.class);
 	}
 
 	@RequestMapping(value = "/{characterName}", method = { RequestMethod.GET })
-	public Character getCharacter(@PathVariable final String characterName) {
-		checkNotNull(characterName, "missing characterName");
-		return this.dao.findCharacter(characterName).orNull();
+	public Avatar get(@PathVariable final String name) {
+		checkNotNull(name, "missing name");
+		return this.dao.find(name).orNull();
 	}
 
-	@RequestMapping(value = "/{characterName}", method = { RequestMethod.POST, RequestMethod.PUT, RequestMethod.PATCH })
-	public Character updateCharacter(
+	@RequestMapping(value = "/{name}", method = { RequestMethod.POST, RequestMethod.PUT, RequestMethod.PATCH })
+	public Avatar updateCharacter(
 	//@formatter:off
-			@PathVariable("characterName") final String name,
+			@PathVariable("name") final String name,
 			@RequestParam(value="worldId",required=true) final int worldId,
 			@RequestParam(value="mapId",required=true) final int mapId,
 			@RequestParam(value="commander",required=true) final boolean commander,
@@ -69,12 +69,12 @@ public final class CharacterController {
 	//@formatter:on
 	{
 		checkNotNull(name, "missing name");
-		final Optional<Character> found = this.dao.findCharacter(name);
-		final CharacterBuilder resultBuilder;
+		final Optional<Avatar> found = this.dao.find(name);
+		final AvatarBuilder resultBuilder;
 		if (found.isPresent()) {
 			resultBuilder = found.get().toBuilder();
 		} else {
-			resultBuilder = Character.builder().name(name);
+			resultBuilder = Avatar.builder().name(name);
 		}
 		resultBuilder.mapId(mapId).worldId(worldId).commander(commander).position(xPosition, yPosition, zPosition);
 		return this.dao.update(resultBuilder.build());

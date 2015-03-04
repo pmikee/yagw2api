@@ -1,8 +1,8 @@
-package yagw2api.server.character;
+package yagw2api.explorer.rcp.wvw;
 
 /*
  * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * yagw2api.server
+ * YAGW2API-Explorer-RCP-Application
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
  * _____________________________________________________________
@@ -20,13 +20,14 @@ package yagw2api.server.character;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
  */
 
-import com.google.common.base.Optional;
+import org.eclipse.ui.IPageLayout;
+import org.eclipse.ui.IPerspectiveFactory;
 
-public interface CharacterDAO {
+public class WVWPerspective implements IPerspectiveFactory {
 
-	Optional<Character> findCharacter(final String name);
-
-	Iterable<Character> getAllCharacter();
-
-	Character update(final Character character);
+	 
+	
+	public void createInitialLayout(IPageLayout layout) {
+        layout.setEditorAreaVisible(false);
+	}
 }

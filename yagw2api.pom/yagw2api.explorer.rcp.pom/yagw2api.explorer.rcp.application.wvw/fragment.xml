@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<fragment>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="yagw2api.explorer.rcp.wvw.WVWPerspective"
+            fixed="false"
+            icon="etc/images/GW2Logo_32x23.png"
+            id="yagw2api.explorer.rcp.wvw.perspective"
+            name="WVW Perspective">
+      </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="yagw2api.explorer.rcp.wvw.perspective">
+         <view
+               closeable="false"
+               id="yagw2api.explorer.rcp.wvw.matchselector"
+               minimized="false"
+               moveable="true"
+               relationship="left"
+               relative="org.eclipse.ui.editorss"
+               standalone="false"
+               visible="true">
+         </view>
+         <view
+               closeable="false"
+               id="yagw2api.explorer.rcp.wvw.matchdetails"
+               minimized="false"
+               relationship="right"
+               relative="org.eclipse.ui.editorss"
+               visible="true">
+         </view>
+         <view
+               closeable="false"
+               id="yagw2api.explorer.rcp.wvw.mapdetails"
+               minimized="false"
+               moveable="true"
+               relationship="bottom"
+               relative="yagw2api.explorer.rcp.wvw.matchdetails"
+               standalone="false"
+               visible="true">
+         </view>
+      </perspectiveExtension>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            allowMultiple="false"
+            class="yagw2api.explorer.rcp.wvw.MatchSelectorViewPart"
+            icon="etc/images/GW2Logo_32x23.png"
+            id="yagw2api.explorer.rcp.wvw.matchselector"
+            name="Match Selector">
+      </view>
+      <view
+            allowMultiple="false"
+            class="yagw2api.explorer.rcp.wvw.MatchDetailsViewPart"
+            icon="etc/images/GW2Logo_32x23.png"
+            id="yagw2api.explorer.rcp.wvw.matchdetails"
+            name="Match Details">
+      </view>
+      <view
+            allowMultiple="false"
+            class="yagw2api.explorer.rcp.wvw.MapDetailsViewPart"
+            icon="etc/images/GW2Logo_32x23.png"
+            id="yagw2api.explorer.rcp.wvw.mapdetails"
+            name="Map Details">
+      </view>
+   </extension>
+
+</fragment>

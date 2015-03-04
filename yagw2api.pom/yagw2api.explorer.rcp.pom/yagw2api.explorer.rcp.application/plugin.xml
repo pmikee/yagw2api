@@ -15,16 +15,6 @@
       </application>
    </extension>
    <extension
-         point="org.eclipse.ui.perspectives">
-      <perspective
-            class="yagw2api.explorer.rcp.WVWPerspective"
-            fixed="false"
-            icon="etc/images/GW2Logo_32x23.png"
-            id="yagw2api.explorer.rcp.wvw.perspective"
-            name="WVW Perspective">
-      </perspective>
-   </extension>
-   <extension
          id="yagw2api"
          point="org.eclipse.core.runtime.products">
       <product
@@ -38,68 +28,19 @@
                name="windowImages"
                value="etc/images/GW2Logo_16x16.png,etc/images/GW2Logo_32x32.png,etc/images/GW2Logo_48x48.png,etc/images/GW2Logo_64x64.png,etc/images/GW2Logo_128x128.png,etc/images/GW2Logo_256x256.png">
          </property>
+         <property
+               name="applicationCSS"
+               value="platform:/plugin/yagw2api.explorer.rcp.application/etc/css/default.css">
+         </property>
       </product>
    </extension>
    <extension
-         point="org.eclipse.ui.views">
-      <view
-            allowMultiple="false"
-            class="yagw2api.explorer.rcp.wvw.MatchSelectorViewPart"
-            icon="etc/images/GW2Logo_32x23.png"
-            id="yagw2api.explorer.rcp.wvw.matchselector"
-            name="Match Selector"
-            restorable="true">
-      </view>
-      <view
-            allowMultiple="false"
-            class="yagw2api.explorer.rcp.wvw.MatchDetailsViewPart"
-            icon="etc/images/GW2Logo_32x23.png"
-            id="yagw2api.explorer.rcp.wvw.matchdetails"
-            name="Match Details">
-      </view>
-      <view
-            allowMultiple="false"
-            class="yagw2api.explorer.rcp.wvw.MapDetailsViewPart"
-            icon="etc/images/GW2Logo_32x23.png"
-            id="yagw2api.explorer.rcp.wvw.mapdetails"
-            name="Map Details">
-      </view>
-   </extension>
-   <extension
-         point="org.eclipse.ui.perspectiveExtensions">
-      <perspectiveExtension
-            targetID="yagw2api.explorer.rcp.wvw.perspective">
-         <view
-               closeable="false"
-               id="yagw2api.explorer.rcp.wvw.matchselector"
-               minimized="false"
-               moveable="true"
-               relationship="left"
-               relative="org.eclipse.ui.editorss"
-               standalone="false"
-               visible="true">
-         </view>
-         <view
-               closeable="false"
-               id="yagw2api.explorer.rcp.wvw.matchdetails"
-               minimized="false"
-               moveable="true"
-               relationship="right"
-               relative="org.eclipse.ui.editorss"
-               standalone="false"
-               visible="true">
-         </view>
-         <view
-               closeable="false"
-               id="yagw2api.explorer.rcp.wvw.mapdetails"
-               minimized="false"
-               moveable="true"
-               relationship="bottom"
-               relative="yagw2api.explorer.rcp.wvw.matchdetails"
-               standalone="false"
-               visible="true">
-         </view>
-      </perspectiveExtension>
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:org.eclipse.ui.main.menu">
+
+      </menuContribution>
    </extension>
 
 </plugin>

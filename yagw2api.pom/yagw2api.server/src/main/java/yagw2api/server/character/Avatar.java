@@ -9,9 +9,9 @@ package yagw2api.server.character;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,15 +32,15 @@ import com.google.common.base.MoreObjects;
 import com.google.gson.annotations.Expose;
 
 @Immutable
-public final class Character {
+public final class Avatar {
 
 	// STATICS
-	public static CharacterBuilder builder() {
-		return new CharacterBuilder();
+	public static AvatarBuilder builder() {
+		return new AvatarBuilder();
 	}
 
 	// EMBEDDED
-	public static final class CharacterBuilder {
+	public static final class AvatarBuilder {
 		// FIELDS
 		@Nullable
 		private String name = null;
@@ -58,55 +58,55 @@ public final class Character {
 		private Float zPosition = null;
 
 		// CONSTRUCTOR
-		private CharacterBuilder() {
+		private AvatarBuilder() {
 
 		}
 
 		// METHODS
-		public CharacterBuilder name(final @Nullable String name) {
+		public AvatarBuilder name(final @Nullable String name) {
 			this.name = name;
 			return this;
 		}
 
-		public CharacterBuilder worldId(final @Nullable Integer worldId) {
+		public AvatarBuilder worldId(final @Nullable Integer worldId) {
 			this.worldId = worldId;
 			return this;
 		}
 
-		public CharacterBuilder mapId(final @Nullable Integer mapId) {
+		public AvatarBuilder mapId(final @Nullable Integer mapId) {
 			this.mapId = mapId;
 			return this;
 		}
 
-		public CharacterBuilder commander(final @Nullable Boolean commander) {
+		public AvatarBuilder commander(final @Nullable Boolean commander) {
 			this.commander = commander;
 			return this;
 		}
 
-		public CharacterBuilder xPosition(final @Nullable Float position) {
+		public AvatarBuilder xPosition(final @Nullable Float position) {
 			this.xPosition = position;
 			return this;
 		}
 
-		public CharacterBuilder yPosition(final @Nullable Float position) {
+		public AvatarBuilder yPosition(final @Nullable Float position) {
 			this.yPosition = position;
 			return this;
 		}
 
-		public CharacterBuilder zPosition(final @Nullable Float position) {
+		public AvatarBuilder zPosition(final @Nullable Float position) {
 			this.zPosition = position;
 			return this;
 		}
 
-		public CharacterBuilder position(final @Nullable Float xPosition, final @Nullable Float yPosition, final @Nullable Float zPosition) {
+		public AvatarBuilder position(final @Nullable Float xPosition, final @Nullable Float yPosition, final @Nullable Float zPosition) {
 			this.xPosition = xPosition;
 			this.yPosition = yPosition;
 			this.zPosition = zPosition;
 			return this;
 		}
 
-		public Character build() {
-			return new Character(this);
+		public Avatar build() {
+			return new Avatar(this);
 		}
 
 		@Override
@@ -137,7 +137,11 @@ public final class Character {
 	private final float zPosition;
 
 	// CONSTRUCTOR
-	private Character() {
+	/**
+	 * default constructor
+	 */
+	@SuppressWarnings("unused")
+	private Avatar() {
 		this.lastUpdated = null;
 		this.name = null;
 		this.worldId = -1;
@@ -148,7 +152,7 @@ public final class Character {
 		this.zPosition = Float.MIN_VALUE;
 	}
 
-	public Character(final CharacterBuilder builder) {
+	public Avatar(final AvatarBuilder builder) {
 		checkNotNull(builder, "missing builder");
 		this.lastUpdated = LocalDateTime.now();
 		this.name = checkNotNull(builder.name, "missing characterName in %s", builder);
@@ -173,7 +177,7 @@ public final class Character {
 		return this.name;
 	}
 
-	public final CharacterBuilder setName(final String name) {
+	public final AvatarBuilder setName(final String name) {
 		checkNotNull(name, "missing name");
 		return this.toBuilder().name(name);
 	}
@@ -182,7 +186,7 @@ public final class Character {
 		return this.worldId;
 	}
 
-	public final CharacterBuilder setWorldId(final int id) {
+	public final AvatarBuilder setWorldId(final int id) {
 		return this.toBuilder().worldId(id);
 	}
 
@@ -190,7 +194,7 @@ public final class Character {
 		return this.mapId;
 	}
 
-	public final CharacterBuilder setMapId(final int id) {
+	public final AvatarBuilder setMapId(final int id) {
 		return this.toBuilder().mapId(id);
 	}
 
@@ -198,11 +202,11 @@ public final class Character {
 		return this.commander;
 	}
 
-	public final CharacterBuilder setCommander(final boolean commander) {
+	public final AvatarBuilder setCommander(final boolean commander) {
 		return this.toBuilder().commander(commander);
 	}
 
-	public final CharacterBuilder setPosition(final float xPosition, final float yPosition, final float zPosition) {
+	public final AvatarBuilder setPosition(final float xPosition, final float yPosition, final float zPosition) {
 		return this.toBuilder().position(xPosition, yPosition, zPosition);
 	}
 
@@ -210,7 +214,7 @@ public final class Character {
 		return this.xPosition;
 	}
 
-	public final CharacterBuilder setXPosition(final float xPosition) {
+	public final AvatarBuilder setXPosition(final float xPosition) {
 		return this.toBuilder().xPosition(xPosition);
 	}
 
@@ -218,7 +222,7 @@ public final class Character {
 		return this.yPosition;
 	}
 
-	public final CharacterBuilder setYPosition(final float yPosition) {
+	public final AvatarBuilder setYPosition(final float yPosition) {
 		return this.toBuilder().yPosition(yPosition);
 	}
 
@@ -226,11 +230,11 @@ public final class Character {
 		return this.zPosition;
 	}
 
-	public final CharacterBuilder setZPosition(final float zPosition) {
+	public final AvatarBuilder setZPosition(final float zPosition) {
 		return this.toBuilder().zPosition(zPosition);
 	}
 
-	public final CharacterBuilder toBuilder() {
+	public final AvatarBuilder toBuilder() {
 		return builder().name(this.name).commander(this.commander).mapId(this.mapId).position(this.xPosition, this.yPosition, this.zPosition).worldId(this.worldId);
 	}
 

@@ -3,7 +3,6 @@
       id="yagw2api.explorer.rcp.feature"
       label="YAGW2API Feature"
       version="1.0.0.qualifier"
-      provider-name="Julian Stitz"
       plugin="yagw2api.explorer.rcp">
 
    <description url="http://www.example.com/description">
@@ -23,6 +22,14 @@
          download-size="0"
          install-size="0"
          version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="yagw2api.explorer.rcp.application.wvw"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
          unpack="false"/>
 
 </feature>

@@ -1,8 +1,8 @@
-package yagw2api.explorer.rcp;
+package yagw2api.server.character;
 
 /*
  * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * YAGW2API-Explorer-RCP-Application
+ * yagw2api.server
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
  * _____________________________________________________________
@@ -20,14 +20,13 @@ package yagw2api.explorer.rcp;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
  */
 
-import org.eclipse.ui.IPageLayout;
-import org.eclipse.ui.IPerspectiveFactory;
+import com.google.common.base.Optional;
 
-public class WVWPerspective implements IPerspectiveFactory {
+public interface AvatarDAO {
 
-	 
-	
-	public void createInitialLayout(IPageLayout layout) {
-        layout.setEditorAreaVisible(false);
-	}
+	Optional<Avatar> find(final String name);
+
+	Iterable<Avatar> getAll();
+
+	Avatar update(final Avatar character);
 }
