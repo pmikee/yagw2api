@@ -20,28 +20,23 @@ package de.justi.yagwapi.common;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
  */
 
-
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.IOError;
 import java.io.IOException;
 import java.math.RoundingMode;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.PriorityBlockingQueue;
@@ -59,7 +54,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalListener;
@@ -70,6 +64,7 @@ import com.google.common.math.DoubleMath;
 import com.google.common.util.concurrent.AbstractScheduledService;
 import com.google.common.util.concurrent.Service;
 
+@SuppressWarnings("restriction")
 public final class TTSUtils {
 	private static final int DEFAULT_PRIORITY = 0;
 	private static final double DEFAULT_RATE = 1.2d;
@@ -79,7 +74,7 @@ public final class TTSUtils {
 	private static final Logger LOGGER = LoggerFactory.getLogger(TTSUtils.class);
 	private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:11.0) " + "Gecko/20100101 Firefox/11.0";
 	private static final long MP3_CACHE_EXPIRE_HOURS = 24;
-	private static final File YAGW2API_TEMP_FILE;
+	private static final Path RELATIVE_TEMP_DIR_PATH = Paths.get("yagw2api", TTSUtils.class.getSimpleName());
 
 	private static final class TTSTask implements Comparable<TTSTask> {
 		private final String text;
@@ -88,7 +83,7 @@ public final class TTSUtils {
 		private final Date creationTimestamp;
 		private final double rate;
 
-		public TTSTask(String text, Locale locale, int priority, double rate) {
+		public TTSTask(final String text, final Locale locale, final int priority, final double rate) {
 			checkArgument(rate > 0);
 			this.text = checkNotNull(text);
 			this.locale = checkNotNull(locale);
@@ -101,48 +96,49 @@ public final class TTSUtils {
 		 * @return the text
 		 */
 		public final String getText() {
-			return text;
+			return this.text;
 		}
 
 		/**
 		 * @return the locale
 		 */
 		public final Locale getLocale() {
-			return locale;
+			return this.locale;
 		}
 
 		/**
 		 * @return the priority
 		 */
 		public final int getPriority() {
-			return priority;
+			return this.priority;
 		}
 
 		/**
 		 * @return the creationTimestamp
 		 */
 		public final Date getCreationTimestamp() {
-			return creationTimestamp;
+			return this.creationTimestamp;
 		}
 
 		@Override
-		public final int compareTo(TTSTask o) {
+		public final int compareTo(final TTSTask o) {
 			return DoubleMath
-					.roundToInt((Math.signum(new Integer(this.getPriority()).compareTo(o.getPriority())) * -10d) + Math.signum(this.getCreationTimestamp().compareTo(o.getCreationTimestamp())),
-							RoundingMode.FLOOR);
+					.roundToInt(
+							(Math.signum(new Integer(this.getPriority()).compareTo(o.getPriority())) * -10d)
+									+ Math.signum(this.getCreationTimestamp().compareTo(o.getCreationTimestamp())), RoundingMode.FLOOR);
 		}
 
 		/**
 		 * @return the rate
 		 */
 		public final double getRate() {
-			return rate;
+			return this.rate;
 		}
 
 		@Override
 		public String toString() {
-			return MoreObjects.toStringHelper(this).add("priority", this.getPriority()).add("timestamp", this.getCreationTimestamp()).add("locale", this.getLocale()).add("rate", this.getRate())
-					.addValue(this.getText()).toString();
+			return MoreObjects.toStringHelper(this).add("priority", this.getPriority()).add("timestamp", this.getCreationTimestamp()).add("locale", this.getLocale())
+					.add("rate", this.getRate()).addValue(this.getText()).toString();
 		}
 	}
 
@@ -162,14 +158,6 @@ public final class TTSUtils {
 	}
 
 	static {
-		try {
-			final File tempDirDetectionFile = File.createTempFile(UUID.randomUUID().toString(), ".dat");
-			checkState(tempDirDetectionFile.delete());
-			YAGW2API_TEMP_FILE = new File(tempDirDetectionFile.getParentFile(), "yagw2api");
-			checkState((YAGW2API_TEMP_FILE.exists() && YAGW2API_TEMP_FILE.isDirectory()) || YAGW2API_TEMP_FILE.mkdirs());
-		} catch (IOException e) {
-			throw new RuntimeException("Failed to initialize " + TTSUtils.class.getSimpleName(), e);
-		}
 
 		final Service ttsService = new AbstractScheduledService() {
 			@Override
@@ -185,14 +173,14 @@ public final class TTSUtils {
 
 				if (task != null) {
 					LOGGER.debug("Going to handle {}", task);
-					final List<File> mp3s = new ArrayList<File>();
+					final List<Path> mp3s = Lists.newArrayList();
 					for (String block : divideInTextBlocks(task.getText())) {
 						mp3s.add(retrieveMP3File(block, task.getLocale()));
 					}
-					for (File mp3 : mp3s) {
+					for (Path mp3 : mp3s) {
 						playMP3File(mp3, task.getRate());
 					}
-					LOGGER.debug("Handled {}", task);					
+					LOGGER.debug("Handled {}", task);
 				}
 			}
 		};
@@ -202,39 +190,40 @@ public final class TTSUtils {
 	private TTSUtils() {
 	}
 
-	private static final Cache<String, File> MP3_FILE_CACHE = CacheBuilder.newBuilder().expireAfterWrite(MP3_CACHE_EXPIRE_HOURS, TimeUnit.HOURS).removalListener(new RemovalListener<String, File>() {
-		@Override
-		public void onRemoval(RemovalNotification<String, File> notification) {
-			if (notification.getValue().exists()) {
-				notification.getValue().delete();
-			}
-		}
-	}).build();
-
-	private static File retrieveMP3File(final String text, final Locale locale) {
-		checkNotNull(text);
-		checkArgument(text.trim().length() <= MAX_TEXT_LENGTH_PER_REQUEST, "Text has to be shorter than " + MAX_TEXT_LENGTH_PER_REQUEST + " but actual is " + text.trim().length() + ": \n" + text);
-		try {
-			final File mp3 = MP3_FILE_CACHE.get(locale.getLanguage() + text, new Callable<File>() {
+	private static final Cache<String, Path> MP3_FILE_CACHE = CacheBuilder.newBuilder().expireAfterWrite(MP3_CACHE_EXPIRE_HOURS, TimeUnit.HOURS)
+			.removalListener(new RemovalListener<String, Path>() {
 				@Override
-				public File call() throws Exception {
+				public void onRemoval(final RemovalNotification<String, Path> notification) {
 					try {
-						final File target = new File(YAGW2API_TEMP_FILE, DigestUtils.md5Hex(locale.getLanguage() + text) + MP3_SUFFIX);
-						if (!target.exists()) {
+						java.nio.file.Files.deleteIfExists(notification.getValue());
+					} catch (IOException e) {
+						throw new IOError(e);
+					}
+				}
+			}).build();
+
+	private static Path retrieveMP3File(final String text, final Locale locale) {
+		checkNotNull(text);
+		checkArgument(text.trim().length() <= MAX_TEXT_LENGTH_PER_REQUEST, "Text has to be shorter than " + MAX_TEXT_LENGTH_PER_REQUEST + " but actual is " + text.trim().length()
+				+ ": \n" + text);
+		try {
+			final Path mp3 = MP3_FILE_CACHE.get(locale.getLanguage() + text, new Callable<Path>() {
+				@Override
+				public Path call() throws Exception {
+					try {
+						Path target = Files.getTempDir().resolve(TTSUtils.RELATIVE_TEMP_DIR_PATH).resolve(DigestUtils.md5Hex(locale.getLanguage() + text) + MP3_SUFFIX);
+						if (!java.nio.file.Files.exists(target)) {
 							downloadFileFromURI(buildURIForMP3Request(locale, text), target);
 						}
-						checkState(target.isFile());
 						return target;
 					} catch (Exception e) {
-						LOGGER.error("Failed to retrieve mp3 cached file for text=" + text, e);
+						LOGGER.error("Failed to retrieve mp3 cached file for text={}", text, e);
 						throw e;
 					}
 				}
 			});
 
-			if (LOGGER.isInfoEnabled()) {
-				LOGGER.info("Retrieved " + mp3 + " for '" + text + "'.");
-			}
+			LOGGER.info("Retrieved {} for '{}'", mp3, text);
 			return mp3;
 		} catch (ExecutionException e) {
 			LOGGER.error("Failed to retrieve mp3 cached file for text=" + text, e);
@@ -242,10 +231,9 @@ public final class TTSUtils {
 		}
 	}
 
-	private static void downloadFileFromURI(URI uri2download, File targetLocation) throws IOException {
+	private static void downloadFileFromURI(final URI uri2download, final Path targetLocation) throws IOException {
 		checkNotNull(uri2download);
 		checkNotNull(targetLocation);
-		checkArgument(targetLocation.exists() == false);
 		// Etablish connection
 		final HttpURLConnection connection = (HttpURLConnection) uri2download.toURL().openConnection();
 		// Get method
@@ -255,30 +243,20 @@ public final class TTSUtils {
 		connection.addRequestProperty("User-Agent", USER_AGENT);
 		connection.connect();
 
-		final BufferedInputStream bufIn = new BufferedInputStream(connection.getInputStream());
-		byte[] buffer = new byte[1024];
-		int n;
-		ByteArrayOutputStream bufOut = new ByteArrayOutputStream();
-		while ((n = bufIn.read(buffer)) > 0) {
-			bufOut.write(buffer, 0, n);
-		}
-
-		BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(targetLocation));
-		out.write(bufOut.toByteArray());
-		out.flush();
-		out.close();
+		java.nio.file.Files.createDirectories(targetLocation.getParent());
+		java.nio.file.Files.copy(connection.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 	}
 
-	private static void playMP3File(final File mp3File, final double rate) {
+	private static void playMP3File(final Path mp3File, final double rate) {
 		checkNotNull(mp3File);
-		checkArgument(mp3File.exists());
-		checkArgument(mp3File.isFile());
+		checkArgument(java.nio.file.Files.exists(mp3File), "%s does not exist", mp3File);
+		checkArgument(java.nio.file.Files.isRegularFile(mp3File), "%s is no regular file", mp3File);
 		checkArgument(rate > 0);
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Going to play " + mp3File);
 		}
 		try {
-			final Media mp3Media = new Media(mp3File.toURI().toURL().toString());
+			final Media mp3Media = new Media(mp3File.toUri().toURL().toString());
 			final MediaPlayer mediaPlayer = new MediaPlayer(mp3Media);
 			synchronized (mediaPlayer) {
 				mediaPlayer.setAutoPlay(false);
@@ -311,13 +289,14 @@ public final class TTSUtils {
 	private static URI buildURIForMP3Request(final Locale locale, final String text) {
 		checkNotNull(locale);
 		checkNotNull(text);
-		checkArgument(text.trim().length() <= MAX_TEXT_LENGTH_PER_REQUEST, "Text has to be shorter than " + MAX_TEXT_LENGTH_PER_REQUEST + " but actual is " + text.trim().length() + ": \n" + text);
+		checkArgument(text.trim().length() <= MAX_TEXT_LENGTH_PER_REQUEST, "Text has to be shorter than " + MAX_TEXT_LENGTH_PER_REQUEST + " but actual is " + text.trim().length()
+				+ ": \n" + text);
 		final URI uri = RuntimeDelegate.getInstance().createUriBuilder().scheme("http").host("translate.google.com").path("translate_tts").queryParam("tl", locale.getLanguage())
 				.queryParam("q", text.trim()).build();
 		return uri;
 	}
 
-	private static List<String> divideInTextBlocks(String text) {
+	private static List<String> divideInTextBlocks(final String text) {
 		StringBuilder resultElement = new StringBuilder();
 		final List<String> result = new ArrayList<String>();
 		String rest;
@@ -368,7 +347,7 @@ public final class TTSUtils {
 		return result;
 	}
 
-	public static synchronized void readOut(final String rawText, final Locale locale, Object... arguments) {
+	public static synchronized void readOut(final String rawText, final Locale locale, final Object... arguments) {
 		checkNotNull(rawText);
 		checkNotNull(locale);
 		checkNotNull(arguments);
@@ -382,7 +361,7 @@ public final class TTSUtils {
 		readOut(text, locale, DEFAULT_PRIORITY, DEFAULT_RATE);
 	}
 
-	public static synchronized void readOut(final String rawText, final Locale locale, int priority, Object... arguments) {
+	public static synchronized void readOut(final String rawText, final Locale locale, final int priority, final Object... arguments) {
 		checkNotNull(rawText);
 		checkNotNull(locale);
 		checkNotNull(arguments);
@@ -390,13 +369,13 @@ public final class TTSUtils {
 		readOut(text, locale, priority);
 	}
 
-	public static synchronized void readOut(final String text, final Locale locale, int priority) {
+	public static synchronized void readOut(final String text, final Locale locale, final int priority) {
 		checkNotNull(text);
 		checkNotNull(locale);
 		readOut(text, locale, priority, DEFAULT_RATE);
 	}
 
-	public static synchronized void readOut(final String rawText, final Locale locale, double rate, Object... arguments) {
+	public static synchronized void readOut(final String rawText, final Locale locale, final double rate, final Object... arguments) {
 		checkNotNull(rawText);
 		checkNotNull(locale);
 		checkArgument(rate > 0);
@@ -405,14 +384,14 @@ public final class TTSUtils {
 		readOut(text, locale, rate);
 	}
 
-	public static synchronized void readOut(final String text, final Locale locale, double rate) {
+	public static synchronized void readOut(final String text, final Locale locale, final double rate) {
 		checkNotNull(text);
 		checkNotNull(locale);
 		checkArgument(rate > 0);
 		readOut(text, locale, DEFAULT_PRIORITY, rate);
 	}
 
-	public static synchronized void readOut(final String rawText, final Locale locale, int priority, double rate, Object... arguments) {
+	public static synchronized void readOut(final String rawText, final Locale locale, final int priority, final double rate, final Object... arguments) {
 		checkNotNull(rawText);
 		checkNotNull(locale);
 		checkArgument(rate > 0);
@@ -421,7 +400,7 @@ public final class TTSUtils {
 		readOut(text, locale, priority, rate);
 	}
 
-	public static synchronized void readOut(final String text, final Locale locale, int priority, double rate) {
+	public static synchronized void readOut(final String text, final Locale locale, final int priority, final double rate) {
 		checkNotNull(text);
 		checkNotNull(locale);
 		checkArgument(rate > 0);

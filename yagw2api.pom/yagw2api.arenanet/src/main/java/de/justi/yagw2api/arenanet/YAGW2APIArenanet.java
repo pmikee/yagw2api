@@ -23,13 +23,13 @@ package de.justi.yagw2api.arenanet;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.Locale;
 import java.util.concurrent.ForkJoinPool;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.inject.CreationException;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
@@ -56,6 +56,7 @@ public enum YAGW2APIArenanet implements IArenanet {
 	private final IWVWService wvwService;
 	private final IGuildService guildService;
 	private final IWorldService worldService;
+	private final IMapTileService mapTileService;
 	private final ForkJoinPool forkJoinPool;
 
 	private Locale currentLocale = Locale.getDefault();
@@ -64,15 +65,16 @@ public enum YAGW2APIArenanet implements IArenanet {
 	private YAGW2APIArenanet() {
 		final Injector injector = Guice.createInjector(new Module());
 		this.forkJoinPool = new ForkJoinPool(Runtime.getRuntime().availableProcessors() * THREAD_COUNT_PER_PROCESSOR, ForkJoinPool.defaultForkJoinWorkerThreadFactory,
-				new Thread.UncaughtExceptionHandler() {
+				new UncaughtExceptionHandler() {
 					@Override
-					public void uncaughtException(Thread t, Throwable e) {
+					public void uncaughtException(final Thread t, final Throwable e) {
 						LOGGER.error("Uncought exception thrown in {}", t, e);
 					}
 				}, false);
 		this.guildService = injector.getInstance(IGuildService.class);
 		this.wvwService = injector.getInstance(IWVWService.class);
 		this.worldService = injector.getInstance(IWorldService.class);
+		this.mapTileService = injector.getInstance(IMapTileService.class);
 		this.currentLocale = injector.getInstance(Locale.class);
 	}
 
@@ -83,7 +85,9 @@ public enum YAGW2APIArenanet implements IArenanet {
 		return getInstance().forkJoinPool;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see de.justi.yagw2api.arenanet.Arenanet#getWVWService()
 	 */
 	@Override
@@ -91,7 +95,9 @@ public enum YAGW2APIArenanet implements IArenanet {
 		return this.wvwService;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see de.justi.yagw2api.arenanet.Arenanet#getWorldService()
 	 */
 	@Override
@@ -99,7 +105,9 @@ public enum YAGW2APIArenanet implements IArenanet {
 		return this.worldService;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see de.justi.yagw2api.arenanet.Arenanet#getGuildService()
 	 */
 	@Override
@@ -107,7 +115,14 @@ public enum YAGW2APIArenanet implements IArenanet {
 		return this.guildService;
 	}
 
-	/* (non-Javadoc)
+	@Override
+	public IMapTileService getMapTileService() {
+		return this.mapTileService;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see de.justi.yagw2api.arenanet.Arenanet#getCurrentLocale()
 	 */
 	@Override
@@ -115,11 +130,13 @@ public enum YAGW2APIArenanet implements IArenanet {
 		return getInstance().currentLocale;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see de.justi.yagw2api.arenanet.Arenanet#setCurrentLocale(java.util.Locale)
 	 */
 	@Override
-	public void setCurrentLocale(Locale locale) {
+	public void setCurrentLocale(final Locale locale) {
 		getInstance().currentLocale = checkNotNull(locale);
 	}
 

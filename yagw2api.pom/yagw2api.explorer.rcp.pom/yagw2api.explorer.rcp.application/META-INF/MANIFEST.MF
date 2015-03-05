@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Explorer
 Bundle-SymbolicName: yagw2api.explorer.rcp.application;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: yagw2api.explorer.rcp.Activator
+Bundle-Activator: de.justi.yagw2api.explorer.rcp.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
@@ -39,4 +39,19 @@ Bundle-ClassPath: .,
  lib/org.eclipse.persistence.org.eclipse.persistence.core.jar,
  lib/org.eclipse.persistence.org.eclipse.persistence.jpa.jar,
  lib/org.eclipse.persistence.org.eclipse.persistence.jpa.jpql.jar,
- lib/org.hamcrest.hamcrest-core.jar
+ lib/org.hamcrest.hamcrest-core.jar,
+ lib/de.justi.yagw2api.locationprovider.jar,
+ lib/de.justi.yagw2api.server.jar,
+ lib/org.springframework.boot.spring-boot-autoconfigure.jar,
+ lib/org.springframework.boot.spring-boot-starter-logging.jar,
+ lib/org.springframework.boot.spring-boot-starter-tomcat.jar,
+ lib/org.springframework.boot.spring-boot-starter-web.jar,
+ lib/org.springframework.boot.spring-boot-starter.jar,
+ lib/org.springframework.boot.spring-boot.jar,
+ lib/org.springframework.spring-aop.jar,
+ lib/org.springframework.spring-beans.jar,
+ lib/org.springframework.spring-context.jar,
+ lib/org.springframework.spring-core.jar,
+ lib/org.springframework.spring-expression.jar,
+ lib/org.springframework.spring-web.jar,
+ lib/org.springframework.spring-webmvc.jar

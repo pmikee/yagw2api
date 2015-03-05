@@ -28,7 +28,7 @@ public interface IArenanet {
 	 * <p>
 	 * access to low level api calls returning dtos
 	 * <p>
-	 * 
+	 *
 	 * @return
 	 */
 	IWVWService getWVWService();
@@ -37,7 +37,7 @@ public interface IArenanet {
 	 * <p>
 	 * access to low level api calls returning dtos
 	 * <p>
-	 * 
+	 *
 	 * @return
 	 */
 	IWorldService getWorldService();
@@ -46,10 +46,12 @@ public interface IArenanet {
 	 * <p>
 	 * access to low level api calls returning dtos
 	 * <p>
-	 * 
+	 *
 	 * @return
 	 */
 	IGuildService getGuildService();
+
+	IMapTileService getMapTileService();
 
 	Locale getCurrentLocale();
 

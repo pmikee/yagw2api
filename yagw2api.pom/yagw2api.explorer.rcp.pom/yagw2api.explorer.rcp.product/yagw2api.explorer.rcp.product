@@ -3,7 +3,6 @@
 
 <product name="YAGW2API Explorer" uid="yagw2api.explorer.rcp.product" id="yagw2api.explorer.rcp.application.yagw2api" application="yagw2api.explorer.rcp.application" version="1.0.0.qualifier" useFeatures="true" includeLaunchers="true">
 
-
    <configIni use="default">
    </configIni>
 
@@ -16,26 +15,22 @@
 
    <windowImages i16="/yagw2api.explorer.rcp.application/etc/images/GW2Logo_16x16.png" i32="/yagw2api.explorer.rcp.application/etc/images/GW2Logo_32x32.png" i48="/yagw2api.explorer.rcp.application/etc/images/GW2Logo_48x48.png" i64="/yagw2api.explorer.rcp.application/etc/images/GW2Logo_64x64.png" i128="/yagw2api.explorer.rcp.application/etc/images/GW2Logo_128x128.png" i256="/yagw2api.explorer.rcp.application/etc/images/GW2Logo_256x256.png"/>
 
-   <splash
-      location="yagw2api.explorer.rcp.application" />
+   <splash location="yagw2api.explorer.rcp.application" />
    <launcher name="YAGW2API-Explorer">
-      <solaris/>
       <win useIco="false">
          <bmp
-            winSmallHigh="/yagw2api.explorer.rcp.application/etc/images/GW2Logo_16x16.bmp"
-            winSmallLow="/yagw2api.explorer.rcp.application/etc/images/GW2Logo_16x16_8bit.bmp"
-            winMediumHigh="/yagw2api.explorer.rcp.application/etc/images/GW2Logo_32x32.bmp"
-            winMediumLow="/yagw2api.explorer.rcp.application/etc/images/GW2Logo_32x32_8bit.bmp"
-            winLargeHigh="/yagw2api.explorer.rcp.application/etc/images/GW2Logo_48x48.bmp"
-            winLargeLow="/yagw2api.explorer.rcp.application/etc/images/GW2Logo_48x48_8bit.bmp"
-            winExtraLargeHigh="/yagw2api.explorer.rcp.application/etc/images/GW2Logo_256x256.bmp"/>
+            winSmallHigh="etc/images/GW2Logo_16x16.bmp"
+            winSmallLow="etc/images/GW2Logo_16x16_8bit.bmp"
+            winMediumHigh="etc/images/GW2Logo_32x32.bmp"
+            winMediumLow="etc/images/GW2Logo_32x32_8bit.bmp"
+            winLargeHigh="etc/images/GW2Logo_48x48.bmp"
+            winLargeLow="etc/images/GW2Logo_48x48_8bit.bmp"
+            winExtraLargeHigh="etc/images/GW2Logo_256x256.bmp"/>
       </win>
    </launcher>
 
-
    <vm>
    </vm>
-
 
    <plugins>
    </plugins>

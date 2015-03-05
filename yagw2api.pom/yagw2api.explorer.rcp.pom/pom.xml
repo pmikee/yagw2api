@@ -13,6 +13,7 @@
 		<module>yagw2api.explorer.rcp.targetplatform</module>
 		<module>yagw2api.explorer.rcp.application</module>
 		<module>yagw2api.explorer.rcp.application.wvw</module>
+		<module>yagw2api.explorer.rcp.application.map</module>
 		<module>yagw2api.explorer.rcp.feature</module>
 		<module>yagw2api.explorer.rcp.product</module>
 	</modules>

@@ -12,7 +12,7 @@
 	</parent>
 
 	<name>YAGW2API-Explorer-RCP-Application</name>
-	
+
 	<build>
 		<plugins>
 			<plugin>
@@ -20,19 +20,30 @@
 				<artifactId>maven-dependency-plugin</artifactId>
 				<executions>
 					<execution>
-						<id>prepare plugin libraries</id>
+						<id>prepare-plugin-dependencies</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>prepare-plugin-dependency-sources</id>
 						<phase>initialize</phase>
 						<goals>
 							<goal>copy-dependencies</goal>
 						</goals>
 						<configuration>
-							<prependGroupId>true</prependGroupId>
-							<stripVersion>true</stripVersion>
-							<outputDirectory>${project.basedir}/lib</outputDirectory>
-							<verbose>true</verbose>
+							<classifier>sources</classifier>
+							<failOnMissingClassifierArtifact>false</failOnMissingClassifierArtifact>
 						</configuration>
 					</execution>
 				</executions>
+				<configuration>
+					<prependGroupId>true</prependGroupId>
+					<stripVersion>true</stripVersion>
+					<outputDirectory>${project.basedir}/lib</outputDirectory>
+					<verbose>true</verbose>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
@@ -61,6 +72,14 @@
 		<dependency>
 			<groupId>de.justi</groupId>
 			<artifactId>yagw2api.wrapper</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.justi</groupId>
+			<artifactId>yagw2api.server</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.justi</groupId>
+			<artifactId>yagw2api.locationprovider</artifactId>
 		</dependency>
 
 		<!-- UTILS -->

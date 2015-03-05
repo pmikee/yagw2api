@@ -20,13 +20,13 @@ package de.justi.yagw2api.arenanet.impl;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
  */
 
-
 import java.util.Locale;
 
 import com.google.inject.AbstractModule;
 
 import de.justi.yagw2api.arenanet.IGuildDTOFactory;
 import de.justi.yagw2api.arenanet.IGuildService;
+import de.justi.yagw2api.arenanet.IMapTileService;
 import de.justi.yagw2api.arenanet.IWVWDTOFactory;
 import de.justi.yagw2api.arenanet.IWVWService;
 import de.justi.yagw2api.arenanet.IWorldDTOFactory;
@@ -45,6 +45,7 @@ public final class Module extends AbstractModule {
 		this.bind(IWVWService.class).to(WVWService.class).asEagerSingleton();
 		this.bind(IGuildService.class).to(GuildService.class).asEagerSingleton();
 		this.bind(IWorldService.class).to(WorldService.class).asEagerSingleton();
+		this.bind(IMapTileService.class).to(MapTileService.class).asEagerSingleton();
 
 		// default locale
 		this.bind(Locale.class).toInstance(Locale.getDefault());

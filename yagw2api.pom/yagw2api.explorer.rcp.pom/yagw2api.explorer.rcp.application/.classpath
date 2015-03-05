@@ -18,7 +18,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/commons-codec.commons-codec.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/de.justi.yagw2api.analyzer.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/de.justi.yagw2api.anchorman.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/de.justi.yagw2api.arenanet.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/de.justi.yagw2api.arenanet.jar" sourcepath="/yagw2api.arenanet"/>
 	<classpathentry exported="true" kind="lib" path="lib/de.justi.yagw2api.common.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/de.justi.yagw2api.mumblelink.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/de.justi.yagw2api.wrapper.jar"/>
@@ -34,5 +34,20 @@
 	<classpathentry exported="true" kind="lib" path="lib/org.eclipse.persistence.org.eclipse.persistence.jpa.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/org.eclipse.persistence.org.eclipse.persistence.jpa.jpql.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/org.hamcrest.hamcrest-core.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/de.justi.yagw2api.locationprovider.jar" sourcepath="lib/com.google.guava.guava-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/de.justi.yagw2api.server.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.springframework.boot.spring-boot-autoconfigure.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.springframework.boot.spring-boot-starter-logging.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.springframework.boot.spring-boot-starter-tomcat.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.springframework.boot.spring-boot-starter-web.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.springframework.boot.spring-boot-starter.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.springframework.boot.spring-boot.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.springframework.spring-aop.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.springframework.spring-beans.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.springframework.spring-context.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.springframework.spring-core.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.springframework.spring-expression.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.springframework.spring-web.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.springframework.spring-webmvc.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

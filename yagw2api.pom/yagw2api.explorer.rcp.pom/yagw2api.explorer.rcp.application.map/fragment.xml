@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<fragment>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="de.justi.yagw2api.explorer.rcp.map.MapPerspective"
+            fixed="false"
+            icon="etc/images/GW2Logo_32x23.png"
+            id="yagw2api.explorer.rcp.map.perspective"
+            name="Map Perspective">
+      </perspective>
+   </extension>
+   <extension point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="yagw2api.explorer.rcp.map.perspective">
+         <view
+               closeable="false"
+               id="yagw2api.explorer.rcp.map.worldmap"
+               minimized="false"
+               moveable="true"
+               relationship="left"
+               relative="org.eclipse.ui.editorss"
+               standalone="false"
+               visible="true">
+         </view>
+      </perspectiveExtension>
+    
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            allowMultiple="false"
+            class="de.justi.yagw2api.explorer.rcp.map.WorldMap"
+            icon="etc/images/GW2Logo_32x23.png"
+            id="yagw2api.explorer.rcp.map.worldmap"
+            name="World Map">
+      </view>
+     
+   </extension>
+
+</fragment>

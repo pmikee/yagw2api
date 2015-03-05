@@ -4,7 +4,7 @@
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            class="yagw2api.explorer.rcp.wvw.WVWPerspective"
+            class="de.justi.yagw2api.explorer.rcp.wvw.WVWPerspective"
             fixed="false"
             icon="etc/images/GW2Logo_32x23.png"
             id="yagw2api.explorer.rcp.wvw.perspective"
@@ -49,21 +49,21 @@
          point="org.eclipse.ui.views">
       <view
             allowMultiple="false"
-            class="yagw2api.explorer.rcp.wvw.MatchSelectorViewPart"
+            class="de.justi.yagw2api.explorer.rcp.wvw.MatchSelectorViewPart"
             icon="etc/images/GW2Logo_32x23.png"
             id="yagw2api.explorer.rcp.wvw.matchselector"
             name="Match Selector">
       </view>
       <view
             allowMultiple="false"
-            class="yagw2api.explorer.rcp.wvw.MatchDetailsViewPart"
+            class="de.justi.yagw2api.explorer.rcp.wvw.MatchDetailsViewPart"
             icon="etc/images/GW2Logo_32x23.png"
             id="yagw2api.explorer.rcp.wvw.matchdetails"
             name="Match Details">
       </view>
       <view
             allowMultiple="false"
-            class="yagw2api.explorer.rcp.wvw.MapDetailsViewPart"
+            class="de.justi.yagw2api.explorer.rcp.wvw.MapDetailsViewPart"
             icon="etc/images/GW2Logo_32x23.png"
             id="yagw2api.explorer.rcp.wvw.mapdetails"
             name="Map Details">
