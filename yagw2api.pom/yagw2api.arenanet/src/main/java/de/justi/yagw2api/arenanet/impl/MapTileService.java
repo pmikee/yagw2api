@@ -9,9 +9,9 @@ package de.justi.yagw2api.arenanet.impl;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,6 +22,7 @@ package de.justi.yagw2api.arenanet.impl;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -133,22 +134,27 @@ public class MapTileService implements IMapTileService {
 		}
 	}
 
-	private final LoadingCache<MapTileSelector, Path> mapTileCache = CacheBuilder.newBuilder().build(new CacheLoader<MapTileSelector, Path>() {
+	private final LoadingCache<MapTileSelector, Optional<Path>> mapTileCache = CacheBuilder.newBuilder().build(new CacheLoader<MapTileSelector, Optional<Path>>() {
 		@Override
-		public Path load(final MapTileSelector key) throws Exception {
+		public Optional<Path> load(final MapTileSelector key) throws Exception {
 			checkNotNull(key, "missing key");
 			final URL url = key.toURL();
-			final Path dir = de.justi.yagwapi.common.Files.getTempDir().resolve(RELATIVE_TEMP_DIR_PATH);
-			final Path file = dir.resolve(key.getContinentId() + "." + key.getFloor() + "." + key.getZoom() + "." + key.getX() + "." + key.getY() + ".jpg");
-			if (!Files.exists(file)) {
-				try (final InputStream in = url.openStream()) {
-					Files.createDirectories(dir);
-					LOGGER.trace("going to download {} to {}", url, file);
-					java.nio.file.Files.copy(in, file, StandardCopyOption.REPLACE_EXISTING);
-					LOGGER.debug("downloaded {} to {}", url, file);
+			try {
+				final Path dir = de.justi.yagwapi.common.Files.getTempDir().resolve(RELATIVE_TEMP_DIR_PATH);
+				final Path file = dir.resolve(key.getContinentId() + "." + key.getFloor() + "." + key.getZoom() + "." + key.getX() + "." + key.getY() + ".jpg");
+				if (!Files.exists(file)) {
+					try (final InputStream in = url.openStream()) {
+						Files.createDirectories(dir);
+						LOGGER.trace("going to download {} to {}", url, file);
+						java.nio.file.Files.copy(in, file, StandardCopyOption.REPLACE_EXISTING);
+						LOGGER.debug("downloaded {} to {}", url, file);
+					}
 				}
+				return Optional.of(file);
+			} catch (IOException e) {
+				LOGGER.warn("unable to download {}", url);
+				return Optional.absent();
 			}
-			return file;
 		}
 	});
 
@@ -156,9 +162,9 @@ public class MapTileService implements IMapTileService {
 	public Optional<Path> getMapTile(final int continentId, final int floor, final int zoom, final int x, final int y) {
 		final MapTileSelector selector = MapTileSelector.of(continentId, floor, zoom, x, y);
 		try {
-			return Optional.of(this.mapTileCache.get(selector));
+			return this.mapTileCache.get(selector);
 		} catch (ExecutionException e) {
-			return Optional.absent();
+			throw new Error(e);
 		}
 	}
 }
