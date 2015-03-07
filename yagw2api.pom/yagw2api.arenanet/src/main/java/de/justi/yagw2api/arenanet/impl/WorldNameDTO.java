@@ -9,9 +9,9 @@ package de.justi.yagw2api.arenanet.impl;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,12 +20,11 @@ package de.justi.yagw2api.arenanet.impl;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
  */
 
-
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
@@ -53,7 +52,8 @@ final class WorldNameDTO implements IWorldNameDTO {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("id", this.id).add("name", this.name).add("locale", this.getWorldLocale()).add("nameWithoutLocale", this.getNameWithoutLocale()).toString();
+		return MoreObjects.toStringHelper(this).add("id", this.id).add("name", this.name).add("locale", this.getWorldLocale())
+				.add("nameWithoutLocale", this.getNameWithoutLocale()).toString();
 	}
 
 	@Override

@@ -9,9 +9,9 @@ package de.justi.yagw2api.arenanet.impl;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,7 +20,6 @@ package de.justi.yagw2api.arenanet.impl;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
  */
 
-
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
@@ -28,7 +27,6 @@ import static com.google.common.base.Preconditions.checkState;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -58,7 +56,7 @@ import de.justi.yagwapi.common.RetryClientFilter;
 
 final class WorldService implements IWorldService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(WorldService.class);
-	private static final long WOLRD_NAMES_CACHE_EXPIRE_MILLIS = 1000 * 60 * 60 * 12; // 12h
+	private static final long WOLRD_NAMES_CACHE_EXPIRE_MILLIS = TimeUnit.HOURS.toMillis(12);
 	private static final IWorldNameDTO[] EMPTY_WORLD_NAME_ARRAY = new IWorldNameDTO[0];
 	private static final URL WORL_NAMES_URL;
 	static {
@@ -74,7 +72,7 @@ final class WorldService implements IWorldService {
 	private final Cache<Locale, Optional<IWorldNameDTO[]>> worldNamesCache = CacheBuilder.newBuilder().expireAfterWrite(WOLRD_NAMES_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS)
 			.removalListener(new RemovalListener<Locale, Optional<IWorldNameDTO[]>>() {
 				@Override
-				public void onRemoval(RemovalNotification<Locale, Optional<IWorldNameDTO[]>> notification) {
+				public void onRemoval(final RemovalNotification<Locale, Optional<IWorldNameDTO[]>> notification) {
 					// synchronize worldNamesCache with worldNameCaches
 					if (WorldService.this.worldNameCaches.containsKey(notification.getKey())) {
 						WorldService.this.worldNameCaches.get(notification.getKey()).invalidateAll();
@@ -86,23 +84,24 @@ final class WorldService implements IWorldService {
 
 	// METHODS
 	@Inject
-	public WorldService(IWorldDTOFactory worldDTOFactory) {
+	public WorldService(final IWorldDTOFactory worldDTOFactory) {
 		this.worldDTOFactory = checkNotNull(worldDTOFactory);
 	}
 
 	/**
 	 * get or create a locale specific cache for {@link IWorldNameDTO}s
-	 * 
+	 *
 	 * @param locale
 	 * @return
 	 */
-	private Cache<Integer, Optional<IWorldNameDTO>> getOrCreateWorldNameCache(Locale locale) {
+	private Cache<Integer, Optional<IWorldNameDTO>> getOrCreateWorldNameCache(final Locale locale) {
 		checkNotNull(locale);
 		final Locale key = ServiceUtils.normalizeLocaleForAPIUsage(locale);
 		if (!this.worldNameCaches.containsKey(key)) {
 			synchronized (this) {
 				if (!this.worldNameCaches.containsKey(key)) {
-					final Cache<Integer, Optional<IWorldNameDTO>> newCache = CacheBuilder.newBuilder().expireAfterWrite(WOLRD_NAMES_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build();
+					final Cache<Integer, Optional<IWorldNameDTO>> newCache = CacheBuilder.newBuilder().expireAfterWrite(WOLRD_NAMES_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS)
+							.build();
 					this.worldNameCaches.put(key, newCache);
 				}
 			}

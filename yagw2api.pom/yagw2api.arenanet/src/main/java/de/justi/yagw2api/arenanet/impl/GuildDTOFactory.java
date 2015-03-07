@@ -9,9 +9,9 @@ package de.justi.yagw2api.arenanet.impl;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,39 +20,31 @@ package de.justi.yagw2api.arenanet.impl;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
  */
 
-
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
 import de.justi.yagw2api.arenanet.IGuildDTOFactory;
 import de.justi.yagw2api.arenanet.IGuildDetailsDTO;
 
-final class GuildDTOFactory implements IGuildDTOFactory {
+final class GuildDTOFactory extends AbstractGSONFactory implements IGuildDTOFactory {
 	private static final Logger LOGGER = LoggerFactory.getLogger(GuildDTOFactory.class);
 
 	public GuildDTOFactory() {
-
-	}
-
-	private Gson createGSON() {
-		return new GsonBuilder().excludeFieldsWithModifiers(java.lang.reflect.Modifier.TRANSIENT).setVersion(1.0).create();
+		super();
 	}
 
 	@Override
-	public IGuildDetailsDTO newGuildDetailsOf(String json) {
+	public IGuildDetailsDTO newGuildDetailsOf(final String json) {
 		LOGGER.trace("Going to built " + IGuildDetailsDTO.class.getSimpleName());
 		GuildDetailsDTO result;
 		try {
-			result = this.createGSON().fromJson(checkNotNull(json), GuildDetailsDTO.class);
+			result = this.getGSON().fromJson(checkNotNull(json), GuildDetailsDTO.class);
 		} catch (JsonSyntaxException e) {
-			LOGGER.error("Invalid json received: {}",json);
+			LOGGER.error("Invalid json received: {}", json);
 			throw e;
 		}
 		LOGGER.debug("Built {}", result);

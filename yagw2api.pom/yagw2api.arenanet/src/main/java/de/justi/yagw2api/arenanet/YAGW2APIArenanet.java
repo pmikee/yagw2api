@@ -9,9 +9,9 @@ package de.justi.yagw2api.arenanet;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -57,6 +57,7 @@ public enum YAGW2APIArenanet implements IArenanet {
 	private final IGuildService guildService;
 	private final IWorldService worldService;
 	private final IMapTileService mapTileService;
+	private final IMapFloorService mapFloorService;
 	private final ForkJoinPool forkJoinPool;
 
 	private Locale currentLocale = Locale.getDefault();
@@ -75,6 +76,7 @@ public enum YAGW2APIArenanet implements IArenanet {
 		this.wvwService = injector.getInstance(IWVWService.class);
 		this.worldService = injector.getInstance(IWorldService.class);
 		this.mapTileService = injector.getInstance(IMapTileService.class);
+		this.mapFloorService = injector.getInstance(IMapFloorService.class);
 		this.currentLocale = injector.getInstance(Locale.class);
 	}
 
@@ -87,7 +89,7 @@ public enum YAGW2APIArenanet implements IArenanet {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see de.justi.yagw2api.arenanet.Arenanet#getWVWService()
 	 */
 	@Override
@@ -97,7 +99,7 @@ public enum YAGW2APIArenanet implements IArenanet {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see de.justi.yagw2api.arenanet.Arenanet#getWorldService()
 	 */
 	@Override
@@ -107,7 +109,7 @@ public enum YAGW2APIArenanet implements IArenanet {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see de.justi.yagw2api.arenanet.Arenanet#getGuildService()
 	 */
 	@Override
@@ -120,9 +122,14 @@ public enum YAGW2APIArenanet implements IArenanet {
 		return this.mapTileService;
 	}
 
+	@Override
+	public IMapFloorService getMapFloorService() {
+		return this.mapFloorService;
+	}
+
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see de.justi.yagw2api.arenanet.Arenanet#getCurrentLocale()
 	 */
 	@Override
@@ -132,7 +139,7 @@ public enum YAGW2APIArenanet implements IArenanet {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see de.justi.yagw2api.arenanet.Arenanet#setCurrentLocale(java.util.Locale)
 	 */
 	@Override
