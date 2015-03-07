@@ -1,7 +1,7 @@
 package de.justi.yagw2api.analyzer.impl;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Analyzer
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,16 +17,14 @@ package de.justi.yagw2api.analyzer.impl;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Map;
 import java.util.SortedSet;
 
@@ -48,10 +46,8 @@ import javax.persistence.TemporalType;
 import org.eclipse.persistence.annotations.Converter;
 import org.eclipse.persistence.annotations.MapKeyConvert;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
-import com.google.common.base.Optional;
 import com.google.common.base.MoreObjects.ToStringHelper;
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.Maps;
 
@@ -63,7 +59,7 @@ import de.justi.yagw2api.wrapper.IWVWMapType;
 import de.justi.yagw2api.wrapper.impl.WVWMapType;
 
 @Entity(name = "wvw_match")
-@Converter(name="localdatetime_converter", converterClass=LocalDateTimeConverter.class)
+@Converter(name = "localdatetime_converter", converterClass = LocalDateTimeConverter.class)
 public final class WVWMatchEntity extends AbstractEntity implements IWVWMatchEntity {
 
 	@Column(name = "match_id", nullable = false)
@@ -88,12 +84,12 @@ public final class WVWMatchEntity extends AbstractEntity implements IWVWMatchEnt
 
 	@Column(name = "startOfMatch")
 	@Temporal(TemporalType.TIMESTAMP)
-	@Convert(converter=LocalDateTimeConverter.class)
+	@Convert(converter = LocalDateTimeConverter.class)
 	private LocalDateTime startTimestamp = null;
 
 	@Column(name = "endOfMatch")
 	@Temporal(TemporalType.TIMESTAMP)
-	@Convert(converter=LocalDateTimeConverter.class)
+	@Convert(converter = LocalDateTimeConverter.class)
 	private LocalDateTime endTimestamp = null;
 
 	@ElementCollection(targetClass = WVWScoresEmbeddable.class)
@@ -141,7 +137,7 @@ public final class WVWMatchEntity extends AbstractEntity implements IWVWMatchEnt
 	}
 
 	@Override
-	public void addScores(LocalDateTime timestamp, IWVWScoresEmbeddable scores) {
+	public void addScores(final LocalDateTime timestamp, final IWVWScoresEmbeddable scores) {
 		this.scoresMappedByTimestamp.put(checkNotNull(timestamp), checkNotNull(scores));
 	}
 
@@ -178,71 +174,71 @@ public final class WVWMatchEntity extends AbstractEntity implements IWVWMatchEnt
 
 	@Override
 	public ToStringHelper toStringHelper() {
-		return super.toStringHelper().add("matchId", this.matchId).add("latestScores", this.getLatestScores().orNull()).add("scoreHistorySize", this.scoresMappedByTimestamp.size())
-				.add("start", this.startTimestamp).add("end", this.endTimestamp);
+		return super.toStringHelper().add("matchId", this.matchId).add("latestScores", this.getLatestScores().orNull())
+				.add("scoreHistorySize", this.scoresMappedByTimestamp.size()).add("start", this.startTimestamp).add("end", this.endTimestamp);
 	}
 
 	@Override
-	public void setOriginMatchId(String originMatchId) {
+	public void setOriginMatchId(final String originMatchId) {
 		this.matchId = checkNotNull(originMatchId);
 	}
 
 	@Override
-	public void setRedMap(IWVWMapEntity map) {
+	public void setRedMap(final IWVWMapEntity map) {
 		checkNotNull(map);
 		checkState(this.getRedMap() == null);
 		this.maps.put(WVWMapType.RED, map);
 	}
 
 	@Override
-	public void setGreenMap(IWVWMapEntity map) {
+	public void setGreenMap(final IWVWMapEntity map) {
 		checkNotNull(map);
 		checkState(this.getGreenMap() == null);
 		this.maps.put(WVWMapType.GREEN, map);
 	}
 
 	@Override
-	public void setBlueMap(IWVWMapEntity map) {
+	public void setBlueMap(final IWVWMapEntity map) {
 		checkNotNull(map);
 		checkState(this.getBlueMap() == null);
 		this.maps.put(WVWMapType.BLUE, map);
 	}
 
 	@Override
-	public void setCenterMap(IWVWMapEntity map) {
+	public void setCenterMap(final IWVWMapEntity map) {
 		checkNotNull(map);
 		checkState(this.getCenterMap() == null);
 		this.maps.put(WVWMapType.CENTER, map);
 	}
 
 	@Override
-	public void setRedWorld(IWorldEntity world) {
+	public void setRedWorld(final IWorldEntity world) {
 		checkNotNull(world);
 		checkState(this.getRedWorld() == null);
 		this.redWorld = world;
 	}
 
 	@Override
-	public void setGreenWorld(IWorldEntity world) {
+	public void setGreenWorld(final IWorldEntity world) {
 		checkNotNull(world);
 		checkState(this.getGreenWorld() == null);
 		this.greenWorld = world;
 	}
 
 	@Override
-	public void setBlueWorld(IWorldEntity world) {
+	public void setBlueWorld(final IWorldEntity world) {
 		checkNotNull(world);
 		checkState(this.getBlueWorld() == null);
 		this.blueWorld = world;
 	}
 
 	@Override
-	public void setStartTimestamp(LocalDateTime date) {
+	public void setStartTimestamp(final LocalDateTime date) {
 		this.startTimestamp = checkNotNull(date);
 	}
 
 	@Override
-	public void setEndTimestamp(LocalDateTime date) {
+	public void setEndTimestamp(final LocalDateTime date) {
 		this.endTimestamp = checkNotNull(date);
 	}
 }

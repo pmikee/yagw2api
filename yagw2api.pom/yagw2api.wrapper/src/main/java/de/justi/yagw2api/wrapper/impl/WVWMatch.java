@@ -1,7 +1,7 @@
 package de.justi.yagw2api.wrapper.impl;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Wrapper
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,20 +17,16 @@ package de.justi.yagw2api.wrapper.impl;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
-import java.text.DateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -75,7 +71,7 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 	final class UnmodifiableWVWMatch implements IWVWMatch, IUnmodifiable {
 
 		@Override
-		public Set<IWorld> searchWorldsByNamePattern(Pattern searchPattern) {
+		public Set<IWorld> searchWorldsByNamePattern(final Pattern searchPattern) {
 			final Collection<IWorld> result = new ArrayList<IWorld>();
 			for (IWorld world : WVWMatch.this.searchWorldsByNamePattern(searchPattern)) {
 				result.add(world.createUnmodifiableReference());
@@ -113,7 +109,7 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 		}
 
 		@Override
-		public Optional<IWorld> getWorldByDTOOwnerString(String dtoOwnerString) {
+		public Optional<IWorld> getWorldByDTOOwnerString(final String dtoOwnerString) {
 			final Optional<IWorld> buffer = WVWMatch.this.getWorldByDTOOwnerString(dtoOwnerString);
 			return buffer.isPresent() ? Optional.of(buffer.get().createUnmodifiableReference()) : buffer;
 		}
@@ -150,7 +146,8 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 
 		@Override
 		public EventBus getChannel() {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName() + " and therefore can not be modified.");
+			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName()
+					+ " and therefore can not be modified.");
 		}
 
 		@Override
@@ -164,7 +161,7 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 		}
 
 		@Override
-		public boolean equals(Object obj) {
+		public boolean equals(final Object obj) {
 			return WVWMatch.this.equals(obj);
 		}
 
@@ -230,8 +227,8 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 			checkState(this.start.isPresent(), "Missing start in " + this);
 			checkState(this.end.isPresent(), "Missing start in " + this);
 
-			final IWVWMatch match = new WVWMatch(this.id.get(), this.redWorld.get(), this.greenWorld.get(), this.blueWorld.get(), this.centerMap.get(), this.redMap.get(), this.greenMap.get(),
-					this.blueMap.get(), this.start.get(), this.end.get());
+			final IWVWMatch match = new WVWMatch(this.id.get(), this.redWorld.get(), this.greenWorld.get(), this.blueWorld.get(), this.centerMap.get(), this.redMap.get(),
+					this.greenMap.get(), this.blueMap.get(), this.start.get(), this.end.get());
 			if (this.fromMatchDTO.isPresent()) {
 				checkState(this.fromMatchDTO.get().getDetails().isPresent());
 				this.setupOwner(match, match.getCenterMap(), this.fromMatchDTO.get(), this.fromMatchDTO.get().getDetails().get().getCenterMap());
@@ -249,19 +246,18 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 			return match;
 		}
 
-		private void setupOwner(IWVWMatch match, IWVWMap map, IWVWMatchDTO matchDTO, IWVWMapDTO mapDTO) {
+		private void setupOwner(final IWVWMatch match, final IWVWMap map, final IWVWMatchDTO matchDTO, final IWVWMapDTO mapDTO) {
 			checkNotNull(match);
 			checkNotNull(map);
 			checkNotNull(matchDTO);
-			
-			
+
 			for (IWVWObjectiveDTO objectiveDTO : mapDTO.getObjectives()) {
 				if (objectiveDTO.getOwner() != null) {
-					final Optional<IWorld>owner = match.getWorldByDTOOwnerString(objectiveDTO.getOwner());
-					
+					final Optional<IWorld> owner = match.getWorldByDTOOwnerString(objectiveDTO.getOwner());
+
 					final Optional<IWVWObjective> objective = map.getByObjectiveId(objectiveDTO.getId());
 					checkState(objective.isPresent());
-					
+
 					objective.get().initializeOwner(owner.orNull());
 				}
 			}
@@ -271,7 +267,7 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 			private final IWVWMapDTO dto;
 			private Optional<IWVWMap> result = Optional.absent();
 
-			public BuildMapFromDTOAction(IWVWMapDTO dto) {
+			public BuildMapFromDTOAction(final IWVWMapDTO dto) {
 				this.dto = checkNotNull(dto);
 			}
 
@@ -300,7 +296,7 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 			private final IWorldNameDTO dto;
 			private Optional<IWorld> result = Optional.absent();
 
-			public BuildWorldFromDTOAction(IWorldNameDTO dto) {
+			public BuildWorldFromDTOAction(final IWorldNameDTO dto) {
 				this.dto = checkNotNull(dto);
 			}
 
@@ -327,7 +323,7 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 
 		@SuppressWarnings("unchecked")
 		@Override
-		public IWVWMatch.IWVWMatchBuilder fromMatchDTO(IWVWMatchDTO dto, Locale locale) {
+		public IWVWMatch.IWVWMatchBuilder fromMatchDTO(final IWVWMatchDTO dto, final Locale locale) {
 			checkNotNull(locale);
 			checkState(!this.fromMatchDTO.isPresent());
 
@@ -354,19 +350,20 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 
 			if (LOGGER.isTraceEnabled()) {
 				LOGGER.trace("Going to execute " + BuildMapFromDTOAction.class.getSimpleName() + "'s and " + BuildWorldFromDTOAction.class.getSimpleName() + "'s to build "
-						+ this.getClass().getSimpleName() + "\n" + "~ " + buildCenterMapAction.toString() + "\n" + "~ " + buildRedMapAction.toString() + "\n" + "~ " + buildGreenMapAction.toString()
-						+ "\n" + "~ " + buildBlueMapAction.toString() + "\n" + "~ " + buildRedWorldAction.toString() + "\n" + "~ " + buildGreenWorldAction.toString() + "\n" + "~ "
-						+ buildBlueWorldAction.toString());
+						+ this.getClass().getSimpleName() + "\n" + "~ " + buildCenterMapAction.toString() + "\n" + "~ " + buildRedMapAction.toString() + "\n" + "~ "
+						+ buildGreenMapAction.toString() + "\n" + "~ " + buildBlueMapAction.toString() + "\n" + "~ " + buildRedWorldAction.toString() + "\n" + "~ "
+						+ buildGreenWorldAction.toString() + "\n" + "~ " + buildBlueWorldAction.toString());
 			}
 
 			YAGW2APIWrapper.INSTANCE.getForkJoinPool().invokeAll(
-					Lists.newArrayList(buildCenterMapAction, buildRedMapAction, buildBlueMapAction, buildGreenMapAction, buildRedWorldAction, buildGreenWorldAction, buildBlueWorldAction));
+					Lists.newArrayList(buildCenterMapAction, buildRedMapAction, buildBlueMapAction, buildGreenMapAction, buildRedWorldAction, buildGreenWorldAction,
+							buildBlueWorldAction));
 
 			if (LOGGER.isTraceEnabled()) {
 				LOGGER.trace("Done with execution of " + BuildMapFromDTOAction.class.getSimpleName() + "'s and " + BuildWorldFromDTOAction.class.getSimpleName() + "'s to build "
-						+ this.getClass().getSimpleName() + "\n" + "~ " + buildCenterMapAction.toString() + "\n" + "~ " + buildRedMapAction.toString() + "\n" + "~ " + buildGreenMapAction.toString()
-						+ "\n" + "~ " + buildBlueMapAction.toString() + "\n" + "~ " + buildRedWorldAction.toString() + "\n" + "~ " + buildGreenWorldAction.toString() + "\n" + "~ "
-						+ buildBlueWorldAction.toString());
+						+ this.getClass().getSimpleName() + "\n" + "~ " + buildCenterMapAction.toString() + "\n" + "~ " + buildRedMapAction.toString() + "\n" + "~ "
+						+ buildGreenMapAction.toString() + "\n" + "~ " + buildBlueMapAction.toString() + "\n" + "~ " + buildRedWorldAction.toString() + "\n" + "~ "
+						+ buildGreenWorldAction.toString() + "\n" + "~ " + buildBlueWorldAction.toString());
 			}
 
 			this.centerMap = buildCenterMapAction.getResult();
@@ -397,50 +394,52 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 
 			final long endTimestamp = System.currentTimeMillis();
 			if (LOGGER.isTraceEnabled()) {
-				LOGGER.trace("Done with filling " + this.getClass().getSimpleName() + " with data from dto=" + dto + " and locale=" + locale + " in " + (endTimestamp - startTimestamp) + "ms");
+				LOGGER.trace("Done with filling " + this.getClass().getSimpleName() + " with data from dto=" + dto + " and locale=" + locale + " in "
+						+ (endTimestamp - startTimestamp) + "ms");
 			}
 
 			return this;
 		}
 
 		@Override
-		public IWVWMatch.IWVWMatchBuilder redScore(int score) {
+		public IWVWMatch.IWVWMatchBuilder redScore(final int score) {
 			checkArgument(score > 0);
 			this.redScore = Optional.of(score);
 			return this;
 		}
 
 		@Override
-		public IWVWMatch.IWVWMatchBuilder blueScore(int score) {
+		public IWVWMatch.IWVWMatchBuilder blueScore(final int score) {
 			checkArgument(score > 0);
 			this.blueScore = Optional.of(score);
 			return this;
 		}
 
 		@Override
-		public IWVWMatch.IWVWMatchBuilder greenScore(int score) {
+		public IWVWMatch.IWVWMatchBuilder greenScore(final int score) {
 			checkArgument(score > 0);
 			this.greenScore = Optional.of(score);
 			return this;
 		}
 
 		@Override
-		public IWVWMatchBuilder start(LocalDateTime date) {
+		public IWVWMatchBuilder start(final LocalDateTime date) {
 			this.start = Optional.fromNullable(date);
 			return this;
 		}
 
 		@Override
-		public IWVWMatchBuilder end(LocalDateTime date) {
+		public IWVWMatchBuilder end(final LocalDateTime date) {
 			this.end = Optional.fromNullable(date);
 			return this;
 		}
 
 		@Override
 		public String toString() {
-			return Objects.toStringHelper(this).add("id", this.id).add("start", this.start).add("end", this.end).add("redScore", this.redScore).add("greenScore", this.greenScore)
-					.add("blueScore", this.blueScore).add("redWorld", this.redWorld).add("greenWorld", this.greenWorld).add("blueWorld", this.blueWorld).add("centerMap", this.centerMap)
-					.add("redMap", this.redMap).add("greenMap", this.greenMap).add("blueMap", this.blueMap).toString();
+			return MoreObjects.toStringHelper(this).add("id", this.id).add("start", this.start).add("end", this.end).add("redScore", this.redScore)
+					.add("greenScore", this.greenScore).add("blueScore", this.blueScore).add("redWorld", this.redWorld).add("greenWorld", this.greenWorld)
+					.add("blueWorld", this.blueWorld).add("centerMap", this.centerMap).add("redMap", this.redMap).add("greenMap", this.greenMap).add("blueMap", this.blueMap)
+					.toString();
 		}
 
 	}
@@ -457,7 +456,8 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 	private final LocalDateTime startTime;
 	private final LocalDateTime endTime;
 
-	private WVWMatch(String id, IWorld redWorld, IWorld greenWorld, IWorld blueWorld, IWVWMap centerMap, IWVWMap redMap, IWVWMap greenMap, IWVWMap blueMap, LocalDateTime start, LocalDateTime end) {
+	private WVWMatch(final String id, final IWorld redWorld, final IWorld greenWorld, final IWorld blueWorld, final IWVWMap centerMap, final IWVWMap redMap,
+			final IWVWMap greenMap, final IWVWMap blueMap, final LocalDateTime start, final LocalDateTime end) {
 		this.id = checkNotNull(id);
 		this.redWorld = checkNotNull(redWorld);
 		this.greenWorld = checkNotNull(greenWorld);
@@ -486,13 +486,13 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 		// register as listener to scores
 		this.scores.getChannel().register(this);
 
-		// start / end time		
+		// start / end time
 		this.startTime = checkNotNull(start);
 		this.endTime = checkNotNull(end);
 	}
 
 	@Subscribe
-	public void onEvent(IEvent event) {
+	public void onEvent(final IEvent event) {
 		LOGGER.trace("{} is going to forward {}", event);
 		this.getChannel().post(event);
 	}
@@ -549,13 +549,13 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 
 	@Override
 	public String toString() {
-		return MoreObjects.toStringHelper(this).add("id", this.id).add("scores", this.scores).add("redWorld", this.redWorld).add("greenWorld", this.greenWorld).add("blueWorld", this.blueWorld)
-				.add("centerMap", this.centerMap).add("redMap", this.redMap).add("greenMap", this.greenMap).add("blueMap", this.blueMap).add("start",this.startTime)
-				.add("end", this.endTime).toString();
+		return MoreObjects.toStringHelper(this).add("id", this.id).add("scores", this.scores).add("redWorld", this.redWorld).add("greenWorld", this.greenWorld)
+				.add("blueWorld", this.blueWorld).add("centerMap", this.centerMap).add("redMap", this.redMap).add("greenMap", this.greenMap).add("blueMap", this.blueMap)
+				.add("start", this.startTime).add("end", this.endTime).toString();
 	}
 
 	@Override
-	public Optional<IWorld> getWorldByDTOOwnerString(String dtoOwnerString) {
+	public Optional<IWorld> getWorldByDTOOwnerString(final String dtoOwnerString) {
 		checkNotNull(dtoOwnerString);
 		switch (dtoOwnerString.toUpperCase()) {
 			case DTOConstants.OWNER_RED_STRING:
@@ -573,7 +573,7 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 	}
 
 	@Override
-	public Set<IWorld> searchWorldsByNamePattern(Pattern searchPattern) {
+	public Set<IWorld> searchWorldsByNamePattern(final Pattern searchPattern) {
 		checkNotNull(searchPattern);
 		checkState(this.redWorld != null);
 		checkState(this.greenWorld != null);
@@ -602,7 +602,7 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if ((obj == null) || !(obj instanceof IWVWMatch)) {
 			return false;
 		} else {

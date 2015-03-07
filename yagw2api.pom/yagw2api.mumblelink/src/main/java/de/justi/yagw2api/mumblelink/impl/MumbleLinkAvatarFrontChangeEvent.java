@@ -1,7 +1,7 @@
 package de.justi.yagw2api.mumblelink.impl;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-MumbleLink
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,9 +17,8 @@ package de.justi.yagw2api.mumblelink.impl;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-
 
 import javax.annotation.Nullable;
 
@@ -27,7 +26,7 @@ import de.justi.yagw2api.mumblelink.IMumbleLinkAvatarFrontChangeEvent;
 import de.justi.yagw2api.mumblelink.IMumbleLinkPosition;
 
 final class MumbleLinkAvatarFrontChangeEvent extends AbstractMumbleLinkPositionChangeEvent implements IMumbleLinkAvatarFrontChangeEvent {
-	public MumbleLinkAvatarFrontChangeEvent(@Nullable IMumbleLinkPosition oldPosition, @Nullable IMumbleLinkPosition newPosition) {
+	public MumbleLinkAvatarFrontChangeEvent(@Nullable final IMumbleLinkPosition oldPosition, @Nullable final IMumbleLinkPosition newPosition) {
 		super(oldPosition, newPosition);
 	}
 }

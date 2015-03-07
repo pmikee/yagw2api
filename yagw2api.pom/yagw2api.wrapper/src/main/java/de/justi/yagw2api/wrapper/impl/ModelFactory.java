@@ -1,7 +1,7 @@
 package de.justi.yagw2api.wrapper.impl;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Wrapper
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,9 +17,8 @@ package de.justi.yagw2api.wrapper.impl;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -42,12 +41,13 @@ final class ModelFactory implements IModelFactory {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ModelFactory.class);
 	private final Map<String, IGuild> guildsMappedById = new HashMap<String, IGuild>();
 	private final Map<Integer, IWorld> worldsMappedById = new HashMap<Integer, IWorld>();
-	
-	public IGuild getOrCreateGuild(String id, String name, String tag) {
+
+	@Override
+	public IGuild getOrCreateGuild(final String id, final String name, final String tag) {
 		checkNotNull(id);
-		if(!this.guildsMappedById.containsKey(id)) {
+		if (!this.guildsMappedById.containsKey(id)) {
 			synchronized (this) {
-				if(!this.guildsMappedById.containsKey(id)) {
+				if (!this.guildsMappedById.containsKey(id)) {
 					this.guildsMappedById.put(id, new Guild(id, name, tag));
 				}
 			}
@@ -57,7 +57,7 @@ final class ModelFactory implements IModelFactory {
 	}
 
 	@Override
-	public Optional<IWorld> getWorld(int id) {
+	public Optional<IWorld> getWorld(final int id) {
 		checkArgument(id > 0);
 		return Optional.fromNullable(this.worldsMappedById.get(id));
 	}
@@ -69,7 +69,7 @@ final class ModelFactory implements IModelFactory {
 
 	@Override
 	public void clearCache() {
-		LOGGER.info("Going to clear cache of {}",this);
+		LOGGER.info("Going to clear cache of {}", this);
 		this.guildsMappedById.clear();
 		this.worldsMappedById.clear();
 	}

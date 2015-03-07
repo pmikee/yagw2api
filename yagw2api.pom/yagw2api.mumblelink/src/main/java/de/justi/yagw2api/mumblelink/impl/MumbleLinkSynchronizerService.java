@@ -1,7 +1,7 @@
 package de.justi.yagw2api.mumblelink.impl;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-MumbleLink
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,9 +17,8 @@ package de.justi.yagw2api.mumblelink.impl;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-
 
 import java.util.concurrent.TimeUnit;
 
@@ -27,7 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.eventbus.EventBus;
 import com.google.common.util.concurrent.AbstractScheduledService;
@@ -89,7 +87,7 @@ final class MumbleLinkSynchronizerService extends AbstractScheduledService imple
 					final Optional<IMumbleLinkState> newState = Optional.fromNullable(MumbleLinkState.of(this.sharedMemory));
 					if (!newState.isPresent() || (newState.get().getUITick().isPresent() && (newState.get().getUITick().get().intValue() != this.lastUITick))) {
 						this.currentState = newState;
-						this.lastUITick = this.currentState.isPresent() ? this.currentState.get().getUITick().get() : lastUITick;
+						this.lastUITick = this.currentState.isPresent() ? this.currentState.get().getUITick().get() : this.lastUITick;
 					} else {
 						this.currentState = Optional.absent();
 					}
@@ -116,7 +114,8 @@ final class MumbleLinkSynchronizerService extends AbstractScheduledService imple
 						this.getChannel().post(new MumbleLinkAvatarTopChangeEvent(this.lastState.get().getAvatarTop().get(), this.currentState.get().getAvatarTop().get()));
 					}
 					if (!this.currentState.get().getAvatarPosition().equals(this.lastState.get().getAvatarPosition())) {
-						this.getChannel().post(new MumbleLinkAvatarPositionChangeEvent(this.lastState.get().getAvatarPosition().get(), this.currentState.get().getAvatarPosition().get()));
+						this.getChannel().post(
+								new MumbleLinkAvatarPositionChangeEvent(this.lastState.get().getAvatarPosition().get(), this.currentState.get().getAvatarPosition().get()));
 					}
 					if (!this.currentState.get().getCameraFront().equals(this.lastState.get().getCameraFront())) {
 						this.getChannel().post(new MumbleLinkCameraFrontChangeEvent(this.lastState.get().getCameraFront().get(), this.currentState.get().getCameraFront().get()));
@@ -125,7 +124,8 @@ final class MumbleLinkSynchronizerService extends AbstractScheduledService imple
 						this.getChannel().post(new MumbleLinkCameraTopChangeEvent(this.lastState.get().getCameraTop().get(), this.currentState.get().getCameraTop().get()));
 					}
 					if (!this.currentState.get().getCameraPosition().equals(this.lastState.get().getCameraPosition())) {
-						this.getChannel().post(new MumbleLinkCameraPositionChangeEvent(this.lastState.get().getCameraPosition().get(), this.currentState.get().getCameraPosition().get()));
+						this.getChannel().post(
+								new MumbleLinkCameraPositionChangeEvent(this.lastState.get().getCameraPosition().get(), this.currentState.get().getCameraPosition().get()));
 					}
 				} else if (this.currentState.isPresent()) {
 					// now value present til now -> create all events
@@ -168,7 +168,7 @@ final class MumbleLinkSynchronizerService extends AbstractScheduledService imple
 				this.currentState = Optional.absent();
 			}
 		} catch (Throwable t) {
-			LOGGER.error("Failed to run iteration of {}",this, t);
+			LOGGER.error("Failed to run iteration of {}", this, t);
 		}
 	}
 

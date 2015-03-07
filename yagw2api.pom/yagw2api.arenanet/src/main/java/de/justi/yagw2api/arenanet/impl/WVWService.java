@@ -1,7 +1,7 @@
 package de.justi.yagw2api.arenanet.impl;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Arenanet
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,7 +17,7 @@ package de.justi.yagw2api.arenanet.impl;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -82,7 +82,7 @@ final class WVWService implements IWVWService {
 	private final Cache<Locale, Optional<IWVWObjectiveNameDTO[]>> objectiveNamesCache = CacheBuilder.newBuilder()
 			.expireAfterWrite(OBJECTIVE_NAMES_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).removalListener(new RemovalListener<Locale, Optional<IWVWObjectiveNameDTO[]>>() {
 				@Override
-				public void onRemoval(RemovalNotification<Locale, Optional<IWVWObjectiveNameDTO[]>> notification) {
+				public void onRemoval(final RemovalNotification<Locale, Optional<IWVWObjectiveNameDTO[]>> notification) {
 					// synchronize
 					// objectiveNamesCache and
 					// objectiveNameCaches
@@ -97,7 +97,7 @@ final class WVWService implements IWVWService {
 	private final Cache<String, Optional<IWVWMatchesDTO>> matchesCache = CacheBuilder.newBuilder().initialCapacity(1).maximumSize(1)
 			.expireAfterWrite(MATCH_CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).removalListener(new RemovalListener<String, Optional<IWVWMatchesDTO>>() {
 				@Override
-				public void onRemoval(RemovalNotification<String, Optional<IWVWMatchesDTO>> notification) {
+				public void onRemoval(final RemovalNotification<String, Optional<IWVWMatchesDTO>> notification) {
 					// synchronize matchesCache and
 					// matchCache
 					WVWService.this.matchCache.invalidateAll();
@@ -109,18 +109,18 @@ final class WVWService implements IWVWService {
 	private final IWVWDTOFactory wvwDTOFactory;
 
 	@Inject
-	public WVWService(IWVWDTOFactory wvwDTOFactory) {
+	public WVWService(final IWVWDTOFactory wvwDTOFactory) {
 		checkNotNull(wvwDTOFactory);
 		this.wvwDTOFactory = wvwDTOFactory;
 	}
 
 	/**
 	 * get or create a locale specific cache for {@link IWVWObjectiveNameDTO}s
-	 * 
+	 *
 	 * @param locale
 	 * @return
 	 */
-	private Cache<Integer, Optional<IWVWObjectiveNameDTO>> getOrCreateObjectiveNameCache(Locale locale) {
+	private Cache<Integer, Optional<IWVWObjectiveNameDTO>> getOrCreateObjectiveNameCache(final Locale locale) {
 		checkNotNull(locale);
 		final Locale key = ServiceUtils.normalizeLocaleForAPIUsage(locale);
 		if (!this.objectiveNameCaches.containsKey(key)) {

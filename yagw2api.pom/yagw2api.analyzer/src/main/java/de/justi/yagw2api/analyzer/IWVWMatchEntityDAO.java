@@ -1,7 +1,7 @@
 package de.justi.yagw2api.analyzer;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Analyzer
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,9 +17,8 @@ package de.justi.yagw2api.analyzer;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-
 
 import java.time.LocalDateTime;
 
@@ -36,13 +35,12 @@ public interface IWVWMatchEntityDAO {
 
 	/**
 	 * <p>
-	 * returns the {@link IWVWMatchEntity} that belongs to the given
-	 * {@link IWVWMatch}
+	 * returns the {@link IWVWMatchEntity} that belongs to the given {@link IWVWMatch}
 	 * </p>
 	 * <p>
 	 * if there is no such {@link IWVWMatchEntity} a new will be created
 	 * </p>
-	 * 
+	 *
 	 * @param world
 	 * @return
 	 */
@@ -53,10 +51,9 @@ public interface IWVWMatchEntityDAO {
 	 * Synchronize this with the given {@link IWVWMatch}
 	 * </p>
 	 * <p>
-	 * Synchronization is not persisted directly, therefore you have to use
-	 * {@link IWVWMatchEntityDAO#save(IWVWMatchEntity)} to persist them.
+	 * Synchronization is not persisted directly, therefore you have to use {@link IWVWMatchEntityDAO#save(IWVWMatchEntity)} to persist them.
 	 * </p>
-	 * 
+	 *
 	 * @param entity
 	 * @param timestamp
 	 * @param model

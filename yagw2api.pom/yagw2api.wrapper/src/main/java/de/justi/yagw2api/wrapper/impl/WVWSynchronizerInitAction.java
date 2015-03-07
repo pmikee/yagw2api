@@ -1,7 +1,7 @@
 package de.justi.yagw2api.wrapper.impl;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Wrapper
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,9 +17,8 @@ package de.justi.yagw2api.wrapper.impl;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
@@ -58,13 +57,13 @@ final class WVWSynchronizerInitAction extends AbstractSynchronizerAction<IWVWMat
 	final Map<String, IWVWMatch> matchesBuffer;
 	final EventBus eventBus;
 
-	public WVWSynchronizerInitAction(List<IWVWMatchDTO> content) {
+	public WVWSynchronizerInitAction(final List<IWVWMatchDTO> content) {
 		this(ImmutableList.copyOf(content), MAX_CHUNK_SIZE, 0, content.size(), new HashSet<IWVWMatch>(), new HashSet<IWorld>(), new HashMap<String, IWVWMatch>(), new EventBus(
 				WVWSynchronizerInitAction.class.getName()));
 	}
 
-	private WVWSynchronizerInitAction(List<IWVWMatchDTO> content, int chunkSize, int fromInclusive, int toExclusive, Set<IWVWMatch> matchReferencesBuffer, Set<IWorld> worldReferencesBuffer,
-			Map<String, IWVWMatch> matchesBuffer, EventBus eventBus) {
+	private WVWSynchronizerInitAction(final List<IWVWMatchDTO> content, final int chunkSize, final int fromInclusive, final int toExclusive,
+			final Set<IWVWMatch> matchReferencesBuffer, final Set<IWorld> worldReferencesBuffer, final Map<String, IWVWMatch> matchesBuffer, final EventBus eventBus) {
 		super(content, chunkSize, fromInclusive, toExclusive);
 		this.matchReferencesBuffer = checkNotNull(matchReferencesBuffer);
 		this.worldReferencesBuffer = checkNotNull(worldReferencesBuffer);
@@ -73,8 +72,9 @@ final class WVWSynchronizerInitAction extends AbstractSynchronizerAction<IWVWMat
 	}
 
 	@Override
-	protected WVWSynchronizerInitAction createSubTask(List<IWVWMatchDTO> content, int chunkSize, int fromInclusive, int toExclusive) {
-		return new WVWSynchronizerInitAction(content, chunkSize, fromInclusive, toExclusive, this.matchReferencesBuffer, this.worldReferencesBuffer, this.matchesBuffer, this.eventBus);
+	protected WVWSynchronizerInitAction createSubTask(final List<IWVWMatchDTO> content, final int chunkSize, final int fromInclusive, final int toExclusive) {
+		return new WVWSynchronizerInitAction(content, chunkSize, fromInclusive, toExclusive, this.matchReferencesBuffer, this.worldReferencesBuffer, this.matchesBuffer,
+				this.eventBus);
 	}
 
 	@Override
@@ -83,7 +83,7 @@ final class WVWSynchronizerInitAction extends AbstractSynchronizerAction<IWVWMat
 	}
 
 	@Override
-	protected void perform(IWVWMatchDTO content) {
+	protected void perform(final IWVWMatchDTO content) {
 		final long startTimestamp = System.currentTimeMillis();
 		if (LOGGER.isTraceEnabled()) {
 			LOGGER.trace("Going to perform " + this.getClass().getSimpleName() + " using content=" + content);
@@ -91,7 +91,8 @@ final class WVWSynchronizerInitAction extends AbstractSynchronizerAction<IWVWMat
 		final IWVWMatch match = WVW_MODEL_FACTORY.newMatchBuilder().fromMatchDTO(content, YAGW2APIArenanet.INSTANCE.getCurrentLocale()).build();
 		final long completedMatchModelBuildTimestamp = System.currentTimeMillis();
 		if (LOGGER.isTraceEnabled()) {
-			LOGGER.trace("Done with build of " + IWVWMatch.class.getSimpleName() + " for content=" + content + " after " + (completedMatchModelBuildTimestamp - startTimestamp) + "ms");
+			LOGGER.trace("Done with build of " + IWVWMatch.class.getSimpleName() + " for content=" + content + " after " + (completedMatchModelBuildTimestamp - startTimestamp)
+					+ "ms");
 		}
 		match.getChannel().register(this);
 		this.matchesBuffer.put(match.getId(), match);
@@ -109,15 +110,15 @@ final class WVWSynchronizerInitAction extends AbstractSynchronizerAction<IWVWMat
 	}
 
 	public final Set<IWVWMatch> getMatchReferencesBuffer() {
-		return matchReferencesBuffer;
+		return this.matchReferencesBuffer;
 	}
 
 	public final Set<IWorld> getWorldReferencesBuffer() {
-		return worldReferencesBuffer;
+		return this.worldReferencesBuffer;
 	}
 
 	public final Map<String, IWVWMatch> getMatchesBuffer() {
-		return matchesBuffer;
+		return this.matchesBuffer;
 	}
 
 }

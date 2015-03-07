@@ -1,7 +1,7 @@
 package de.justi.yagw2api.wrapper.impl;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Wrapper
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,7 +17,7 @@ package de.justi.yagw2api.wrapper.impl;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -27,17 +27,20 @@ import static com.google.common.base.Preconditions.checkState;
 import java.util.concurrent.TimeUnit;
 
 import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
 
 import de.justi.yagw2api.wrapper.IWVWObjectiveType;
 
 public enum WVWObjectiveType implements IWVWObjectiveType {
-	RUINS(0, TimeUnit.MINUTES, 0), CAMP(5, TimeUnit.MINUTES, 5), TOWER(5, TimeUnit.MINUTES, 10), KEEP(5, TimeUnit.MINUTES, 25), CASTLE(5, TimeUnit.MINUTES, 35);
+	RUINS(0, TimeUnit.MINUTES, 0),
+	CAMP(5, TimeUnit.MINUTES, 5),
+	TOWER(5, TimeUnit.MINUTES, 10),
+	KEEP(5, TimeUnit.MINUTES, 25),
+	CASTLE(5, TimeUnit.MINUTES, 35);
 
 	private final long buffDurationMillis;
 	private final int points;
 
-	private WVWObjectiveType(long buffDuration, TimeUnit buffDurationTimeUnit, int points) {
+	private WVWObjectiveType(final long buffDuration, final TimeUnit buffDurationTimeUnit, final int points) {
 		checkArgument(buffDuration >= 0);
 		checkNotNull(buffDurationTimeUnit);
 		this.buffDurationMillis = buffDurationTimeUnit.toMillis(buffDuration);
@@ -51,7 +54,7 @@ public enum WVWObjectiveType implements IWVWObjectiveType {
 	}
 
 	@Override
-	public long getBuffDuration(TimeUnit timeUnit) {
+	public long getBuffDuration(final TimeUnit timeUnit) {
 		checkNotNull(timeUnit);
 		checkState(this.buffDurationMillis >= 0);
 		return timeUnit.convert(this.buffDurationMillis, TimeUnit.MILLISECONDS);

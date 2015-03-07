@@ -5,3 +5,4 @@ Bundle-SymbolicName: yagw2api.explorer.rcp.application.map;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Fragment-Host: yagw2api.explorer.rcp.application;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ClassPath: .

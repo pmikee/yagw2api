@@ -1,7 +1,7 @@
 package de.justi.yagw2api.wrapper.impl;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Wrapper
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,9 +17,8 @@ package de.justi.yagw2api.wrapper.impl;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -75,7 +74,7 @@ final class WVWSynchronizer extends AbstractScheduledService implements IHasChan
 			final long startTimestamp = System.currentTimeMillis();
 			final IWVWMatchesDTO matchesDto = SERVICE.retrieveAllMatches();
 
-			LOGGER.debug("Retrieved {} after {}ms",matchesDto,(System.currentTimeMillis() - startTimestamp));
+			LOGGER.debug("Retrieved {} after {}ms", matchesDto, (System.currentTimeMillis() - startTimestamp));
 			final WVWSynchronizerInitAction initAction = new WVWSynchronizerInitAction(Arrays.asList(matchesDto.getMatches()));
 			initAction.getChannel().register(this);
 			final Thread asyncStartup = new Thread() {
@@ -84,9 +83,9 @@ final class WVWSynchronizer extends AbstractScheduledService implements IHasChan
 					try {
 						YAGW2APIWrapper.INSTANCE.getForkJoinPool().invoke(initAction);
 						final long endTimestamp = System.currentTimeMillis();
-						LOGGER.info("Initialized {} in {}ms", WVWSynchronizer.this,(endTimestamp - startTimestamp));
+						LOGGER.info("Initialized {} in {}ms", WVWSynchronizer.this, (endTimestamp - startTimestamp));
 					} catch (Exception e) {
-						LOGGER.error("Exception thrown during initialization of {}",WVWSynchronizer.this);
+						LOGGER.error("Exception thrown during initialization of {}", WVWSynchronizer.this);
 					}
 				}
 			};
@@ -111,7 +110,7 @@ final class WVWSynchronizer extends AbstractScheduledService implements IHasChan
 	}
 
 	@Subscribe
-	public void onEvent(IEvent event) {
+	public void onEvent(final IEvent event) {
 		checkNotNull(event);
 		try {
 			if (event instanceof IWVWInitializedMatchEvent) {
@@ -128,7 +127,7 @@ final class WVWSynchronizer extends AbstractScheduledService implements IHasChan
 			}
 			this.channel.post(event);
 		} catch (Exception e) {
-			LOGGER.error("Cought exception while handling of {}",event, e);
+			LOGGER.error("Cought exception while handling of {}", event, e);
 			throw e;
 		}
 	}
@@ -143,9 +142,9 @@ final class WVWSynchronizer extends AbstractScheduledService implements IHasChan
 
 			final long endTime = System.currentTimeMillis();
 			final long executionTime = endTime - startTimestamp;
-			LOGGER.trace("Done with iteration of {} after {}ms",this,executionTime);
+			LOGGER.trace("Done with iteration of {} after {}ms", this, executionTime);
 		} catch (Exception e) {
-			LOGGER.error("Cought exception during run of iteration of {}",this, e);
+			LOGGER.error("Cought exception during run of iteration of {}", this, e);
 			throw e;
 		}
 	}

@@ -1,7 +1,7 @@
 package de.justi.yagw2api.analyzer;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Analyzer
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,9 +17,8 @@ package de.justi.yagw2api.analyzer;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -39,7 +38,7 @@ public enum YAGW2APIAnalyzer {
 
 	private static YAGW2APIAnalyzer instance = DEFAULT;
 
-	public static void changeYAGW2APIAnalyzerInstance(YAGW2APIAnalyzer toUse) {
+	public static void changeYAGW2APIAnalyzerInstance(final YAGW2APIAnalyzer toUse) {
 		checkNotNull(toUse);
 		if (toUse != YAGW2APIAnalyzer.instance) {
 			YAGW2APIAnalyzer.instance = toUse;
@@ -67,7 +66,7 @@ public enum YAGW2APIAnalyzer {
 	private final IWorldEnityDAO worldEntityDAO;
 	private final IWVWMatchEntityDAO wvwMatchEntityDAO;
 
-	private YAGW2APIAnalyzer(Injector injector) {
+	private YAGW2APIAnalyzer(final Injector injector) {
 		checkNotNull(injector);
 		this.injector = injector;
 		this.analyzer = this.injector.getInstance(IWVWAnalyzer.class);

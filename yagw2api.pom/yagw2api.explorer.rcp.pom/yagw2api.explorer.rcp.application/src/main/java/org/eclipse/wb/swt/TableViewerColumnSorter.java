@@ -11,7 +11,7 @@
 package org.eclipse.wb.swt;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Explorer-RCP-Application
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -27,7 +27,7 @@ package org.eclipse.wb.swt;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
 import java.lang.reflect.Method;
@@ -47,7 +47,7 @@ import org.eclipse.swt.widgets.Table;
  * Helper for sorting {@link TableViewer} by one of its {@link TableViewerColumn}s.
  * <p>
  * Originally from http://wiki.eclipse.org/index.php/JFaceSnippets, Snippet040TableViewerSorting.
- * 
+ *
  * @author Tom Schindl <tom.schindl@bestsolution.at>
  * @author Konstantin Scheglov <Konstantin.Scheglov@gmail.com>
  */
@@ -55,107 +55,111 @@ public class TableViewerColumnSorter extends ViewerComparator {
 	public static final int ASC = 1;
 	public static final int NONE = 0;
 	public static final int DESC = -1;
-	////////////////////////////////////////////////////////////////////////////
+	// //////////////////////////////////////////////////////////////////////////
 	//
 	// Instance fields
 	//
-	////////////////////////////////////////////////////////////////////////////
+	// //////////////////////////////////////////////////////////////////////////
 	private final TableViewerColumn m_column;
 	private final TableViewer m_viewer;
 	private final Table m_table;
 	private int m_direction = NONE;
-	////////////////////////////////////////////////////////////////////////////
+
+	// //////////////////////////////////////////////////////////////////////////
 	//
 	// Constructor
 	//
-	////////////////////////////////////////////////////////////////////////////
-	public TableViewerColumnSorter(TableViewerColumn column) {
-		m_column = column;
-		m_viewer = (TableViewer) column.getViewer();
-		m_table = m_viewer.getTable();
-		m_column.getColumn().addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
-				if (m_viewer.getComparator() != null) {
-					if (m_viewer.getComparator() == TableViewerColumnSorter.this) {
-						if (m_direction == ASC) {
-							setSorter(DESC);
-						} else if (m_direction == DESC) {
-							setSorter(NONE);
+	// //////////////////////////////////////////////////////////////////////////
+	public TableViewerColumnSorter(final TableViewerColumn column) {
+		this.m_column = column;
+		this.m_viewer = (TableViewer) column.getViewer();
+		this.m_table = this.m_viewer.getTable();
+		this.m_column.getColumn().addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent e) {
+				if (TableViewerColumnSorter.this.m_viewer.getComparator() != null) {
+					if (TableViewerColumnSorter.this.m_viewer.getComparator() == TableViewerColumnSorter.this) {
+						if (TableViewerColumnSorter.this.m_direction == ASC) {
+							TableViewerColumnSorter.this.setSorter(DESC);
+						} else if (TableViewerColumnSorter.this.m_direction == DESC) {
+							TableViewerColumnSorter.this.setSorter(NONE);
 						}
 					} else {
-						setSorter(ASC);
+						TableViewerColumnSorter.this.setSorter(ASC);
 					}
 				} else {
-					setSorter(ASC);
+					TableViewerColumnSorter.this.setSorter(ASC);
 				}
 			}
 		});
 	}
-	////////////////////////////////////////////////////////////////////////////
+
+	// //////////////////////////////////////////////////////////////////////////
 	//
 	// Utils
 	//
-	////////////////////////////////////////////////////////////////////////////
-	public void setSorter(int direction) {
+	// //////////////////////////////////////////////////////////////////////////
+	public void setSorter(final int direction) {
 		if (direction == NONE) {
-			m_table.setSortColumn(null);
-			m_table.setSortDirection(SWT.NONE);
-			m_viewer.setComparator(null);
+			this.m_table.setSortColumn(null);
+			this.m_table.setSortDirection(SWT.NONE);
+			this.m_viewer.setComparator(null);
 		} else {
-			m_table.setSortColumn(m_column.getColumn());
-			m_direction = direction;
-			if (m_direction == ASC) {
-				m_table.setSortDirection(SWT.DOWN);
+			this.m_table.setSortColumn(this.m_column.getColumn());
+			this.m_direction = direction;
+			if (this.m_direction == ASC) {
+				this.m_table.setSortDirection(SWT.DOWN);
 			} else {
-				m_table.setSortDirection(SWT.UP);
+				this.m_table.setSortDirection(SWT.UP);
 			}
-			if (m_viewer.getComparator() == this) {
-				m_viewer.refresh();
+			if (this.m_viewer.getComparator() == this) {
+				this.m_viewer.refresh();
 			} else {
-				m_viewer.setComparator(this);
+				this.m_viewer.setComparator(this);
 			}
 		}
 	}
-	////////////////////////////////////////////////////////////////////////////
+
+	// //////////////////////////////////////////////////////////////////////////
 	//
 	// ViewerComparator
 	//
-	////////////////////////////////////////////////////////////////////////////
-	public int compare(Viewer viewer, Object e1, Object e2) {
-		return m_direction * doCompare(viewer, e1, e2);
+	// //////////////////////////////////////////////////////////////////////////
+	@Override
+	public int compare(final Viewer viewer, final Object e1, final Object e2) {
+		return this.m_direction * this.doCompare(viewer, e1, e2);
 	}
+
 	/**
-	 * Compares to elements of viewer. By default tries to compare values extracted from these elements using
-	 * {@link #getValue(Object)}, because usually you want to compare value of some attribute.
+	 * Compares to elements of viewer. By default tries to compare values extracted from these elements using {@link #getValue(Object)}, because usually you want to compare value
+	 * of some attribute.
 	 */
 	@SuppressWarnings("unchecked")
-	protected int doCompare(Viewer viewer, Object e1, Object e2) {
-		Object o1 = getValue(e1);
-		Object o2 = getValue(e2);
+	protected int doCompare(final Viewer viewer, final Object e1, final Object e2) {
+		Object o1 = this.getValue(e1);
+		Object o2 = this.getValue(e2);
 		if (o1 instanceof Comparable && o2 instanceof Comparable) {
 			return ((Comparable) o1).compareTo(o2);
 		}
 		return 0;
 	}
+
 	/**
-	 * 
-	 * @return the value to compare in {@link #doCompare(Viewer, Object, Object)}. Be default tries to get it
-	 *         from {@link EditingSupport}. May return <code>null</code>.
+	 *
+	 * @return the value to compare in {@link #doCompare(Viewer, Object, Object)}. Be default tries to get it from {@link EditingSupport}. May return <code>null</code>.
 	 */
-	protected Object getValue(Object o) {
+	protected Object getValue(final Object o) {
 		try {
 			EditingSupport editingSupport;
 			{
-				Method getEditingMethod = ViewerColumn.class.getDeclaredMethod("getEditingSupport",
-					new Class[]{});
+				Method getEditingMethod = ViewerColumn.class.getDeclaredMethod("getEditingSupport", new Class[] {});
 				getEditingMethod.setAccessible(true);
-				editingSupport = (EditingSupport) getEditingMethod.invoke(m_column, new Object[]{});
+				editingSupport = (EditingSupport) getEditingMethod.invoke(this.m_column, new Object[] {});
 			}
 			if (editingSupport != null) {
-				Method getValueMethod = EditingSupport.class.getDeclaredMethod("getValue",
-					new Class[]{Object.class});
+				Method getValueMethod = EditingSupport.class.getDeclaredMethod("getValue", new Class[] { Object.class });
 				getValueMethod.setAccessible(true);
-				return getValueMethod.invoke(editingSupport, new Object[]{o});
+				return getValueMethod.invoke(editingSupport, new Object[] { o });
 			}
 		} catch (Throwable e) {
 		}

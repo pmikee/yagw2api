@@ -1,7 +1,7 @@
 package de.justi.yagw2api.mumblelink.impl;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-MumbleLink
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,15 +17,14 @@ package de.justi.yagw2api.mumblelink.impl;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-
 
 import static com.google.common.base.Preconditions.checkArgument;
 
 import javax.annotation.Nullable;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 
 import de.justi.yagw2api.mumblelink.IMumbleLinkPosition;
@@ -37,25 +36,26 @@ abstract class AbstractMumbleLinkPositionChangeEvent extends AbstractEvent imple
 	private final Optional<IMumbleLinkPosition> oldPosition;
 	private final Optional<IMumbleLinkPosition> newPosition;
 
-	protected AbstractMumbleLinkPositionChangeEvent(@Nullable IMumbleLinkPosition oldPosition, @Nullable IMumbleLinkPosition newPosition) {
-		checkArgument(((oldPosition == null) ^ (newPosition == null)) || ((oldPosition != null) && !oldPosition.equals(newPosition)) || ((newPosition != null) && !newPosition.equals(oldPosition)),
-				"Old position = %s and new position = %s have to be different.", oldPosition, newPosition);
+	protected AbstractMumbleLinkPositionChangeEvent(@Nullable final IMumbleLinkPosition oldPosition, @Nullable final IMumbleLinkPosition newPosition) {
+		checkArgument(
+				((oldPosition == null) ^ (newPosition == null)) || ((oldPosition != null) && !oldPosition.equals(newPosition))
+						|| ((newPosition != null) && !newPosition.equals(oldPosition)), "Old position = %s and new position = %s have to be different.", oldPosition, newPosition);
 		this.oldPosition = Optional.fromNullable(oldPosition);
 		this.newPosition = Optional.fromNullable(newPosition);
 	}
 
 	@Override
 	public Optional<IMumbleLinkPosition> getOldPosition() {
-		return oldPosition;
+		return this.oldPosition;
 	}
 
 	@Override
 	public Optional<IMumbleLinkPosition> getNewPosition() {
-		return newPosition;
+		return this.newPosition;
 	}
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).addValue(super.toString()).add("old", this.oldPosition).add("new", this.newPosition).toString();
+		return MoreObjects.toStringHelper(this).addValue(super.toString()).add("old", this.oldPosition).add("new", this.newPosition).toString();
 	}
 }

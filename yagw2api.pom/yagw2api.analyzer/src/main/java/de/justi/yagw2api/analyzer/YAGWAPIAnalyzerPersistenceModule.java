@@ -1,7 +1,7 @@
 package de.justi.yagw2api.analyzer;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Analyzer
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,27 +17,27 @@ package de.justi.yagw2api.analyzer;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-
 
 import com.google.inject.AbstractModule;
 
 public class YAGWAPIAnalyzerPersistenceModule extends AbstractModule {
 
 	private boolean testModeEnabled;
-	public YAGWAPIAnalyzerPersistenceModule(boolean testMode) {
+
+	public YAGWAPIAnalyzerPersistenceModule(final boolean testMode) {
 		this.testModeEnabled = testMode;
 	}
-	
+
 	@Override
 	protected void configure() {
-		if(this.testModeEnabled) {
+		if (this.testModeEnabled) {
 			// test mode
-			bind(YAGW2APIAnalyzerPersistence.class).toInstance(YAGW2APIAnalyzerPersistence.TEST);
-		}else {
+			this.bind(YAGW2APIAnalyzerPersistence.class).toInstance(YAGW2APIAnalyzerPersistence.TEST);
+		} else {
 			// default mode
-			bind(YAGW2APIAnalyzerPersistence.class).toInstance(YAGW2APIAnalyzerPersistence.DEFAULT);
+			this.bind(YAGW2APIAnalyzerPersistence.class).toInstance(YAGW2APIAnalyzerPersistence.DEFAULT);
 		}
 	}
 

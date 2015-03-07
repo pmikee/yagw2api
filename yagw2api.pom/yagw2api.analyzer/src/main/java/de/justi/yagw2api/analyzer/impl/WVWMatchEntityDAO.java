@@ -1,7 +1,7 @@
 package de.justi.yagw2api.analyzer.impl;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Analyzer
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,7 +17,7 @@ package de.justi.yagw2api.analyzer.impl;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -48,7 +48,7 @@ public final class WVWMatchEntityDAO implements IWVWMatchEntityDAO {
 	private static final Logger LOGGER = LoggerFactory.getLogger(WVWMatchEntityDAO.class);
 
 	@Override
-	public synchronized Optional<IWVWMatchEntity> newMatchEntityOf(IWVWMatch match) {
+	public synchronized Optional<IWVWMatchEntity> newMatchEntityOf(final IWVWMatch match) {
 		checkNotNull(match);
 		checkState(YAGW2APIAnalyzerPersistence.getDefaultEM().isOpen());
 		final EntityTransaction tx = YAGW2APIAnalyzerPersistence.getDefaultEM().getTransaction();
@@ -76,7 +76,7 @@ public final class WVWMatchEntityDAO implements IWVWMatchEntityDAO {
 	}
 
 	@Override
-	public synchronized boolean save(IWVWMatchEntity entity) {
+	public synchronized boolean save(final IWVWMatchEntity entity) {
 		boolean success;
 		final EntityTransaction tx = YAGW2APIAnalyzerPersistence.getDefaultEM().getTransaction();
 		final boolean newTransaction = !tx.isActive();
@@ -101,7 +101,7 @@ public final class WVWMatchEntityDAO implements IWVWMatchEntityDAO {
 	}
 
 	@Override
-	public synchronized Optional<IWVWMatchEntity> findWVWMatchEntity(LocalDateTime start, LocalDateTime end, String originMatchId) {
+	public synchronized Optional<IWVWMatchEntity> findWVWMatchEntity(final LocalDateTime start, final LocalDateTime end, final String originMatchId) {
 		checkNotNull(start);
 		checkNotNull(end);
 		checkNotNull(originMatchId);
@@ -122,7 +122,7 @@ public final class WVWMatchEntityDAO implements IWVWMatchEntityDAO {
 	}
 
 	@Override
-	public synchronized IWVWMatchEntity findOrCreateWVWMatchEntityOf(IWVWMatch match) {
+	public synchronized IWVWMatchEntity findOrCreateWVWMatchEntityOf(final IWVWMatch match) {
 		checkNotNull(match);
 		checkState(YAGW2APIAnalyzerPersistence.getDefaultEM().isOpen());
 		final Optional<IWVWMatchEntity> alreadyThere = this.findWVWMatchEntity(match.getStartTimestamp(), match.getEndTimestamp(), match.getId());
@@ -132,18 +132,18 @@ public final class WVWMatchEntityDAO implements IWVWMatchEntityDAO {
 		} else {
 			final Optional<IWVWMatchEntity> newCreated = this.newMatchEntityOf(match);
 			checkState(newCreated.isPresent());
-			LOGGER.trace("Created new match: {}",match);
+			LOGGER.trace("Created new match: {}", match);
 			return newCreated.get();
 		}
 	}
 
-	private boolean doesModelScoreDiffFromEntityScore(IWVWScoresEmbeddable scoreEntity, IWVWScores scoreModel) {
+	private boolean doesModelScoreDiffFromEntityScore(final IWVWScoresEmbeddable scoreEntity, final IWVWScores scoreModel) {
 		return (scoreEntity.getBlueScore() != scoreModel.getBlueScore()) || (scoreEntity.getGreenScore() != scoreModel.getGreenScore())
 				|| (scoreEntity.getRedScore() != scoreModel.getRedScore());
 	}
 
 	@Override
-	public synchronized void synchronizeEntityWithModel(IWVWMatchEntity entity, LocalDateTime timestamp, IWVWMatch model) {
+	public synchronized void synchronizeEntityWithModel(final IWVWMatchEntity entity, final LocalDateTime timestamp, final IWVWMatch model) {
 		checkNotNull(entity);
 		checkNotNull(timestamp);
 		checkNotNull(model);
@@ -231,6 +231,6 @@ public final class WVWMatchEntityDAO implements IWVWMatchEntityDAO {
 			entity.addScores(timestamp, new WVWScoresEmbeddable(model.getScores().getRedScore(), model.getScores().getGreenScore(), model.getScores().getBlueScore()));
 		}
 
-		LOGGER.trace("Synchronized {} with {} @{}",entity,model,timestamp);
+		LOGGER.trace("Synchronized {} with {} @{}", entity, model, timestamp);
 	}
 }

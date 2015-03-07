@@ -1,7 +1,7 @@
 package de.justi.yagw2api.analyzer;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Analyzer
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,9 +17,8 @@ package de.justi.yagw2api.analyzer;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
@@ -46,7 +45,7 @@ public enum YAGW2APIAnalyzerPersistence {
 	private EntityManagerFactory emf = null;
 	private EntityManager sharedEntityManager = null;
 
-	private YAGW2APIAnalyzerPersistence(String persistenceUnitName) {
+	private YAGW2APIAnalyzerPersistence(final String persistenceUnitName) {
 		checkNotNull(persistenceUnitName);
 		this.persistenceUnitName = persistenceUnitName;
 	}
@@ -63,9 +62,9 @@ public enum YAGW2APIAnalyzerPersistence {
 			}
 		}
 		checkState(this.emf != null);
-		if(!this.emf.isOpen()){
+		if (!this.emf.isOpen()) {
 			synchronized (this.emf) {
-				if(!this.emf.isOpen()){
+				if (!this.emf.isOpen()) {
 					this.emf = null;
 					return this.getEMF();
 				}
@@ -73,6 +72,7 @@ public enum YAGW2APIAnalyzerPersistence {
 		}
 		return this.emf;
 	}
+
 	// FIXME the auto recreation of the shared em is a major design flaw
 	public final EntityManager getEM() {
 		if (this.sharedEntityManager == null) {
@@ -83,15 +83,14 @@ public enum YAGW2APIAnalyzerPersistence {
 			}
 		}
 		checkState(this.sharedEntityManager != null);
-		if(!this.sharedEntityManager.isOpen()){
+		if (!this.sharedEntityManager.isOpen()) {
 			synchronized (this.sharedEntityManager) {
-				if(!this.sharedEntityManager.isOpen()){
+				if (!this.sharedEntityManager.isOpen()) {
 					this.sharedEntityManager = null;
 					return this.getEM();
 				}
 			}
 		}
-		
 
 		return this.sharedEntityManager;
 	}

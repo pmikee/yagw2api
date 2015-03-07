@@ -1,7 +1,7 @@
 package de.justi.yagw2api.analyzer.impl;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Analyzer
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,7 +17,7 @@ package de.justi.yagw2api.analyzer.impl;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -38,22 +38,22 @@ public final class LocalDateTimeConverter implements Converter, AttributeConvert
 	private static final long serialVersionUID = 5590460947565445621L;
 
 	@Override
-	public Object convertObjectValueToDataValue(Object objectValue, Session session) {
+	public Object convertObjectValueToDataValue(final Object objectValue, final Session session) {
 		if (objectValue == null) {
 			return null;
 		} else {
 			checkArgument(objectValue instanceof LocalDateTime, "expected %s to be instance of %s", objectValue, LocalDateTime.class);
-			return convertToDatabaseColumn((LocalDateTime) objectValue);
+			return this.convertToDatabaseColumn((LocalDateTime) objectValue);
 		}
 	}
 
 	@Override
-	public Object convertDataValueToObjectValue(Object dataValue, Session session) {
+	public Object convertDataValueToObjectValue(final Object dataValue, final Session session) {
 		if (dataValue == null) {
 			return null;
 		} else {
 			checkArgument(dataValue instanceof Date, "expected %s to be instance of %s", dataValue, Date.class);
-			return convertToEntityAttribute((Date) dataValue);
+			return this.convertToEntityAttribute((Date) dataValue);
 		}
 	}
 
@@ -63,11 +63,11 @@ public final class LocalDateTimeConverter implements Converter, AttributeConvert
 	}
 
 	@Override
-	public void initialize(DatabaseMapping mapping, Session session) {
+	public void initialize(final DatabaseMapping mapping, final Session session) {
 	}
 
 	@Override
-	public Date convertToDatabaseColumn(LocalDateTime attribute) {
+	public Date convertToDatabaseColumn(final LocalDateTime attribute) {
 		if (attribute == null) {
 			return null;
 		} else {
@@ -78,10 +78,10 @@ public final class LocalDateTimeConverter implements Converter, AttributeConvert
 	}
 
 	@Override
-	public LocalDateTime convertToEntityAttribute(Date dbData) {
-		if(dbData == null){
+	public LocalDateTime convertToEntityAttribute(final Date dbData) {
+		if (dbData == null) {
 			return null;
-		}else{
+		} else {
 			final Instant instant = Instant.ofEpochMilli(dbData.getTime());
 			final LocalDateTime res = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
 			return res;

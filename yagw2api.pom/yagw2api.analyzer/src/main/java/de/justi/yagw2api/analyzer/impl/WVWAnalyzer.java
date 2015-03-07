@@ -1,7 +1,7 @@
 package de.justi.yagw2api.analyzer.impl;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Analyzer
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,9 +17,8 @@ package de.justi.yagw2api.analyzer.impl;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
@@ -54,58 +53,58 @@ final class WVWAnalyzer implements IWVWAnalyzer {
 	private IWVWMatchEntityDAO wvwMatchEntityDAO;
 
 	@Override
-	public void onMatchScoreChangedEvent(IWVWMatchScoresChangedEvent event) {
-		LOGGER.debug("{}",event);
+	public void onMatchScoreChangedEvent(final IWVWMatchScoresChangedEvent event) {
+		LOGGER.debug("{}", event);
 		this.synchronizeWorldsOfMatch(event.getTimestamp(), event.getMatch());
 	}
 
 	@Override
-	public void onObjectiveCapturedEvent(IWVWObjectiveCaptureEvent event) {
-		LOGGER.debug("{}",event);
+	public void onObjectiveCapturedEvent(final IWVWObjectiveCaptureEvent event) {
+		LOGGER.debug("{}", event);
 		if (event.getMap().getMatch().isPresent()) {
 			this.synchronizeWorldsOfMatch(event.getTimestamp(), event.getMap().getMatch().get());
 		}
 	}
 
 	@Override
-	public void onObjectiveEndOfBuffEvent(IWVWObjectiveEndOfBuffEvent event) {
-		LOGGER.debug("{}",event);
+	public void onObjectiveEndOfBuffEvent(final IWVWObjectiveEndOfBuffEvent event) {
+		LOGGER.debug("{}", event);
 		if (event.getMap().getMatch().isPresent()) {
 			this.synchronizeWorldsOfMatch(event.getTimestamp(), event.getMap().getMatch().get());
 		}
 	}
 
 	@Override
-	public void onObjectiveClaimedEvent(IWVWObjectiveClaimedEvent event) {
-		LOGGER.debug("{}",event);
+	public void onObjectiveClaimedEvent(final IWVWObjectiveClaimedEvent event) {
+		LOGGER.debug("{}", event);
 		if (event.getMap().getMatch().isPresent()) {
 			this.synchronizeWorldsOfMatch(event.getTimestamp(), event.getMap().getMatch().get());
 		}
 	}
 
 	@Override
-	public void onObjectiveUnclaimedEvent(IWVWObjectiveUnclaimedEvent event) {
-		LOGGER.debug("{}",event);
+	public void onObjectiveUnclaimedEvent(final IWVWObjectiveUnclaimedEvent event) {
+		LOGGER.debug("{}", event);
 		if (event.getMap().getMatch().isPresent()) {
 			this.synchronizeWorldsOfMatch(event.getTimestamp(), event.getMap().getMatch().get());
 		}
 	}
 
 	@Override
-	public void onInitializedMatchForWrapper(IWVWInitializedMatchEvent event) {
-		LOGGER.debug("{}",event);
+	public void onInitializedMatchForWrapper(final IWVWInitializedMatchEvent event) {
+		LOGGER.debug("{}", event);
 		this.synchronizeWorldsOfMatch(event.getTimestamp(), event.getMatch());
 	}
 
 	@Override
-	public void onChangedMapScoreEvent(IWVWMapScoresChangedEvent event) {
-		LOGGER.debug("{}",event);
+	public void onChangedMapScoreEvent(final IWVWMapScoresChangedEvent event) {
+		LOGGER.debug("{}", event);
 		if (event.getMap().getMatch().isPresent()) {
 			this.synchronizeWorldsOfMatch(event.getTimestamp(), event.getMap().getMatch().get());
 		}
 	}
 
-	private boolean synchronizeWorldsOfMatch(LocalDateTime timestamp, IWVWMatch match) {
+	private boolean synchronizeWorldsOfMatch(final LocalDateTime timestamp, final IWVWMatch match) {
 		checkNotNull(match);
 		final IWVWMatchEntity entity = this.wvwMatchEntityDAO.findOrCreateWVWMatchEntityOf(match);
 		checkState(entity.getBlueMap() != null);
@@ -139,19 +138,19 @@ final class WVWAnalyzer implements IWVWAnalyzer {
 		checkState(entity.getBlueWorld() != null);
 		checkState(entity.getRedWorld() != null);
 		checkState(entity.getGreenWorld() != null);
-		
-		LOGGER.trace("Successfully synchronized {}",entity);
+
+		LOGGER.trace("Successfully synchronized {}", entity);
 		persisted = this.wvwMatchEntityDAO.save(entity);
 		if (persisted) {
-			LOGGER.trace("Successfully persisted {}",entity);
-		}else{
-			LOGGER.error("Failed to persist {}",entity);
+			LOGGER.trace("Successfully persisted {}", entity);
+		} else {
+			LOGGER.error("Failed to persist {}", entity);
 		}
 		return persisted;
 	}
 
 	@Override
-	public IWorldEntity worldEntityOf(IWorld world) {
+	public IWorldEntity worldEntityOf(final IWorld world) {
 		return this.worldEntityDAO.findOrCreateWorldEntityOf(world);
 	}
 

@@ -1,7 +1,7 @@
 package de.justi.yagw2api.wrapper.impl;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Wrapper
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,9 +17,8 @@ package de.justi.yagw2api.wrapper.impl;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -85,8 +84,6 @@ final class WVWWrapper implements IWVWWrapper {
 		this.deamon.startAsync();
 	}
 
-
-
 	@Override
 	public void stop() {
 		checkState(this.deamon != null);
@@ -100,7 +97,7 @@ final class WVWWrapper implements IWVWWrapper {
 	}
 
 	@Subscribe
-	public void onWVWMatchEvent(IWVWMatchEvent event) {
+	public void onWVWMatchEvent(final IWVWMatchEvent event) {
 		checkNotNull(event);
 		LOGGER.debug(this + " will now inform it's registered listeners about " + event);
 		final IWVWMatch match = event.getMatch();
@@ -115,7 +112,7 @@ final class WVWWrapper implements IWVWWrapper {
 		}
 	}
 
-	private void notifyWVWMatchListener(IWVWMatchListener listener, IWVWMatchEvent event) {
+	private void notifyWVWMatchListener(final IWVWMatchListener listener, final IWVWMatchEvent event) {
 		checkNotNull(listener);
 		checkNotNull(event);
 		LOGGER.trace("Going to notify " + listener + " about " + event);
@@ -127,7 +124,7 @@ final class WVWWrapper implements IWVWWrapper {
 	}
 
 	@Subscribe
-	public void onWVWMapEvent(IWVWMapEvent event) {
+	public void onWVWMapEvent(final IWVWMapEvent event) {
 		checkNotNull(event);
 		checkArgument(event.getMap().getMatch().isPresent());
 		if (LOGGER.isDebugEnabled()) {
@@ -160,7 +157,7 @@ final class WVWWrapper implements IWVWWrapper {
 		}
 	}
 
-	private void notifyWVWMapListener(IWVWMapListener listener, IWVWMapEvent event) {
+	private void notifyWVWMapListener(final IWVWMapListener listener, final IWVWMapEvent event) {
 		checkNotNull(listener);
 		checkNotNull(event);
 		LOGGER.trace("Going to notify " + listener + " about " + event);
@@ -179,7 +176,7 @@ final class WVWWrapper implements IWVWWrapper {
 	}
 
 	@Override
-	public void registerWVWMatchListener(IWVWMatch match, IWVWMatchListener listener) {
+	public void registerWVWMatchListener(final IWVWMatch match, final IWVWMatchListener listener) {
 		checkNotNull(match);
 		checkNotNull(listener);
 		checkState(!this.singleMatchListeners.containsKey(match) || !this.singleMatchListeners.get(match).contains(listener));
@@ -197,7 +194,7 @@ final class WVWWrapper implements IWVWWrapper {
 	}
 
 	@Override
-	public void registerWVWMatchListener(IWVWMatchListener listener) {
+	public void registerWVWMatchListener(final IWVWMatchListener listener) {
 		checkNotNull(listener);
 		checkState(!this.allMatchesListeners.contains(listener));
 
@@ -206,7 +203,7 @@ final class WVWWrapper implements IWVWWrapper {
 	}
 
 	@Override
-	public void unregisterWVWMatchListener(IWVWMatchListener listener) {
+	public void unregisterWVWMatchListener(final IWVWMatchListener listener) {
 		checkNotNull(listener);
 
 		// remove listener references
@@ -219,7 +216,7 @@ final class WVWWrapper implements IWVWWrapper {
 	}
 
 	@Override
-	public void unregisterWVWMapListener(IWVWMapListener listener) {
+	public void unregisterWVWMapListener(final IWVWMapListener listener) {
 		checkNotNull(listener);
 
 		// remove listener references
@@ -237,7 +234,7 @@ final class WVWWrapper implements IWVWWrapper {
 	}
 
 	@Override
-	public void registerWVWMapListener(IWVWMapListener listener) {
+	public void registerWVWMapListener(final IWVWMapListener listener) {
 		checkNotNull(listener);
 		checkState(!this.allMapsOfAllMatchesListeners.contains(listener));
 
@@ -246,7 +243,7 @@ final class WVWWrapper implements IWVWWrapper {
 	}
 
 	@Override
-	public void registerWVWMapListener(IWVWMatch match, IWVWMapListener listener) {
+	public void registerWVWMapListener(final IWVWMatch match, final IWVWMapListener listener) {
 		checkNotNull(match);
 		checkNotNull(listener);
 		checkState(!this.allMapsOfSingleMatchListeners.containsKey(match) || !this.allMapsOfSingleMatchListeners.get(match).contains(listener));
@@ -264,7 +261,7 @@ final class WVWWrapper implements IWVWWrapper {
 	}
 
 	@Override
-	public void registerWVWMapListener(IWVWMap map, IWVWMapListener listener) {
+	public void registerWVWMapListener(final IWVWMap map, final IWVWMapListener listener) {
 		checkNotNull(map);
 		checkNotNull(listener);
 		checkState(!this.singleMapListeners.containsKey(map) || !this.singleMapListeners.get(map).contains(listener));

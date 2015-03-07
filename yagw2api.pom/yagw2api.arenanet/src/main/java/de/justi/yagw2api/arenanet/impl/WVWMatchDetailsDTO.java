@@ -1,7 +1,7 @@
 package de.justi.yagw2api.arenanet.impl;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Arenanet
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,9 +17,8 @@ package de.justi.yagw2api.arenanet.impl;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
@@ -89,7 +88,7 @@ final class WVWMatchDetailsDTO implements IWVWMatchDetailsDTO {
 	}
 
 	@Override
-	public Optional<IWVWMapDTO> getMapForTypeString(String dtoMapTypeString) {
+	public Optional<IWVWMapDTO> getMapForTypeString(final String dtoMapTypeString) {
 		checkNotNull(dtoMapTypeString);
 		IWVWMapDTO map = null;
 		int index = 0;
@@ -130,47 +129,47 @@ final class WVWMatchDetailsDTO implements IWVWMatchDetailsDTO {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = (prime * result) + ((id == null) ? 0 : id.hashCode());
-		result = (prime * result) + Arrays.hashCode(maps);
-		result = (prime * result) + Arrays.hashCode(scores);
+		result = (prime * result) + ((this.id == null) ? 0 : this.id.hashCode());
+		result = (prime * result) + Arrays.hashCode(this.maps);
+		result = (prime * result) + Arrays.hashCode(this.scores);
 		return result;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
 		}
 		if (obj == null) {
 			return false;
 		}
-		if (getClass() != obj.getClass()) {
+		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
 		WVWMatchDetailsDTO other = (WVWMatchDetailsDTO) obj;
-		if (id == null) {
+		if (this.id == null) {
 			if (other.id != null) {
 				return false;
 			}
-		} else if (!id.equals(other.id)) {
+		} else if (!this.id.equals(other.id)) {
 			return false;
 		}
-		if (!Arrays.equals(maps, other.maps)) {
+		if (!Arrays.equals(this.maps, other.maps)) {
 			return false;
 		}
-		if (!Arrays.equals(scores, other.scores)) {
+		if (!Arrays.equals(this.scores, other.scores)) {
 			return false;
 		}
 		return true;

@@ -1,7 +1,7 @@
 package de.justi.yagw2api.arenanet.impl;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Arenanet
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,9 +17,8 @@ package de.justi.yagw2api.arenanet.impl;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
@@ -65,12 +64,12 @@ final class WVWObjectiveDTO implements IWVWObjectiveDTO {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("id", this.id).add("name", this.getName(YAGW2APIArenanet.getInstance().getCurrentLocale())).add("owner", this.owner).add("guildId", this.guildId)
-				.toString();
+		return Objects.toStringHelper(this).add("id", this.id).add("name", this.getName(YAGW2APIArenanet.getInstance().getCurrentLocale())).add("owner", this.owner)
+				.add("guildId", this.guildId).toString();
 	}
 
 	@Override
-	public Optional<IWVWObjectiveNameDTO> getName(Locale locale) {
+	public Optional<IWVWObjectiveNameDTO> getName(final Locale locale) {
 		checkNotNull(locale);
 		checkState(this.getId() > 0);
 		return YAGW2APIArenanet.getInstance().getWVWService().retrieveObjectiveName(locale, this.getId());
@@ -87,51 +86,51 @@ final class WVWObjectiveDTO implements IWVWObjectiveDTO {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = (prime * result) + ((guildId == null) ? 0 : guildId.hashCode());
-		result = (prime * result) + id;
-		result = (prime * result) + ((owner == null) ? 0 : owner.hashCode());
+		result = (prime * result) + ((this.guildId == null) ? 0 : this.guildId.hashCode());
+		result = (prime * result) + this.id;
+		result = (prime * result) + ((this.owner == null) ? 0 : this.owner.hashCode());
 		return result;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
 		}
 		if (obj == null) {
 			return false;
 		}
-		if (getClass() != obj.getClass()) {
+		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
 		WVWObjectiveDTO other = (WVWObjectiveDTO) obj;
-		if (guildId == null) {
+		if (this.guildId == null) {
 			if (other.guildId != null) {
 				return false;
 			}
-		} else if (!guildId.equals(other.guildId)) {
+		} else if (!this.guildId.equals(other.guildId)) {
 			return false;
 		}
-		if (id != other.id) {
+		if (this.id != other.id) {
 			return false;
 		}
-		if (owner == null) {
+		if (this.owner == null) {
 			if (other.owner != null) {
 				return false;
 			}
-		} else if (!owner.equals(other.owner)) {
+		} else if (!this.owner.equals(other.owner)) {
 			return false;
 		}
 		return true;

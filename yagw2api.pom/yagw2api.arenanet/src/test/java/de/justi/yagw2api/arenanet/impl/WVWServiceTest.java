@@ -1,7 +1,7 @@
 package de.justi.yagw2api.arenanet.impl;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Arenanet
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,19 +17,14 @@ package de.justi.yagw2api.arenanet.impl;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.text.ParseException;
-import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 import org.junit.Test;
@@ -52,7 +47,7 @@ public final class WVWServiceTest extends AbstractYAGW2APITest {
 	private static final String EXISTING_MATCH_ID_4_TEST = "1-1";
 	private static final int NUMBER_OF_OBJECTIVE_NAMES = 76;
 
-	private static final void assertConsistencyOfMapArray(IWVWMapDTO[] maps) {
+	private static final void assertConsistencyOfMapArray(final IWVWMapDTO[] maps) {
 		checkNotNull(maps);
 		for (IWVWMapDTO map : maps) {
 			assertTrue(map.getBlueScore() >= 0);
@@ -67,10 +62,10 @@ public final class WVWServiceTest extends AbstractYAGW2APITest {
 				assertTrue("Guild ID of " + objective + " should either be null or a string without leading or tailing whitespaces.", (objective.getGuildId() == null)
 						|| ((objective.getGuildId().trim().length() > 0) && (objective.getGuildId().length() == objective.getGuildId().trim().length())));
 				assertTrue(objective.getId() > 0);
-				assertTrue("Owner of " + objective + " should either be null or equal to one of the following strings: " + DTOConstants.OWNER_BLUE_STRING + ", " + DTOConstants.OWNER_GREEN_STRING
-						+ ", " + DTOConstants.OWNER_RED_STRING+","+DTOConstants.OWNER_NEUTRAL_STRING,
-						(objective.getOwner() == null) || objective.getOwner().equals(DTOConstants.OWNER_BLUE_STRING) || objective.getOwner().equals(DTOConstants.OWNER_GREEN_STRING)
-								|| objective.getOwner().equals(DTOConstants.OWNER_RED_STRING) || objective.getOwner().equals(DTOConstants.OWNER_NEUTRAL_STRING));
+				assertTrue("Owner of " + objective + " should either be null or equal to one of the following strings: " + DTOConstants.OWNER_BLUE_STRING + ", "
+						+ DTOConstants.OWNER_GREEN_STRING + ", " + DTOConstants.OWNER_RED_STRING + "," + DTOConstants.OWNER_NEUTRAL_STRING, (objective.getOwner() == null)
+						|| objective.getOwner().equals(DTOConstants.OWNER_BLUE_STRING) || objective.getOwner().equals(DTOConstants.OWNER_GREEN_STRING)
+						|| objective.getOwner().equals(DTOConstants.OWNER_RED_STRING) || objective.getOwner().equals(DTOConstants.OWNER_NEUTRAL_STRING));
 				assertNotNull(objective.getGuildDetails());
 				if (objective.getGuildDetails().isPresent()) {
 					assertNotNull(objective.getGuildDetails().get());
@@ -91,7 +86,7 @@ public final class WVWServiceTest extends AbstractYAGW2APITest {
 		}
 	}
 
-	private static final void assertConsistencyOfMapTypsForMatchDetails(IWVWMatchDetailsDTO matchDetails) {
+	private static final void assertConsistencyOfMapTypsForMatchDetails(final IWVWMatchDetailsDTO matchDetails) {
 		checkNotNull(matchDetails);
 		assertNotNull(matchDetails.getBlueMap());
 		assertEquals(DTOConstants.BLUE_MAP_TYPE_STRING, matchDetails.getBlueMap().getType());
@@ -103,7 +98,7 @@ public final class WVWServiceTest extends AbstractYAGW2APITest {
 		assertEquals(DTOConstants.CENTER_MAP_TYPE_STRING, matchDetails.getCenterMap().getType());
 	}
 
-	private static final void assertConsistencyOfMatch(IWVWMatchDTO match) {
+	private static final void assertConsistencyOfMatch(final IWVWMatchDTO match) {
 		checkNotNull(match);
 		assertNotNull(match.getDetails());
 		assertTrue(match.getDetails().isPresent());
@@ -120,7 +115,7 @@ public final class WVWServiceTest extends AbstractYAGW2APITest {
 		assertConsistencyOfMatchDetails(match.getDetails().get());
 	}
 
-	private static final void assertConsistencyOfMatchDetails(IWVWMatchDetailsDTO matchDetails) {
+	private static final void assertConsistencyOfMatchDetails(final IWVWMatchDetailsDTO matchDetails) {
 		checkNotNull(matchDetails);
 		assertNotNull(matchDetails.getMatch());
 		assertTrue(matchDetails.getMatch().isPresent());

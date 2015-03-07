@@ -1,7 +1,7 @@
 package de.justi.yagw2api.wrapper.impl;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Wrapper
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,9 +17,8 @@ package de.justi.yagw2api.wrapper.impl;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-
 
 import com.google.common.base.Optional;
 
@@ -29,15 +28,15 @@ import de.justi.yagw2api.wrapper.IWVWObjectiveUnclaimedEvent;
 
 final class WVWObjectiveUnclaimedEvent extends AbstractWVWObjectiveEvent implements IWVWObjectiveUnclaimedEvent {
 	private final Optional<IGuild> previousClaimedByGuild;
-	
-	public WVWObjectiveUnclaimedEvent(IWVWObjective source, IGuild previousClaimedByGuild) {
+
+	public WVWObjectiveUnclaimedEvent(final IWVWObjective source, final IGuild previousClaimedByGuild) {
 		super(source);
 		this.previousClaimedByGuild = Optional.fromNullable(previousClaimedByGuild);
 	}
+
 	@Override
 	public Optional<IGuild> previousClaimedByGuild() {
 		return this.previousClaimedByGuild;
 	}
-
 
 }

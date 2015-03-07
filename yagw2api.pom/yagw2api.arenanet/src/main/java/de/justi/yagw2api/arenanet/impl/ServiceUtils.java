@@ -1,7 +1,7 @@
 package de.justi.yagw2api.arenanet.impl;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Arenanet
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,7 +17,7 @@ package de.justi.yagw2api.arenanet.impl;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -46,12 +46,16 @@ final class ServiceUtils {
 		ZULU_DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("Zulu"));
 	}
 
-	public static Locale normalizeLocaleForAPIUsage(Locale locale) {
+	private ServiceUtils() {
+		throw new AssertionError("no instance");
+	}
+
+	public static Locale normalizeLocaleForAPIUsage(final Locale locale) {
 		checkNotNull(locale);
 		return Locale.forLanguageTag(locale.getLanguage());
 	}
 
-	public static final LocalDateTime parseZULUTimestampString(String timestampString) throws ParseException {
+	public static final LocalDateTime parseZULUTimestampString(final String timestampString) throws ParseException {
 		Date ts = ZULU_DATE_FORMAT.parse(timestampString);
 		final Instant instant = Instant.ofEpochMilli(ts.getTime());
 		final LocalDateTime res = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());

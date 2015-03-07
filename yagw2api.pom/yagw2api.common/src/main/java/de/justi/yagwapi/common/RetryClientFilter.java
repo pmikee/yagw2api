@@ -1,7 +1,7 @@
 package de.justi.yagwapi.common;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Commons
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,9 +17,8 @@ package de.justi.yagwapi.common;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -35,13 +34,13 @@ public final class RetryClientFilter extends ClientFilter {
 	private static final Logger LOGGER = LoggerFactory.getLogger(RetryClientFilter.class);
 	private final int maximumRetryCount;
 
-	public RetryClientFilter(int maximumRetryCount) {
+	public RetryClientFilter(final int maximumRetryCount) {
 		checkArgument(maximumRetryCount >= 0);
 		this.maximumRetryCount = maximumRetryCount;
 	}
 
 	@Override
-	public final ClientResponse handle(ClientRequest cr) throws ClientHandlerException {
+	public final ClientResponse handle(final ClientRequest cr) throws ClientHandlerException {
 
 		int i = 0;
 
@@ -58,7 +57,7 @@ public final class RetryClientFilter extends ClientFilter {
 		throw new ClientHandlerException("Connection retries limit of " + this.maximumRetryCount + " exceeded.");
 	}
 
-	protected void onRetry(int retry) {
+	protected void onRetry(final int retry) {
 		LOGGER.warn("Will now perform retry " + retry + "/" + this.maximumRetryCount);
 	}
 

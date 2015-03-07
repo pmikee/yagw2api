@@ -1,7 +1,7 @@
 package de.justi.yagw2api.analyzer;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Analyzer
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,9 +17,8 @@ package de.justi.yagw2api.analyzer;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-
 
 import java.util.List;
 import java.util.Locale;
@@ -67,10 +66,9 @@ public interface IWorldEntity extends IEntity {
 	 * Synchronize this with the given {@link IWorld}
 	 * </p>
 	 * <p>
-	 * Synchronization is not persisted directly, therefore you have to use
-	 * {@link IWorldEnityDAO#save(IWorldEntity)} to persist them.
+	 * Synchronization is not persisted directly, therefore you have to use {@link IWorldEnityDAO#save(IWorldEntity)} to persist them.
 	 * </p>
-	 * 
+	 *
 	 * @param model
 	 * @return true if successfully, else false
 	 */

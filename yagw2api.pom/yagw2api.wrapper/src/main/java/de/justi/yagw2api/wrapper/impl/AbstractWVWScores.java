@@ -1,7 +1,7 @@
 package de.justi.yagw2api.wrapper.impl;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Wrapper
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,9 +17,8 @@ package de.justi.yagw2api.wrapper.impl;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -27,7 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
 import com.google.common.eventbus.EventBus;
 
 import de.justi.yagw2api.wrapper.IWVWScores;
@@ -35,13 +33,14 @@ import de.justi.yagwapi.common.AbstractHasChannel;
 import de.justi.yagwapi.common.IUnmodifiable;
 
 abstract class AbstractWVWScores extends AbstractHasChannel implements IWVWScores {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractWVWScores.class);
 
-	final class UnmodifiableWVWScores implements IWVWScores, IUnmodifiable{
+	final class UnmodifiableWVWScores implements IWVWScores, IUnmodifiable {
 		@Override
 		public EventBus getChannel() {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName()+" is instance of "+IUnmodifiable.class.getSimpleName()+" and therefore can not be modified.");
+			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName()
+					+ " and therefore can not be modified.");
 		}
 
 		@Override
@@ -60,8 +59,9 @@ abstract class AbstractWVWScores extends AbstractHasChannel implements IWVWScore
 		}
 
 		@Override
-		public void update(int redScore, int greenScore, int blueScore) {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName()+" is instance of "+IUnmodifiable.class.getSimpleName()+" and therefore can not be modified.");
+		public void update(final int redScore, final int greenScore, final int blueScore) {
+			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName()
+					+ " and therefore can not be modified.");
 		}
 
 		@Override
@@ -69,16 +69,17 @@ abstract class AbstractWVWScores extends AbstractHasChannel implements IWVWScore
 			return this;
 		}
 
+		@Override
 		public String toString() {
-			return Objects.toStringHelper(this).addValue(AbstractWVWScores.this.toString()).toString();
+			return MoreObjects.toStringHelper(this).addValue(AbstractWVWScores.this.toString()).toString();
 		}
 	}
-	
+
 	// FIELDS
 	private int redScore = 0;
 	private int greenScore = 0;
 	private int blueScore = 0;
-	
+
 	@Override
 	public int getRedScore() {
 		return this.redScore;
@@ -94,12 +95,13 @@ abstract class AbstractWVWScores extends AbstractHasChannel implements IWVWScore
 		return this.blueScore;
 	}
 
+	@Override
 	public String toString() {
-		return MoreObjects.toStringHelper(this).add("red",this.redScore).add("green", this.greenScore).add("blue", this.blueScore).toString();
+		return MoreObjects.toStringHelper(this).add("red", this.redScore).add("green", this.greenScore).add("blue", this.blueScore).toString();
 	}
 
 	@Override
-	public void update(int redScore, int greenScore, int blueScore) {
+	public void update(final int redScore, final int greenScore, final int blueScore) {
 		checkArgument(redScore >= 0);
 		checkArgument(greenScore >= 0);
 		checkArgument(blueScore >= 0);
@@ -110,13 +112,13 @@ abstract class AbstractWVWScores extends AbstractHasChannel implements IWVWScore
 		this.redScore = redScore;
 		this.greenScore = greenScore;
 		this.blueScore = blueScore;
-		
-		if(changed) {
-			LOGGER.trace(this.toString()+" has been changed: deltaRed="+deltaRed+", deltaGreen="+deltaGreen+", deltaBlue="+deltaBlue);
+
+		if (changed) {
+			LOGGER.trace(this.toString() + " has been changed: deltaRed=" + deltaRed + ", deltaGreen=" + deltaGreen + ", deltaBlue=" + deltaBlue);
 			this.onChange(deltaRed, deltaGreen, deltaBlue);
 		}
 	}
-	
+
 	protected abstract void onChange(int deltaRed, int deltaGreen, int deltaBlue);
 
 	@Override

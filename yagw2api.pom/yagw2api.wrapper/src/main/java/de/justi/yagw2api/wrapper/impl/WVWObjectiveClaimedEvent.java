@@ -1,7 +1,7 @@
 package de.justi.yagw2api.wrapper.impl;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Wrapper
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,9 +17,8 @@ package de.justi.yagw2api.wrapper.impl;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -33,8 +32,8 @@ final class WVWObjectiveClaimedEvent extends AbstractWVWObjectiveEvent implement
 
 	private final IGuild claimingGuild;
 	private final Optional<IGuild> previousClaimedByGuild;
-	
-	public WVWObjectiveClaimedEvent(IWVWObjective source, IGuild claimingGuild, IGuild previousClaimedByGuild) {
+
+	public WVWObjectiveClaimedEvent(final IWVWObjective source, final IGuild claimingGuild, final IGuild previousClaimedByGuild) {
 		super(source);
 		this.claimingGuild = checkNotNull(claimingGuild);
 		this.previousClaimedByGuild = Optional.fromNullable(previousClaimedByGuild);
@@ -49,6 +48,5 @@ final class WVWObjectiveClaimedEvent extends AbstractWVWObjectiveEvent implement
 	public Optional<IGuild> previousClaimedByGuild() {
 		return this.previousClaimedByGuild;
 	}
-
 
 }

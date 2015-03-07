@@ -1,7 +1,7 @@
 package de.justi.yagw2api.analyzer.impl;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Analyzer
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,9 +17,8 @@ package de.justi.yagw2api.analyzer.impl;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -44,10 +43,9 @@ import org.eclipse.persistence.annotations.ObjectTypeConverters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.collect.Iterables;
 
 import de.justi.yagw2api.analyzer.IWVWMatchEntity;
@@ -111,7 +109,7 @@ public final class WorldEntity extends AbstractEntity implements IWorldEntity {
 	}
 
 	@Override
-	public boolean addParticipatedAsRedInMatch(IWVWMatchEntity match) {
+	public boolean addParticipatedAsRedInMatch(final IWVWMatchEntity match) {
 		checkNotNull(match);
 		if (this.participatedInMatchesAsBlueWorld.contains(match) || this.participatedInMatchesAsGreenWorld.contains(match) || this.participatedInMatchesAsRedWorld.contains(match)) {
 			return false;
@@ -121,7 +119,7 @@ public final class WorldEntity extends AbstractEntity implements IWorldEntity {
 	}
 
 	@Override
-	public boolean addParticipatedAsBlueInMatch(IWVWMatchEntity match) {
+	public boolean addParticipatedAsBlueInMatch(final IWVWMatchEntity match) {
 		checkNotNull(match);
 		if (this.participatedInMatchesAsBlueWorld.contains(match) || this.participatedInMatchesAsGreenWorld.contains(match) || this.participatedInMatchesAsRedWorld.contains(match)) {
 			return false;
@@ -131,7 +129,7 @@ public final class WorldEntity extends AbstractEntity implements IWorldEntity {
 	}
 
 	@Override
-	public boolean addParticipatedAsGreenInMatch(IWVWMatchEntity match) {
+	public boolean addParticipatedAsGreenInMatch(final IWVWMatchEntity match) {
 		checkNotNull(match);
 		if (this.participatedInMatchesAsBlueWorld.contains(match) || this.participatedInMatchesAsGreenWorld.contains(match) || this.participatedInMatchesAsRedWorld.contains(match)) {
 			return false;
@@ -151,7 +149,7 @@ public final class WorldEntity extends AbstractEntity implements IWorldEntity {
 	}
 
 	@Override
-	public boolean synchronizeWithModel(IWorld model) {
+	public boolean synchronizeWithModel(final IWorld model) {
 		checkNotNull(model);
 		if ((this.originWorldId == null) || (model.getId() == this.originWorldId)) {
 			// compatible ids
@@ -169,7 +167,7 @@ public final class WorldEntity extends AbstractEntity implements IWorldEntity {
 		}
 	}
 
-	private void setName(Locale locale, String name) {
+	private void setName(final Locale locale, final String name) {
 		checkNotNull(locale);
 		checkNotNull(name);
 		checkArgument(name.trim().length() > 0);
@@ -193,7 +191,7 @@ public final class WorldEntity extends AbstractEntity implements IWorldEntity {
 	}
 
 	@Override
-	public Optional<String> getName(Locale locale) {
+	public Optional<String> getName(final Locale locale) {
 		switch (locale.getLanguage().toLowerCase()) {
 			case "de":
 				return this.getNameDE().or(this.getNameEN()).or(this.getNameES()).or(this.getNameFR());
@@ -252,7 +250,7 @@ public final class WorldEntity extends AbstractEntity implements IWorldEntity {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if ((obj == null) || !(obj instanceof IWorldEntity)) {
 			return false;
 		} else {

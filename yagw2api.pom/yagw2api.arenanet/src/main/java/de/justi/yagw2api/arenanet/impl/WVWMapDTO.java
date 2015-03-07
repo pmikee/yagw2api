@@ -1,7 +1,7 @@
 package de.justi.yagw2api.arenanet.impl;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Arenanet
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,9 +17,8 @@ package de.justi.yagw2api.arenanet.impl;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-
 
 import java.util.Arrays;
 
@@ -75,47 +74,47 @@ final class WVWMapDTO implements IWVWMapDTO {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = (prime * result) + Arrays.hashCode(objectives);
-		result = (prime * result) + Arrays.hashCode(scores);
-		result = (prime * result) + ((type == null) ? 0 : type.hashCode());
+		result = (prime * result) + Arrays.hashCode(this.objectives);
+		result = (prime * result) + Arrays.hashCode(this.scores);
+		result = (prime * result) + ((this.type == null) ? 0 : this.type.hashCode());
 		return result;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
 		}
 		if (obj == null) {
 			return false;
 		}
-		if (getClass() != obj.getClass()) {
+		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
 		WVWMapDTO other = (WVWMapDTO) obj;
-		if (!Arrays.equals(objectives, other.objectives)) {
+		if (!Arrays.equals(this.objectives, other.objectives)) {
 			return false;
 		}
-		if (!Arrays.equals(scores, other.scores)) {
+		if (!Arrays.equals(this.scores, other.scores)) {
 			return false;
 		}
-		if (type == null) {
+		if (this.type == null) {
 			if (other.type != null) {
 				return false;
 			}
-		} else if (!type.equals(other.type)) {
+		} else if (!this.type.equals(other.type)) {
 			return false;
 		}
 		return true;

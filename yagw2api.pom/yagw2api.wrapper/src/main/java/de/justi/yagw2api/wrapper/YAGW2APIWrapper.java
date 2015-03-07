@@ -1,7 +1,7 @@
 package de.justi.yagw2api.wrapper;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Wrapper
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,9 +17,8 @@ package de.justi.yagw2api.wrapper;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-
 
 import java.util.concurrent.ForkJoinPool;
 
@@ -47,8 +46,8 @@ public enum YAGW2APIWrapper {
 		this.forkJoinPool = new ForkJoinPool(Runtime.getRuntime().availableProcessors() * THREAD_COUNT_PER_PROCESSOR, ForkJoinPool.defaultForkJoinWorkerThreadFactory,
 				new Thread.UncaughtExceptionHandler() {
 					@Override
-					public void uncaughtException(Thread t, Throwable e) {
-						LOGGER.error("Uncought exception thrown in {}",t, e);
+					public void uncaughtException(final Thread t, final Throwable e) {
+						LOGGER.error("Uncought exception thrown in {}", t, e);
 					}
 				}, false);
 		this.modelFactory = injector.getInstance(IModelFactory.class);

@@ -1,7 +1,7 @@
 package de.justi.yagw2api.wrapper.impl;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Wrapper
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,13 +17,12 @@ package de.justi.yagw2api.wrapper.impl;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 
 import de.justi.yagw2api.wrapper.IWVWMatch;
 import de.justi.yagw2api.wrapper.IWVWMatchScoresChangedEvent;
@@ -32,8 +31,8 @@ import de.justi.yagw2api.wrapper.IWVWScores;
 final class WVWMatchScoresChanged extends AbstractWVWScoresChangedEvent implements IWVWMatchScoresChangedEvent {
 	private final IWVWMatch match;
 
-	public WVWMatchScoresChanged(IWVWScores scores,int deltaRed, int deltaGreen, int deltaBlue, IWVWMatch match) {
-		super(checkNotNull(scores),deltaRed, deltaGreen, deltaBlue);
+	public WVWMatchScoresChanged(final IWVWScores scores, final int deltaRed, final int deltaGreen, final int deltaBlue, final IWVWMatch match) {
+		super(checkNotNull(scores), deltaRed, deltaGreen, deltaBlue);
 		this.match = checkNotNull(match);
 	}
 
@@ -42,7 +41,9 @@ final class WVWMatchScoresChanged extends AbstractWVWScoresChangedEvent implemen
 		return this.match;
 	}
 
+	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("super", super.toString()).add("scores", this.getScores()).add("delta", "r:"+this.getDeltaRed()+",g:"+this.getDeltaGreen()+",b:"+this.getDeltaBlue()).add("matchId", this.getMatch().getId()).toString();
+		return MoreObjects.toStringHelper(this).add("super", super.toString()).add("scores", this.getScores())
+				.add("delta", "r:" + this.getDeltaRed() + ",g:" + this.getDeltaGreen() + ",b:" + this.getDeltaBlue()).add("matchId", this.getMatch().getId()).toString();
 	}
 }

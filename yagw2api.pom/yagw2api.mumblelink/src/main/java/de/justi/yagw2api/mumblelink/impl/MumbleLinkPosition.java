@@ -1,7 +1,7 @@
 package de.justi.yagw2api.mumblelink.impl;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-MumbleLink
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,19 +17,18 @@ package de.justi.yagw2api.mumblelink.impl;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 
 import de.justi.yagw2api.mumblelink.IMumbleLinkPosition;
 
 final class MumbleLinkPosition implements IMumbleLinkPosition {
-	static Optional<IMumbleLinkPosition> of(float[] positionArray) {
+	static Optional<IMumbleLinkPosition> of(final float[] positionArray) {
 		if (positionArray == null) {
 			return Optional.absent();
 		} else {
@@ -42,7 +41,7 @@ final class MumbleLinkPosition implements IMumbleLinkPosition {
 	private final float y;
 	private final float z;
 
-	private MumbleLinkPosition(float x, float y, float z) {
+	private MumbleLinkPosition(final float x, final float y, final float z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -72,9 +71,9 @@ final class MumbleLinkPosition implements IMumbleLinkPosition {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = (prime * result) + Float.floatToIntBits(x);
-		result = (prime * result) + Float.floatToIntBits(y);
-		result = (prime * result) + Float.floatToIntBits(z);
+		result = (prime * result) + Float.floatToIntBits(this.x);
+		result = (prime * result) + Float.floatToIntBits(this.y);
+		result = (prime * result) + Float.floatToIntBits(this.z);
 		return result;
 	}
 
@@ -84,7 +83,7 @@ final class MumbleLinkPosition implements IMumbleLinkPosition {
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
 		}
@@ -95,13 +94,13 @@ final class MumbleLinkPosition implements IMumbleLinkPosition {
 			return false;
 		}
 		MumbleLinkPosition other = (MumbleLinkPosition) obj;
-		if (Float.floatToIntBits(x) != Float.floatToIntBits(other.x)) {
+		if (Float.floatToIntBits(this.x) != Float.floatToIntBits(other.x)) {
 			return false;
 		}
-		if (Float.floatToIntBits(y) != Float.floatToIntBits(other.y)) {
+		if (Float.floatToIntBits(this.y) != Float.floatToIntBits(other.y)) {
 			return false;
 		}
-		if (Float.floatToIntBits(z) != Float.floatToIntBits(other.z)) {
+		if (Float.floatToIntBits(this.z) != Float.floatToIntBits(other.z)) {
 			return false;
 		}
 		return true;
@@ -109,6 +108,6 @@ final class MumbleLinkPosition implements IMumbleLinkPosition {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("x", this.x).add("y", this.y).add("z", this.z).toString();
+		return MoreObjects.toStringHelper(this).add("x", this.x).add("y", this.y).add("z", this.z).toString();
 	}
 }

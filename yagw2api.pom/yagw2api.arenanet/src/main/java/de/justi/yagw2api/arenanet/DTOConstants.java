@@ -1,7 +1,7 @@
 package de.justi.yagw2api.arenanet;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Arenanet
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,12 +17,13 @@ package de.justi.yagw2api.arenanet;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-
 public final class DTOConstants {
-	private DTOConstants() {}
+	private DTOConstants() {
+	}
+
 	public static final String CENTER_MAP_TYPE_STRING = "CENTER";
 	public static final String RED_MAP_TYPE_STRING = "REDHOME";
 	public static final String GREEN_MAP_TYPE_STRING = "GREENHOME";

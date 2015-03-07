@@ -1,7 +1,7 @@
 package de.justi.yagw2api.analyzer.impl;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Analyzer
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,9 +17,8 @@ package de.justi.yagw2api.analyzer.impl;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-
 
 import com.google.inject.AbstractModule;
 
@@ -31,9 +30,9 @@ public final class Module extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bind(IWorldEnityDAO.class).to(WorldEntityDAO.class).asEagerSingleton();
-		bind(IWVWMatchEntityDAO.class).to(WVWMatchEntityDAO.class).asEagerSingleton();
-		bind(IWVWAnalyzer.class).to(WVWAnalyzer.class);
+		this.bind(IWorldEnityDAO.class).to(WorldEntityDAO.class).asEagerSingleton();
+		this.bind(IWVWMatchEntityDAO.class).to(WVWMatchEntityDAO.class).asEagerSingleton();
+		this.bind(IWVWAnalyzer.class).to(WVWAnalyzer.class);
 	}
 
 }

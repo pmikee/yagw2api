@@ -1,7 +1,7 @@
 package de.justi.yagw2api.wrapper.impl;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Wrapper
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,7 +17,7 @@ package de.justi.yagw2api.wrapper.impl;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -38,7 +38,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -74,7 +73,8 @@ final class WVWMap extends AbstractHasChannel implements IWVWMap {
 
 		@Override
 		public EventBus getChannel() {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName() + " and therefore can not be modified.");
+			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName()
+					+ " and therefore can not be modified.");
 		}
 
 		@Override
@@ -113,13 +113,13 @@ final class WVWMap extends AbstractHasChannel implements IWVWMap {
 		}
 
 		@Override
-		public Optional<IWVWObjective> getByObjectiveId(int id) {
+		public Optional<IWVWObjective> getByObjectiveId(final int id) {
 			final Optional<IWVWObjective> buffer = WVWMap.this.getByObjectiveId(id);
 			return buffer.isPresent() ? Optional.of(buffer.get().createUnmodifiableReference()) : buffer;
 		}
 
 		@Override
-		public Optional<IHasWVWLocation<?>> getByLocation(IWVWLocationType location) {
+		public Optional<IHasWVWLocation<?>> getByLocation(final IWVWLocationType location) {
 			final Optional<IHasWVWLocation<?>> buffer = WVWMap.this.getByLocation(location);
 			return buffer.isPresent() ? Optional.<IHasWVWLocation<?>> of(buffer.get().createUnmodifiableReference()) : buffer;
 		}
@@ -141,13 +141,14 @@ final class WVWMap extends AbstractHasChannel implements IWVWMap {
 		}
 
 		@Override
-		public void connectWithMatch(IWVWMatch map) {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName() + " and therefore can not be modified.");
+		public void connectWithMatch(final IWVWMatch map) {
+			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName()
+					+ " and therefore can not be modified.");
 		}
 
 		@Override
 		public String toString() {
-			return Objects.toStringHelper(this).addValue(WVWMap.this.toString()).toString();
+			return MoreObjects.toStringHelper(this).addValue(WVWMap.this.toString()).toString();
 		}
 
 		@Override
@@ -173,11 +174,11 @@ final class WVWMap extends AbstractHasChannel implements IWVWMap {
 		private final List<IWVWObjective> results;
 		private final List<IWVWObjectiveDTO> objectiveDTOs;
 
-		public BuildObjectivesFromDTOsAction(IWVWObjectiveDTO[] objectiveDTOs) {
+		public BuildObjectivesFromDTOsAction(final IWVWObjectiveDTO[] objectiveDTOs) {
 			this(ImmutableList.copyOf(checkNotNull(objectiveDTOs)), new ArrayList<IWVWObjective>());
 		}
 
-		private BuildObjectivesFromDTOsAction(List<IWVWObjectiveDTO> dtos, List<IWVWObjective> results) {
+		private BuildObjectivesFromDTOsAction(final List<IWVWObjectiveDTO> dtos, final List<IWVWObjective> results) {
 			checkNotNull(dtos);
 			this.results = checkNotNull(results, "Missing objective list.");
 			this.objectiveDTOs = dtos;
@@ -253,13 +254,13 @@ final class WVWMap extends AbstractHasChannel implements IWVWMap {
 		}
 
 		@Override
-		public IWVWMap.IWVWMapBuilder type(IWVWMapType type) {
+		public IWVWMap.IWVWMapBuilder type(final IWVWMapType type) {
 			this.type = Optional.fromNullable(type);
 			return this;
 		}
 
 		@Override
-		public IWVWMap.IWVWMapBuilder objective(IWVWObjective objective) {
+		public IWVWMap.IWVWMapBuilder objective(final IWVWObjective objective) {
 			checkNotNull(objective);
 			checkNotNull(objective.getLocation());
 			checkState(!this.contentMappedByLocation.containsKey(objective.getLocation()));
@@ -268,7 +269,7 @@ final class WVWMap extends AbstractHasChannel implements IWVWMap {
 		}
 
 		@Override
-		public IWVWMap.IWVWMapBuilder fromDTO(IWVWMapDTO dto) {
+		public IWVWMap.IWVWMapBuilder fromDTO(final IWVWMapDTO dto) {
 			checkNotNull(dto);
 			if (LOGGER.isTraceEnabled()) {
 				LOGGER.trace("Going to build from " + IWVWMapDTO.class.getSimpleName() + " where dto=" + dto);
@@ -286,28 +287,28 @@ final class WVWMap extends AbstractHasChannel implements IWVWMap {
 		}
 
 		@Override
-		public IWVWMap.IWVWMapBuilder redScore(int score) {
+		public IWVWMap.IWVWMapBuilder redScore(final int score) {
 			checkArgument(score > 0);
 			this.redScore = Optional.of(score);
 			return this;
 		}
 
 		@Override
-		public IWVWMap.IWVWMapBuilder blueScore(int score) {
+		public IWVWMap.IWVWMapBuilder blueScore(final int score) {
 			checkArgument(score > 0);
 			this.blueScore = Optional.of(score);
 			return this;
 		}
 
 		@Override
-		public IWVWMap.IWVWMapBuilder greenScore(int score) {
+		public IWVWMap.IWVWMapBuilder greenScore(final int score) {
 			checkArgument(score > 0);
 			this.greenScore = Optional.of(score);
 			return this;
 		}
 
 		@Override
-		public IWVWMapBuilder match(IWVWMatch match) {
+		public IWVWMapBuilder match(final IWVWMatch match) {
 			this.match = Optional.fromNullable(match);
 			return this;
 		}
@@ -319,7 +320,7 @@ final class WVWMap extends AbstractHasChannel implements IWVWMap {
 	private final IWVWScores scores;
 	private Optional<IWVWMatch> match = Optional.absent();
 
-	private WVWMap(IWVWMapType type, Collection<IHasWVWLocation<?>> contents) {
+	private WVWMap(final IWVWMapType type, final Collection<IHasWVWLocation<?>> contents) {
 		checkNotNull(type);
 		checkNotNull(contents);
 		checkArgument(contents.size() > 0);
@@ -342,7 +343,7 @@ final class WVWMap extends AbstractHasChannel implements IWVWMap {
 	}
 
 	@Subscribe
-	public void onWVWObjectiveEvent(IWVWObjectiveEvent event) {
+	public void onWVWObjectiveEvent(final IWVWObjectiveEvent event) {
 		if (LOGGER.isTraceEnabled()) {
 			LOGGER.trace(this.getClass().getSimpleName() + " is going to forward " + event);
 		}
@@ -350,7 +351,7 @@ final class WVWMap extends AbstractHasChannel implements IWVWMap {
 	}
 
 	@Subscribe
-	public void onWVWMapScoreChangeEvent(IWVWMapScoresChangedEvent event) {
+	public void onWVWMapScoreChangeEvent(final IWVWMapScoresChangedEvent event) {
 		if (LOGGER.isTraceEnabled()) {
 			LOGGER.trace(this.getClass().getSimpleName() + " is going to forward " + event);
 		}
@@ -378,7 +379,7 @@ final class WVWMap extends AbstractHasChannel implements IWVWMap {
 	}
 
 	@Override
-	public Optional<IHasWVWLocation<?>> getByLocation(IWVWLocationType location) {
+	public Optional<IHasWVWLocation<?>> getByLocation(final IWVWLocationType location) {
 		if (this.content.containsKey(location)) {
 			return Optional.<IHasWVWLocation<?>> fromNullable(this.content.get(location));
 		} else {
@@ -397,7 +398,7 @@ final class WVWMap extends AbstractHasChannel implements IWVWMap {
 	}
 
 	@Override
-	public Optional<IWVWObjective> getByObjectiveId(int id) {
+	public Optional<IWVWObjective> getByObjectiveId(final int id) {
 		checkArgument(id > 0);
 		final Optional<IWVWLocationType> location = WVWLocationType.forObjectiveId(id);
 		if (location.isPresent()) {
@@ -424,13 +425,13 @@ final class WVWMap extends AbstractHasChannel implements IWVWMap {
 	}
 
 	@Override
-	public void connectWithMatch(IWVWMatch match) {
+	public void connectWithMatch(final IWVWMatch match) {
 		checkNotNull(match);
 		checkState(!this.match.isPresent(), "Connect with map can only be called once.");
 		this.match = Optional.of(match);
 	}
 
-	private int calculateTickOfWorld(IWorld world) {
+	private int calculateTickOfWorld(final IWorld world) {
 		int tick = 0;
 		for (IWVWObjective objective : this.getObjectives()) {
 			if (world.equals(objective.getOwner().orNull())) {

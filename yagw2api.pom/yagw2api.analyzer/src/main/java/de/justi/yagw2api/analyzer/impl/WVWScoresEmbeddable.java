@@ -1,7 +1,7 @@
 package de.justi.yagw2api.analyzer.impl;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Analyzer
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,9 +17,8 @@ package de.justi.yagw2api.analyzer.impl;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -34,10 +33,10 @@ import de.justi.yagw2api.analyzer.IWVWScoresEmbeddable;
 final class WVWScoresEmbeddable implements IWVWScoresEmbeddable {
 
 	public WVWScoresEmbeddable() {
-		this(0,0,0);
+		this(0, 0, 0);
 	}
-	
-	public WVWScoresEmbeddable(int redScore, int greenScore, int blueScore) {
+
+	public WVWScoresEmbeddable(final int redScore, final int greenScore, final int blueScore) {
 		checkArgument(redScore >= 0);
 		checkArgument(greenScore >= 0);
 		checkArgument(blueScore >= 0);
@@ -45,16 +44,16 @@ final class WVWScoresEmbeddable implements IWVWScoresEmbeddable {
 		this.greenScores = greenScore;
 		this.blueScores = blueScore;
 	}
-	
+
 	@Column(name = "red_scores")
 	private int redScores;
-	
+
 	@Column(name = "green_scores")
 	private int greenScores;
-	
+
 	@Column(name = "blue_scores")
 	private int blueScores;
-	
+
 	@Override
 	public int getRedScore() {
 		return this.redScores;
@@ -70,7 +69,8 @@ final class WVWScoresEmbeddable implements IWVWScoresEmbeddable {
 		return this.greenScores;
 	}
 
+	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("red",this.redScores).add("green", this.greenScores).add("blue", this.blueScores).toString();
+		return Objects.toStringHelper(this).add("red", this.redScores).add("green", this.greenScores).add("blue", this.blueScores).toString();
 	}
 }

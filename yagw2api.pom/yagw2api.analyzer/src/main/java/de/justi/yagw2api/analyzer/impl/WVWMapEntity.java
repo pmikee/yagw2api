@@ -1,7 +1,7 @@
 package de.justi.yagw2api.analyzer.impl;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Analyzer
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,9 +17,8 @@ package de.justi.yagw2api.analyzer.impl;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
@@ -46,9 +45,8 @@ import org.eclipse.persistence.annotations.MapKeyConvert;
 import org.eclipse.persistence.annotations.ObjectTypeConverter;
 import org.eclipse.persistence.annotations.ObjectTypeConverters;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.Optional;
 import com.google.common.base.MoreObjects.ToStringHelper;
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.Maps;
 
@@ -59,10 +57,10 @@ import de.justi.yagw2api.wrapper.IWVWMapType;
 import de.justi.yagw2api.wrapper.impl.WVWMapType;
 
 @ObjectTypeConverters({ @ObjectTypeConverter(name = "MapTypeConverter", objectType = WVWMapType.class, dataType = String.class, conversionValues = {
-		@ConversionValue(objectValue = "CENTER", dataValue = "CENTER"), @ConversionValue(objectValue = "RED", dataValue = "RED"), @ConversionValue(objectValue = "GREEN", dataValue = "GREEN"),
-		@ConversionValue(objectValue = "BLUE", dataValue = "BLUE") }) })
+		@ConversionValue(objectValue = "CENTER", dataValue = "CENTER"), @ConversionValue(objectValue = "RED", dataValue = "RED"),
+		@ConversionValue(objectValue = "GREEN", dataValue = "GREEN"), @ConversionValue(objectValue = "BLUE", dataValue = "BLUE") }) })
 @Entity(name = "map")
-@Converter(name="localdatetime_converter", converterClass=LocalDateTimeConverter.class)
+@Converter(name = "localdatetime_converter", converterClass = LocalDateTimeConverter.class)
 public final class WVWMapEntity extends AbstractEntity implements IWVWMapEntity {
 	@ElementCollection(targetClass = WVWScoresEmbeddable.class)
 	@MapKeyColumn(name = "timestamp")
@@ -85,12 +83,12 @@ public final class WVWMapEntity extends AbstractEntity implements IWVWMapEntity 
 	}
 
 	@Override
-	public void setType(IWVWMapType type) {
+	public void setType(final IWVWMapType type) {
 		this.type = checkNotNull(type);
 	}
 
 	@Override
-	public void setMatch(IWVWMatchEntity match) {
+	public void setMatch(final IWVWMatchEntity match) {
 		this.match = checkNotNull(match);
 	}
 
@@ -106,7 +104,7 @@ public final class WVWMapEntity extends AbstractEntity implements IWVWMapEntity 
 	}
 
 	@Override
-	public void addScores(LocalDateTime timestamp, IWVWScoresEmbeddable scores) {
+	public void addScores(final LocalDateTime timestamp, final IWVWScoresEmbeddable scores) {
 		checkNotNull(timestamp);
 		checkNotNull(scores);
 		checkState(this.scoresMappedByTimestamp != null);

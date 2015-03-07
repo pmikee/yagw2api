@@ -1,7 +1,7 @@
 package de.justi.yagw2api.explorer.rcp;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Explorer-RCP-Application
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,7 +17,7 @@ package de.justi.yagw2api.explorer.rcp;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
 import org.eclipse.jface.action.IMenuManager;
@@ -27,14 +27,16 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 
 public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
-    public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
-        super(configurer);
-    }
+	public ApplicationActionBarAdvisor(final IActionBarConfigurer configurer) {
+		super(configurer);
+	}
 
-    protected void makeActions(IWorkbenchWindow window) {
-    }
+	@Override
+	protected void makeActions(final IWorkbenchWindow window) {
+	}
 
-    protected void fillMenuBar(IMenuManager menuBar) {
-    }
-    
+	@Override
+	protected void fillMenuBar(final IMenuManager menuBar) {
+	}
+
 }

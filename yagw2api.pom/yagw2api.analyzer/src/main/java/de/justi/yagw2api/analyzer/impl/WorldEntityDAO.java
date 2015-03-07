@@ -1,7 +1,7 @@
 package de.justi.yagw2api.analyzer.impl;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Analyzer
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,9 +17,8 @@ package de.justi.yagw2api.analyzer.impl;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -64,14 +63,14 @@ final class WorldEntityDAO implements IWorldEnityDAO {
 	}
 
 	@Override
-	public synchronized Optional<IWorldEntity> findWorldEntityById(long id) {
+	public synchronized Optional<IWorldEntity> findWorldEntityById(final long id) {
 		checkArgument(id >= 0);
 		checkState(YAGW2APIAnalyzerPersistence.getDefaultEM().isOpen());
 		return Optional.<IWorldEntity> fromNullable(YAGW2APIAnalyzerPersistence.getDefaultEM().find(WorldEntity.class, id));
 	}
 
 	@Override
-	public synchronized Optional<IWorldEntity> findWorldEntityByOriginId(int originId) {
+	public synchronized Optional<IWorldEntity> findWorldEntityByOriginId(final int originId) {
 		checkArgument(originId > 0);
 		checkState(YAGW2APIAnalyzerPersistence.getDefaultEM().isOpen());
 		final Query q = YAGW2APIAnalyzerPersistence.getDefaultEM().createQuery("SELECT DISTINCT w FROM world w WHERE w.originWorldId=:originId");
@@ -84,10 +83,11 @@ final class WorldEntityDAO implements IWorldEnityDAO {
 	}
 
 	@Override
-	public synchronized Collection<IWorldEntity> searchWorldEntityByNamePart(String part) {
+	public synchronized Collection<IWorldEntity> searchWorldEntityByNamePart(final String part) {
 		checkNotNull(part);
 		checkState(YAGW2APIAnalyzerPersistence.getDefaultEM().isOpen());
-		final Query q = YAGW2APIAnalyzerPersistence.getDefaultEM().createQuery("SELECT w FROM world w WHERE w.nameDE LIKE :part OR w.nameEN LIKE :part OR w.nameES LIKE :part OR w.nameFR LIKE :part");
+		final Query q = YAGW2APIAnalyzerPersistence.getDefaultEM().createQuery(
+				"SELECT w FROM world w WHERE w.nameDE LIKE :part OR w.nameEN LIKE :part OR w.nameES LIKE :part OR w.nameFR LIKE :part");
 		q.setParameter("part", "%" + part + "%");
 		@SuppressWarnings("unchecked")
 		final Optional<List<IWorldEntity>> qResultBuffer = Optional.<List<IWorldEntity>> fromNullable(q.getResultList());
@@ -101,7 +101,7 @@ final class WorldEntityDAO implements IWorldEnityDAO {
 	}
 
 	@Override
-	public synchronized Optional<IWorldEntity> findWorldEntityByName(Locale locale, String name) {
+	public synchronized Optional<IWorldEntity> findWorldEntityByName(final Locale locale, final String name) {
 		checkNotNull(locale);
 		checkNotNull(name);
 		checkState(YAGW2APIAnalyzerPersistence.getDefaultEM().isOpen());
@@ -133,7 +133,7 @@ final class WorldEntityDAO implements IWorldEnityDAO {
 	}
 
 	@Override
-	public synchronized Collection<IWorldEntity> searchWorldEntityByName(String name) {
+	public synchronized Collection<IWorldEntity> searchWorldEntityByName(final String name) {
 		checkNotNull(name);
 		checkState(YAGW2APIAnalyzerPersistence.getDefaultEM().isOpen());
 		final Query q = YAGW2APIAnalyzerPersistence.getDefaultEM().createQuery("SELECT w FROM world w WHERE w.nameDE=:name OR w.nameEN=:name OR w.nameES=:name OR w.nameFR=:name");
@@ -150,7 +150,7 @@ final class WorldEntityDAO implements IWorldEnityDAO {
 	}
 
 	@Override
-	public synchronized Optional<IWorldEntity> newWorldEntityOf(IWorld world) {
+	public synchronized Optional<IWorldEntity> newWorldEntityOf(final IWorld world) {
 		checkNotNull(world);
 		checkState(YAGW2APIAnalyzerPersistence.getDefaultEM().isOpen());
 		final EntityTransaction tx = YAGW2APIAnalyzerPersistence.getDefaultEM().getTransaction();
@@ -168,7 +168,7 @@ final class WorldEntityDAO implements IWorldEnityDAO {
 				tx.commit();
 			}
 		} catch (Exception e) {
-			LOGGER.error("Exception cought while creating new {} out of {}",newEntity,world, e);
+			LOGGER.error("Exception cought while creating new {} out of {}", newEntity, world, e);
 			newEntity = null;
 			if (tx.isActive()) {
 				tx.rollback();
@@ -178,7 +178,7 @@ final class WorldEntityDAO implements IWorldEnityDAO {
 	}
 
 	@Override
-	public synchronized Optional<IWorldEntity> findWorldEntityOf(IWorld world) {
+	public synchronized Optional<IWorldEntity> findWorldEntityOf(final IWorld world) {
 		checkNotNull(world);
 		checkArgument(world.getId() > 0);
 		checkState(YAGW2APIAnalyzerPersistence.getDefaultEM().isOpen());
@@ -186,7 +186,7 @@ final class WorldEntityDAO implements IWorldEnityDAO {
 	}
 
 	@Override
-	public synchronized IWorldEntity findOrCreateWorldEntityOf(IWorld world) {
+	public synchronized IWorldEntity findOrCreateWorldEntityOf(final IWorld world) {
 		checkNotNull(world);
 		checkState(YAGW2APIAnalyzerPersistence.getDefaultEM().isOpen());
 		final Optional<IWorldEntity> alreadyThere = this.findWorldEntityOf(world);
@@ -200,7 +200,7 @@ final class WorldEntityDAO implements IWorldEnityDAO {
 	}
 
 	@Override
-	public synchronized boolean save(IWorldEntity entity) {
+	public synchronized boolean save(final IWorldEntity entity) {
 		boolean success;
 		final EntityTransaction tx = YAGW2APIAnalyzerPersistence.getDefaultEM().getTransaction();
 		final boolean newTransaction = !tx.isActive();

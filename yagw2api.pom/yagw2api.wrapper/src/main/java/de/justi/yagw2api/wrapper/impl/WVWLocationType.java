@@ -1,7 +1,7 @@
 package de.justi.yagw2api.wrapper.impl;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Wrapper
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,9 +17,8 @@ package de.justi.yagw2api.wrapper.impl;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
@@ -32,7 +31,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -212,16 +211,17 @@ public enum WVWLocationType implements IWVWLocationType {
 		}
 		LOCATIONTYPES_MAPPED_BY_OBJECTIVE_ID = mapByObjectiveIdBuilder.build();
 		LOCATIONTYPES_MAPPED_BY_MAPTYPE = ImmutableMap.<IWVWMapType, Set<IWVWLocationType>> builder().put(RED_MAPTYPE, redLocationSetBuilder.build())
-				.put(GREEN_MAPTYPE, greenLocationSetBuilder.build()).put(BLUE_MAPTYPE, blueLocationSetBuilder.build()).put(CENTER_MAPTYPE, centerLocationSetBuilder.build()).build();
+				.put(GREEN_MAPTYPE, greenLocationSetBuilder.build()).put(BLUE_MAPTYPE, blueLocationSetBuilder.build()).put(CENTER_MAPTYPE, centerLocationSetBuilder.build())
+				.build();
 
 		checkState(WVWLocationType.forMapTyp(CENTER_MAPTYPE).isPresent());
 		checkState(WVWLocationType.forMapTyp(BLUE_MAPTYPE).isPresent());
 		checkState(WVWLocationType.forMapTyp(GREEN_MAPTYPE).isPresent());
 		checkState(WVWLocationType.forMapTyp(RED_MAPTYPE).isPresent());
-		checkState(WVWLocationType.forMapTyp(GREEN_MAPTYPE).get().size() == WVWLocationType.forMapTyp(RED_MAPTYPE).get().size(), "green(" + WVWLocationType.forMapTyp(GREEN_MAPTYPE).get().size()
-				+ ")==red(" + WVWLocationType.forMapTyp(RED_MAPTYPE).get().size() + ")");
-		checkState(WVWLocationType.forMapTyp(BLUE_MAPTYPE).get().size() == WVWLocationType.forMapTyp(GREEN_MAPTYPE).get().size(), "blue(" + WVWLocationType.forMapTyp(BLUE_MAPTYPE).get().size()
-				+ ")==green(" + WVWLocationType.forMapTyp(GREEN_MAPTYPE).get().size() + ")");
+		checkState(WVWLocationType.forMapTyp(GREEN_MAPTYPE).get().size() == WVWLocationType.forMapTyp(RED_MAPTYPE).get().size(), "green("
+				+ WVWLocationType.forMapTyp(GREEN_MAPTYPE).get().size() + ")==red(" + WVWLocationType.forMapTyp(RED_MAPTYPE).get().size() + ")");
+		checkState(WVWLocationType.forMapTyp(BLUE_MAPTYPE).get().size() == WVWLocationType.forMapTyp(GREEN_MAPTYPE).get().size(), "blue("
+				+ WVWLocationType.forMapTyp(BLUE_MAPTYPE).get().size() + ")==green(" + WVWLocationType.forMapTyp(GREEN_MAPTYPE).get().size() + ")");
 
 		LOGGER.trace("Initialized " + WVWLocationType.class.getSimpleName());
 	}
@@ -230,11 +230,11 @@ public enum WVWLocationType implements IWVWLocationType {
 	private final Optional<Integer> objectiveId;
 	private final Optional<IWVWObjectiveType> objectiveType;
 
-	private WVWLocationType(IWVWMapType type) {
+	private WVWLocationType(final IWVWMapType type) {
 		this(null, null, checkNotNull(type));
 	}
 
-	private WVWLocationType(Integer objectiveId, IWVWObjectiveType objectiveType, IWVWMapType type) {
+	private WVWLocationType(final Integer objectiveId, final IWVWObjectiveType objectiveType, final IWVWMapType type) {
 		this.objectiveId = Optional.fromNullable(objectiveId);
 		this.objectiveType = Optional.fromNullable(objectiveType);
 		checkNotNull(type);
@@ -247,7 +247,7 @@ public enum WVWLocationType implements IWVWLocationType {
 	}
 
 	@Override
-	public Optional<String> getLabel(Locale locale) {
+	public Optional<String> getLabel(final Locale locale) {
 		checkNotNull(locale);
 		final ResourceBundle bundle = ResourceBundle.getBundle("locations", locale);
 		try {
@@ -263,7 +263,7 @@ public enum WVWLocationType implements IWVWLocationType {
 		return this.objectiveId;
 	}
 
-	public static Optional<IWVWLocationType> forObjectiveId(int objectiveId) {
+	public static Optional<IWVWLocationType> forObjectiveId(final int objectiveId) {
 		final Optional<IWVWLocationType> location = Optional.fromNullable(LOCATIONTYPES_MAPPED_BY_OBJECTIVE_ID.get(objectiveId));
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Determined location " + location + " for " + objectiveId);
@@ -271,7 +271,7 @@ public enum WVWLocationType implements IWVWLocationType {
 		return location;
 	}
 
-	public static Optional<Set<IWVWLocationType>> forMapTyp(IWVWMapType mapType) {
+	public static Optional<Set<IWVWLocationType>> forMapTyp(final IWVWMapType mapType) {
 		return Optional.fromNullable(LOCATIONTYPES_MAPPED_BY_MAPTYPE.get(mapType));
 	}
 
@@ -287,7 +287,7 @@ public enum WVWLocationType implements IWVWLocationType {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("label", this.getLabel(YAGW2APIArenanet.INSTANCE.getCurrentLocale())).add("isObjectiveLocation", this.isObjectiveLocation())
+		return MoreObjects.toStringHelper(this).add("label", this.getLabel(YAGW2APIArenanet.INSTANCE.getCurrentLocale())).add("isObjectiveLocation", this.isObjectiveLocation())
 				.add("objectiveId", this.getObjectiveId()).add("objectiveType", this.getObjectiveType()).add("mapType", this.getMapType()).toString();
 	}
 }

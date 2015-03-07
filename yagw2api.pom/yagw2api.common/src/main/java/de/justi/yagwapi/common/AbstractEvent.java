@@ -1,7 +1,7 @@
 package de.justi.yagwapi.common;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Commons
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,17 +17,12 @@ package de.justi.yagwapi.common;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-
-import java.text.DateFormat;
 import java.time.LocalDateTime;
-import java.util.Calendar;
 
 import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
-
 
 public abstract class AbstractEvent implements IEvent {
 	private final LocalDateTime timestamp;
@@ -36,11 +31,13 @@ public abstract class AbstractEvent implements IEvent {
 		this.timestamp = LocalDateTime.now();
 	}
 
+	@Override
 	public final LocalDateTime getTimestamp() {
 		return this.timestamp;
 	}
 
+	@Override
 	public String toString() {
-		return MoreObjects.toStringHelper(this).add("timestamp", timestamp).toString();
+		return MoreObjects.toStringHelper(this).add("timestamp", this.timestamp).toString();
 	}
 }

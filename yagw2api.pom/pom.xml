@@ -69,54 +69,9 @@
 		<module>yagw2api.anchorman</module>
 		<module>yagw2api.server</module>
 		<module>yagw2api.locationprovider</module>
-		<module>yagw2api.explorer</module>
 		<module>yagw2api.explorer.rcp.pom</module>
 	</modules>
 
-	<profiles>
-		<profile>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<id>update-licence-headers</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>license-maven-plugin</artifactId>
-						<version>${license-maven-plugin.version}</version>
-						<executions>
-							<execution>
-								<id>add-licence-headers</id>
-								<phase>process-sources</phase>
-								<goals>
-									<goal>update-file-header</goal>
-									<goal>check-file-header</goal>
-								</goals>
-								<configuration>
-									<licenseName>apache_v2</licenseName>
-									<inceptionYear>2012</inceptionYear>
-									<acceptPomPackaging>true</acceptPomPackaging>
-									<failIfWarning>true</failIfWarning>
-									<roots>
-										<root>src/main/java</root>
-										<root>src/test/java</root>
-									</roots>
-									<canUpdateCopyright>true</canUpdateCopyright>
-									<canUpdateDescription>true</canUpdateDescription>
-									<canUpdateLicense>true</canUpdateLicense>
-									<addJavaLicenseAfterPackage>true</addJavaLicenseAfterPackage>
-									<processStartTag><![CDATA[<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~]]></processStartTag>
-									<sectionDelimiter><![CDATA[_____________________________________________________________]]></sectionDelimiter>
-									<processEndTag><![CDATA[~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>]]></processEndTag>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
 
 	<build>
 		<plugins>
@@ -130,6 +85,38 @@
 					<showWarning>true</showWarning>
 					<showDeprecation>true</showDeprecation>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<version>${license-maven-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>add-update-check-licence-headers</id>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>update-file-header</goal>
+							<goal>check-file-header</goal>
+						</goals>
+						<configuration>
+							<licenseName>apache_v2</licenseName>
+							<inceptionYear>2012</inceptionYear>
+							<acceptPomPackaging>true</acceptPomPackaging>
+							<failIfWarning>true</failIfWarning>
+							<roots>
+								<root>src/main/java</root>
+								<root>src/test/java</root>
+							</roots>
+							<canUpdateCopyright>true</canUpdateCopyright>
+							<canUpdateDescription>false</canUpdateDescription>
+							<canUpdateLicense>false</canUpdateLicense>
+							<addJavaLicenseAfterPackage>true</addJavaLicenseAfterPackage>
+							<processStartTag><![CDATA[@formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~]]></processStartTag>
+							<sectionDelimiter><![CDATA[_____________________________________________________________]]></sectionDelimiter>
+							<processEndTag><![CDATA[~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on]]></processEndTag>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 		<pluginManagement>

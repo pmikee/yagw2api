@@ -1,7 +1,7 @@
 package de.justi.yagw2api.mumblelink.impl;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-MumbleLink
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,9 +17,8 @@ package de.justi.yagw2api.mumblelink.impl;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -31,7 +30,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.sun.jna.Pointer;
 
@@ -43,7 +41,7 @@ final class MumbleLinkState implements IMumbleLinkState {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MumbleLinkState.class);
 
 	@Nullable
-	public static final IMumbleLinkState of(Pointer memMapFileData) {
+	public static final IMumbleLinkState of(final Pointer memMapFileData) {
 		checkNotNull(memMapFileData);
 		final Integer uiVersion = memMapFileData.getInt(0);
 		if ((uiVersion == null) || (uiVersion < 0)) {
@@ -88,7 +86,7 @@ final class MumbleLinkState implements IMumbleLinkState {
 		}
 		final String avatarJSON = String.copyValueOf(memMapFileData.getCharArray(592, 256)).trim();
 		if ((avatarJSON == null) || (avatarJSON.length() == 0)) {
-			LOGGER.trace("Invalid avatarJSON={}", avatarJSON);			
+			LOGGER.trace("Invalid avatarJSON={}", avatarJSON);
 			return null;
 		}
 		final IMumbleLinkAvatar avatar = MumbleLinkAvatar.of(avatarJSON);
@@ -119,11 +117,11 @@ final class MumbleLinkState implements IMumbleLinkState {
 		final int build = memMapFileData.getInt(1108 + 44); // affirmed
 		final int mapId = memMapFileData.getInt(1108 + 28); // affirmed
 
-		return new MumbleLinkState(uiVersion, uiTick, avatarPosition.get(), avatarFront.get(), avatarTop.get(), cameraPosition.get(), cameraFront.get(), cameraTop.get(), avatar, gameName,
-				regionId, build, mapId);
+		return new MumbleLinkState(uiVersion, uiTick, avatarPosition.get(), avatarFront.get(), avatarTop.get(), cameraPosition.get(), cameraFront.get(), cameraTop.get(), avatar,
+				gameName, regionId, build, mapId);
 	}
 
-	private static int unsignedByteValue2ByteValue(int unsignedByteValue) {
+	private static int unsignedByteValue2ByteValue(final int unsignedByteValue) {
 		return (256 + unsignedByteValue) % 256;
 	}
 
@@ -141,8 +139,9 @@ final class MumbleLinkState implements IMumbleLinkState {
 	private final Optional<Integer> build;
 	private final Optional<Integer> mapId;
 
-	private MumbleLinkState(int uiVersion, int uiTick, IMumbleLinkPosition avatarPosition, IMumbleLinkPosition avatarFront, IMumbleLinkPosition avatarTop, IMumbleLinkPosition cameraPosition,
-			IMumbleLinkPosition cameraFront, IMumbleLinkPosition cameraTop, IMumbleLinkAvatar avatar, String gameName, int regionId, int build, int mapId) {
+	private MumbleLinkState(final int uiVersion, final int uiTick, final IMumbleLinkPosition avatarPosition, final IMumbleLinkPosition avatarFront,
+			final IMumbleLinkPosition avatarTop, final IMumbleLinkPosition cameraPosition, final IMumbleLinkPosition cameraFront, final IMumbleLinkPosition cameraTop,
+			final IMumbleLinkAvatar avatar, final String gameName, final int regionId, final int build, final int mapId) {
 		checkNotNull(avatarPosition);
 		checkNotNull(avatarFront);
 		checkNotNull(avatarTop);
@@ -221,104 +220,105 @@ final class MumbleLinkState implements IMumbleLinkState {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((avatar == null) ? 0 : avatar.hashCode());
-		result = prime * result + ((avatarFront == null) ? 0 : avatarFront.hashCode());
-		result = prime * result + ((avatarPosition == null) ? 0 : avatarPosition.hashCode());
-		result = prime * result + ((avatarTop == null) ? 0 : avatarTop.hashCode());
-		result = prime * result + ((build == null) ? 0 : build.hashCode());
-		result = prime * result + ((cameraFront == null) ? 0 : cameraFront.hashCode());
-		result = prime * result + ((cameraPosition == null) ? 0 : cameraPosition.hashCode());
-		result = prime * result + ((cameraTop == null) ? 0 : cameraTop.hashCode());
-		result = prime * result + ((gameName == null) ? 0 : gameName.hashCode());
-		result = prime * result + ((mapId == null) ? 0 : mapId.hashCode());
-		result = prime * result + ((regionId == null) ? 0 : regionId.hashCode());
-		result = prime * result + ((uiTick == null) ? 0 : uiTick.hashCode());
-		result = prime * result + ((uiVersion == null) ? 0 : uiVersion.hashCode());
+		result = prime * result + ((this.avatar == null) ? 0 : this.avatar.hashCode());
+		result = prime * result + ((this.avatarFront == null) ? 0 : this.avatarFront.hashCode());
+		result = prime * result + ((this.avatarPosition == null) ? 0 : this.avatarPosition.hashCode());
+		result = prime * result + ((this.avatarTop == null) ? 0 : this.avatarTop.hashCode());
+		result = prime * result + ((this.build == null) ? 0 : this.build.hashCode());
+		result = prime * result + ((this.cameraFront == null) ? 0 : this.cameraFront.hashCode());
+		result = prime * result + ((this.cameraPosition == null) ? 0 : this.cameraPosition.hashCode());
+		result = prime * result + ((this.cameraTop == null) ? 0 : this.cameraTop.hashCode());
+		result = prime * result + ((this.gameName == null) ? 0 : this.gameName.hashCode());
+		result = prime * result + ((this.mapId == null) ? 0 : this.mapId.hashCode());
+		result = prime * result + ((this.regionId == null) ? 0 : this.regionId.hashCode());
+		result = prime * result + ((this.uiTick == null) ? 0 : this.uiTick.hashCode());
+		result = prime * result + ((this.uiVersion == null) ? 0 : this.uiVersion.hashCode());
 		return result;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
+		if (this.getClass() != obj.getClass())
 			return false;
 		MumbleLinkState other = (MumbleLinkState) obj;
-		if (avatar == null) {
+		if (this.avatar == null) {
 			if (other.avatar != null)
 				return false;
-		} else if (!avatar.equals(other.avatar))
+		} else if (!this.avatar.equals(other.avatar))
 			return false;
-		if (avatarFront == null) {
+		if (this.avatarFront == null) {
 			if (other.avatarFront != null)
 				return false;
-		} else if (!avatarFront.equals(other.avatarFront))
+		} else if (!this.avatarFront.equals(other.avatarFront))
 			return false;
-		if (avatarPosition == null) {
+		if (this.avatarPosition == null) {
 			if (other.avatarPosition != null)
 				return false;
-		} else if (!avatarPosition.equals(other.avatarPosition))
+		} else if (!this.avatarPosition.equals(other.avatarPosition))
 			return false;
-		if (avatarTop == null) {
+		if (this.avatarTop == null) {
 			if (other.avatarTop != null)
 				return false;
-		} else if (!avatarTop.equals(other.avatarTop))
+		} else if (!this.avatarTop.equals(other.avatarTop))
 			return false;
-		if (build == null) {
+		if (this.build == null) {
 			if (other.build != null)
 				return false;
-		} else if (!build.equals(other.build))
+		} else if (!this.build.equals(other.build))
 			return false;
-		if (cameraFront == null) {
+		if (this.cameraFront == null) {
 			if (other.cameraFront != null)
 				return false;
-		} else if (!cameraFront.equals(other.cameraFront))
+		} else if (!this.cameraFront.equals(other.cameraFront))
 			return false;
-		if (cameraPosition == null) {
+		if (this.cameraPosition == null) {
 			if (other.cameraPosition != null)
 				return false;
-		} else if (!cameraPosition.equals(other.cameraPosition))
+		} else if (!this.cameraPosition.equals(other.cameraPosition))
 			return false;
-		if (cameraTop == null) {
+		if (this.cameraTop == null) {
 			if (other.cameraTop != null)
 				return false;
-		} else if (!cameraTop.equals(other.cameraTop))
+		} else if (!this.cameraTop.equals(other.cameraTop))
 			return false;
-		if (gameName == null) {
+		if (this.gameName == null) {
 			if (other.gameName != null)
 				return false;
-		} else if (!gameName.equals(other.gameName))
+		} else if (!this.gameName.equals(other.gameName))
 			return false;
-		if (mapId == null) {
+		if (this.mapId == null) {
 			if (other.mapId != null)
 				return false;
-		} else if (!mapId.equals(other.mapId))
+		} else if (!this.mapId.equals(other.mapId))
 			return false;
-		if (regionId == null) {
+		if (this.regionId == null) {
 			if (other.regionId != null)
 				return false;
-		} else if (!regionId.equals(other.regionId))
+		} else if (!this.regionId.equals(other.regionId))
 			return false;
-		if (uiTick == null) {
+		if (this.uiTick == null) {
 			if (other.uiTick != null)
 				return false;
-		} else if (!uiTick.equals(other.uiTick))
+		} else if (!this.uiTick.equals(other.uiTick))
 			return false;
-		if (uiVersion == null) {
+		if (this.uiVersion == null) {
 			if (other.uiVersion != null)
 				return false;
-		} else if (!uiVersion.equals(other.uiVersion))
+		} else if (!this.uiVersion.equals(other.uiVersion))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return MoreObjects.toStringHelper(this).add("uiVersion", this.uiVersion).add("uiTick", this.uiTick).add("avatarPosition", this.avatarPosition).add("avatarFront", this.avatarFront)
-				.add("avatarTop", this.avatarTop).add("cameraPosition", this.cameraPosition).add("cameraFront", this.cameraFront).add("cameraTop", this.cameraTop).add("avatar", this.avatar)
-				.add("gameName", this.gameName).add("regionId", this.regionId).add("build", this.build).add("mapId", this.mapId).toString();
+		return MoreObjects.toStringHelper(this).add("uiVersion", this.uiVersion).add("uiTick", this.uiTick).add("avatarPosition", this.avatarPosition)
+				.add("avatarFront", this.avatarFront).add("avatarTop", this.avatarTop).add("cameraPosition", this.cameraPosition).add("cameraFront", this.cameraFront)
+				.add("cameraTop", this.cameraTop).add("avatar", this.avatar).add("gameName", this.gameName).add("regionId", this.regionId).add("build", this.build)
+				.add("mapId", this.mapId).toString();
 	}
 
 	@Override

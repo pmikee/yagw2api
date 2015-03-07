@@ -1,7 +1,7 @@
 package de.justi.yagw2api.wrapper.impl;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Wrapper
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,9 +17,8 @@ package de.justi.yagw2api.wrapper.impl;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -60,14 +59,14 @@ final class WVWSynchronizerAction extends AbstractSynchronizerAction<String, WVW
 
 	private final Map<String, IWVWMatch> matchesMappedById;
 
-	public WVWSynchronizerAction(Map<String, IWVWMatch> matchesMappedById) {
+	public WVWSynchronizerAction(final Map<String, IWVWMatch> matchesMappedById) {
 		this(ImmutableMap.copyOf(matchesMappedById), ImmutableList.copyOf(matchesMappedById.keySet()), MAX_CHUNK_SIZE, 0, matchesMappedById.size());
 		if (LOGGER.isTraceEnabled()) {
 			LOGGER.trace("Created new " + this.getClass().getSimpleName() + " that has to handle " + this.matchesMappedById);
 		}
 	}
 
-	private WVWSynchronizerAction(Map<String, IWVWMatch> matchesMappedById, List<String> matchIds, int chunkSize, int fromInclusive, int toExclusive) {
+	private WVWSynchronizerAction(final Map<String, IWVWMatch> matchesMappedById, final List<String> matchIds, final int chunkSize, final int fromInclusive, final int toExclusive) {
 		super(matchIds, chunkSize, fromInclusive, toExclusive);
 		checkArgument(chunkSize > 0);
 		checkNotNull(matchIds);
@@ -77,12 +76,12 @@ final class WVWSynchronizerAction extends AbstractSynchronizerAction<String, WVW
 	}
 
 	@Override
-	protected WVWSynchronizerAction createSubTask(List<String> mapIds, int chunkSize, int fromInclusive, int toExclusive) {
+	protected WVWSynchronizerAction createSubTask(final List<String> mapIds, final int chunkSize, final int fromInclusive, final int toExclusive) {
 		return new WVWSynchronizerAction(this.matchesMappedById, mapIds, chunkSize, fromInclusive, toExclusive);
 	}
 
 	@Override
-	protected void perform(String matchId) {
+	protected void perform(final String matchId) {
 		final long startTimestamp = System.currentTimeMillis();
 		final Optional<IWVWMatchDTO> matchDTOOptional = WVW_SERVICE.retrieveMatch(matchId);
 		if (matchDTOOptional.isPresent() && matchDTOOptional.get().getDetails().isPresent()) {
@@ -108,7 +107,7 @@ final class WVWSynchronizerAction extends AbstractSynchronizerAction<String, WVW
 		LOGGER.trace("Synchronized matchId=" + matchId + " in " + duration + "ms.");
 	}
 
-	private void synchronizeWorldNames(IWVWMatch matchModel, IWVWMatchDTO matchDTO) {
+	private void synchronizeWorldNames(final IWVWMatch matchModel, final IWVWMatchDTO matchDTO) {
 		final Optional<IWorldNameDTO> greenName = matchDTO.getGreenWorldName(YAGW2APIArenanet.INSTANCE.getCurrentLocale());
 		final Optional<IWorldNameDTO> redName = matchDTO.getRedWorldName(YAGW2APIArenanet.INSTANCE.getCurrentLocale());
 		final Optional<IWorldNameDTO> blueName = matchDTO.getBlueWorldName(YAGW2APIArenanet.INSTANCE.getCurrentLocale());
@@ -123,7 +122,7 @@ final class WVWSynchronizerAction extends AbstractSynchronizerAction<String, WVW
 		}
 	}
 
-	private void synchronizeMap(IWVWMatch match, IWVWMap mapModel, IWVWMapDTO mapDTO) {
+	private void synchronizeMap(final IWVWMatch match, final IWVWMap mapModel, final IWVWMapDTO mapDTO) {
 		checkNotNull(mapDTO);
 		checkNotNull(mapModel);
 

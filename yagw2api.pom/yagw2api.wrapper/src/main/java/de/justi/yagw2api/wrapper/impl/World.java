@@ -1,7 +1,7 @@
 package de.justi.yagw2api.wrapper.impl;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Wrapper
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,9 +17,8 @@ package de.justi.yagw2api.wrapper.impl;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -27,6 +26,7 @@ import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Locale;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 
@@ -69,7 +69,7 @@ final class World implements IWorld {
 		}
 
 		@Override
-		public IWorldBuilder fromDTO(IWorldNameDTO dto) {
+		public IWorldBuilder fromDTO(final IWorldNameDTO dto) {
 			checkArgument(dto.isEurope() ^ dto.isNorthAmerica());
 			if (dto.isEurope()) {
 				this.worldLocation(WorldLocationType.EUROPE);
@@ -83,26 +83,26 @@ final class World implements IWorld {
 		}
 
 		@Override
-		public IWorldBuilder worldLocation(IWorldLocationType location) {
+		public IWorldBuilder worldLocation(final IWorldLocationType location) {
 			this.location = Optional.fromNullable(location);
 			return this;
 		}
 
 		@Override
-		public IWorldBuilder name(String name) {
+		public IWorldBuilder name(final String name) {
 			this.name = Optional.fromNullable(name);
 			return this;
 		}
 
 		@Override
-		public IWorldBuilder id(int id) {
+		public IWorldBuilder id(final int id) {
 			checkArgument(id > 0);
 			this.id = Optional.of(id);
 			return this;
 		}
 
 		@Override
-		public IWorldBuilder worldLocale(Locale locale) {
+		public IWorldBuilder worldLocale(final Locale locale) {
 			this.locale = Optional.fromNullable(locale);
 			return this;
 		}
@@ -122,8 +122,9 @@ final class World implements IWorld {
 		}
 
 		@Override
-		public void setName(String name) {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName() + " and therefore can not be modified.");
+		public void setName(final String name) {
+			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName()
+					+ " and therefore can not be modified.");
 		}
 
 		@Override
@@ -133,7 +134,7 @@ final class World implements IWorld {
 
 		@Override
 		public String toString() {
-			return Objects.toStringHelper(this).addValue(World.this.toString()).toString();
+			return MoreObjects.toStringHelper(this).addValue(World.this.toString()).toString();
 		}
 
 		@Override
@@ -142,7 +143,7 @@ final class World implements IWorld {
 		}
 
 		@Override
-		public boolean equals(Object obj) {
+		public boolean equals(final Object obj) {
 			return World.this.equals(obj);
 		}
 
@@ -162,7 +163,7 @@ final class World implements IWorld {
 	private final Optional<Locale> locale;
 	private final IWorldLocationType location;
 
-	public World(int id, Locale locale, IWorldLocationType location) {
+	public World(final int id, final Locale locale, final IWorldLocationType location) {
 		checkArgument(id > 0);
 		this.id = id;
 		this.locale = Optional.fromNullable(locale);
@@ -181,11 +182,11 @@ final class World implements IWorld {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("id", this.id).add("name", this.name).add("locale", this.locale).add("location", this.location).toString();
+		return MoreObjects.toStringHelper(this).add("id", this.id).add("name", this.name).add("locale", this.locale).add("location", this.location).toString();
 	}
 
 	@Override
-	public void setName(String name) {
+	public void setName(final String name) {
 		checkNotNull(name);
 		this.name = Optional.of(name);
 	}
@@ -201,7 +202,7 @@ final class World implements IWorld {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if ((obj == null) || !(obj instanceof IWorld)) {
 			return false;
 		} else {

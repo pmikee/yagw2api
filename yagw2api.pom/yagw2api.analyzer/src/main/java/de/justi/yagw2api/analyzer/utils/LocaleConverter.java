@@ -1,7 +1,7 @@
 package de.justi.yagw2api.analyzer.utils;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Analyzer
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,9 +17,8 @@ package de.justi.yagw2api.analyzer.utils;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -33,7 +32,7 @@ public final class LocaleConverter implements Converter {
 	private static final long serialVersionUID = 6076012675486780488L;
 
 	@Override
-	public Object convertObjectValueToDataValue(Object objectValue, Session session) {
+	public Object convertObjectValueToDataValue(final Object objectValue, final Session session) {
 		if (objectValue != null) {
 			checkArgument(objectValue instanceof Locale);
 			return ((Locale) objectValue).toLanguageTag();
@@ -43,7 +42,7 @@ public final class LocaleConverter implements Converter {
 	}
 
 	@Override
-	public Object convertDataValueToObjectValue(Object dataValue, Session session) {
+	public Object convertDataValueToObjectValue(final Object dataValue, final Session session) {
 		if (dataValue != null) {
 			checkArgument(dataValue instanceof String);
 			return Locale.forLanguageTag((String) dataValue);
@@ -59,7 +58,7 @@ public final class LocaleConverter implements Converter {
 	}
 
 	@Override
-	public void initialize(DatabaseMapping mapping, Session session) {
+	public void initialize(final DatabaseMapping mapping, final Session session) {
 		// nothing to do
 	}
 

@@ -1,7 +1,7 @@
 package de.justi.yagw2api.analyzer.utils;
 
 /*
- * <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Analyzer
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
@@ -17,7 +17,7 @@ package de.justi.yagw2api.analyzer.utils;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -40,24 +40,23 @@ import org.slf4j.LoggerFactory;
 public final class HTTPClasspathForWebStartArchive extends ArchiveBase implements Archive {
 	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(HTTPClasspathForWebStartArchive.class);
 	private static final String[] POSSIBLE_ENTRIES = new String[] { PersistenceUnitProperties.ECLIPSELINK_PERSISTENCE_XML_DEFAULT };
-	
+
 	private final URL url;
 	private final ClassLoader loader;
 
-	
 	private final List<String> entries = new ArrayList<String>();
 	private Logger logger;
 
-	public HTTPClasspathForWebStartArchive(URL url, Logger logger, String descriptorLocation) throws IOException {
-		super(checkNotNull(url,"URL should not be null."), checkNotNull(descriptorLocation, "DescriptorLocation should not be null"));
+	public HTTPClasspathForWebStartArchive(final URL url, final Logger logger, final String descriptorLocation) throws IOException {
+		super(checkNotNull(url, "URL should not be null."), checkNotNull(descriptorLocation, "DescriptorLocation should not be null"));
 		this.logger = checkNotNull(logger);
 		this.logger.entering("HTTPClasspathForWebStartArchive", "HTTPClasspathForWebStartArchive", // NOI18N
-				new Object[] { url });		
+				new Object[] { url });
 		this.url = checkNotNull(url);
 		this.loader = checkNotNull(this.getClass().getClassLoader());
-		init();
+		this.init();
 		checkState(this.entries.size() > 0);
-		LOGGER.info("Initialized new "+this.getClass().getSimpleName()+" for "+url+": "+this.entries);
+		LOGGER.info("Initialized new " + this.getClass().getSimpleName() + " for " + url + ": " + this.entries);
 	}
 
 	private void init() throws IOException {
@@ -67,9 +66,9 @@ public final class HTTPClasspathForWebStartArchive extends ArchiveBase implement
 				is = this.loader.getResourceAsStream(entry);
 				if (is != null) {
 					this.entries.add(entry);
-					LOGGER.info("Successfully located entry="+entry+" using "+this.loader);
-				}else {
-					LOGGER.warn("Unable to locate entry="+entry+" using "+this.loader);
+					LOGGER.info("Successfully located entry=" + entry + " using " + this.loader);
+				} else {
+					LOGGER.warn("Unable to locate entry=" + entry + " using " + this.loader);
 				}
 			} finally {
 				if (is != null) {
@@ -81,14 +80,16 @@ public final class HTTPClasspathForWebStartArchive extends ArchiveBase implement
 				}
 			}
 		}
-		LOGGER.info("Initiailzed " + this + ": " + entries);
+		LOGGER.info("Initiailzed " + this + ": " + this.entries);
 	}
 
+	@Override
 	public Iterator<String> getEntries() {
 		return this.entries.iterator();
 	}
 
-	public InputStream getEntry(String entryPath) throws IOException {
+	@Override
+	public InputStream getEntry(final String entryPath) throws IOException {
 		LOGGER.info("Going to return " + InputStream.class.getSimpleName() + " for " + entryPath);
 		if (!this.entries.contains(entryPath)) {
 			return null;
@@ -98,7 +99,8 @@ public final class HTTPClasspathForWebStartArchive extends ArchiveBase implement
 		return (is == null) ? null : new BufferedInputStream(is);
 	}
 
-	public URL getEntryAsURL(String entryPath) throws IOException {
+	@Override
+	public URL getEntryAsURL(final String entryPath) throws IOException {
 		URL result = this.entries.contains(entryPath) ? result = new URL("jar:" + this.url + "!/" + entryPath) : null; // NOI18N
 		return result;
 	}
