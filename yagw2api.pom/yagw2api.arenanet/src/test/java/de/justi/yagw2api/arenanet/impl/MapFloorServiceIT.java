@@ -32,6 +32,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
@@ -40,7 +42,10 @@ import de.justi.yagw2api.arenanet.IMapFloorDTO;
 import de.justi.yagw2api.test.AbstractYAGW2APITest;
 
 @RunWith(Parameterized.class)
-public class MapFloorServiceIT extends AbstractYAGW2APITest {
+public final class MapFloorServiceIT extends AbstractYAGW2APITest {
+	// CONSTS
+	private static final Logger LOGGER = LoggerFactory.getLogger(MapFloorServiceIT.class);
+
 	// STATIC
 	@Parameters(name = "continentId={0}&floor={1}&lang={2}")
 	public static Collection<Object[]> parameters() {
@@ -78,10 +83,11 @@ public class MapFloorServiceIT extends AbstractYAGW2APITest {
 		final MapDTOFactory dtoFactory = new MapDTOFactory();
 		final MapFloorService service = new MapFloorService(dtoFactory);
 
-		Optional<IMapFloorDTO> floor = service.retrieveMapFloor(this.continentId, this.floor, this.locale);
+		final Optional<IMapFloorDTO> floor = service.retrieveMapFloor(this.continentId, this.floor, this.locale);
 
 		assertThat(floor.isPresent(), is(true));
 		assertThat(floor.get().getTextureDimension().getValue1().get(), is(greaterThan(0)));
 		assertThat(floor.get().getTextureDimension().getValue2().get(), is(greaterThan(0)));
+		assertThat(floor.get().getRegions().size(), is(greaterThan(0)));
 	}
 }

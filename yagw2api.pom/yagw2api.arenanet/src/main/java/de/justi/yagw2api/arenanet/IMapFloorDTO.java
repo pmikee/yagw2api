@@ -20,6 +20,8 @@ package de.justi.yagw2api.arenanet;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
+import java.util.Map;
+
 import com.google.common.base.Optional;
 
 import de.justi.yagwapi.common.Tuple2;
@@ -28,5 +30,10 @@ import de.justi.yagwapi.common.Tuple4;
 public interface IMapFloorDTO {
 	Tuple2<Integer, Integer> getTextureDimension();
 
+	/**
+	 * @return If present, it represents a rectangle of downloadable textures. Every tile coordinate outside this rectangle is not available on the tile server.
+	 */
 	Optional<Tuple4<Integer, Integer, Integer, Integer>> getClampedView();
+
+	Map<String, IMapRegionDTO> getRegions();
 }

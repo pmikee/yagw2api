@@ -22,14 +22,19 @@ package de.justi.yagw2api.arenanet.impl;
 
 import static com.google.common.base.Preconditions.checkState;
 
+import java.util.Collections;
+import java.util.Map;
+
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 
 import de.justi.yagw2api.arenanet.IMapFloorDTO;
+import de.justi.yagw2api.arenanet.IMapRegionDTO;
 import de.justi.yagwapi.common.Tuple2;
 import de.justi.yagwapi.common.Tuple4;
 import de.justi.yagwapi.common.Tuples;
@@ -42,6 +47,10 @@ final class MapFloorDTO implements IMapFloorDTO {
 	@SerializedName("clamped_view")
 	@Since(1.0)
 	private final Integer[][] clampedView = new Integer[2][2];
+
+	@SerializedName("regions")
+	@Since(1.0)
+	private final Map<String, MapRegionDTO> regions = ImmutableMap.of();
 
 	private final transient Supplier<Tuple2<Integer, Integer>> textureDimensionTupleSupplier = Suppliers.memoize(() -> {
 		checkState(this.textureDimension.length == 2, "invalid texture dimension length: %s", this.textureDimension.length);
@@ -71,7 +80,13 @@ final class MapFloorDTO implements IMapFloorDTO {
 
 	@Override
 	public String toString() {
-		return MoreObjects.toStringHelper(this).add("textureDimension", this.getTextureDimension()).add("clampedView", this.getClampedView()).toString();
+		return MoreObjects.toStringHelper(this).add("textureDimension", this.getTextureDimension()).add("clampedView", this.getClampedView()).add("regions", this.regions)
+				.toString();
+	}
+
+	@Override
+	public Map<String, IMapRegionDTO> getRegions() {
+		return Collections.unmodifiableMap(this.regions);
 	}
 
 }

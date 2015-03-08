@@ -20,7 +20,7 @@ package de.justi.yagw2api.arenanet.impl;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 
@@ -35,7 +35,7 @@ final class WVWMatchesDTO implements IWVWMatchesDTO {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("matchesCount", this.matches.length).toString();
+		return MoreObjects.toStringHelper(this).add("matchesCount", this.matches.length).toString();
 	}
 
 	@Override
