@@ -20,10 +20,10 @@ package de.justi.yagw2api.arenanet;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-import scala.Tuple2;
-import scala.Tuple4;
-
 import com.google.common.base.Optional;
+
+import de.justi.yagwapi.common.Tuple2;
+import de.justi.yagwapi.common.Tuple4;
 
 public interface IMapFloorDTO {
 	Tuple2<Integer, Integer> getTextureDimension();

@@ -47,7 +47,6 @@
 		<hamcrest.version>1.3</hamcrest.version>
 		<springframework.version>4.1.5.RELEASE</springframework.version>
 		<springboot.version>1.2.2.RELEASE</springboot.version>
-		<scala.version>2.11.6</scala.version>
 
 		<!-- PLUGINS -->
 		<license-maven-plugin.version>1.8</license-maven-plugin.version>
@@ -56,6 +55,7 @@
 		<maven-compiler-plugin.version>3.2</maven-compiler-plugin.version>
 		<maven-assembly-plugin.version>2.5.3</maven-assembly-plugin.version>
 		<maven-surefire-plugin.version>2.18.1</maven-surefire-plugin.version>
+		<maven-failsafe-plugin.version>2.18.1</maven-failsafe-plugin.version>
 		<maven-shade-plugin.version>2.3</maven-shade-plugin.version>
 	</properties>
 
@@ -87,9 +87,16 @@
 				</configuration>
 			</plugin>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+			</plugin>
+			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>license-maven-plugin</artifactId>
-				<version>${license-maven-plugin.version}</version>
 				<executions>
 					<execution>
 						<id>add-update-check-licence-headers</id>
@@ -152,8 +159,23 @@
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-failsafe-plugin</artifactId>
+					<version>${maven-failsafe-plugin.version}</version>
+					<configuration>
+						<disableXmlReport>true</disableXmlReport>
+						<failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
+						<failIfNoTests>false</failIfNoTests>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-shade-plugin</artifactId>
 					<version>${maven-shade-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>license-maven-plugin</artifactId>
+					<version>${license-maven-plugin.version}</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -362,11 +384,6 @@
 				<groupId>com.google.inject</groupId>
 				<artifactId>guice</artifactId>
 				<version>${guice.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.scala-lang</groupId>
-				<artifactId>scala-library</artifactId>
-				<version>${scala.version}</version>
 			</dependency>
 			<!-- UTILS > LOGGING -->
 			<dependency>

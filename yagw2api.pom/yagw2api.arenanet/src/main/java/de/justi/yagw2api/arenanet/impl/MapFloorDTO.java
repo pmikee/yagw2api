@@ -21,8 +21,6 @@ package de.justi.yagw2api.arenanet.impl;
  */
 
 import static com.google.common.base.Preconditions.checkState;
-import scala.Tuple2;
-import scala.Tuple4;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
@@ -32,6 +30,9 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 
 import de.justi.yagw2api.arenanet.IMapFloorDTO;
+import de.justi.yagwapi.common.Tuple2;
+import de.justi.yagwapi.common.Tuple4;
+import de.justi.yagwapi.common.Tuples;
 
 final class MapFloorDTO implements IMapFloorDTO {
 
@@ -44,7 +45,7 @@ final class MapFloorDTO implements IMapFloorDTO {
 
 	private final transient Supplier<Tuple2<Integer, Integer>> textureDimensionTupleSupplier = Suppliers.memoize(() -> {
 		checkState(this.textureDimension.length == 2, "invalid texture dimension length: %s", this.textureDimension.length);
-		return new Tuple2<Integer, Integer>(this.textureDimension[0], this.textureDimension[1]);
+		return Tuples.of(this.textureDimension[0], this.textureDimension[1]);
 	});
 
 	private final transient Supplier<Optional<Tuple4<Integer, Integer, Integer, Integer>>> clampedViewTupleSupplier = Suppliers.memoize(() -> {
@@ -54,7 +55,7 @@ final class MapFloorDTO implements IMapFloorDTO {
 		if (this.clampedView[0][0] == null || this.clampedView[0][1] == null || this.clampedView[1][0] == null || this.clampedView[1][1] == null) {
 			return Optional.absent();
 		} else {
-			return Optional.of(new Tuple4<Integer, Integer, Integer, Integer>(this.clampedView[0][0], this.clampedView[0][1], this.clampedView[1][0], this.clampedView[1][1]));
+			return Optional.of(Tuples.of(this.clampedView[0][0], this.clampedView[0][1], this.clampedView[1][0], this.clampedView[1][1]));
 		}
 	});
 

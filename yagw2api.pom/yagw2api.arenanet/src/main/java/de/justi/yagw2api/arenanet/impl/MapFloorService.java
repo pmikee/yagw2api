@@ -33,8 +33,6 @@ import javax.ws.rs.core.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import scala.Tuple3;
-
 import com.google.common.base.Optional;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -48,6 +46,8 @@ import de.justi.yagw2api.arenanet.IMapDTOFactory;
 import de.justi.yagw2api.arenanet.IMapFloorDTO;
 import de.justi.yagw2api.arenanet.IMapFloorService;
 import de.justi.yagwapi.common.RetryClientFilter;
+import de.justi.yagwapi.common.Tuple3;
+import de.justi.yagwapi.common.Tuples;
 
 final class MapFloorService implements IMapFloorService {
 	// CONSTS
@@ -68,11 +68,11 @@ final class MapFloorService implements IMapFloorService {
 			.expireAfterWrite(CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build(new CacheLoader<Tuple3<Locale, Integer, Integer>, Optional<IMapFloorDTO>>() {
 				@Override
 				public Optional<IMapFloorDTO> load(final Tuple3<Locale, Integer, Integer> key) throws Exception {
-					final WebResource resource = ServiceUtils.REST_CLIENT.resource(MAP_FLOOR_URL.toExternalForm()).queryParam("continent_id ", key._2().toString())
-							.queryParam("floor", key._3().toString()).queryParam("lang", key._1().toLanguageTag());
-					resource.addFilter(new RetryClientFilter(ServiceUtils.REST_RETRY_COUNT));
-					final WebResource.Builder builder = resource.accept(MediaType.APPLICATION_JSON_TYPE);
+					final WebResource resource = ServiceUtils.REST_CLIENT.resource(MAP_FLOOR_URL.toExternalForm()).queryParam("continent_id ", key.getValue2().get().toString())
+							.queryParam("floor", key.getValue3().get().toString()).queryParam("lang", key.getValue1().get().toLanguageTag());
 					try {
+						resource.addFilter(new RetryClientFilter(ServiceUtils.REST_RETRY_COUNT));
+						final WebResource.Builder builder = resource.accept(MediaType.APPLICATION_JSON_TYPE);
 						final String response = builder.get(String.class);
 						LOGGER.trace("Retrieved response=" + response);
 						final IMapFloorDTO result = MapFloorService.this.mapDTOFactory.newMapFloorOf(response);
@@ -96,7 +96,7 @@ final class MapFloorService implements IMapFloorService {
 	public Optional<IMapFloorDTO> retrieveMapFloor(final int continentId, final int floor, final Locale lang) {
 		checkNotNull(lang, "missing lang");
 		try {
-			return this.mapFloorCache.get(new Tuple3<Locale, Integer, Integer>(lang, continentId, floor));
+			return this.mapFloorCache.get(Tuples.of(lang, continentId, floor));
 		} catch (ExecutionException e) {
 			LOGGER.error("Failed to retrieve {} from cache for continentId={}, floor={}, lang={}", IMapFloorDTO.class, continentId, floor, lang, e);
 			throw new IllegalStateException("Failed to retrieve " + IMapFloorDTO.class.getSimpleName() + " from cache for continentId=" + continentId + ", floor=" + floor

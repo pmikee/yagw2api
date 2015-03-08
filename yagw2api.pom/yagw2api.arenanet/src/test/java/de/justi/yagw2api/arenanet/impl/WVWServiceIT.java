@@ -40,7 +40,7 @@ import de.justi.yagw2api.arenanet.IWVWObjectiveDTO;
 import de.justi.yagw2api.arenanet.IWVWObjectiveNameDTO;
 import de.justi.yagw2api.test.AbstractYAGW2APITest;
 
-public final class WVWServiceTest extends AbstractYAGW2APITest {
+public final class WVWServiceIT extends AbstractYAGW2APITest {
 	private static final Locale SUPPORTED_LOCALE_A1 = Locale.GERMAN;
 	private static final Locale SUPPORTED_LOCALE_A2 = Locale.GERMANY;
 	private static final int NUMBER_OF_MAPS = 4;

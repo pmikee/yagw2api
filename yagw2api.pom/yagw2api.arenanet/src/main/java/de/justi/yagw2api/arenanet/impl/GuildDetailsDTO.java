@@ -20,7 +20,9 @@ package de.justi.yagw2api.arenanet.impl;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-import com.google.common.base.Objects;
+import javax.annotation.concurrent.Immutable;
+
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
@@ -28,22 +30,23 @@ import com.google.gson.annotations.Since;
 import de.justi.yagw2api.arenanet.IGuildDetailsDTO;
 import de.justi.yagw2api.arenanet.IGuildEmblemDTO;
 
+@Immutable
 final class GuildDetailsDTO implements IGuildDetailsDTO {
 	@SerializedName("guild_id")
 	@Since(1.0)
-	private String id;
+	private final String id = null;
 
 	@SerializedName("guild_name")
 	@Since(1.0)
-	private String name;
+	private final String name = null;
 
 	@SerializedName("tag")
 	@Since(1.0)
-	private String tag;
+	private final String tag = null;
 
 	@SerializedName("emblem")
 	@Since(1.0)
-	private GuildEmblemDTO emblem;
+	private final GuildEmblemDTO emblem = null;
 
 	@Override
 	public String getId() {
@@ -67,6 +70,6 @@ final class GuildDetailsDTO implements IGuildDetailsDTO {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("id", this.getId()).add("name", this.getName()).add("tag", this.getTag()).add("emblem", this.getEmblem()).toString();
+		return MoreObjects.toStringHelper(this).add("id", this.getId()).add("name", this.getName()).add("tag", this.getTag()).add("emblem", this.getEmblem()).toString();
 	}
 }
