@@ -2,13 +2,21 @@ package de.justi.yagw2api.arenanet.impl;
 
 import static com.google.common.base.Preconditions.checkState;
 
+import java.util.Collections;
+import java.util.List;
+
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
+import com.google.common.collect.ImmutableList;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 
 import de.justi.yagw2api.arenanet.IMapMapDTO;
+import de.justi.yagw2api.arenanet.IMapPOIDTO;
+import de.justi.yagw2api.arenanet.IMapSectorDTO;
+import de.justi.yagw2api.arenanet.IMapSkillChallangeDTO;
+import de.justi.yagw2api.arenanet.IMapTaskDTO;
 import de.justi.yagwapi.common.Tuple4;
 import de.justi.yagwapi.common.Tuples;
 
@@ -32,6 +40,18 @@ final class MapMapDTO implements IMapMapDTO {
 	@SerializedName("continent_rect")
 	@Since(1.0)
 	private final Integer[][] boundsOnContinent = new Integer[2][2];
+	@SerializedName("points_of_interest")
+	@Since(1.0)
+	private final List<MapPOIDTO> pois = ImmutableList.of();
+	@SerializedName("sectors")
+	@Since(1.0)
+	private final List<MapSectorDTO> sectors = ImmutableList.of();
+	@SerializedName("skill_challenges")
+	@Since(1.0)
+	private final List<MapSkillChallangeDTO> skillChallanges = ImmutableList.of();
+	@SerializedName("tasks")
+	@Since(1.0)
+	private final List<MapTaskDTO> tasks = ImmutableList.of();
 
 	private final transient Supplier<Tuple4<Integer, Integer, Integer, Integer>> boundsTupleSupplier = Suppliers.memoize(() -> {
 		checkState(this.bounds.length == 2, "invalid bounds length: %s", this.bounds.length);
@@ -80,8 +100,29 @@ final class MapMapDTO implements IMapMapDTO {
 	}
 
 	@Override
+	public List<IMapPOIDTO> getPOIs() {
+		return Collections.unmodifiableList(this.pois);
+	}
+
+	@Override
+	public List<IMapSectorDTO> getSectors() {
+		return Collections.unmodifiableList(this.sectors);
+	}
+
+	@Override
+	public List<IMapSkillChallangeDTO> getSkillChallanges() {
+		return Collections.unmodifiableList(this.skillChallanges);
+	}
+
+	@Override
+	public List<IMapTaskDTO> getTasks() {
+		return Collections.unmodifiableList(this.tasks);
+	}
+
+	@Override
 	public String toString() {
 		return MoreObjects.toStringHelper(this).add("name", this.name).add("minLevel", this.minLevel).add("maxLevel", this.maxLevel).add("defaultFloor", this.defaultFloor)
-				.add("bounds", this.getBounds()).add("boundsOnContinent", this.getBoundsOnContinent()).toString();
+				.add("bounds", this.getBounds()).add("boundsOnContinent", this.getBoundsOnContinent()).add("pois", this.pois).add("sectors", this.sectors)
+				.add("skillChallanges", this.skillChallanges).add("tasks", this.tasks).toString();
 	}
 }

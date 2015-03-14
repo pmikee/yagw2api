@@ -44,7 +44,7 @@ public final class Tuple4<V1, V2, V3, V4> implements Tuple<V1, V4> {
 	private transient final Supplier<List<Object>> valueListSupplier = Suppliers.memoize(new Supplier<List<Object>>() {
 		@Override
 		public List<Object> get() {
-			return ImmutableList.copyOf(Tuple4.this.getValuesAsArray());
+			return ImmutableList.copyOf(Tuple4.this.asArray());
 		}
 	});
 
@@ -56,27 +56,27 @@ public final class Tuple4<V1, V2, V3, V4> implements Tuple<V1, V4> {
 	}
 
 	@Override
-	public final List<Object> getValues() {
+	public final List<Object> asList() {
 		return this.valueListSupplier.get();
 	}
 
 	@Override
-	public final Object[] getValuesAsArray() {
+	public final Object[] asArray() {
 		return new Object[] { this.value1, this.value2, this.value3, this.value4 };
 	}
 
 	@Override
-	public final int getDimension() {
+	public final int dimension() {
 		return 4;
 	}
 
 	@Override
-	public final Optional<V1> getFirstValue() {
+	public final Optional<V1> first() {
 		return Optional.fromNullable(this.value1);
 	}
 
 	@Override
-	public final Optional<V4> getLastValue() {
+	public final Optional<V4> last() {
 		return Optional.fromNullable(this.value4);
 	}
 
@@ -119,6 +119,49 @@ public final class Tuple4<V1, V2, V3, V4> implements Tuple<V1, V4> {
 
 	@Override
 	public Iterator<Object> iterator() {
-		return this.getValues().iterator();
+		return this.asList().iterator();
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((this.value1 == null) ? 0 : this.value1.hashCode());
+		result = prime * result + ((this.value2 == null) ? 0 : this.value2.hashCode());
+		result = prime * result + ((this.value3 == null) ? 0 : this.value3.hashCode());
+		result = prime * result + ((this.value4 == null) ? 0 : this.value4.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof Tuple4))
+			return false;
+		Tuple4 other = (Tuple4) obj;
+		if (this.value1 == null) {
+			if (other.value1 != null)
+				return false;
+		} else if (!this.value1.equals(other.value1))
+			return false;
+		if (this.value2 == null) {
+			if (other.value2 != null)
+				return false;
+		} else if (!this.value2.equals(other.value2))
+			return false;
+		if (this.value3 == null) {
+			if (other.value3 != null)
+				return false;
+		} else if (!this.value3.equals(other.value3))
+			return false;
+		if (this.value4 == null) {
+			if (other.value4 != null)
+				return false;
+		} else if (!this.value4.equals(other.value4))
+			return false;
+		return true;
 	}
 }

@@ -40,7 +40,7 @@ public final class Tuple2<V1, V2> implements Tuple<V1, V2> {
 	private transient final Supplier<List<Object>> valueListSupplier = Suppliers.memoize(new Supplier<List<Object>>() {
 		@Override
 		public List<Object> get() {
-			return ImmutableList.copyOf(Tuple2.this.getValuesAsArray());
+			return ImmutableList.copyOf(Tuple2.this.asArray());
 		}
 	});
 
@@ -50,27 +50,27 @@ public final class Tuple2<V1, V2> implements Tuple<V1, V2> {
 	}
 
 	@Override
-	public final List<Object> getValues() {
+	public final List<Object> asList() {
 		return this.valueListSupplier.get();
 	}
 
 	@Override
-	public final Object[] getValuesAsArray() {
+	public final Object[] asArray() {
 		return new Object[] { this.value1, this.value2 };
 	}
 
 	@Override
-	public final int getDimension() {
+	public final int dimension() {
 		return 2;
 	}
 
 	@Override
-	public final Optional<V1> getFirstValue() {
+	public final Optional<V1> first() {
 		return Optional.fromNullable(this.value1);
 	}
 
 	@Override
-	public final Optional<V2> getLastValue() {
+	public final Optional<V2> last() {
 		return Optional.fromNullable(this.value2);
 	}
 
@@ -97,6 +97,37 @@ public final class Tuple2<V1, V2> implements Tuple<V1, V2> {
 
 	@Override
 	public Iterator<Object> iterator() {
-		return this.getValues().iterator();
+		return this.asList().iterator();
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((this.value1 == null) ? 0 : this.value1.hashCode());
+		result = prime * result + ((this.value2 == null) ? 0 : this.value2.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof Tuple2))
+			return false;
+		Tuple2 other = (Tuple2) obj;
+		if (this.value1 == null) {
+			if (other.value1 != null)
+				return false;
+		} else if (!this.value1.equals(other.value1))
+			return false;
+		if (this.value2 == null) {
+			if (other.value2 != null)
+				return false;
+		} else if (!this.value2.equals(other.value2))
+			return false;
+		return true;
 	}
 }

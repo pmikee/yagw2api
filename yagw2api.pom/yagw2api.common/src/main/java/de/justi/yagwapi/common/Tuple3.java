@@ -42,7 +42,7 @@ public final class Tuple3<V1, V2, V3> implements Tuple<V1, V3> {
 	private transient final Supplier<List<Object>> valueListSupplier = Suppliers.memoize(new Supplier<List<Object>>() {
 		@Override
 		public List<Object> get() {
-			return ImmutableList.copyOf(Tuple3.this.getValuesAsArray());
+			return ImmutableList.copyOf(Tuple3.this.asArray());
 		}
 	});
 
@@ -53,27 +53,27 @@ public final class Tuple3<V1, V2, V3> implements Tuple<V1, V3> {
 	}
 
 	@Override
-	public final List<Object> getValues() {
+	public final List<Object> asList() {
 		return this.valueListSupplier.get();
 	}
 
 	@Override
-	public final Object[] getValuesAsArray() {
+	public final Object[] asArray() {
 		return new Object[] { this.value1, this.value2, this.value3 };
 	}
 
 	@Override
-	public final int getDimension() {
+	public final int dimension() {
 		return 3;
 	}
 
 	@Override
-	public final Optional<V1> getFirstValue() {
+	public final Optional<V1> first() {
 		return Optional.fromNullable(this.value1);
 	}
 
 	@Override
-	public final Optional<V3> getLastValue() {
+	public final Optional<V3> last() {
 		return Optional.fromNullable(this.value3);
 	}
 
@@ -108,6 +108,43 @@ public final class Tuple3<V1, V2, V3> implements Tuple<V1, V3> {
 
 	@Override
 	public Iterator<Object> iterator() {
-		return this.getValues().iterator();
+		return this.asList().iterator();
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((this.value1 == null) ? 0 : this.value1.hashCode());
+		result = prime * result + ((this.value2 == null) ? 0 : this.value2.hashCode());
+		result = prime * result + ((this.value3 == null) ? 0 : this.value3.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof Tuple3))
+			return false;
+		Tuple3 other = (Tuple3) obj;
+		if (this.value1 == null) {
+			if (other.value1 != null)
+				return false;
+		} else if (!this.value1.equals(other.value1))
+			return false;
+		if (this.value2 == null) {
+			if (other.value2 != null)
+				return false;
+		} else if (!this.value2.equals(other.value2))
+			return false;
+		if (this.value3 == null) {
+			if (other.value3 != null)
+				return false;
+		} else if (!this.value3.equals(other.value3))
+			return false;
+		return true;
 	}
 }

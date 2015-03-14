@@ -1,5 +1,7 @@
 package de.justi.yagw2api.arenanet;
 
+import java.util.List;
+
 import de.justi.yagwapi.common.Tuple4;
 
 public interface IMapMapDTO {
@@ -22,4 +24,12 @@ public interface IMapMapDTO {
 	 * @return The dimensions of the map within the continent coordinate system, given as the coordinates of the upper-left (NW) and lower-right (SE) corners.
 	 */
 	Tuple4<Integer, Integer, Integer, Integer> getBoundsOnContinent();
+
+	List<IMapPOIDTO> getPOIs();
+
+	List<IMapSectorDTO> getSectors();
+
+	List<IMapSkillChallangeDTO> getSkillChallanges();
+
+	List<IMapTaskDTO> getTasks();
 }

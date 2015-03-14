@@ -29,13 +29,13 @@ import com.google.common.base.Optional;
 @Immutable
 public interface Tuple<VF, VL> extends Iterable<Object> {
 
-	Optional<VF> getFirstValue();
+	Optional<VF> first();
 
-	Optional<VL> getLastValue();
+	Optional<VL> last();
 
-	List<Object> getValues();
+	List<Object> asList();
 
-	Object[] getValuesAsArray();
+	Object[] asArray();
 
-	int getDimension();
+	int dimension();
 }
