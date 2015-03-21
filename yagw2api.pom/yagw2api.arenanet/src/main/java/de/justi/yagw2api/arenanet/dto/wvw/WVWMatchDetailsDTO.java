@@ -1,8 +1,8 @@
-package de.justi.yagw2api.wrapper;
+package de.justi.yagw2api.arenanet.dto.wvw;
 
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * YAGW2API-Wrapper
+ * YAGW2API-Arenanet
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
  * _____________________________________________________________
@@ -20,37 +20,29 @@ package de.justi.yagw2api.wrapper;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-import java.util.Locale;
-
 import com.google.common.base.Optional;
 
-import de.justi.yagw2api.arenanet.dto.world.WorldNameDTO;
+public interface WVWMatchDetailsDTO {
 
-public interface IWorld {
+	String getMatchID();
 
-	static interface IWorldBuilder {
-		IWorld build();
+	int getRedScore();
 
-		IWorldBuilder fromDTO(WorldNameDTO dto);
+	int getGreenScore();
 
-		IWorldBuilder worldLocation(IWorldLocationType location);
+	int getBlueScore();
 
-		IWorldBuilder name(String name);
+	WVWMapDTO[] getMaps();
 
-		IWorldBuilder id(int id);
+	Optional<WVWMapDTO> getMapForTypeString(String dtoMapTypeString);
 
-		IWorldBuilder worldLocale(Locale locale);
-	}
+	WVWMapDTO getCenterMap();
 
-	int getId();
+	WVWMapDTO getRedMap();
 
-	Optional<String> getName();
+	WVWMapDTO getGreenMap();
 
-	void setName(String name);
+	WVWMapDTO getBlueMap();
 
-	Optional<Locale> getWorldLocale();
-
-	IWorldLocationType getWorldLocation();
-
-	IWorld createUnmodifiableReference();
+	Optional<WVWMatchDTO> getMatch();
 }

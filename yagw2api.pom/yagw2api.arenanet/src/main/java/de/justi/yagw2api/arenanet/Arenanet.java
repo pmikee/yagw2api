@@ -1,8 +1,8 @@
-package de.justi.yagw2api.wrapper;
+package de.justi.yagw2api.arenanet;
 
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * YAGW2API-Wrapper
+ * YAGW2API-Arenanet
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
  * _____________________________________________________________
@@ -22,35 +22,41 @@ package de.justi.yagw2api.wrapper;
 
 import java.util.Locale;
 
-import com.google.common.base.Optional;
+public interface Arenanet {
 
-import de.justi.yagw2api.arenanet.dto.world.WorldNameDTO;
+	/**
+	 * <p>
+	 * access to low level api calls returning dtos
+	 * <p>
+	 *
+	 * @return
+	 */
+	WVWService getWVWService();
 
-public interface IWorld {
+	/**
+	 * <p>
+	 * access to low level api calls returning dtos
+	 * <p>
+	 *
+	 * @return
+	 */
+	WorldService getWorldService();
 
-	static interface IWorldBuilder {
-		IWorld build();
+	/**
+	 * <p>
+	 * access to low level api calls returning dtos
+	 * <p>
+	 *
+	 * @return
+	 */
+	GuildService getGuildService();
 
-		IWorldBuilder fromDTO(WorldNameDTO dto);
+	MapTileService getMapTileService();
 
-		IWorldBuilder worldLocation(IWorldLocationType location);
+	MapFloorService getMapFloorService();
 
-		IWorldBuilder name(String name);
+	Locale getCurrentLocale();
 
-		IWorldBuilder id(int id);
+	void setCurrentLocale(Locale locale);
 
-		IWorldBuilder worldLocale(Locale locale);
-	}
-
-	int getId();
-
-	Optional<String> getName();
-
-	void setName(String name);
-
-	Optional<Locale> getWorldLocale();
-
-	IWorldLocationType getWorldLocation();
-
-	IWorld createUnmodifiableReference();
 }

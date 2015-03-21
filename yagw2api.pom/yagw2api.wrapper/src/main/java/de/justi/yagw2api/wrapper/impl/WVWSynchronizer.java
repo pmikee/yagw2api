@@ -38,9 +38,9 @@ import com.google.common.eventbus.Subscribe;
 import com.google.common.util.concurrent.AbstractScheduledService;
 import com.sun.jersey.client.impl.CopyOnWriteHashMap;
 
-import de.justi.yagw2api.arenanet.IWVWMatchesDTO;
-import de.justi.yagw2api.arenanet.IWVWService;
+import de.justi.yagw2api.arenanet.WVWService;
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
+import de.justi.yagw2api.arenanet.dto.wvw.WVWMatchesDTO;
 import de.justi.yagw2api.wrapper.IWVWInitializedMatchEvent;
 import de.justi.yagw2api.wrapper.IWVWMatch;
 import de.justi.yagw2api.wrapper.IWorld;
@@ -49,7 +49,7 @@ import de.justi.yagwapi.common.IEvent;
 import de.justi.yagwapi.common.IHasChannel;
 
 final class WVWSynchronizer extends AbstractScheduledService implements IHasChannel {
-	private static final IWVWService SERVICE = YAGW2APIArenanet.getInstance().getWVWService();
+	private static final WVWService SERVICE = YAGW2APIArenanet.getInstance().getWVWService();
 	private static final long DELAY_MILLIS = 500;
 	private static final Logger LOGGER = LoggerFactory.getLogger(WVWSynchronizer.class);
 
@@ -72,7 +72,7 @@ final class WVWSynchronizer extends AbstractScheduledService implements IHasChan
 
 		try {
 			final long startTimestamp = System.currentTimeMillis();
-			final IWVWMatchesDTO matchesDto = SERVICE.retrieveAllMatches();
+			final WVWMatchesDTO matchesDto = SERVICE.retrieveAllMatches();
 
 			LOGGER.debug("Retrieved {} after {}ms", matchesDto, (System.currentTimeMillis() - startTimestamp));
 			final WVWSynchronizerInitAction initAction = new WVWSynchronizerInitAction(Arrays.asList(matchesDto.getMatches()));

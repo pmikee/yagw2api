@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.google.common.base.Optional;
 
-import de.justi.yagw2api.arenanet.IWVWObjectiveDTO;
+import de.justi.yagw2api.arenanet.dto.wvw.WVWObjectiveDTO;
 import de.justi.yagwapi.common.IHasChannel;
 
 public interface IWVWObjective extends IHasWVWLocation<IWVWObjective>, IHasChannel {
@@ -36,7 +36,7 @@ public interface IWVWObjective extends IHasWVWLocation<IWVWObjective>, IHasChann
 
 		IWVWObjectiveBuilder location(IWVWLocationType location);
 
-		IWVWObjectiveBuilder fromDTO(IWVWObjectiveDTO dto);
+		IWVWObjectiveBuilder fromDTO(WVWObjectiveDTO dto);
 
 		IWVWObjectiveBuilder owner(IWorld world);
 

@@ -46,8 +46,8 @@ import com.google.common.collect.Iterables;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
-import de.justi.yagw2api.arenanet.IWVWMapDTO;
-import de.justi.yagw2api.arenanet.IWVWObjectiveDTO;
+import de.justi.yagw2api.arenanet.dto.wvw.WVWMapDTO;
+import de.justi.yagw2api.arenanet.dto.wvw.WVWObjectiveDTO;
 import de.justi.yagw2api.wrapper.IHasWVWLocation;
 import de.justi.yagw2api.wrapper.IWVWLocationType;
 import de.justi.yagw2api.wrapper.IWVWMap;
@@ -172,20 +172,20 @@ final class WVWMap extends AbstractHasChannel implements IWVWMap {
 		private static final long serialVersionUID = -2652032220819553149L;
 
 		private final List<IWVWObjective> results;
-		private final List<IWVWObjectiveDTO> objectiveDTOs;
+		private final List<WVWObjectiveDTO> objectiveDTOs;
 
-		public BuildObjectivesFromDTOsAction(final IWVWObjectiveDTO[] objectiveDTOs) {
+		public BuildObjectivesFromDTOsAction(final WVWObjectiveDTO[] objectiveDTOs) {
 			this(ImmutableList.copyOf(checkNotNull(objectiveDTOs)), new ArrayList<IWVWObjective>());
 		}
 
-		private BuildObjectivesFromDTOsAction(final List<IWVWObjectiveDTO> dtos, final List<IWVWObjective> results) {
+		private BuildObjectivesFromDTOsAction(final List<WVWObjectiveDTO> dtos, final List<IWVWObjective> results) {
 			checkNotNull(dtos);
 			this.results = checkNotNull(results, "Missing objective list.");
 			this.objectiveDTOs = dtos;
 		}
 
 		@SuppressWarnings("unchecked")
-		private List<IWVWObjectiveDTO> getFirstHalf() {
+		private List<WVWObjectiveDTO> getFirstHalf() {
 			if (this.objectiveDTOs.isEmpty()) {
 				return Collections.EMPTY_LIST;
 			} else {
@@ -194,7 +194,7 @@ final class WVWMap extends AbstractHasChannel implements IWVWMap {
 		}
 
 		@SuppressWarnings("unchecked")
-		private List<IWVWObjectiveDTO> getSecondHalf() {
+		private List<WVWObjectiveDTO> getSecondHalf() {
 			if (this.objectiveDTOs.size() < 2) {
 				return Collections.EMPTY_LIST;
 			} else {
@@ -269,10 +269,10 @@ final class WVWMap extends AbstractHasChannel implements IWVWMap {
 		}
 
 		@Override
-		public IWVWMap.IWVWMapBuilder fromDTO(final IWVWMapDTO dto) {
+		public IWVWMap.IWVWMapBuilder fromDTO(final WVWMapDTO dto) {
 			checkNotNull(dto);
 			if (LOGGER.isTraceEnabled()) {
-				LOGGER.trace("Going to build from " + IWVWMapDTO.class.getSimpleName() + " where dto=" + dto);
+				LOGGER.trace("Going to build from " + WVWMapDTO.class.getSimpleName() + " where dto=" + dto);
 			}
 
 			final BuildObjectivesFromDTOsAction initObjectivesAction = new BuildObjectivesFromDTOsAction(dto.getObjectives());

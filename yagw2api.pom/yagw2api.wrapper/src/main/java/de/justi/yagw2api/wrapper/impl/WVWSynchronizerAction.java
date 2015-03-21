@@ -33,15 +33,15 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
-import de.justi.yagw2api.arenanet.IGuildDetailsDTO;
-import de.justi.yagw2api.arenanet.IWVWMapDTO;
-import de.justi.yagw2api.arenanet.IWVWMatchDTO;
-import de.justi.yagw2api.arenanet.IWVWMatchDetailsDTO;
-import de.justi.yagw2api.arenanet.IWVWObjectiveDTO;
-import de.justi.yagw2api.arenanet.IWVWObjectiveNameDTO;
-import de.justi.yagw2api.arenanet.IWVWService;
-import de.justi.yagw2api.arenanet.IWorldNameDTO;
+import de.justi.yagw2api.arenanet.WVWService;
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
+import de.justi.yagw2api.arenanet.dto.guild.GuildDetailsDTO;
+import de.justi.yagw2api.arenanet.dto.world.WorldNameDTO;
+import de.justi.yagw2api.arenanet.dto.wvw.WVWMapDTO;
+import de.justi.yagw2api.arenanet.dto.wvw.WVWMatchDTO;
+import de.justi.yagw2api.arenanet.dto.wvw.WVWMatchDetailsDTO;
+import de.justi.yagw2api.arenanet.dto.wvw.WVWObjectiveDTO;
+import de.justi.yagw2api.arenanet.dto.wvw.WVWObjectiveNameDTO;
 import de.justi.yagw2api.wrapper.IGuild;
 import de.justi.yagw2api.wrapper.IModelFactory;
 import de.justi.yagw2api.wrapper.IWVWMap;
@@ -54,7 +54,7 @@ final class WVWSynchronizerAction extends AbstractSynchronizerAction<String, WVW
 	private static final long serialVersionUID = 8391498327079686666L;
 	private static final int MAX_CHUNK_SIZE = 1;
 	private static final Logger LOGGER = LoggerFactory.getLogger(WVWSynchronizerAction.class);
-	private static final IWVWService WVW_SERVICE = YAGW2APIArenanet.INSTANCE.getWVWService();
+	private static final WVWService WVW_SERVICE = YAGW2APIArenanet.INSTANCE.getWVWService();
 	private static final IModelFactory MODEL_FACTORY = YAGW2APIWrapper.INSTANCE.getModelFactory();
 
 	private final Map<String, IWVWMatch> matchesMappedById;
@@ -83,10 +83,10 @@ final class WVWSynchronizerAction extends AbstractSynchronizerAction<String, WVW
 	@Override
 	protected void perform(final String matchId) {
 		final long startTimestamp = System.currentTimeMillis();
-		final Optional<IWVWMatchDTO> matchDTOOptional = WVW_SERVICE.retrieveMatch(matchId);
+		final Optional<WVWMatchDTO> matchDTOOptional = WVW_SERVICE.retrieveMatch(matchId);
 		if (matchDTOOptional.isPresent() && matchDTOOptional.get().getDetails().isPresent()) {
-			final IWVWMatchDTO matchDTO = matchDTOOptional.get();
-			final IWVWMatchDetailsDTO matchDetailsDTO = matchDTO.getDetails().get();
+			final WVWMatchDTO matchDTO = matchDTOOptional.get();
+			final WVWMatchDetailsDTO matchDetailsDTO = matchDTO.getDetails().get();
 			final IWVWMatch matchModel = this.matchesMappedById.get(matchId);
 
 			// 0. synchronize worlds
@@ -100,17 +100,17 @@ final class WVWSynchronizerAction extends AbstractSynchronizerAction<String, WVW
 			// 2. synchronize match scores
 			matchModel.getScores().update(matchDetailsDTO.getRedScore(), matchDetailsDTO.getGreenScore(), matchDetailsDTO.getBlueScore());
 		} else {
-			LOGGER.error("Failed to retrieve " + IWVWMatchDTO.class.getSimpleName() + " for matchId=" + matchId);
+			LOGGER.error("Failed to retrieve " + WVWMatchDTO.class.getSimpleName() + " for matchId=" + matchId);
 		}
 		final long endTimestamp = System.currentTimeMillis();
 		final long duration = endTimestamp - startTimestamp;
 		LOGGER.trace("Synchronized matchId=" + matchId + " in " + duration + "ms.");
 	}
 
-	private void synchronizeWorldNames(final IWVWMatch matchModel, final IWVWMatchDTO matchDTO) {
-		final Optional<IWorldNameDTO> greenName = matchDTO.getGreenWorldName(YAGW2APIArenanet.INSTANCE.getCurrentLocale());
-		final Optional<IWorldNameDTO> redName = matchDTO.getRedWorldName(YAGW2APIArenanet.INSTANCE.getCurrentLocale());
-		final Optional<IWorldNameDTO> blueName = matchDTO.getBlueWorldName(YAGW2APIArenanet.INSTANCE.getCurrentLocale());
+	private void synchronizeWorldNames(final IWVWMatch matchModel, final WVWMatchDTO matchDTO) {
+		final Optional<WorldNameDTO> greenName = matchDTO.getGreenWorldName(YAGW2APIArenanet.INSTANCE.getCurrentLocale());
+		final Optional<WorldNameDTO> redName = matchDTO.getRedWorldName(YAGW2APIArenanet.INSTANCE.getCurrentLocale());
+		final Optional<WorldNameDTO> blueName = matchDTO.getBlueWorldName(YAGW2APIArenanet.INSTANCE.getCurrentLocale());
 		if (greenName.isPresent()) {
 			matchModel.getGreenWorld().setName(greenName.get().getNameWithoutLocale());
 		}
@@ -122,7 +122,7 @@ final class WVWSynchronizerAction extends AbstractSynchronizerAction<String, WVW
 		}
 	}
 
-	private void synchronizeMap(final IWVWMatch match, final IWVWMap mapModel, final IWVWMapDTO mapDTO) {
+	private void synchronizeMap(final IWVWMatch match, final IWVWMap mapModel, final WVWMapDTO mapDTO) {
 		checkNotNull(mapDTO);
 		checkNotNull(mapModel);
 
@@ -137,8 +137,8 @@ final class WVWSynchronizerAction extends AbstractSynchronizerAction<String, WVW
 		Optional<IWVWObjective> optionalObjectiveModel;
 		IWVWObjective objectiveModel;
 		Optional<IWorld> potentialNewOwner;
-		Optional<IGuildDetailsDTO> claimedByGuildDTO;
-		for (IWVWObjectiveDTO objectiveDTO : mapDTO.getObjectives()) {
+		Optional<GuildDetailsDTO> claimedByGuildDTO;
+		for (WVWObjectiveDTO objectiveDTO : mapDTO.getObjectives()) {
 			optionalObjectiveModel = mapModel.getByObjectiveId(objectiveDTO.getId());
 			if (optionalObjectiveModel.isPresent()) {
 				objectiveModel = optionalObjectiveModel.get();
@@ -156,7 +156,7 @@ final class WVWSynchronizerAction extends AbstractSynchronizerAction<String, WVW
 					objectiveModel.claim(null);
 				}
 			} else {
-				LOGGER.error("Missing {} for objectiveId={}", IWVWObjectiveNameDTO.class, objectiveDTO.getId());
+				LOGGER.error("Missing {} for objectiveId={}", WVWObjectiveNameDTO.class, objectiveDTO.getId());
 			}
 		}
 

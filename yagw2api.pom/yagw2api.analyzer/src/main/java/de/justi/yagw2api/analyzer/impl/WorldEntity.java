@@ -51,7 +51,7 @@ import com.google.common.collect.Iterables;
 import de.justi.yagw2api.analyzer.IWVWMatchEntity;
 import de.justi.yagw2api.analyzer.IWorldEntity;
 import de.justi.yagw2api.analyzer.utils.LocaleConverter;
-import de.justi.yagw2api.arenanet.IArenanet;
+import de.justi.yagw2api.arenanet.Arenanet;
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
 import de.justi.yagw2api.wrapper.IWorld;
 import de.justi.yagw2api.wrapper.IWorldLocationType;
@@ -63,7 +63,7 @@ import de.justi.yagw2api.wrapper.impl.WorldLocationType;
 @Entity(name = "world")
 public final class WorldEntity extends AbstractEntity implements IWorldEntity {
 	private static final Logger LOGGER = LoggerFactory.getLogger(WorldEntity.class);
-	private static final IArenanet ARENANET = YAGW2APIArenanet.INSTANCE;
+	private static final Arenanet ARENANET = YAGW2APIArenanet.INSTANCE;
 
 	@Column(name = "name_de", unique = true, nullable = true)
 	private String nameDE;

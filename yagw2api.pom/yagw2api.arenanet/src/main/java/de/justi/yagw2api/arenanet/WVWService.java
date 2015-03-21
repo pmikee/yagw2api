@@ -1,8 +1,8 @@
-package de.justi.yagw2api.wrapper;
+package de.justi.yagw2api.arenanet;
 
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * YAGW2API-Wrapper
+ * YAGW2API-Arenanet
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
  * _____________________________________________________________
@@ -24,33 +24,20 @@ import java.util.Locale;
 
 import com.google.common.base.Optional;
 
-import de.justi.yagw2api.arenanet.dto.world.WorldNameDTO;
+import de.justi.yagw2api.arenanet.dto.wvw.WVWMatchDTO;
+import de.justi.yagw2api.arenanet.dto.wvw.WVWMatchDetailsDTO;
+import de.justi.yagw2api.arenanet.dto.wvw.WVWMatchesDTO;
+import de.justi.yagw2api.arenanet.dto.wvw.WVWObjectiveNameDTO;
 
-public interface IWorld {
+public interface WVWService {
 
-	static interface IWorldBuilder {
-		IWorld build();
+	WVWMatchesDTO retrieveAllMatches();
 
-		IWorldBuilder fromDTO(WorldNameDTO dto);
+	WVWObjectiveNameDTO[] retrieveAllObjectiveNames(Locale locale);
 
-		IWorldBuilder worldLocation(IWorldLocationType location);
+	Optional<WVWMatchDetailsDTO> retrieveMatchDetails(String id);
 
-		IWorldBuilder name(String name);
+	Optional<WVWMatchDTO> retrieveMatch(String matchId);
 
-		IWorldBuilder id(int id);
-
-		IWorldBuilder worldLocale(Locale locale);
-	}
-
-	int getId();
-
-	Optional<String> getName();
-
-	void setName(String name);
-
-	Optional<Locale> getWorldLocale();
-
-	IWorldLocationType getWorldLocation();
-
-	IWorld createUnmodifiableReference();
+	Optional<WVWObjectiveNameDTO> retrieveObjectiveName(Locale locale, int id);
 }

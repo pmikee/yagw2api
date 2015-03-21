@@ -33,7 +33,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 
 import de.justi.yagw2api.anchorman.IAnchorman;
-import de.justi.yagw2api.arenanet.IArenanet;
+import de.justi.yagw2api.arenanet.Arenanet;
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
 import de.justi.yagw2api.mumblelink.IMumbleLink;
 import de.justi.yagw2api.mumblelink.IMumbleLinkAvatarChangeEvent;
@@ -72,7 +72,7 @@ class Anchorman implements IAnchorman, IMumbleLinkListener, IWVWMatchListener, I
 	private static final String BUNDLE_KEY_LOGGED_OUT = "logged_out";
 	private static final String BUNDLE_KEY_CHANGED_CHARACTER = "changed_character";
 	private static final String BUNDLE_BASENAME = "anchorman";
-	private static final IArenanet ARENANET = YAGW2APIArenanet.INSTANCE;
+	private static final Arenanet ARENANET = YAGW2APIArenanet.INSTANCE;
 	private static final boolean BUNDLE_KEY_COMPLETED_MATCH_INITIALIZATION_TOGGLE = false;
 
 	// FIXME make this atomicbooleans

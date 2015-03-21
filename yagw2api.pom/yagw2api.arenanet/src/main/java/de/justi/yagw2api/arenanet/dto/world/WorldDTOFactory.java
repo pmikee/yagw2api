@@ -1,8 +1,8 @@
-package de.justi.yagw2api.wrapper;
+package de.justi.yagw2api.arenanet.dto.world;
 
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * YAGW2API-Wrapper
+ * YAGW2API-Arenanet
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
  * _____________________________________________________________
@@ -20,37 +20,7 @@ package de.justi.yagw2api.wrapper;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-import java.util.Locale;
+public interface WorldDTOFactory {
+	WorldNameDTO[] newWorldNamesOf(String json);
 
-import com.google.common.base.Optional;
-
-import de.justi.yagw2api.arenanet.dto.world.WorldNameDTO;
-
-public interface IWorld {
-
-	static interface IWorldBuilder {
-		IWorld build();
-
-		IWorldBuilder fromDTO(WorldNameDTO dto);
-
-		IWorldBuilder worldLocation(IWorldLocationType location);
-
-		IWorldBuilder name(String name);
-
-		IWorldBuilder id(int id);
-
-		IWorldBuilder worldLocale(Locale locale);
-	}
-
-	int getId();
-
-	Optional<String> getName();
-
-	void setName(String name);
-
-	Optional<Locale> getWorldLocale();
-
-	IWorldLocationType getWorldLocation();
-
-	IWorld createUnmodifiableReference();
 }

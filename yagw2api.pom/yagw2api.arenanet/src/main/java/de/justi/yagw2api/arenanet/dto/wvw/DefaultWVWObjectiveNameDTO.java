@@ -1,8 +1,8 @@
-package de.justi.yagw2api.wrapper;
+package de.justi.yagw2api.arenanet.dto.wvw;
 
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * YAGW2API-Wrapper
+ * YAGW2API-Arenanet
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
  * _____________________________________________________________
@@ -20,37 +20,31 @@ package de.justi.yagw2api.wrapper;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-import java.util.Locale;
+import com.google.common.base.Objects;
+import com.google.gson.annotations.SerializedName;
+import com.google.gson.annotations.Since;
 
-import com.google.common.base.Optional;
+final class DefaultWVWObjectiveNameDTO implements WVWObjectiveNameDTO {
+	@Since(1.0)
+	@SerializedName("id")
+	private int id;
+	@Since(1.0)
+	@SerializedName("name")
+	private String name;
 
-import de.justi.yagw2api.arenanet.dto.world.WorldNameDTO;
-
-public interface IWorld {
-
-	static interface IWorldBuilder {
-		IWorld build();
-
-		IWorldBuilder fromDTO(WorldNameDTO dto);
-
-		IWorldBuilder worldLocation(IWorldLocationType location);
-
-		IWorldBuilder name(String name);
-
-		IWorldBuilder id(int id);
-
-		IWorldBuilder worldLocale(Locale locale);
+	@Override
+	public int getId() {
+		return this.id;
 	}
 
-	int getId();
+	@Override
+	public String getName() {
+		return this.name;
+	}
 
-	Optional<String> getName();
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add("id", this.id).add("name", this.name).toString();
+	}
 
-	void setName(String name);
-
-	Optional<Locale> getWorldLocale();
-
-	IWorldLocationType getWorldLocation();
-
-	IWorld createUnmodifiableReference();
 }

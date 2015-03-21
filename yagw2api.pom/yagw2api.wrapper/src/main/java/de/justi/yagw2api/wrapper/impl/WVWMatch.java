@@ -44,13 +44,13 @@ import com.google.common.collect.Lists;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
-import de.justi.yagw2api.arenanet.DTOConstants;
-import de.justi.yagw2api.arenanet.IWVWMapDTO;
-import de.justi.yagw2api.arenanet.IWVWMatchDTO;
-import de.justi.yagw2api.arenanet.IWVWMatchDetailsDTO;
-import de.justi.yagw2api.arenanet.IWVWObjectiveDTO;
-import de.justi.yagw2api.arenanet.IWorldNameDTO;
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
+import de.justi.yagw2api.arenanet.dto.DTOConstants;
+import de.justi.yagw2api.arenanet.dto.world.WorldNameDTO;
+import de.justi.yagw2api.arenanet.dto.wvw.WVWMapDTO;
+import de.justi.yagw2api.arenanet.dto.wvw.WVWMatchDTO;
+import de.justi.yagw2api.arenanet.dto.wvw.WVWMatchDetailsDTO;
+import de.justi.yagw2api.arenanet.dto.wvw.WVWObjectiveDTO;
 import de.justi.yagw2api.wrapper.IModelFactory;
 import de.justi.yagw2api.wrapper.IWVWMap;
 import de.justi.yagw2api.wrapper.IWVWMatch;
@@ -192,7 +192,7 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 	}
 
 	public static class WVWMatchBuilder implements IWVWMatch.IWVWMatchBuilder {
-		private Optional<IWVWMatchDTO> fromMatchDTO = Optional.absent();
+		private Optional<WVWMatchDTO> fromMatchDTO = Optional.absent();
 		private Optional<String> id = Optional.absent();
 		private Optional<IWVWMap> centerMap = Optional.absent();
 		private Optional<IWVWMap> redMap = Optional.absent();
@@ -246,12 +246,12 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 			return match;
 		}
 
-		private void setupOwner(final IWVWMatch match, final IWVWMap map, final IWVWMatchDTO matchDTO, final IWVWMapDTO mapDTO) {
+		private void setupOwner(final IWVWMatch match, final IWVWMap map, final WVWMatchDTO matchDTO, final WVWMapDTO mapDTO) {
 			checkNotNull(match);
 			checkNotNull(map);
 			checkNotNull(matchDTO);
 
-			for (IWVWObjectiveDTO objectiveDTO : mapDTO.getObjectives()) {
+			for (WVWObjectiveDTO objectiveDTO : mapDTO.getObjectives()) {
 				if (objectiveDTO.getOwner() != null) {
 					final Optional<IWorld> owner = match.getWorldByDTOOwnerString(objectiveDTO.getOwner());
 
@@ -264,10 +264,10 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 		}
 
 		private static final class BuildMapFromDTOAction implements Callable<Void> {
-			private final IWVWMapDTO dto;
+			private final WVWMapDTO dto;
 			private Optional<IWVWMap> result = Optional.absent();
 
-			public BuildMapFromDTOAction(final IWVWMapDTO dto) {
+			public BuildMapFromDTOAction(final WVWMapDTO dto) {
 				this.dto = checkNotNull(dto);
 			}
 
@@ -293,10 +293,10 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 		}
 
 		private static final class BuildWorldFromDTOAction implements Callable<Void> {
-			private final IWorldNameDTO dto;
+			private final WorldNameDTO dto;
 			private Optional<IWorld> result = Optional.absent();
 
-			public BuildWorldFromDTOAction(final IWorldNameDTO dto) {
+			public BuildWorldFromDTOAction(final WorldNameDTO dto) {
 				this.dto = checkNotNull(dto);
 			}
 
@@ -323,7 +323,7 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 
 		@SuppressWarnings("unchecked")
 		@Override
-		public IWVWMatch.IWVWMatchBuilder fromMatchDTO(final IWVWMatchDTO dto, final Locale locale) {
+		public IWVWMatch.IWVWMatchBuilder fromMatchDTO(final WVWMatchDTO dto, final Locale locale) {
 			checkNotNull(locale);
 			checkState(!this.fromMatchDTO.isPresent());
 
@@ -385,7 +385,7 @@ final class WVWMatch extends AbstractHasChannel implements IWVWMatch {
 			this.start(dto.getStartTime());
 			this.end(dto.getEndTime());
 
-			final Optional<IWVWMatchDetailsDTO> details = dto.getDetails();
+			final Optional<WVWMatchDetailsDTO> details = dto.getDetails();
 			if (details.isPresent()) {
 				this.redScore(details.get().getRedScore());
 				this.blueScore(details.get().getBlueScore());

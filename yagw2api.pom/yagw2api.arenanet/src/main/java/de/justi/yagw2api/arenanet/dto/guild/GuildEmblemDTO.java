@@ -1,8 +1,8 @@
-package de.justi.yagw2api.wrapper;
+package de.justi.yagw2api.arenanet.dto.guild;
 
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * YAGW2API-Wrapper
+ * YAGW2API-Arenanet
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
  * _____________________________________________________________
@@ -20,37 +20,16 @@ package de.justi.yagw2api.wrapper;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-import java.util.Locale;
+public interface GuildEmblemDTO {
+	int getBackgroundId();
 
-import com.google.common.base.Optional;
+	int getForegroundId();
 
-import de.justi.yagw2api.arenanet.dto.world.WorldNameDTO;
+	int getBackgroundColorId();
 
-public interface IWorld {
+	int getForegroundPrimaryColorId();
 
-	static interface IWorldBuilder {
-		IWorld build();
+	int getForegroundSecondaryColorId();
 
-		IWorldBuilder fromDTO(WorldNameDTO dto);
-
-		IWorldBuilder worldLocation(IWorldLocationType location);
-
-		IWorldBuilder name(String name);
-
-		IWorldBuilder id(int id);
-
-		IWorldBuilder worldLocale(Locale locale);
-	}
-
-	int getId();
-
-	Optional<String> getName();
-
-	void setName(String name);
-
-	Optional<Locale> getWorldLocale();
-
-	IWorldLocationType getWorldLocation();
-
-	IWorld createUnmodifiableReference();
+	String[] getFlags();
 }

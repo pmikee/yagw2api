@@ -30,7 +30,7 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 
-import de.justi.yagw2api.arenanet.IWorldNameDTO;
+import de.justi.yagw2api.arenanet.dto.world.WorldNameDTO;
 import de.justi.yagw2api.wrapper.IModelFactory;
 import de.justi.yagw2api.wrapper.IWorld;
 import de.justi.yagw2api.wrapper.IWorldLocationType;
@@ -69,7 +69,7 @@ final class World implements IWorld {
 		}
 
 		@Override
-		public IWorldBuilder fromDTO(final IWorldNameDTO dto) {
+		public IWorldBuilder fromDTO(final WorldNameDTO dto) {
 			checkArgument(dto.isEurope() ^ dto.isNorthAmerica());
 			if (dto.isEurope()) {
 				this.worldLocation(WorldLocationType.EUROPE);

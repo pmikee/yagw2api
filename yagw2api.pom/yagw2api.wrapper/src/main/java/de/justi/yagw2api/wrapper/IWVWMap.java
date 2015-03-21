@@ -25,7 +25,7 @@ import java.util.Set;
 
 import com.google.common.base.Optional;
 
-import de.justi.yagw2api.arenanet.IWVWMapDTO;
+import de.justi.yagw2api.arenanet.dto.wvw.WVWMapDTO;
 import de.justi.yagwapi.common.IHasChannel;
 
 public interface IWVWMap extends IHasChannel {
@@ -36,7 +36,7 @@ public interface IWVWMap extends IHasChannel {
 
 		IWVWMapBuilder objective(IWVWObjective objective);
 
-		IWVWMapBuilder fromDTO(IWVWMapDTO dto);
+		IWVWMapBuilder fromDTO(WVWMapDTO dto);
 
 		IWVWMapBuilder match(IWVWMatch match);
 

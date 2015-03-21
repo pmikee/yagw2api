@@ -37,9 +37,9 @@ import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.eventbus.EventBus;
 
-import de.justi.yagw2api.arenanet.IGuildDetailsDTO;
-import de.justi.yagw2api.arenanet.IWVWObjectiveDTO;
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
+import de.justi.yagw2api.arenanet.dto.guild.GuildDetailsDTO;
+import de.justi.yagw2api.arenanet.dto.wvw.WVWObjectiveDTO;
 import de.justi.yagw2api.wrapper.IGuild;
 import de.justi.yagw2api.wrapper.IModelFactory;
 import de.justi.yagw2api.wrapper.IWVWLocationType;
@@ -188,9 +188,9 @@ final class WVWObjective extends AbstractHasChannel implements IWVWObjective {
 		}
 
 		@Override
-		public IWVWObjective.IWVWObjectiveBuilder fromDTO(final IWVWObjectiveDTO dto) {
+		public IWVWObjective.IWVWObjectiveBuilder fromDTO(final WVWObjectiveDTO dto) {
 			checkNotNull(dto);
-			final Optional<IGuildDetailsDTO> guildDetails = dto.getGuildDetails();
+			final Optional<GuildDetailsDTO> guildDetails = dto.getGuildDetails();
 			if (guildDetails.isPresent()) {
 				final IGuild guild = MODEL_FACTORY.getOrCreateGuild(guildDetails.get().getId(), guildDetails.get().getName(), guildDetails.get().getTag());
 				checkState(guild != null);

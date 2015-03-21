@@ -1,8 +1,8 @@
-package de.justi.yagw2api.wrapper;
+package de.justi.yagw2api.arenanet.dto;
 
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * YAGW2API-Wrapper
+ * YAGW2API-Arenanet
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
  * _____________________________________________________________
@@ -20,37 +20,16 @@ package de.justi.yagw2api.wrapper;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-import java.util.Locale;
-
-import com.google.common.base.Optional;
-
-import de.justi.yagw2api.arenanet.dto.world.WorldNameDTO;
-
-public interface IWorld {
-
-	static interface IWorldBuilder {
-		IWorld build();
-
-		IWorldBuilder fromDTO(WorldNameDTO dto);
-
-		IWorldBuilder worldLocation(IWorldLocationType location);
-
-		IWorldBuilder name(String name);
-
-		IWorldBuilder id(int id);
-
-		IWorldBuilder worldLocale(Locale locale);
+public final class DTOConstants {
+	private DTOConstants() {
 	}
 
-	int getId();
-
-	Optional<String> getName();
-
-	void setName(String name);
-
-	Optional<Locale> getWorldLocale();
-
-	IWorldLocationType getWorldLocation();
-
-	IWorld createUnmodifiableReference();
+	public static final String CENTER_MAP_TYPE_STRING = "CENTER";
+	public static final String RED_MAP_TYPE_STRING = "REDHOME";
+	public static final String GREEN_MAP_TYPE_STRING = "GREENHOME";
+	public static final String BLUE_MAP_TYPE_STRING = "BLUEHOME";
+	public static final String OWNER_RED_STRING = "RED";
+	public static final String OWNER_GREEN_STRING = "GREEN";
+	public static final String OWNER_BLUE_STRING = "BLUE";
+	public static final String OWNER_NEUTRAL_STRING = "NEUTRAL";
 }

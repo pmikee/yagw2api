@@ -33,9 +33,7 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-import de.justi.yagw2api.arenanet.impl.Module;
-
-public enum YAGW2APIArenanet implements IArenanet {
+public enum YAGW2APIArenanet implements Arenanet, UncaughtExceptionHandler {
 	/**
 	 * <p>
 	 * Use {@link YAGW2APIArenanet#getInstance} instead.
@@ -53,11 +51,11 @@ public enum YAGW2APIArenanet implements IArenanet {
 	}
 
 	// FIELDS
-	private final IWVWService wvwService;
-	private final IGuildService guildService;
-	private final IWorldService worldService;
-	private final IMapTileService mapTileService;
-	private final IMapFloorService mapFloorService;
+	private final WVWService wvwService;
+	private final GuildService guildService;
+	private final WorldService worldService;
+	private final MapTileService mapTileService;
+	private final MapFloorService mapFloorService;
 	private final ForkJoinPool forkJoinPool;
 
 	private Locale currentLocale = Locale.getDefault();
@@ -65,22 +63,20 @@ public enum YAGW2APIArenanet implements IArenanet {
 	// CONSTRUCTOR
 	private YAGW2APIArenanet() {
 		final Injector injector = Guice.createInjector(new Module());
-		this.forkJoinPool = new ForkJoinPool(Runtime.getRuntime().availableProcessors() * THREAD_COUNT_PER_PROCESSOR, ForkJoinPool.defaultForkJoinWorkerThreadFactory,
-				new UncaughtExceptionHandler() {
-					@Override
-					public void uncaughtException(final Thread t, final Throwable e) {
-						LOGGER.error("Uncought exception thrown in {}", t, e);
-					}
-				}, false);
-		this.guildService = injector.getInstance(IGuildService.class);
-		this.wvwService = injector.getInstance(IWVWService.class);
-		this.worldService = injector.getInstance(IWorldService.class);
-		this.mapTileService = injector.getInstance(IMapTileService.class);
-		this.mapFloorService = injector.getInstance(IMapFloorService.class);
+		this.forkJoinPool = new ForkJoinPool(Runtime.getRuntime().availableProcessors() * THREAD_COUNT_PER_PROCESSOR, ForkJoinPool.defaultForkJoinWorkerThreadFactory, this, false);
+		this.guildService = injector.getInstance(GuildService.class);
+		this.wvwService = injector.getInstance(WVWService.class);
+		this.worldService = injector.getInstance(WorldService.class);
+		this.mapTileService = injector.getInstance(MapTileService.class);
+		this.mapFloorService = injector.getInstance(MapFloorService.class);
 		this.currentLocale = injector.getInstance(Locale.class);
 	}
 
 	// METHODS
+	@Override
+	public void uncaughtException(final Thread t, final Throwable e) {
+		LOGGER.error("Uncought exception thrown in {}", t, e);
+	}
 
 	public static ForkJoinPool getForkJoinPool() {
 		checkState(getInstance() != null);
@@ -89,62 +85,62 @@ public enum YAGW2APIArenanet implements IArenanet {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see de.justi.yagw2api.arenanet.Arenanet#getWVWService()
 	 */
 	@Override
-	public IWVWService getWVWService() {
+	public WVWService getWVWService() {
 		return this.wvwService;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see de.justi.yagw2api.arenanet.Arenanet#getWorldService()
 	 */
 	@Override
-	public IWorldService getWorldService() {
+	public WorldService getWorldService() {
 		return this.worldService;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see de.justi.yagw2api.arenanet.Arenanet#getGuildService()
 	 */
 	@Override
-	public IGuildService getGuildService() {
+	public GuildService getGuildService() {
 		return this.guildService;
 	}
 
 	@Override
-	public IMapTileService getMapTileService() {
+	public MapTileService getMapTileService() {
 		return this.mapTileService;
 	}
 
 	@Override
-	public IMapFloorService getMapFloorService() {
+	public MapFloorService getMapFloorService() {
 		return this.mapFloorService;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see de.justi.yagw2api.arenanet.Arenanet#getCurrentLocale()
 	 */
 	@Override
 	public Locale getCurrentLocale() {
-		return getInstance().currentLocale;
+		return this.currentLocale;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see de.justi.yagw2api.arenanet.Arenanet#setCurrentLocale(java.util.Locale)
 	 */
 	@Override
 	public void setCurrentLocale(final Locale locale) {
-		getInstance().currentLocale = checkNotNull(locale);
+		this.currentLocale = checkNotNull(locale);
 	}
 
 }

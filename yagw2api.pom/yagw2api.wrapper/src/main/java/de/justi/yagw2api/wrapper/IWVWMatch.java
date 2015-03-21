@@ -26,14 +26,14 @@ import java.util.regex.Pattern;
 
 import com.google.common.base.Optional;
 
-import de.justi.yagw2api.arenanet.IWVWMatchDTO;
+import de.justi.yagw2api.arenanet.dto.wvw.WVWMatchDTO;
 import de.justi.yagwapi.common.IHasChannel;
 
 public interface IWVWMatch extends IHasChannel {
 	interface IWVWMatchBuilder {
 		IWVWMatch build();
 
-		IWVWMatchBuilder fromMatchDTO(IWVWMatchDTO dto, Locale locale);
+		IWVWMatchBuilder fromMatchDTO(WVWMatchDTO dto, Locale locale);
 
 		IWVWMatchBuilder redScore(int score);
 

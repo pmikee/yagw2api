@@ -35,8 +35,8 @@ import org.slf4j.LoggerFactory;
 import com.google.common.collect.ImmutableList;
 import com.google.common.eventbus.EventBus;
 
-import de.justi.yagw2api.arenanet.IWVWMatchDTO;
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
+import de.justi.yagw2api.arenanet.dto.wvw.WVWMatchDTO;
 import de.justi.yagw2api.wrapper.IWVWMatch;
 import de.justi.yagw2api.wrapper.IWVWModelEventFactory;
 import de.justi.yagw2api.wrapper.IWVWModelFactory;
@@ -44,7 +44,7 @@ import de.justi.yagw2api.wrapper.IWorld;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
 import de.justi.yagwapi.common.IHasChannel;
 
-final class WVWSynchronizerInitAction extends AbstractSynchronizerAction<IWVWMatchDTO, WVWSynchronizerInitAction> implements IHasChannel {
+final class WVWSynchronizerInitAction extends AbstractSynchronizerAction<WVWMatchDTO, WVWSynchronizerInitAction> implements IHasChannel {
 	private static final Logger LOGGER = LoggerFactory.getLogger(WVWSynchronizerInitAction.class);
 	private static final long serialVersionUID = 2446713690087630720L;
 	private static final int MAX_CHUNK_SIZE = 100; // init all matches with one
@@ -57,12 +57,12 @@ final class WVWSynchronizerInitAction extends AbstractSynchronizerAction<IWVWMat
 	final Map<String, IWVWMatch> matchesBuffer;
 	final EventBus eventBus;
 
-	public WVWSynchronizerInitAction(final List<IWVWMatchDTO> content) {
+	public WVWSynchronizerInitAction(final List<WVWMatchDTO> content) {
 		this(ImmutableList.copyOf(content), MAX_CHUNK_SIZE, 0, content.size(), new HashSet<IWVWMatch>(), new HashSet<IWorld>(), new HashMap<String, IWVWMatch>(), new EventBus(
 				WVWSynchronizerInitAction.class.getName()));
 	}
 
-	private WVWSynchronizerInitAction(final List<IWVWMatchDTO> content, final int chunkSize, final int fromInclusive, final int toExclusive,
+	private WVWSynchronizerInitAction(final List<WVWMatchDTO> content, final int chunkSize, final int fromInclusive, final int toExclusive,
 			final Set<IWVWMatch> matchReferencesBuffer, final Set<IWorld> worldReferencesBuffer, final Map<String, IWVWMatch> matchesBuffer, final EventBus eventBus) {
 		super(content, chunkSize, fromInclusive, toExclusive);
 		this.matchReferencesBuffer = checkNotNull(matchReferencesBuffer);
@@ -72,7 +72,7 @@ final class WVWSynchronizerInitAction extends AbstractSynchronizerAction<IWVWMat
 	}
 
 	@Override
-	protected WVWSynchronizerInitAction createSubTask(final List<IWVWMatchDTO> content, final int chunkSize, final int fromInclusive, final int toExclusive) {
+	protected WVWSynchronizerInitAction createSubTask(final List<WVWMatchDTO> content, final int chunkSize, final int fromInclusive, final int toExclusive) {
 		return new WVWSynchronizerInitAction(content, chunkSize, fromInclusive, toExclusive, this.matchReferencesBuffer, this.worldReferencesBuffer, this.matchesBuffer,
 				this.eventBus);
 	}
@@ -83,7 +83,7 @@ final class WVWSynchronizerInitAction extends AbstractSynchronizerAction<IWVWMat
 	}
 
 	@Override
-	protected void perform(final IWVWMatchDTO content) {
+	protected void perform(final WVWMatchDTO content) {
 		final long startTimestamp = System.currentTimeMillis();
 		if (LOGGER.isTraceEnabled()) {
 			LOGGER.trace("Going to perform " + this.getClass().getSimpleName() + " using content=" + content);
