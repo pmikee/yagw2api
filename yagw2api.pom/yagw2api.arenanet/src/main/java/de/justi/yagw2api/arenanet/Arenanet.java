@@ -51,6 +51,8 @@ public interface Arenanet {
 	 */
 	GuildService getGuildService();
 
+	MapService getMapService();
+
 	MapTileService getMapTileService();
 
 	MapFloorService getMapFloorService();

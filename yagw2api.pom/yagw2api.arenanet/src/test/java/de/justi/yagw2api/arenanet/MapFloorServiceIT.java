@@ -40,7 +40,6 @@ import com.google.common.collect.ImmutableList;
 
 import de.justi.yagw2api.arenanet.dto.map.MapFloorDTO;
 import de.justi.yagw2api.arenanet.dto.map.DefaultMapDTOFactory;
-import de.justi.yagw2api.arenanet.dto.map.DefaultMapFloorService;
 import de.justi.yagw2api.test.AbstractYAGW2APITest;
 
 @RunWith(Parameterized.class)

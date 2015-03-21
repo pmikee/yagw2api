@@ -35,7 +35,7 @@ import com.google.gson.annotations.Since;
 import de.justi.yagwapi.common.Tuple4;
 import de.justi.yagwapi.common.Tuples;
 
-final class DefaultMapMapDTO implements MapMapDTO {
+final class DefaultMapRegionMapDTO implements MapRegionMapDTO {
 	// FIELDS
 	@SerializedName("name")
 	@Since(1.0)
@@ -51,10 +51,10 @@ final class DefaultMapMapDTO implements MapMapDTO {
 	private final int defaultFloor = -1;
 	@SerializedName("map_rect")
 	@Since(1.0)
-	private final Integer[][] bounds = new Integer[2][2];
+	private final int[][] bounds = new int[2][2];
 	@SerializedName("continent_rect")
 	@Since(1.0)
-	private final Integer[][] boundsOnContinent = new Integer[2][2];
+	private final int[][] boundsOnContinent = new int[2][2];
 	@SerializedName("points_of_interest")
 	@Since(1.0)
 	private final List<DefaultMapPOIDTO> pois = ImmutableList.of();

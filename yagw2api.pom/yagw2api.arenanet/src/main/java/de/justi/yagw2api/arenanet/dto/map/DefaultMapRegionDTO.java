@@ -45,7 +45,7 @@ final class DefaultMapRegionDTO implements MapRegionDTO {
 	private final Integer[] labelCoordinates = new Integer[2];
 	@SerializedName("maps")
 	@Since(1.0)
-	private final Map<String, DefaultMapMapDTO> maps = ImmutableMap.of();
+	private final Map<String, DefaultMapRegionMapDTO> maps = ImmutableMap.of();
 
 	private final transient Supplier<Tuple2<Integer, Integer>> labelCoordinatesTupleSupplier = Suppliers.memoize(() -> {
 		checkState(this.labelCoordinates.length == 2, "invalid texture dimension length: %s", this.labelCoordinates.length);
@@ -70,7 +70,7 @@ final class DefaultMapRegionDTO implements MapRegionDTO {
 	}
 
 	@Override
-	public Map<String, MapMapDTO> getMaps() {
+	public Map<String, MapRegionMapDTO> getMaps() {
 		return Collections.unmodifiableMap(this.maps);
 	}
 

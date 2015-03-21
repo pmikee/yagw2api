@@ -29,5 +29,5 @@ public interface MapRegionDTO {
 
 	Tuple2<Integer, Integer> getLabelCoordinates();
 
-	Map<String, MapMapDTO> getMaps();
+	Map<String, MapRegionMapDTO> getMaps();
 }

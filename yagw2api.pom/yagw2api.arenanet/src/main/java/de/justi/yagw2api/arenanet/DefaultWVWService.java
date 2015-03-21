@@ -147,9 +147,9 @@ final class DefaultWVWService implements WVWService {
 					final WebResource.Builder builder = resource.accept(MediaType.APPLICATION_JSON_TYPE);
 					try {
 						final String response = builder.get(String.class);
-						LOGGER.trace("Retrieved response=" + response);
+						LOGGER.trace("Retrieved response={}", response);
 						final WVWMatchesDTO result = DefaultWVWService.this.wvwDTOFactory.newMatchesOf(response);
-						LOGGER.debug("Built result=" + result);
+						LOGGER.debug("Built result={}", result);
 						return Optional.of(result);
 					} catch (ClientHandlerException | UniformInterfaceException e) {
 						LOGGER.error("Exception thrown while quering {}", resource, e);
@@ -158,7 +158,7 @@ final class DefaultWVWService implements WVWService {
 				}
 			}).orNull();
 		} catch (ExecutionException e) {
-			LOGGER.error("Failed to retrieve " + WVWMatchesDTO.class.getSimpleName() + " from cache.", e);
+			LOGGER.error("Failed to retrieve {} from cache.", WVWMatchesDTO.class, e);
 			throw new IllegalStateException("Failed to retrieve " + WVWMatchesDTO.class.getSimpleName() + " from cache.", e);
 		}
 	}
@@ -175,9 +175,9 @@ final class DefaultWVWService implements WVWService {
 					final WebResource.Builder builder = resource.accept(MediaType.APPLICATION_JSON_TYPE);
 					try {
 						final String response = builder.get(String.class);
-						LOGGER.trace("Retrieved response=" + response);
+						LOGGER.trace("Retrieved response={}", response);
 						final WVWMatchDetailsDTO result = DefaultWVWService.this.wvwDTOFactory.newMatchDetailsOf(response);
-						LOGGER.debug("Built result=" + result);
+						LOGGER.debug("Built result={}", result);
 						return Optional.of(result);
 					} catch (ClientHandlerException | UniformInterfaceException e) {
 						LOGGER.error("Exception thrown while quering {}", resource, e);
@@ -205,10 +205,10 @@ final class DefaultWVWService implements WVWService {
 					final WebResource.Builder builder = resource.accept(MediaType.APPLICATION_JSON_TYPE);
 					try {
 						final String response = builder.get(String.class);
-						LOGGER.trace("Retrieved response=" + response);
+						LOGGER.trace("Retrieved response={}", response);
 						final WVWObjectiveNameDTO[] result = DefaultWVWService.this.wvwDTOFactory.newObjectiveNamesOf(response);
 						if (LOGGER.isDebugEnabled()) {
-							LOGGER.debug("Built result=" + Arrays.deepToString(result));
+							LOGGER.debug("Built result={}", Arrays.deepToString(result));
 						}
 						return Optional.of(result);
 					} catch (ClientHandlerException | UniformInterfaceException e) {
@@ -240,14 +240,12 @@ final class DefaultWVWService implements WVWService {
 						result = names[index].getId() == id ? names[index] : null;
 						index++;
 					}
-					if (LOGGER.isTraceEnabled()) {
-						LOGGER.trace("Retrieved " + WVWObjectiveNameDTO.class.getSimpleName() + " for id=" + id + " and lang=" + key + ": " + result);
-					}
+					LOGGER.trace("Retrieved {} for id={} and lang={}: {}", WVWObjectiveNameDTO.class, id, key, result);
 					return Optional.fromNullable(result);
 				}
 			});
 		} catch (ExecutionException e) {
-			LOGGER.error("Failed to retrieve " + WorldNameDTO.class.getSimpleName() + " from cache for id=" + id + " lang=" + key, e);
+			LOGGER.error("Failed to retrieve {} from cache for id={} lang={}", WorldNameDTO.class, id, key, e);
 			throw new IllegalStateException("Failed to retrieve all " + WorldNameDTO.class.getSimpleName() + " from cache for worldId=" + id + " lang=" + locale, e);
 		}
 
@@ -268,14 +266,12 @@ final class DefaultWVWService implements WVWService {
 						result = matches[index].getId().equals(matchId) ? matches[index] : null;
 						index++;
 					}
-					if (LOGGER.isTraceEnabled()) {
-						LOGGER.trace("Retrieved " + WVWMatchDTO.class.getSimpleName() + " for matchId=" + matchId + ": " + result);
-					}
+					LOGGER.trace("Retrieved {} for matchId={}: {}", WVWMatchDTO.class, matchId, result);
 					return Optional.fromNullable(result);
 				}
 			});
 		} catch (ExecutionException e) {
-			LOGGER.error("Failed to retrieve " + WVWMatchDTO.class.getSimpleName() + " from cache for matchId=" + matchId, e);
+			LOGGER.error("Failed to retrieve {} from cache for matchId={}", WVWMatchDTO.class, matchId, e);
 			throw new IllegalStateException("Failed to retrieve all " + WVWMatchDTO.class.getSimpleName() + " from cache for matchId=" + matchId, e);
 		}
 	}

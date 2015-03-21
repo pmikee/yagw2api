@@ -1,4 +1,4 @@
-package de.justi.yagw2api.arenanet.dto.map;
+package de.justi.yagw2api.arenanet;
 
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -42,13 +42,13 @@ import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
 
-import de.justi.yagw2api.arenanet.ArenanetUtils;
-import de.justi.yagw2api.arenanet.MapFloorService;
+import de.justi.yagw2api.arenanet.dto.map.MapDTOFactory;
+import de.justi.yagw2api.arenanet.dto.map.MapFloorDTO;
 import de.justi.yagwapi.common.RetryClientFilter;
 import de.justi.yagwapi.common.Tuple3;
 import de.justi.yagwapi.common.Tuples;
 
-public final class DefaultMapFloorService implements MapFloorService {
+final class DefaultMapFloorService implements MapFloorService {
 	// CONSTS
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultMapFloorService.class);
 	private static final long CACHE_EXPIRE_MILLIS = TimeUnit.HOURS.toMillis(12);

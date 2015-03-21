@@ -24,7 +24,7 @@ import java.util.List;
 
 import de.justi.yagwapi.common.Tuple4;
 
-public interface MapMapDTO {
+public interface MapRegionMapDTO {
 
 	String getName();
 

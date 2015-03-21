@@ -49,6 +49,7 @@ public final class TestYAGW2AAPIArenanent extends AbstractYAGW2APITest {
 		assertNotNull(YAGW2APIArenanet.getInstance().getWVWService());
 		assertNotNull(YAGW2APIArenanet.getInstance().getWorldService());
 		assertNotNull(YAGW2APIArenanet.getInstance().getGuildService());
+		assertNotNull(YAGW2APIArenanet.getInstance().getMapService());
 		assertNotNull(YAGW2APIArenanet.getInstance().getMapTileService());
 		assertNotNull(YAGW2APIArenanet.getInstance().getMapFloorService());
 	}

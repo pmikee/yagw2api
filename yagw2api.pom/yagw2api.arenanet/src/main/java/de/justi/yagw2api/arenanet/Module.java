@@ -26,14 +26,12 @@ import com.google.inject.AbstractModule;
 
 import de.justi.yagw2api.arenanet.dto.guild.DefaultGuildDTOFactory;
 import de.justi.yagw2api.arenanet.dto.guild.GuildDTOFactory;
-import de.justi.yagw2api.arenanet.dto.map.MapDTOFactory;
 import de.justi.yagw2api.arenanet.dto.map.DefaultMapDTOFactory;
-import de.justi.yagw2api.arenanet.dto.map.DefaultMapFloorService;
-import de.justi.yagw2api.arenanet.dto.map.DefaultMapTileService;
-import de.justi.yagw2api.arenanet.dto.world.WorldDTOFactory;
+import de.justi.yagw2api.arenanet.dto.map.MapDTOFactory;
 import de.justi.yagw2api.arenanet.dto.world.DefaultWorldDTOFactory;
-import de.justi.yagw2api.arenanet.dto.wvw.WVWDTOFactory;
+import de.justi.yagw2api.arenanet.dto.world.WorldDTOFactory;
 import de.justi.yagw2api.arenanet.dto.wvw.DefaultWVWDTOFactory;
+import de.justi.yagw2api.arenanet.dto.wvw.WVWDTOFactory;
 
 public final class Module extends AbstractModule {
 
@@ -49,6 +47,7 @@ public final class Module extends AbstractModule {
 		this.bind(WVWService.class).to(DefaultWVWService.class).asEagerSingleton();
 		this.bind(GuildService.class).to(DefaultGuildService.class).asEagerSingleton();
 		this.bind(WorldService.class).to(DefaultWorldService.class).asEagerSingleton();
+		this.bind(MapService.class).to(DefaultMapService.class).asEagerSingleton();
 		this.bind(MapTileService.class).to(DefaultMapTileService.class).asEagerSingleton();
 		this.bind(MapFloorService.class).to(DefaultMapFloorService.class).asEagerSingleton();
 

@@ -1,4 +1,4 @@
-package de.justi.yagw2api.arenanet.dto.map;
+package de.justi.yagw2api.arenanet;
 
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -46,9 +46,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Maps;
 
-import de.justi.yagw2api.arenanet.MapTileService;
-
-public class DefaultMapTileService implements MapTileService {
+final class DefaultMapTileService implements MapTileService {
 	// CONSTS
 	private static final Path RELATIVE_TEMP_DIR_PATH = Paths.get("yagw2api", DefaultMapTileService.class.getSimpleName());
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultMapTileService.class);

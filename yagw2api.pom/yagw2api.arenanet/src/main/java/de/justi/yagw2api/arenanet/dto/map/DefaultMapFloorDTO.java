@@ -41,10 +41,10 @@ final class DefaultMapFloorDTO implements MapFloorDTO {
 
 	@SerializedName("texture_dims")
 	@Since(1.0)
-	private final Integer[] textureDimension = new Integer[2];
+	private final int[] textureDimension = new int[2];
 	@SerializedName("clamped_view")
 	@Since(1.0)
-	private final Integer[][] clampedView = new Integer[2][2];
+	private final int[][] clampedView = new int[2][2];
 
 	@SerializedName("regions")
 	@Since(1.0)
@@ -59,11 +59,7 @@ final class DefaultMapFloorDTO implements MapFloorDTO {
 		checkState(this.clampedView.length == 2, "invalid clamped view length: %s", this.clampedView.length);
 		checkState(this.clampedView[0].length == 2, "invalid clamped view length: %s", this.clampedView[0].length);
 		checkState(this.clampedView[1].length == 2, "invalid clamped view length: %s", this.clampedView[1].length);
-		if (this.clampedView[0][0] == null || this.clampedView[0][1] == null || this.clampedView[1][0] == null || this.clampedView[1][1] == null) {
-			return Optional.absent();
-		} else {
-			return Optional.of(Tuples.of(this.clampedView[0][0], this.clampedView[0][1], this.clampedView[1][0], this.clampedView[1][1]));
-		}
+		return Optional.of(Tuples.of(this.clampedView[0][0], this.clampedView[0][1], this.clampedView[1][0], this.clampedView[1][1]));
 	});
 
 	@Override

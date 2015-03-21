@@ -46,7 +46,7 @@ final class DefaultMapPOIDTO implements MapPOIDTO {
 	private final Integer floor = null;
 	@SerializedName("coord")
 	@Since(1.0)
-	private final Double[] coordinates = new Double[2];
+	private final double[] coordinates = new double[2];
 
 	private final transient Supplier<Tuple2<Double, Double>> coordinatesTupleSupplier = Suppliers.memoize(() -> {
 		checkState(this.coordinates.length == 2, "invalid coordinates length: %s", this.coordinates.length);

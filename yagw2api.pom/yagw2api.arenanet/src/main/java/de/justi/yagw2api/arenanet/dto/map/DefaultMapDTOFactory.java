@@ -50,4 +50,17 @@ public final class DefaultMapDTOFactory extends AbstractGSONFactory implements M
 		return result;
 	}
 
+	@Override
+	public MapsDTO newMapsOf(final String json) {
+		final DefaultMapsDTO result;
+		try {
+			result = this.getGSON().fromJson(checkNotNull(json), DefaultMapsDTO.class);
+		} catch (JsonSyntaxException e) {
+			LOGGER.error("Invalid response: {}", json, e);
+			throw e;
+		}
+		LOGGER.debug("Built {}", result);
+		return result;
+	}
+
 }

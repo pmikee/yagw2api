@@ -31,6 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Guice;
+import com.google.inject.Inject;
 import com.google.inject.Injector;
 
 public enum YAGW2APIArenanet implements Arenanet, UncaughtExceptionHandler {
@@ -51,25 +52,35 @@ public enum YAGW2APIArenanet implements Arenanet, UncaughtExceptionHandler {
 	}
 
 	// FIELDS
-	private final WVWService wvwService;
-	private final GuildService guildService;
-	private final WorldService worldService;
-	private final MapTileService mapTileService;
-	private final MapFloorService mapFloorService;
-	private final ForkJoinPool forkJoinPool;
+	@Inject
+	private WVWService wvwService = null;
+	@Inject
+	private GuildService guildService = null;
+	@Inject
+	private WorldService worldService = null;
+	@Inject
+	private MapService mapService = null;
+	@Inject
+	private MapTileService mapTileService = null;
+	@Inject
+	private MapFloorService mapFloorService = null;
+	@Inject
+	private Locale currentLocale = null;
 
-	private Locale currentLocale = Locale.getDefault();
+	private final ForkJoinPool forkJoinPool;
 
 	// CONSTRUCTOR
 	private YAGW2APIArenanet() {
-		final Injector injector = Guice.createInjector(new Module());
 		this.forkJoinPool = new ForkJoinPool(Runtime.getRuntime().availableProcessors() * THREAD_COUNT_PER_PROCESSOR, ForkJoinPool.defaultForkJoinWorkerThreadFactory, this, false);
-		this.guildService = injector.getInstance(GuildService.class);
-		this.wvwService = injector.getInstance(WVWService.class);
-		this.worldService = injector.getInstance(WorldService.class);
-		this.mapTileService = injector.getInstance(MapTileService.class);
-		this.mapFloorService = injector.getInstance(MapFloorService.class);
-		this.currentLocale = injector.getInstance(Locale.class);
+		final Injector injector = Guice.createInjector(new Module());
+		injector.injectMembers(this);
+		checkNotNull(this.wvwService, "missing wvwService");
+		checkNotNull(this.guildService, "missing guildService");
+		checkNotNull(this.worldService, "missing worldService");
+		checkNotNull(this.mapService, "missing mapService");
+		checkNotNull(this.mapTileService, "missing mapTileService");
+		checkNotNull(this.mapFloorService, "missing mapFloorService");
+		checkNotNull(this.currentLocale, "missing currentLocale");
 	}
 
 	// METHODS
@@ -141,6 +152,11 @@ public enum YAGW2APIArenanet implements Arenanet, UncaughtExceptionHandler {
 	@Override
 	public void setCurrentLocale(final Locale locale) {
 		this.currentLocale = checkNotNull(locale);
+	}
+
+	@Override
+	public MapService getMapService() {
+		return this.mapService;
 	}
 
 }
