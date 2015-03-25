@@ -36,6 +36,7 @@
 							<groupId>de.justi</groupId>
 							<artifactId>yagw2api.explorer.rcp.targetplatform</artifactId>
 							<version>${project.version}</version>
+							<classifier>yagw2api.explorer.rcp.targetplatform</classifier>
 						</artifact>
 					</target>
 					<environments>
@@ -45,6 +46,7 @@
 							<arch>x86_64</arch>
 						</environment>
 					</environments>
+					
 				</configuration>
 			</plugin>
 			<plugin>

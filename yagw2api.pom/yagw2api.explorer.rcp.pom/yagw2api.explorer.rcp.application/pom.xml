@@ -25,6 +25,9 @@
 						<goals>
 							<goal>copy-dependencies</goal>
 						</goals>
+						<configuration>						
+							<outputDirectory>${project.basedir}/lib</outputDirectory>
+						</configuration>
 					</execution>
 					<execution>
 						<id>prepare-plugin-dependency-sources</id>
@@ -35,14 +38,16 @@
 						<configuration>
 							<classifier>sources</classifier>
 							<failOnMissingClassifierArtifact>false</failOnMissingClassifierArtifact>
+							<outputDirectory>${project.basedir}/lib-source</outputDirectory>
 						</configuration>
 					</execution>
 				</executions>
 				<configuration>
 					<prependGroupId>true</prependGroupId>
 					<stripVersion>true</stripVersion>
-					<outputDirectory>${project.basedir}/lib</outputDirectory>
 					<verbose>true</verbose>
+					<useSubDirectoryPerScope>true</useSubDirectoryPerScope>
+					<excludeScope>system</excludeScope>
 				</configuration>
 			</plugin>
 		</plugins>

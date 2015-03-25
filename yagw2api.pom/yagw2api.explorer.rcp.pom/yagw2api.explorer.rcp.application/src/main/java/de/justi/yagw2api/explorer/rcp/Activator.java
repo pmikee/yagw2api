@@ -27,7 +27,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.osgi.framework.BundleContext;
 
-import de.justi.yagw2api.arenanet.IMapTileService;
+import de.justi.yagw2api.arenanet.MapTileService;
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
 import de.justi.yagw2api.wrapper.IWVWWrapper;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
@@ -54,7 +54,7 @@ public class Activator extends AbstractUIPlugin {
 	// The shared instance
 	private static Activator plugin;
 
-	private final IMapTileService mapTileService = YAGW2APIArenanet.INSTANCE.getMapTileService();
+	private final MapTileService mapTileService = YAGW2APIArenanet.INSTANCE.getMapTileService();
 	private final IWVWWrapper wvw = YAGW2APIWrapper.INSTANCE.getWVWWrapper();
 
 	/**
@@ -69,7 +69,7 @@ public class Activator extends AbstractUIPlugin {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
 	 */
 	@Override
@@ -81,7 +81,7 @@ public class Activator extends AbstractUIPlugin {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
 	 */
 	@Override
@@ -95,7 +95,7 @@ public class Activator extends AbstractUIPlugin {
 		return this.wvw;
 	}
 
-	public IMapTileService getMapTileService() {
+	public MapTileService getMapTileService() {
 		return this.mapTileService;
 	}
 

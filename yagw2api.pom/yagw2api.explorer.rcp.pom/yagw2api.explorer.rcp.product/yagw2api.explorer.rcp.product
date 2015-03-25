@@ -15,8 +15,10 @@
 
    <windowImages i16="/yagw2api.explorer.rcp.application/etc/images/GW2Logo_16x16.png" i32="/yagw2api.explorer.rcp.application/etc/images/GW2Logo_32x32.png" i48="/yagw2api.explorer.rcp.application/etc/images/GW2Logo_48x48.png" i64="/yagw2api.explorer.rcp.application/etc/images/GW2Logo_64x64.png" i128="/yagw2api.explorer.rcp.application/etc/images/GW2Logo_128x128.png" i256="/yagw2api.explorer.rcp.application/etc/images/GW2Logo_256x256.png"/>
 
-   <splash location="yagw2api.explorer.rcp.application" />
+   <splash
+      location="yagw2api.explorer.rcp.application" />
    <launcher name="YAGW2API-Explorer">
+      <solaris/>
       <win useIco="false">
          <bmp
             winSmallHigh="etc/images/GW2Logo_16x16.bmp"
@@ -37,10 +39,6 @@
 
    <features>
       <feature id="yagw2api.explorer.rcp.feature"/>
-      <feature id="org.eclipse.rcp"/>
-      <feature id="org.eclipse.emf.ecore"/>
-      <feature id="org.eclipse.emf.common"/>
-      <feature id="org.eclipse.e4.rcp"/>
    </features>
 
    <configurations>
