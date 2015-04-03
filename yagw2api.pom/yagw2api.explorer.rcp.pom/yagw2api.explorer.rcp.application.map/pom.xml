@@ -3,6 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>yagw2api.explorer.rcp.application.map</artifactId>
 	<packaging>eclipse-plugin</packaging>
+	<name>YAGW2API-Explorer-RCP-Application World-Map</name>
 
 	<parent>
 		<groupId>de.justi</groupId>

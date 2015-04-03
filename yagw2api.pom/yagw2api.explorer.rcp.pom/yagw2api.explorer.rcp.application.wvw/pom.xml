@@ -2,6 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>yagw2api.explorer.rcp.application.wvw</artifactId>
+	<name>YAGW2API-Explorer-RCP-Application WVW</name>
 	<parent>
 		<groupId>de.justi</groupId>
 		<artifactId>yagw2api.explorer.rcp.pom</artifactId>
