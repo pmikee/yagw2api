@@ -7,7 +7,7 @@
    </configIni>
 
    <launcherArgs>
-      <vmArgs>-Dlog4j.configurationFile=log4j2.xml
+      <vmArgs>-Dlog4j.configurationFile=log4j2.xml -Dosgi.clean=true -Dosgi.classloader.type=parallel -Declipse.service.jobs=false -Dorg.eclipse.update.reconcile=false
       </vmArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts
       </vmArgsMac>
@@ -20,6 +20,7 @@
    <launcher name="YAGW2API-Explorer">
       <solaris/>
       <win useIco="false">
+         <ico path="/yagw2api.explorer.rcp.product/etc/images/GW2Logo.ico"/>
          <bmp
             winSmallHigh="etc/images/GW2Logo_16x16.bmp"
             winSmallLow="etc/images/GW2Logo_16x16_8bit.bmp"
@@ -39,6 +40,7 @@
 
    <features>
       <feature id="yagw2api.explorer.rcp.feature"/>
+      <feature id="org.eclipse.rcp"/>
    </features>
 
    <configurations>
