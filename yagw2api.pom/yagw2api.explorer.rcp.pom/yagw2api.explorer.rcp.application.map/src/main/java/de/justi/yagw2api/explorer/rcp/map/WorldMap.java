@@ -26,18 +26,28 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
+import javax.annotation.Nullable;
+
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Spinner;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.slf4j.Logger;
@@ -47,8 +57,11 @@ import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import de.justi.yagw2api.explorer.rcp.Activator;
+import de.justi.yagw2api.explorer.rcp.map.ZoomManager.ZoomChangedCallback;
 
-public class WorldMap extends ViewPart {
+public class WorldMap extends ViewPart implements ZoomChangedCallback {
+
+	// CONST
 	private static final Logger LOGGER = LoggerFactory.getLogger(WorldMap.class);
 	private static final int SECTOR_SIZE = 256;
 	public static final String ID = "de.justi.yagw2api.explorer.rcp.map.worldmap"; //$NON-NLS-1$
@@ -60,13 +73,22 @@ public class WorldMap extends ViewPart {
 					LOGGER.error("Uncaught exception in {}", t, e);
 				}
 			}).build();
-	private ScrolledComposite scrolling = null;
-	private final ExecutorService mapUpdaterService;
 
+	// FIELDS
+	private final ExecutorService mapUpdaterService;
+	@Nullable
+	private ScrolledComposite scrolling = null;
+	@Nullable
+	private ZoomManager zoomManager = null;
+	@Nullable
+	private Text txtZoom = null;
+
+	// CONSTRUCTOR
 	public WorldMap() {
 		this.mapUpdaterService = Executors.newSingleThreadExecutor(DAEMON_THREAD_FACTORY);
 	}
 
+	// METHODS
 	private void initializeMapAsync(final int continentId, final int floor, final int zoom, final int vSectors, final int hSectors) {
 		this.mapUpdaterService.submit(new Runnable() {
 
@@ -115,19 +137,60 @@ public class WorldMap extends ViewPart {
 	public void createPartControl(final Composite parent) {
 
 		parent.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		parent.setLayout(new GridLayout(5, false));
+
+		CLabel lblZoom = new CLabel(parent, SWT.NONE);
+		lblZoom.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		lblZoom.setText("Zoom");
+
+		this.txtZoom = new Text(parent, SWT.BORDER | SWT.READ_ONLY | SWT.RIGHT);
+		this.txtZoom.setText("100%");
+		this.txtZoom.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+
+		Button btnZoomIn = new Button(parent, SWT.FLAT | SWT.CENTER);
+		GridData gd_btnZoomIn = new GridData(SWT.CENTER, SWT.TOP, false, false, 1, 1);
+		gd_btnZoomIn.widthHint = 25;
+		btnZoomIn.setLayoutData(gd_btnZoomIn);
+		btnZoomIn.setText("+");
+
+		Button btnZoomOut = new Button(parent, SWT.FLAT | SWT.CENTER);
+		GridData gd_btnZoomOut = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_btnZoomOut.widthHint = 25;
+		btnZoomOut.setLayoutData(gd_btnZoomOut);
+		btnZoomOut.setText("-");
 		this.scrolling = new ScrolledComposite(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+		this.scrolling.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 4));
 		this.scrolling.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		this.scrolling.setExpandHorizontal(true);
 		this.scrolling.setExpandVertical(true);
 
+		CLabel lblFloor = new CLabel(parent, SWT.NONE);
+		lblFloor.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		lblFloor.setText("Floor");
+
+		Spinner spnFloor = new Spinner(parent, SWT.BORDER | SWT.READ_ONLY);
+		spnFloor.setMaximum(10);
+		spnFloor.setMinimum(-10);
+		spnFloor.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
+
+		CLabel lblContinent = new CLabel(parent, SWT.NONE);
+		lblContinent.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		lblContinent.setText("Continent");
+
+		Combo cmbContinent = new Combo(parent, SWT.READ_ONLY);
+		GridData gd_cmbContinent = new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1);
+		gd_cmbContinent.widthHint = 125;
+		cmbContinent.setLayoutData(gd_cmbContinent);
+		new Label(parent, SWT.NONE);
+		new Label(parent, SWT.NONE);
+		new Label(parent, SWT.NONE);
+		new Label(parent, SWT.NONE);
+
 		this.createActions();
 		this.initializeToolBar();
 		this.initializeMenu();
-		this.initializeMapAsync(1, 1, 3, 5, 5);
-		this.initializeMapAsync(1, 1, 4, 5, 5);
-		this.initializeMapAsync(1, 1, 5, 5, 5);
-		this.initializeMapAsync(1, 1, 6, 5, 5);
-		this.initializeMapAsync(1, 1, 7, 5, 5);
+
+		this.zoomManager = new ZoomManager(btnZoomIn, btnZoomOut, this);
 	}
 
 	/**
@@ -154,6 +217,12 @@ public class WorldMap extends ViewPart {
 	@Override
 	public void setFocus() {
 		// Set the focus
+	}
+
+	@Override
+	public void onZoomLevelChanged(final int oldZoom, final int newZoom) {
+		this.initializeMapAsync(1, 1, newZoom, 2, 2);
+		this.txtZoom.setText(newZoom * 100 + "%");
 	}
 
 }
