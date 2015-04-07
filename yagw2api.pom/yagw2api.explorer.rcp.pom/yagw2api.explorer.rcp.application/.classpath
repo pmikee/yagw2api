@@ -21,7 +21,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/compile/de.justi.yagw2api.arenanet.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/de.justi.yagw2api.common.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/de.justi.yagw2api.mumblelink.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/de.justi.yagw2api.wrapper.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/compile/de.justi.yagw2api.wrapper.jar" sourcepath="/yagw2api.wrapper"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/javax.inject.javax.inject.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/net.java.dev.jna.jna.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/org.apache.logging.log4j.log4j-api.jar"/>

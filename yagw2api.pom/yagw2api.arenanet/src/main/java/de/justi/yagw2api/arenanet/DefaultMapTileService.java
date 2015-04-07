@@ -23,6 +23,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -31,6 +32,10 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.IntUnaryOperator;
 
@@ -45,10 +50,18 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Maps;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 final class DefaultMapTileService implements MapTileService {
 	// CONSTS
 	private static final Path RELATIVE_TEMP_DIR_PATH = Paths.get("yagw2api", DefaultMapTileService.class.getSimpleName());
+	private static final ThreadFactory THREAD_FACTORY = new ThreadFactoryBuilder().setDaemon(true).setNameFormat(DefaultMapTileService.class.getSimpleName() + "-%d")
+			.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
+				@Override
+				public void uncaughtException(final Thread t, final Throwable e) {
+					LOGGER.error("Uncaught exception in {}", t, e);
+				}
+			}).build();
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultMapTileService.class);
 
 	// EMBEDDED
@@ -131,6 +144,7 @@ final class DefaultMapTileService implements MapTileService {
 		}
 	}
 
+	private final ExecutorService executor = Executors.newCachedThreadPool(THREAD_FACTORY);
 	private final LoadingCache<MapTileSelector, Optional<Path>> mapTileCache = CacheBuilder.newBuilder().build(new CacheLoader<MapTileSelector, Optional<Path>>() {
 		@Override
 		public Optional<Path> load(final MapTileSelector key) throws Exception {
@@ -157,11 +171,22 @@ final class DefaultMapTileService implements MapTileService {
 
 	@Override
 	public Optional<Path> getMapTile(final int continentId, final int floor, final int zoom, final int x, final int y) {
-		final MapTileSelector selector = MapTileSelector.of(continentId, floor, zoom, x, y);
 		try {
-			return this.mapTileCache.get(selector);
-		} catch (ExecutionException e) {
+			return this.getMapTileAsync(continentId, floor, zoom, x, y).get();
+		} catch (InterruptedException | ExecutionException e) {
 			throw new Error(e);
 		}
+	}
+
+	@Override
+	public Future<Optional<Path>> getMapTileAsync(final int continentId, final int floor, final int zoom, final int x, final int y) {
+		return this.executor.submit(() -> {
+			final MapTileSelector selector = MapTileSelector.of(continentId, floor, zoom, x, y);
+			try {
+				return DefaultMapTileService.this.mapTileCache.get(selector);
+			} catch (ExecutionException e) {
+				throw new Error(e);
+			}
+		});
 	}
 }

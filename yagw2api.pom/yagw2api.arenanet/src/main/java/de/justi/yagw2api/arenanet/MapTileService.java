@@ -21,9 +21,12 @@ package de.justi.yagw2api.arenanet;
  */
 
 import java.nio.file.Path;
+import java.util.concurrent.Future;
 
 import com.google.common.base.Optional;
 
 public interface MapTileService {
 	Optional<Path> getMapTile(int continentId, int floor, int zoom, int x, int y);
+
+	Future<Optional<Path>> getMapTileAsync(int continentId, int floor, int zoom, int x, int y);
 }
