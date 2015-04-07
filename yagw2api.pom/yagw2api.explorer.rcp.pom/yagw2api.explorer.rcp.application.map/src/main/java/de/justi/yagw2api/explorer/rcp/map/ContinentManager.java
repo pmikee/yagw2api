@@ -8,26 +8,26 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.collect.Range;
 
-final class FloorManager extends AbstractValueManager {
+final class ContinentManager extends AbstractValueManager {
 	// CONSTS
 	static final Logger LOGGER = LoggerFactory.getLogger(ZoomManager.class);
-	private final FloorManager.FloorChangedCallback callback;
+	private final ContinentManager.ContinentChangedCallback callback;
 
 	// EMBEDDED
-	public static interface FloorChangedCallback {
-		void onFloorChanged(int oldFloor, int newFloor);
+	public static interface ContinentChangedCallback {
+		void onContinentChanged(int oldContinentId, int newContinentId);
 	}
 
 	// CONSTRUCTOR
-	public FloorManager(final FloorManager.FloorChangedCallback callback) {
-		super(Range.closed(-5, 5));
+	public ContinentManager(final ContinentChangedCallback callback) {
+		super(Range.closed(1, 2));
 		this.callback = checkNotNull(callback, "missing callback");
 	}
 
 	// METHODS
 	@Override
 	protected void onValueChanged(final int oldValue, final int newValue) {
-		this.callback.onFloorChanged(oldValue, newValue);
+		this.callback.onContinentChanged(oldValue, newValue);
 	}
 
 	@Override

@@ -57,7 +57,7 @@ public final class MapWidget extends Composite {
 	public MapWidget(final Composite parent) {
 		super(parent, SWT.NONE);
 		this.setLayout(new GridLayout(1, false));
-		this.scrolling = new ScrolledComposite(this, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+		this.scrolling = new ScrolledComposite(this, SWT.H_SCROLL | SWT.V_SCROLL);
 		this.scrolling.setBackground(SWTResourceManager.getColor(SWT.COLOR_INFO_BACKGROUND));
 		this.scrolling.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		this.scrolling.setExpandHorizontal(true);
@@ -74,6 +74,11 @@ public final class MapWidget extends Composite {
 
 	public void setZoomAndUpdate(final int zoom) {
 		this.zoom = zoom;
+		this.updateMapAsync();
+	}
+
+	public void setContinentAndUpdate(final int continentId) {
+		this.continentId = continentId;
 		this.updateMapAsync();
 	}
 

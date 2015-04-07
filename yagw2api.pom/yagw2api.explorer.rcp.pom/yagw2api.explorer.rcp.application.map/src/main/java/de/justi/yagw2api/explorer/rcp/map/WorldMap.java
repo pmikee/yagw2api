@@ -20,6 +20,8 @@ package de.justi.yagw2api.explorer.rcp.map;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import javax.annotation.Nullable;
 
 import org.eclipse.jface.action.IMenuManager;
@@ -41,20 +43,20 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.justi.yagw2api.explorer.rcp.map.ContinentManager.ContinentChangedCallback;
 import de.justi.yagw2api.explorer.rcp.map.FloorManager.FloorChangedCallback;
 import de.justi.yagw2api.explorer.rcp.map.ZoomManager.ZoomChangedCallback;
 
-public class WorldMap extends ViewPart implements ZoomChangedCallback, FloorChangedCallback {
+public class WorldMap extends ViewPart implements ZoomChangedCallback, FloorChangedCallback, ContinentChangedCallback {
 
 	// CONST
 	private static final Logger LOGGER = LoggerFactory.getLogger(WorldMap.class);
 	public static final String ID = "de.justi.yagw2api.explorer.rcp.map.worldmap"; //$NON-NLS-1$
 
 	// FIELDS
-	@Nullable
-	private ZoomManager zoomManager = null;
-	@Nullable
-	private FloorManager floorManager = null;
+	private final ZoomManager zoomManager;
+	private final FloorManager floorManager;
+	private final ContinentManager continentManager;
 	@Nullable
 	private Text txtZoom = null;
 	@Nullable
@@ -64,9 +66,13 @@ public class WorldMap extends ViewPart implements ZoomChangedCallback, FloorChan
 	@Nullable
 	private Button btnZoomIn = null;
 	private Spinner spnFloor;
+	private Combo cmbContinent;
 
 	// CONSTRUCTOR
 	public WorldMap() {
+		this.zoomManager = new ZoomManager(this);
+		this.floorManager = new FloorManager(this);
+		this.continentManager = new ContinentManager(this);
 	}
 
 	// METHODS
@@ -94,11 +100,6 @@ public class WorldMap extends ViewPart implements ZoomChangedCallback, FloorChan
 		this.txtZoom = new Text(cmpBasicControls, SWT.BORDER | SWT.READ_ONLY | SWT.RIGHT);
 
 		this.btnZoomIn = new Button(cmpBasicControls, SWT.FLAT | SWT.CENTER);
-		this.btnZoomIn.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(final SelectionEvent e) {
-			}
-		});
 		this.btnZoomIn.setText("+");
 
 		this.btnZoomOut = new Button(cmpBasicControls, SWT.FLAT | SWT.CENTER);
@@ -118,8 +119,10 @@ public class WorldMap extends ViewPart implements ZoomChangedCallback, FloorChan
 		lblContinent.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		lblContinent.setText("Continent");
 
-		Combo cmbContinent = new Combo(cmpBasicControls, SWT.READ_ONLY);
-		cmbContinent.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
+		this.cmbContinent = new Combo(cmpBasicControls, SWT.READ_ONLY);
+		this.cmbContinent.setItems(new String[] { "Tyria", "Mists" });
+		this.cmbContinent.select(0);
+		this.cmbContinent.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
 		this.map = new MapWidget(parent);
 		GridLayout gridLayout = (GridLayout) this.map.getLayout();
 		gridLayout.marginWidth = 0;
@@ -134,49 +137,24 @@ public class WorldMap extends ViewPart implements ZoomChangedCallback, FloorChan
 		new Label(cmpNavigation, SWT.NONE);
 
 		Button btnUp = new Button(cmpNavigation, SWT.CENTER);
-		btnUp.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(final SelectionEvent e) {
-			}
-		});
 		btnUp.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
 		btnUp.setText("UP");
 		new Label(cmpNavigation, SWT.NONE);
 
 		Button btnLeft = new Button(cmpNavigation, SWT.CENTER);
-		btnLeft.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(final SelectionEvent e) {
-			}
-		});
 		btnLeft.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
 		btnLeft.setText("LEFT");
 
 		Button btnReset = new Button(cmpNavigation, SWT.CENTER);
-		btnReset.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(final SelectionEvent e) {
-			}
-		});
 		btnReset.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
 		btnReset.setText("RESET");
 
 		Button btnRight = new Button(cmpNavigation, SWT.CENTER);
-		btnRight.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(final SelectionEvent e) {
-			}
-		});
 		btnRight.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
 		btnRight.setText("RIGHT");
 		new Label(cmpNavigation, SWT.NONE);
 
 		Button btnDown = new Button(cmpNavigation, SWT.CENTER);
-		btnDown.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(final SelectionEvent e) {
-			}
-		});
 		btnDown.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
 		btnDown.setText("DOWN");
 		new Label(cmpNavigation, SWT.NONE);
@@ -189,8 +167,45 @@ public class WorldMap extends ViewPart implements ZoomChangedCallback, FloorChan
 	 * Create the actions.
 	 */
 	private void createActions() {
-		this.zoomManager = new ZoomManager(this.btnZoomIn, this.btnZoomOut, this);
-		this.floorManager = new FloorManager(this.spnFloor, this);
+		this.wireUpZoomManager();
+		this.wireUpFloorManager();
+		this.wireUpContinentManager();
+	}
+
+	private void wireUpContinentManager() {
+		this.cmbContinent.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent e) {
+				WorldMap.this.continentManager.updateValue(WorldMap.this.cmbContinent.getSelectionIndex() + 1);
+			}
+		});
+		this.continentManager.reset();
+	}
+
+	private void wireUpFloorManager() {
+		this.spnFloor.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent e) {
+				WorldMap.this.floorManager.updateValue(WorldMap.this.spnFloor.getSelection());
+			}
+		});
+		this.floorManager.reset();
+	}
+
+	private void wireUpZoomManager() {
+		this.btnZoomOut.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent e) {
+				WorldMap.this.zoomManager.decrement();
+			}
+		});
+		this.btnZoomIn.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent e) {
+				WorldMap.this.zoomManager.increment();
+			}
+		});
+		this.zoomManager.reset();
 	}
 
 	/**
@@ -213,14 +228,23 @@ public class WorldMap extends ViewPart implements ZoomChangedCallback, FloorChan
 	}
 
 	@Override
-	public void onZoomLevelChanged(final int oldZoom, final int newZoom) {
+	public void onZoomChanged(final int oldZoom, final int newZoom) {
+		checkNotNull(this.map, "missing map");
+		checkNotNull(this.txtZoom, "missing txtZoom");
 		this.map.setZoomAndUpdate(newZoom);
 		this.txtZoom.setText(newZoom * 100 + "%");
 	}
 
 	@Override
 	public void onFloorChanged(final int oldFloor, final int newFloor) {
+		checkNotNull(this.map, "missing map");
 		this.map.setFloorAndUpdate(newFloor);
+	}
+
+	@Override
+	public void onContinentChanged(final int oldContinent, final int newContinent) {
+		checkNotNull(this.map, "missing map");
+		this.map.setContinentAndUpdate(newContinent);
 	}
 
 }
