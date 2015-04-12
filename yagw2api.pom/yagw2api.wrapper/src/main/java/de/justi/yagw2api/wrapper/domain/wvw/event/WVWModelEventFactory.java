@@ -52,7 +52,7 @@ public final class WVWModelEventFactory implements IWVWModelEventFactory {
 	public IWVWMatchScoresChangedEvent newMatchScoresChangedEvent(final IWVWScores scores, final int deltaRed, final int deltaGreen, final int deltaBlue, final IWVWMatch match) {
 		checkNotNull(scores);
 		checkNotNull(match);
-		return new WVWMatchScoresChanged(scores, deltaRed, deltaGreen, deltaBlue, match);
+		return new WVWMatchScoresChangedEvent(scores, deltaRed, deltaGreen, deltaBlue, match);
 	}
 
 	@Override

@@ -27,10 +27,10 @@ import com.google.common.base.MoreObjects;
 import de.justi.yagw2api.wrapper.domain.wvw.IWVWMatch;
 import de.justi.yagw2api.wrapper.domain.wvw.IWVWScores;
 
-final class WVWMatchScoresChanged extends AbstractWVWScoresChangedEvent implements IWVWMatchScoresChangedEvent {
+final class WVWMatchScoresChangedEvent extends AbstractWVWScoresChangedEvent implements IWVWMatchScoresChangedEvent {
 	private final IWVWMatch match;
 
-	public WVWMatchScoresChanged(final IWVWScores scores, final int deltaRed, final int deltaGreen, final int deltaBlue, final IWVWMatch match) {
+	public WVWMatchScoresChangedEvent(final IWVWScores scores, final int deltaRed, final int deltaGreen, final int deltaBlue, final IWVWMatch match) {
 		super(checkNotNull(scores), deltaRed, deltaGreen, deltaBlue);
 		this.match = checkNotNull(match);
 	}
