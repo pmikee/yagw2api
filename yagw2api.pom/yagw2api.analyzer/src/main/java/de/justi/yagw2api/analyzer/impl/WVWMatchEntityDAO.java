@@ -41,8 +41,8 @@ import de.justi.yagw2api.analyzer.IWVWMatchEntityDAO;
 import de.justi.yagw2api.analyzer.IWVWScoresEmbeddable;
 import de.justi.yagw2api.analyzer.YAGW2APIAnalyzer;
 import de.justi.yagw2api.analyzer.YAGW2APIAnalyzerPersistence;
-import de.justi.yagw2api.wrapper.IWVWMatch;
-import de.justi.yagw2api.wrapper.IWVWScores;
+import de.justi.yagw2api.wrapper.domain.wvw.IWVWMatch;
+import de.justi.yagw2api.wrapper.domain.wvw.IWVWScores;
 
 public final class WVWMatchEntityDAO implements IWVWMatchEntityDAO {
 	private static final Logger LOGGER = LoggerFactory.getLogger(WVWMatchEntityDAO.class);

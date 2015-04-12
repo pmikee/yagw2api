@@ -35,15 +35,15 @@ import de.justi.yagw2api.analyzer.IWVWMatchEntity;
 import de.justi.yagw2api.analyzer.IWVWMatchEntityDAO;
 import de.justi.yagw2api.analyzer.IWorldEnityDAO;
 import de.justi.yagw2api.analyzer.IWorldEntity;
-import de.justi.yagw2api.wrapper.IWVWInitializedMatchEvent;
-import de.justi.yagw2api.wrapper.IWVWMapScoresChangedEvent;
-import de.justi.yagw2api.wrapper.IWVWMatch;
-import de.justi.yagw2api.wrapper.IWVWMatchScoresChangedEvent;
-import de.justi.yagw2api.wrapper.IWVWObjectiveCaptureEvent;
-import de.justi.yagw2api.wrapper.IWVWObjectiveClaimedEvent;
-import de.justi.yagw2api.wrapper.IWVWObjectiveEndOfBuffEvent;
-import de.justi.yagw2api.wrapper.IWVWObjectiveUnclaimedEvent;
-import de.justi.yagw2api.wrapper.IWorld;
+import de.justi.yagw2api.wrapper.domain.world.IWorld;
+import de.justi.yagw2api.wrapper.domain.wvw.IWVWMatch;
+import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWInitializedMatchEvent;
+import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWMapScoresChangedEvent;
+import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWMatchScoresChangedEvent;
+import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWObjectiveCaptureEvent;
+import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWObjectiveClaimedEvent;
+import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWObjectiveEndOfBuffEvent;
+import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWObjectiveUnclaimedEvent;
 
 final class WVWAnalyzer implements IWVWAnalyzer {
 	private static final Logger LOGGER = LoggerFactory.getLogger(WVWAnalyzer.class);

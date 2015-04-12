@@ -30,10 +30,10 @@ import org.junit.Test;
 
 import de.justi.yagw2api.analyzer.AbstractAnalyzerTest;
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
-import de.justi.yagw2api.wrapper.IModelFactory;
-import de.justi.yagw2api.wrapper.IWorld;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
-import de.justi.yagw2api.wrapper.impl.WorldLocationType;
+import de.justi.yagw2api.wrapper.domain.IModelFactory;
+import de.justi.yagw2api.wrapper.domain.world.IWorld;
+import de.justi.yagw2api.wrapper.domain.world.WorldLocationType;
 
 public final class WVWWorldEntityDAOTest extends AbstractAnalyzerTest {
 

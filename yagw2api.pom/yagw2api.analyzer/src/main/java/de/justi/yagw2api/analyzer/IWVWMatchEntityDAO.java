@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
 
 import com.google.common.base.Optional;
 
-import de.justi.yagw2api.wrapper.IWVWMatch;
+import de.justi.yagw2api.wrapper.domain.wvw.IWVWMatch;
 
 public interface IWVWMatchEntityDAO {
 	Optional<IWVWMatchEntity> newMatchEntityOf(IWVWMatch match);

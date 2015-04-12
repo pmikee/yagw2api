@@ -28,7 +28,10 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-import de.justi.yagw2api.wrapper.impl.Module;
+import de.justi.yagw2api.wrapper.domain.IModelFactory;
+import de.justi.yagw2api.wrapper.domain.wvw.IWVWModelFactory;
+import de.justi.yagw2api.wrapper.domain.wvw.IWVWWrapper;
+import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWModelEventFactory;
 
 public enum YAGW2APIWrapper {
 	INSTANCE;

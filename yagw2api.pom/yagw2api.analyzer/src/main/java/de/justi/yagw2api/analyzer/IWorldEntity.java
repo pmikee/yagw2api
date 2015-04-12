@@ -25,8 +25,8 @@ import java.util.Locale;
 
 import com.google.common.base.Optional;
 
-import de.justi.yagw2api.wrapper.IWorld;
-import de.justi.yagw2api.wrapper.IWorldLocationType;
+import de.justi.yagw2api.wrapper.domain.world.IWorld;
+import de.justi.yagw2api.wrapper.domain.world.IWorldLocationType;
 
 public interface IWorldEntity extends IEntity {
 	Optional<String> getName(Locale locale);

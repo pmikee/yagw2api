@@ -55,10 +55,10 @@ import de.justi.yagw2api.explorer.rcp.swt.AggregatingSelectionProvider;
 import de.justi.yagw2api.explorer.rcp.swt.FixedColoredTypeSafeColumnLabelProvider;
 import de.justi.yagw2api.explorer.rcp.swt.TypeSafeColumnLabelProvider;
 import de.justi.yagw2api.explorer.rcp.swt.TypeSafeTableViewerColumnSorter;
-import de.justi.yagw2api.wrapper.IWVWInitializedMatchEvent;
-import de.justi.yagw2api.wrapper.IWVWMatch;
-import de.justi.yagw2api.wrapper.IWVWMatchListener;
-import de.justi.yagw2api.wrapper.IWVWMatchScoresChangedEvent;
+import de.justi.yagw2api.wrapper.domain.wvw.IWVWMatch;
+import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWInitializedMatchEvent;
+import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWMatchListener;
+import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWMatchScoresChangedEvent;
 
 public class MatchSelectorViewPart extends ViewPart implements IWVWMatchListener, ISelectionListener {
 	public static final String ID = "yagw2api.explorer.rcp.wvw.matchselector"; //$NON-NLS-1$

@@ -42,7 +42,7 @@ import com.google.common.base.Optional;
 import de.justi.yagw2api.analyzer.IWorldEnityDAO;
 import de.justi.yagw2api.analyzer.IWorldEntity;
 import de.justi.yagw2api.analyzer.YAGW2APIAnalyzerPersistence;
-import de.justi.yagw2api.wrapper.IWorld;
+import de.justi.yagw2api.wrapper.domain.world.IWorld;
 
 final class WorldEntityDAO implements IWorldEnityDAO {
 	private static final Logger LOGGER = LoggerFactory.getLogger(WorldEntityDAO.class);

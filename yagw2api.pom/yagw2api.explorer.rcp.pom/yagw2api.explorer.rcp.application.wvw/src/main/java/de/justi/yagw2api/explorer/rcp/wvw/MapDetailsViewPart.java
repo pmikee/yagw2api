@@ -66,20 +66,20 @@ import de.justi.yagw2api.explorer.rcp.swt.AggregatingSelectionProvider;
 import de.justi.yagw2api.explorer.rcp.swt.TypeSafeContentProvider;
 import de.justi.yagw2api.explorer.rcp.swt.TypeSafeTableViewerColumnSorter;
 import de.justi.yagw2api.explorer.rcp.swt.TypeSafeViewerLabelProvider;
-import de.justi.yagw2api.wrapper.IGuild;
-import de.justi.yagw2api.wrapper.IWVWInitializedMatchEvent;
-import de.justi.yagw2api.wrapper.IWVWMap;
-import de.justi.yagw2api.wrapper.IWVWMapListener;
-import de.justi.yagw2api.wrapper.IWVWMapScoresChangedEvent;
-import de.justi.yagw2api.wrapper.IWVWMatch;
-import de.justi.yagw2api.wrapper.IWVWMatchListener;
-import de.justi.yagw2api.wrapper.IWVWMatchScoresChangedEvent;
-import de.justi.yagw2api.wrapper.IWVWObjective;
-import de.justi.yagw2api.wrapper.IWVWObjectiveCaptureEvent;
-import de.justi.yagw2api.wrapper.IWVWObjectiveClaimedEvent;
-import de.justi.yagw2api.wrapper.IWVWObjectiveEndOfBuffEvent;
-import de.justi.yagw2api.wrapper.IWVWObjectiveUnclaimedEvent;
-import de.justi.yagw2api.wrapper.IWorld;
+import de.justi.yagw2api.wrapper.domain.guild.IGuild;
+import de.justi.yagw2api.wrapper.domain.world.IWorld;
+import de.justi.yagw2api.wrapper.domain.wvw.IWVWMap;
+import de.justi.yagw2api.wrapper.domain.wvw.IWVWMatch;
+import de.justi.yagw2api.wrapper.domain.wvw.IWVWObjective;
+import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWInitializedMatchEvent;
+import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWMapListener;
+import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWMapScoresChangedEvent;
+import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWMatchListener;
+import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWMatchScoresChangedEvent;
+import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWObjectiveCaptureEvent;
+import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWObjectiveClaimedEvent;
+import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWObjectiveEndOfBuffEvent;
+import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWObjectiveUnclaimedEvent;
 
 public class MapDetailsViewPart extends ViewPart implements ISelectionListener, ISelectionChangedListener, IWVWMatchListener, IWVWMapListener {
 	private static class MatchMapsContentProvider extends TypeSafeContentProvider<IWVWMatch> {

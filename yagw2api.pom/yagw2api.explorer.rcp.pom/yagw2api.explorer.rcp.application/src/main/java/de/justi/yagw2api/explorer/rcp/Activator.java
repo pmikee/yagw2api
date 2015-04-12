@@ -29,8 +29,8 @@ import org.osgi.framework.BundleContext;
 
 import de.justi.yagw2api.arenanet.MapTileService;
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
-import de.justi.yagw2api.wrapper.IWVWWrapper;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
+import de.justi.yagw2api.wrapper.domain.wvw.IWVWWrapper;
 
 /**
  * The activator class controls the plug-in life cycle

@@ -55,8 +55,8 @@ import de.justi.yagw2api.analyzer.IWVWMapEntity;
 import de.justi.yagw2api.analyzer.IWVWMatchEntity;
 import de.justi.yagw2api.analyzer.IWVWScoresEmbeddable;
 import de.justi.yagw2api.analyzer.IWorldEntity;
-import de.justi.yagw2api.wrapper.IWVWMapType;
-import de.justi.yagw2api.wrapper.impl.WVWMapType;
+import de.justi.yagw2api.wrapper.domain.wvw.IWVWMapType;
+import de.justi.yagw2api.wrapper.domain.wvw.WVWMapType;
 
 @Entity(name = "wvw_match")
 @Converter(name = "localdatetime_converter", converterClass = LocalDateTimeConverter.class)

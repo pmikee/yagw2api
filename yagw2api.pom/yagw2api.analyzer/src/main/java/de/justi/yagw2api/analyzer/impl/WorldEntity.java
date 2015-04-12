@@ -53,9 +53,9 @@ import de.justi.yagw2api.analyzer.IWorldEntity;
 import de.justi.yagw2api.analyzer.utils.LocaleConverter;
 import de.justi.yagw2api.arenanet.Arenanet;
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
-import de.justi.yagw2api.wrapper.IWorld;
-import de.justi.yagw2api.wrapper.IWorldLocationType;
-import de.justi.yagw2api.wrapper.impl.WorldLocationType;
+import de.justi.yagw2api.wrapper.domain.world.IWorld;
+import de.justi.yagw2api.wrapper.domain.world.IWorldLocationType;
+import de.justi.yagw2api.wrapper.domain.world.WorldLocationType;
 
 @ObjectTypeConverters({ @ObjectTypeConverter(name = "WorldLocationTypeConverter", objectType = WorldLocationType.class, dataType = String.class, conversionValues = {
 		@ConversionValue(objectValue = "NORTH_AMERICA", dataValue = "NA"), @ConversionValue(objectValue = "EUROPE", dataValue = "EU") }) })

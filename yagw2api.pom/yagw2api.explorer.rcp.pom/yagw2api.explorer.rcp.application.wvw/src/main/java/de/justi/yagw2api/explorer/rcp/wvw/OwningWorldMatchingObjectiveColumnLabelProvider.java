@@ -23,9 +23,9 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import de.justi.yagw2api.explorer.rcp.swt.TypeSafeColumnLabelProvider;
-import de.justi.yagw2api.wrapper.IWVWMatch;
-import de.justi.yagw2api.wrapper.IWVWObjective;
-import de.justi.yagw2api.wrapper.IWorld;
+import de.justi.yagw2api.wrapper.domain.world.IWorld;
+import de.justi.yagw2api.wrapper.domain.wvw.IWVWMatch;
+import de.justi.yagw2api.wrapper.domain.wvw.IWVWObjective;
 
 class OwningWorldMatchingObjectiveColumnLabelProvider extends TypeSafeColumnLabelProvider<IWVWObjective> {
 	public OwningWorldMatchingObjectiveColumnLabelProvider() {

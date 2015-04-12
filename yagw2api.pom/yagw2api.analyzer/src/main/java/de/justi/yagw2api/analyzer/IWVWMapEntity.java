@@ -25,7 +25,7 @@ import java.util.Map;
 
 import com.google.common.base.Optional;
 
-import de.justi.yagw2api.wrapper.IWVWMapType;
+import de.justi.yagw2api.wrapper.domain.wvw.IWVWMapType;
 
 public interface IWVWMapEntity extends IEntity {
 	void setMatch(IWVWMatchEntity match);
