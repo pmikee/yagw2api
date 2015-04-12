@@ -41,7 +41,6 @@ import com.sun.jersey.client.impl.CopyOnWriteHashMap;
 import de.justi.yagw2api.wrapper.domain.world.IWorld;
 import de.justi.yagw2api.wrapper.domain.wvw.IWVWMap;
 import de.justi.yagw2api.wrapper.domain.wvw.IWVWMatch;
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWWrapper;
 import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWInitializedMatchEvent;
 import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWMapEvent;
 import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWMapListener;

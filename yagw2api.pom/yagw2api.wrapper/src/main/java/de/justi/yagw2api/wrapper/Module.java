@@ -25,10 +25,10 @@ import com.google.inject.AbstractModule;
 import de.justi.yagw2api.wrapper.domain.IModelFactory;
 import de.justi.yagw2api.wrapper.domain.ModelFactory;
 import de.justi.yagw2api.wrapper.domain.wvw.IWVWModelFactory;
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWWrapper;
 import de.justi.yagw2api.wrapper.domain.wvw.WVWModelFactory;
 import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWModelEventFactory;
 import de.justi.yagw2api.wrapper.domain.wvw.event.WVWModelEventFactory;
+import de.justi.yagw2api.wrapper.wvw.IWVWWrapper;
 import de.justi.yagw2api.wrapper.wvw.WVWWrapper;
 
 final public class Module extends AbstractModule {

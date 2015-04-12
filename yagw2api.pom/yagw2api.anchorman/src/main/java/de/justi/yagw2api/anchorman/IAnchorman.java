@@ -23,7 +23,7 @@ package de.justi.yagw2api.anchorman;
 import de.justi.yagw2api.mumblelink.IMumbleLink;
 import de.justi.yagw2api.wrapper.domain.wvw.IWVWMapType;
 import de.justi.yagw2api.wrapper.domain.wvw.IWVWMatch;
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWWrapper;
+import de.justi.yagw2api.wrapper.wvw.IWVWWrapper;
 
 public interface IAnchorman {
 	void init(IWVWWrapper wrapper, IMumbleLink mumblelink);

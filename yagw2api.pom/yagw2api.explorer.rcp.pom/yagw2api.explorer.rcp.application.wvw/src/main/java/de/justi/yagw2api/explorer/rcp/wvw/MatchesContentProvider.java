@@ -27,7 +27,7 @@ import org.eclipse.jface.viewers.Viewer;
 
 import de.justi.yagw2api.explorer.rcp.swt.TypeSafeContentProvider;
 import de.justi.yagw2api.wrapper.domain.wvw.IWVWMatch;
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWWrapper;
+import de.justi.yagw2api.wrapper.wvw.IWVWWrapper;
 
 final class MatchesContentProvider extends TypeSafeContentProvider<IWVWWrapper> implements IStructuredContentProvider {
 	public MatchesContentProvider() {

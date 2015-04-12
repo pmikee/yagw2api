@@ -1,4 +1,4 @@
-package de.justi.yagw2api.wrapper.domain.wvw;
+package de.justi.yagw2api.wrapper.wvw;
 
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.Set;
 
 import de.justi.yagw2api.wrapper.domain.world.IWorld;
+import de.justi.yagw2api.wrapper.domain.wvw.IWVWMap;
+import de.justi.yagw2api.wrapper.domain.wvw.IWVWMatch;
 import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWMapListener;
 import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWMatchListener;
 

@@ -47,7 +47,6 @@ import de.justi.yagw2api.mumblelink.IMumbleLinkMapChangeEvent;
 import de.justi.yagw2api.mumblelink.impl.IMumbleLinkListener;
 import de.justi.yagw2api.wrapper.domain.wvw.IWVWMapType;
 import de.justi.yagw2api.wrapper.domain.wvw.IWVWMatch;
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWWrapper;
 import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWInitializedMatchEvent;
 import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWMapListener;
 import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWMapScoresChangedEvent;
@@ -57,6 +56,7 @@ import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWObjectiveCaptureEvent;
 import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWObjectiveClaimedEvent;
 import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWObjectiveEndOfBuffEvent;
 import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWObjectiveUnclaimedEvent;
+import de.justi.yagw2api.wrapper.wvw.IWVWWrapper;
 import de.justi.yagwapi.common.TTSUtils;
 
 class Anchorman implements IAnchorman, IMumbleLinkListener, IWVWMatchListener, IWVWMapListener {
