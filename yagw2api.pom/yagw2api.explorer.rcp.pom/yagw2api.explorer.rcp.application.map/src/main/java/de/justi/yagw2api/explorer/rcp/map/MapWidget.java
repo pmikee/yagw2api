@@ -84,7 +84,7 @@ public final class MapWidget extends Composite implements PaintListener {
 
 	// CONSTRUCTOR
 	public MapWidget(final Composite parent) {
-		super(parent, SWT.NONE);
+		super(parent, SWT.BORDER);
 		this.setLayout(new GridLayout(1, false));
 
 		this.scrolling = new ScrolledComposite(this, SWT.H_SCROLL | SWT.V_SCROLL);
@@ -93,7 +93,7 @@ public final class MapWidget extends Composite implements PaintListener {
 		this.scrolling.setExpandHorizontal(true);
 		this.scrolling.setExpandVertical(true);
 
-		this.mapCanvas = new Canvas(this.scrolling, SWT.BORDER);
+		this.mapCanvas = new Canvas(this.scrolling, SWT.NONE);
 		this.mapCanvas.addPaintListener(this);
 		this.scrolling.setContent(this.mapCanvas);
 

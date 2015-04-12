@@ -35,7 +35,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.part.ViewPart;
@@ -131,34 +130,6 @@ public class WorldMap extends ViewPart implements ZoomChangedCallback, FloorChan
 		this.map.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
 		this.map.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 
-		Composite cmpNavigation = new Composite(parent, SWT.NONE);
-		cmpNavigation.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		cmpNavigation.setLayout(new GridLayout(3, false));
-		cmpNavigation.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
-		new Label(cmpNavigation, SWT.NONE);
-
-		Button btnUp = new Button(cmpNavigation, SWT.CENTER);
-		btnUp.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
-		btnUp.setText("UP");
-		new Label(cmpNavigation, SWT.NONE);
-
-		Button btnLeft = new Button(cmpNavigation, SWT.CENTER);
-		btnLeft.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
-		btnLeft.setText("LEFT");
-
-		Button btnReset = new Button(cmpNavigation, SWT.CENTER);
-		btnReset.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
-		btnReset.setText("RESET");
-
-		Button btnRight = new Button(cmpNavigation, SWT.CENTER);
-		btnRight.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
-		btnRight.setText("RIGHT");
-		new Label(cmpNavigation, SWT.NONE);
-
-		Button btnDown = new Button(cmpNavigation, SWT.CENTER);
-		btnDown.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
-		btnDown.setText("DOWN");
-		new Label(cmpNavigation, SWT.NONE);
 		this.createActions();
 		this.initializeToolBar();
 		this.initializeMenu();
