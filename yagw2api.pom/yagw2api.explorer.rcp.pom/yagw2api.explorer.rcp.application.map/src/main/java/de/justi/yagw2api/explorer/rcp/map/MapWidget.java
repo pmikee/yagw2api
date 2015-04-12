@@ -54,7 +54,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import de.justi.yagw2api.explorer.rcp.Activator;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
 
-public final class MapWidget extends Composite {
+public final class MapWidget extends Composite implements PaintListener {
 	// CONSTS
 	private static final int SECTOR_SIZE = 256;
 	private static final Logger LOGGER = LoggerFactory.getLogger(MapWidget.class);
@@ -69,8 +69,12 @@ public final class MapWidget extends Composite {
 	// FIELDS
 	private final ExecutorService mapUpdaterService;
 	private final Display display;
+
+	private final ScrolledComposite scrolling;
+	private final Canvas mapCanvas;
+
 	@Nullable
-	private ScrolledComposite scrolling = null;
+	private volatile Table<Integer, Integer, Image> tileImageCache = null;
 
 	private int continentId = 1;
 	private int floor = 1;
@@ -82,12 +86,19 @@ public final class MapWidget extends Composite {
 	public MapWidget(final Composite parent) {
 		super(parent, SWT.NONE);
 		this.setLayout(new GridLayout(1, false));
+
 		this.scrolling = new ScrolledComposite(this, SWT.H_SCROLL | SWT.V_SCROLL);
 		this.scrolling.setBackground(SWTResourceManager.getColor(SWT.COLOR_INFO_BACKGROUND));
 		this.scrolling.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		this.scrolling.setExpandHorizontal(true);
 		this.scrolling.setExpandVertical(true);
+
+		this.mapCanvas = new Canvas(this.scrolling, SWT.BORDER);
+		this.mapCanvas.addPaintListener(this);
+		this.scrolling.setContent(this.mapCanvas);
+
 		this.display = this.getShell().getDisplay();
+
 		this.mapUpdaterService = Executors.newSingleThreadExecutor(DAEMON_THREAD_FACTORY);
 	}
 
@@ -129,36 +140,42 @@ public final class MapWidget extends Composite {
 			this.height = height;
 		}
 
+		private Table<Integer, Integer, Image> loadTiles(final int xOffset, final int yOffset, final int width, final int height) {
+			// compute directly
+			final ImmutableTable.Builder<Integer, Integer, Image> resultBuilder = ImmutableTable.builder();
+			final ImmutableTable.Builder<Integer, Integer, Future<Optional<Path>>> requestBuilder = ImmutableTable.builder();
+			for (int x = xOffset; x < xOffset + width; x++) {
+				for (int y = yOffset; y < yOffset + height; y++) {
+					requestBuilder.put(y, x, Activator.getDefault().getMapTileService().getMapTileAsync(this.continentId, this.floor, this.zoom, x, y));
+				}
+			}
+			final Table<Integer, Integer, Future<Optional<Path>>> requests = requestBuilder.build();
+			for (int x : requests.columnKeySet()) {
+				for (int y : requests.rowKeySet()) {
+					try {
+						Optional<Path> source = requests.get(y, x).get();
+						if (source.isPresent()) {
+							final Image image = SWTResourceManager.getImage(source.get().toAbsolutePath().toString());
+							resultBuilder.put(y, x, image);
+						} else {
+							LOGGER.warn("Missing tile for continentId={}, floor={}, zoom={}, x={} and y={}", this.continentId, this.floor, this.zoom, x, y);
+						}
+					} catch (InterruptedException | ExecutionException e) {
+						throw new Error(e);
+					}
+				}
+			}
+			return resultBuilder.build();
+		}
+
 		@Override
 		protected Table<Integer, Integer, Image> compute() {
-			final ImmutableTable.Builder<Integer, Integer, Image> resultBuilder = ImmutableTable.builder();
 			if (this.width * this.height <= MAX_TILES_AT_ONCE) {
 				// compute directly
-
-				final ImmutableTable.Builder<Integer, Integer, Future<Optional<Path>>> requestBuilder = ImmutableTable.builder();
-				for (int x = this.xOffset; x < this.xOffset + this.width; x++) {
-					for (int y = this.yOffset; y < this.yOffset + this.height; y++) {
-						requestBuilder.put(y, x, Activator.getDefault().getMapTileService().getMapTileAsync(this.continentId, this.floor, this.zoom, x, y));
-					}
-				}
-				final Table<Integer, Integer, Future<Optional<Path>>> requests = requestBuilder.build();
-				for (int x : requests.columnKeySet()) {
-					for (int y : requests.rowKeySet()) {
-						try {
-							Optional<Path> source = requests.get(y, x).get();
-							if (source.isPresent()) {
-								final Image image = SWTResourceManager.getImage(source.get().toAbsolutePath().toString());
-								resultBuilder.put(y, x, image);
-							} else {
-								LOGGER.warn("Missing tile for continentId={}, floor={}, zoom={}, x={} and y={}", this.continentId, this.floor, this.zoom, x, y);
-							}
-						} catch (InterruptedException | ExecutionException e) {
-							throw new Error(e);
-						}
-					}
-				}
+				return this.loadTiles(this.xOffset, this.yOffset, this.width, this.height);
 			} else {
 				// fork
+				final ImmutableTable.Builder<Integer, Integer, Image> resultBuilder = ImmutableTable.builder();
 
 				// calculate required pivots
 				final int leftWidth = this.width / 2;
@@ -186,8 +203,8 @@ public final class MapWidget extends Composite {
 				} catch (InterruptedException | ExecutionException e) {
 					throw new Error(e);
 				}
+				return resultBuilder.build();
 			}
-			return resultBuilder.build();
 		}
 
 		@Override
@@ -196,43 +213,31 @@ public final class MapWidget extends Composite {
 		}
 	}
 
-	private final Table<Integer, Integer, Image> queryForTileImages(final int xOffset, final int width, final int yOffset, final int height) {
-		return YAGW2APIWrapper.INSTANCE.getForkJoinPool().invoke(new QueryForTileImagesTask(this.continentId, this.floor, this.zoom, xOffset, width, yOffset, height));
-	}
-
 	private synchronized void updateMapAsync() {
 		this.mapUpdaterService.execute(() -> {
-			final ScrolledComposite scrolling = this.scrolling;
-			final int hSectors = this.hSectors;
-			final int vSectors = this.vSectors;
-			final Table<Integer, Integer, Image> images = this.queryForTileImages(0, hSectors, 0, vSectors);
-			MapWidget.this.display.syncExec(new Runnable() {
-				@Override
-				public void run() {
-					final Canvas mapCanvas = new Canvas(scrolling, SWT.BORDER);
-					mapCanvas.addPaintListener(new PaintListener() {
-
-						@Override
-						public void paintControl(final PaintEvent e) {
-							for (int x : images.columnKeySet()) {
-								for (int y : images.rowKeySet()) {
-									if (images.get(y, x) != null) {
-										e.gc.drawImage(images.get(y, x), 0, 0, SECTOR_SIZE, SECTOR_SIZE, x * SECTOR_SIZE, y * SECTOR_SIZE, SECTOR_SIZE, SECTOR_SIZE);
-									}
-									e.gc.setForeground(SWTResourceManager.getColor(255, 0, 0));
-									e.gc.drawText(x + "/" + y + "^" + MapWidget.this.floor, x * SECTOR_SIZE, y * SECTOR_SIZE);
-									e.gc.drawRectangle(x * SECTOR_SIZE, y * SECTOR_SIZE, SECTOR_SIZE, SECTOR_SIZE);
-								}
-							}
-						}
-					});
-
-					scrolling.setMinSize(images.columnKeySet().size() * SECTOR_SIZE, images.rowKeySet().size() * SECTOR_SIZE);
-					scrolling.setContent(mapCanvas);
-					scrolling.redraw();
-					scrolling.layout();
-				}
+			this.tileImageCache = YAGW2APIWrapper.INSTANCE.getForkJoinPool().invoke(
+					new QueryForTileImagesTask(this.continentId, this.floor, this.zoom, 0, this.hSectors, 0, this.vSectors));
+			this.display.syncExec(() -> {
+				this.scrolling.setMinSize(this.tileImageCache.columnKeySet().size() * SECTOR_SIZE, this.tileImageCache.rowKeySet().size() * SECTOR_SIZE);
+				this.mapCanvas.redraw();
 			});
 		});
+	}
+
+	@Override
+	public void paintControl(final PaintEvent e) {
+		final Table<Integer, Integer, Image> tiles = this.tileImageCache;
+		if (tiles != null) {
+			for (int x : tiles.columnKeySet()) {
+				for (int y : tiles.rowKeySet()) {
+					if (tiles.get(y, x) != null) {
+						e.gc.drawImage(tiles.get(y, x), 0, 0, SECTOR_SIZE, SECTOR_SIZE, x * SECTOR_SIZE, y * SECTOR_SIZE, SECTOR_SIZE, SECTOR_SIZE);
+					}
+					e.gc.setForeground(SWTResourceManager.getColor(255, 0, 0));
+					e.gc.drawText(x + "/" + y + "^" + MapWidget.this.floor, x * SECTOR_SIZE, y * SECTOR_SIZE);
+					e.gc.drawRectangle(x * SECTOR_SIZE, y * SECTOR_SIZE, SECTOR_SIZE, SECTOR_SIZE);
+				}
+			}
+		}
 	}
 }
