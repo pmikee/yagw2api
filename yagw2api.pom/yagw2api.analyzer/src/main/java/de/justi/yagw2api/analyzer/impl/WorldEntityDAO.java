@@ -42,7 +42,7 @@ import com.google.common.base.Optional;
 import de.justi.yagw2api.analyzer.IWorldEnityDAO;
 import de.justi.yagw2api.analyzer.IWorldEntity;
 import de.justi.yagw2api.analyzer.YAGW2APIAnalyzerPersistence;
-import de.justi.yagw2api.wrapper.domain.world.IWorld;
+import de.justi.yagw2api.wrapper.domain.world.World;
 
 final class WorldEntityDAO implements IWorldEnityDAO {
 	private static final Logger LOGGER = LoggerFactory.getLogger(WorldEntityDAO.class);
@@ -150,7 +150,7 @@ final class WorldEntityDAO implements IWorldEnityDAO {
 	}
 
 	@Override
-	public synchronized Optional<IWorldEntity> newWorldEntityOf(final IWorld world) {
+	public synchronized Optional<IWorldEntity> newWorldEntityOf(final World world) {
 		checkNotNull(world);
 		checkState(YAGW2APIAnalyzerPersistence.getDefaultEM().isOpen());
 		final EntityTransaction tx = YAGW2APIAnalyzerPersistence.getDefaultEM().getTransaction();
@@ -178,7 +178,7 @@ final class WorldEntityDAO implements IWorldEnityDAO {
 	}
 
 	@Override
-	public synchronized Optional<IWorldEntity> findWorldEntityOf(final IWorld world) {
+	public synchronized Optional<IWorldEntity> findWorldEntityOf(final World world) {
 		checkNotNull(world);
 		checkArgument(world.getId() > 0);
 		checkState(YAGW2APIAnalyzerPersistence.getDefaultEM().isOpen());
@@ -186,7 +186,7 @@ final class WorldEntityDAO implements IWorldEnityDAO {
 	}
 
 	@Override
-	public synchronized IWorldEntity findOrCreateWorldEntityOf(final IWorld world) {
+	public synchronized IWorldEntity findOrCreateWorldEntityOf(final World world) {
 		checkNotNull(world);
 		checkState(YAGW2APIAnalyzerPersistence.getDefaultEM().isOpen());
 		final Optional<IWorldEntity> alreadyThere = this.findWorldEntityOf(world);

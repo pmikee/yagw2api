@@ -30,7 +30,7 @@ import org.osgi.framework.BundleContext;
 import de.justi.yagw2api.arenanet.MapTileService;
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
-import de.justi.yagw2api.wrapper.wvw.IWVWWrapper;
+import de.justi.yagw2api.wrapper.wvw.WVWWrapper;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -55,7 +55,7 @@ public class Activator extends AbstractUIPlugin {
 	private static Activator plugin;
 
 	private final MapTileService mapTileService = YAGW2APIArenanet.INSTANCE.getMapTileService();
-	private final IWVWWrapper wvw = YAGW2APIWrapper.INSTANCE.getWVWWrapper();
+	private final WVWWrapper wvw = YAGW2APIWrapper.INSTANCE.getWVWWrapper();
 
 	/**
 	 * The constructor
@@ -91,7 +91,7 @@ public class Activator extends AbstractUIPlugin {
 		this.wvw.stop();
 	}
 
-	public IWVWWrapper getWVW() {
+	public WVWWrapper getWVW() {
 		return this.wvw;
 	}
 

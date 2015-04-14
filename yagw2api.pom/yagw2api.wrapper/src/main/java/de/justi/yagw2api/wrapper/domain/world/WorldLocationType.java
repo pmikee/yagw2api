@@ -20,17 +20,10 @@ package de.justi.yagw2api.wrapper.domain.world;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
+import de.justi.yagwapi.common.Immutable;
 
-public enum WorldLocationType implements IWorldLocationType {
-	NORTH_AMERICA, EUROPE;
+public interface WorldLocationType extends Immutable {
+	boolean isNorthAmerica();
 
-	@Override
-	public boolean isNorthAmerica() {
-		return this.equals(NORTH_AMERICA);
-	}
-
-	@Override
-	public boolean isEurope() {
-		return this.equals(EUROPE);
-	}
+	boolean isEurope();
 }

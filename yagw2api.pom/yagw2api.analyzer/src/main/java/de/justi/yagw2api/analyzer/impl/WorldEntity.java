@@ -53,11 +53,11 @@ import de.justi.yagw2api.analyzer.IWorldEntity;
 import de.justi.yagw2api.analyzer.utils.LocaleConverter;
 import de.justi.yagw2api.arenanet.Arenanet;
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
-import de.justi.yagw2api.wrapper.domain.world.IWorld;
-import de.justi.yagw2api.wrapper.domain.world.IWorldLocationType;
+import de.justi.yagw2api.wrapper.domain.world.World;
 import de.justi.yagw2api.wrapper.domain.world.WorldLocationType;
+import de.justi.yagw2api.wrapper.domain.world.DefaultWorldLocationType;
 
-@ObjectTypeConverters({ @ObjectTypeConverter(name = "WorldLocationTypeConverter", objectType = WorldLocationType.class, dataType = String.class, conversionValues = {
+@ObjectTypeConverters({ @ObjectTypeConverter(name = "WorldLocationTypeConverter", objectType = DefaultWorldLocationType.class, dataType = String.class, conversionValues = {
 		@ConversionValue(objectValue = "NORTH_AMERICA", dataValue = "NA"), @ConversionValue(objectValue = "EUROPE", dataValue = "EU") }) })
 @Converters({ @Converter(converterClass = LocaleConverter.class, name = "LocaleConverter") })
 @Entity(name = "world")
@@ -86,7 +86,7 @@ public final class WorldEntity extends AbstractEntity implements IWorldEntity {
 
 	@Column(name = "world_location", unique = false, nullable = false)
 	@Convert("WorldLocationTypeConverter")
-	private IWorldLocationType location;
+	private WorldLocationType location;
 
 	@OneToMany(targetEntity = WVWMatchEntity.class, mappedBy = "redWorld", cascade = { CascadeType.ALL })
 	private List<WVWMatchEntity> participatedInMatchesAsRedWorld;
@@ -139,7 +139,7 @@ public final class WorldEntity extends AbstractEntity implements IWorldEntity {
 	}
 
 	@Override
-	public IWorldLocationType getLocation() {
+	public WorldLocationType getLocation() {
 		return this.location;
 	}
 
@@ -149,7 +149,7 @@ public final class WorldEntity extends AbstractEntity implements IWorldEntity {
 	}
 
 	@Override
-	public boolean synchronizeWithModel(final IWorld model) {
+	public boolean synchronizeWithModel(final World model) {
 		checkNotNull(model);
 		if ((this.originWorldId == null) || (model.getId() == this.originWorldId)) {
 			// compatible ids

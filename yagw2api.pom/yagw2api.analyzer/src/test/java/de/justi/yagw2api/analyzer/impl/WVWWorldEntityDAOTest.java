@@ -31,26 +31,26 @@ import org.junit.Test;
 import de.justi.yagw2api.analyzer.AbstractAnalyzerTest;
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
-import de.justi.yagw2api.wrapper.domain.IModelFactory;
-import de.justi.yagw2api.wrapper.domain.world.IWorld;
-import de.justi.yagw2api.wrapper.domain.world.WorldLocationType;
+import de.justi.yagw2api.wrapper.domain.ModelFactory;
+import de.justi.yagw2api.wrapper.domain.world.World;
+import de.justi.yagw2api.wrapper.domain.world.DefaultWorldLocationType;
 
 public final class WVWWorldEntityDAOTest extends AbstractAnalyzerTest {
 
-	private IModelFactory modelFactory = YAGW2APIWrapper.INSTANCE.getModelFactory();
+	private ModelFactory modelFactory = YAGW2APIWrapper.INSTANCE.getModelFactory();
 
-	private IWorld world1;
-	private IWorld world2;
-	private IWorld world3;
-	private IWorld world4;
+	private World world1;
+	private World world2;
+	private World world3;
+	private World world4;
 
 	@Before
 	public final void prepareWorlds4Test() {
 		this.modelFactory.clearCache();
-		this.world1 = this.modelFactory.newWorldBuilder().id(1000).name("test").worldLocation(WorldLocationType.EUROPE).build();
-		this.world2 = this.modelFactory.newWorldBuilder().id(1001).name("test2").worldLocation(WorldLocationType.EUROPE).build();
-		this.world3 = this.modelFactory.newWorldBuilder().id(1002).name("test3").worldLocation(WorldLocationType.EUROPE).build();
-		this.world4 = this.modelFactory.newWorldBuilder().id(2000).name("abc").worldLocation(WorldLocationType.NORTH_AMERICA).build();
+		this.world1 = this.modelFactory.newWorldBuilder().id(1000).name("test").worldLocation(DefaultWorldLocationType.EUROPE).build();
+		this.world2 = this.modelFactory.newWorldBuilder().id(1001).name("test2").worldLocation(DefaultWorldLocationType.EUROPE).build();
+		this.world3 = this.modelFactory.newWorldBuilder().id(1002).name("test3").worldLocation(DefaultWorldLocationType.EUROPE).build();
+		this.world4 = this.modelFactory.newWorldBuilder().id(2000).name("abc").worldLocation(DefaultWorldLocationType.NORTH_AMERICA).build();
 	}
 
 	@Test

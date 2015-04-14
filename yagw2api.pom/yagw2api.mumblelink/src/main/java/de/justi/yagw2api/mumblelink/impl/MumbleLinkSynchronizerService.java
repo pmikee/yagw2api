@@ -37,9 +37,9 @@ import com.sun.jna.platform.win32.WinNT.HANDLE;
 
 import de.justi.yagw2api.mumblelink.IMumbleLinkState;
 import de.justi.yagw2api.mumblelink.MumleLinkConstants;
-import de.justi.yagwapi.common.IHasChannel;
+import de.justi.yagwapi.common.HasChannel;
 
-final class MumbleLinkSynchronizerService extends AbstractScheduledService implements IHasChannel {
+final class MumbleLinkSynchronizerService extends AbstractScheduledService implements HasChannel {
 	private static final int INITIAL_UI_TICK_VALUE = -1;
 	private static final int DELAY_MILLIS = 1000;
 	private static final Logger LOGGER = LoggerFactory.getLogger(MumbleLinkSynchronizerService.class);

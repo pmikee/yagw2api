@@ -20,32 +20,12 @@ package de.justi.yagw2api.wrapper.domain.wvw.event;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.common.base.Optional;
 
-import de.justi.yagw2api.wrapper.domain.guild.IGuild;
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWObjective;
+import de.justi.yagw2api.wrapper.domain.guild.Guild;
 
-final class WVWObjectiveClaimedEvent extends AbstractWVWObjectiveEvent implements IWVWObjectiveClaimedEvent {
+public interface WVWObjectiveClaimedEvent extends WVWObjectiveEvent {
+	Guild getClaimingGuild();
 
-	private final IGuild claimingGuild;
-	private final Optional<IGuild> previousClaimedByGuild;
-
-	public WVWObjectiveClaimedEvent(final IWVWObjective source, final IGuild claimingGuild, final IGuild previousClaimedByGuild) {
-		super(source);
-		this.claimingGuild = checkNotNull(claimingGuild);
-		this.previousClaimedByGuild = Optional.fromNullable(previousClaimedByGuild);
-	}
-
-	@Override
-	public IGuild getClaimingGuild() {
-		return this.claimingGuild;
-	}
-
-	@Override
-	public Optional<IGuild> previousClaimedByGuild() {
-		return this.previousClaimedByGuild;
-	}
-
+	Optional<Guild> previousClaimedByGuild();
 }

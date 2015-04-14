@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
 
 import com.google.common.base.MoreObjects;
 
-public abstract class AbstractEvent implements IEvent {
+public abstract class AbstractEvent implements Event {
 	private final LocalDateTime timestamp;
 
 	public AbstractEvent() {

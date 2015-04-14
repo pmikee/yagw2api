@@ -20,71 +20,22 @@ package de.justi.yagw2api.wrapper.domain.wvw;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
-
 import java.util.concurrent.TimeUnit;
 
-import com.google.common.base.MoreObjects;
+import de.justi.yagwapi.common.Immutable;
 
-public enum WVWObjectiveType implements IWVWObjectiveType {
-	RUINS(0, TimeUnit.MINUTES, 0),
-	CAMP(5, TimeUnit.MINUTES, 5),
-	TOWER(5, TimeUnit.MINUTES, 10),
-	KEEP(5, TimeUnit.MINUTES, 25),
-	CASTLE(5, TimeUnit.MINUTES, 35);
+public interface WVWObjectiveType extends Immutable {
+	String getLabel();
 
-	private final long buffDurationMillis;
-	private final int points;
+	long getBuffDuration(TimeUnit timeUnit);
 
-	private WVWObjectiveType(final long buffDuration, final TimeUnit buffDurationTimeUnit, final int points) {
-		checkArgument(buffDuration >= 0);
-		checkNotNull(buffDurationTimeUnit);
-		this.buffDurationMillis = buffDurationTimeUnit.toMillis(buffDuration);
-		checkArgument(points >= 0);
-		this.points = points;
-	}
+	int getPoints();
 
-	@Override
-	public String getLabel() {
-		return this.name();
-	}
+	boolean isCamp();
 
-	@Override
-	public long getBuffDuration(final TimeUnit timeUnit) {
-		checkNotNull(timeUnit);
-		checkState(this.buffDurationMillis >= 0);
-		return timeUnit.convert(this.buffDurationMillis, TimeUnit.MILLISECONDS);
-	}
+	boolean isTower();
 
-	@Override
-	public int getPoints() {
-		return this.points;
-	}
+	boolean isKeep();
 
-	@Override
-	public String toString() {
-		return MoreObjects.toStringHelper(this).add("label", this.getLabel()).add("buffDuration", this.buffDurationMillis + "ms").add("points", this.points).toString();
-	}
-
-	@Override
-	public boolean isCamp() {
-		return this.equals(CAMP);
-	}
-
-	@Override
-	public boolean isTower() {
-		return this.equals(TOWER);
-	}
-
-	@Override
-	public boolean isKeep() {
-		return this.equals(KEEP);
-	}
-
-	@Override
-	public boolean isCastle() {
-		return this.equals(CASTLE);
-	}
+	boolean isCastle();
 }

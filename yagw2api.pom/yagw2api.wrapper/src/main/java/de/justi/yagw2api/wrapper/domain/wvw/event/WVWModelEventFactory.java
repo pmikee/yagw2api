@@ -19,66 +19,27 @@ package de.justi.yagw2api.wrapper.domain.wvw.event;
  * limitations under the License.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.common.base.Optional;
 
-import de.justi.yagw2api.wrapper.domain.guild.IGuild;
-import de.justi.yagw2api.wrapper.domain.world.IWorld;
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWMap;
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWMatch;
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWObjective;
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWScores;
+import de.justi.yagw2api.wrapper.domain.guild.Guild;
+import de.justi.yagw2api.wrapper.domain.world.World;
+import de.justi.yagw2api.wrapper.domain.wvw.WVWMap;
+import de.justi.yagw2api.wrapper.domain.wvw.WVWMatch;
+import de.justi.yagw2api.wrapper.domain.wvw.WVWObjective;
+import de.justi.yagw2api.wrapper.domain.wvw.WVWScores;
 
-public final class WVWModelEventFactory implements IWVWModelEventFactory {
+public interface WVWModelEventFactory {
+	WVWObjectiveUnclaimedEvent newObjectiveUnclaimedEvent(WVWObjective objective, Optional<Guild> previousClaimedByGuild);
 
-	@Override
-	public IWVWObjectiveCaptureEvent newObjectiveCapturedEvent(final IWVWObjective source, final IWorld newOwner, final Optional<IWorld> previousOwner) {
-		checkNotNull(source);
-		checkNotNull(newOwner);
-		checkNotNull(previousOwner);
-		return new WVWObjectiveCaptureEvent(source, newOwner, previousOwner.orNull());
-	}
+	WVWObjectiveClaimedEvent newObjectiveClaimedEvent(WVWObjective objective, Guild claimingGuild, Optional<Guild> previousClaimedByGuild);
 
-	@Override
-	public IWVWMapScoresChangedEvent newMapScoresChangedEvent(final IWVWScores scores, final int deltaRed, final int deltaGreen, final int deltaBlue, final IWVWMap map) {
-		checkNotNull(scores);
-		checkNotNull(map);
-		return new WVWMapScoresChangedEvent(scores, deltaRed, deltaGreen, deltaBlue, map);
-	}
+	WVWObjectiveCaptureEvent newObjectiveCapturedEvent(WVWObjective objective, World newOwner, Optional<World> previousOwner);
 
-	@Override
-	public IWVWMatchScoresChangedEvent newMatchScoresChangedEvent(final IWVWScores scores, final int deltaRed, final int deltaGreen, final int deltaBlue, final IWVWMatch match) {
-		checkNotNull(scores);
-		checkNotNull(match);
-		return new WVWMatchScoresChangedEvent(scores, deltaRed, deltaGreen, deltaBlue, match);
-	}
+	WVWObjectiveEndOfBuffEvent newObjectiveEndOfBuffEvent(WVWObjective source);
 
-	@Override
-	public IWVWObjectiveEndOfBuffEvent newObjectiveEndOfBuffEvent(final IWVWObjective objective) {
-		checkNotNull(objective);
-		return new WVWObjectiveEndOfBuffEvent(objective);
-	}
+	WVWMapScoresChangedEvent newMapScoresChangedEvent(WVWScores scores, int deltaRed, int deltaGreen, int deltaBlue, WVWMap map);
 
-	@Override
-	public IWVWObjectiveClaimedEvent newObjectiveClaimedEvent(final IWVWObjective objective, final IGuild claimingGuild, final Optional<IGuild> previousClaimedByGuild) {
-		checkNotNull(objective);
-		checkNotNull(claimingGuild);
-		checkNotNull(previousClaimedByGuild);
-		return new WVWObjectiveClaimedEvent(objective, claimingGuild, previousClaimedByGuild.orNull());
-	}
+	WVWMatchScoresChangedEvent newMatchScoresChangedEvent(WVWScores scores, int deltaRed, int deltaGreen, int deltaBlue, WVWMatch match);
 
-	@Override
-	public IWVWInitializedMatchEvent newInitializedMatchEvent(final IWVWMatch match) {
-		checkNotNull(match);
-		return new WVWInitializedMatchEvent(match);
-	}
-
-	@Override
-	public IWVWObjectiveUnclaimedEvent newObjectiveUnclaimedEvent(final IWVWObjective objective, final Optional<IGuild> previousClaimedByGuild) {
-		checkNotNull(objective);
-		return new WVWObjectiveUnclaimedEvent(objective, previousClaimedByGuild.orNull());
-	}
-
+	WVWInitializedMatchEvent newInitializedMatchEvent(WVWMatch match);
 }

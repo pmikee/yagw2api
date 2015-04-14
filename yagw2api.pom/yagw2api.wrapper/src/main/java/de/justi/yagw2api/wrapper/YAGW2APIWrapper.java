@@ -28,10 +28,10 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-import de.justi.yagw2api.wrapper.domain.IModelFactory;
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWModelFactory;
-import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWModelEventFactory;
-import de.justi.yagw2api.wrapper.wvw.IWVWWrapper;
+import de.justi.yagw2api.wrapper.domain.ModelFactory;
+import de.justi.yagw2api.wrapper.domain.wvw.WVWModelFactory;
+import de.justi.yagw2api.wrapper.domain.wvw.event.WVWModelEventFactory;
+import de.justi.yagw2api.wrapper.wvw.WVWWrapper;
 
 public enum YAGW2APIWrapper {
 	INSTANCE;
@@ -39,10 +39,10 @@ public enum YAGW2APIWrapper {
 	private static final int THREAD_COUNT_PER_PROCESSOR = 2;
 
 	private final ForkJoinPool forkJoinPool;
-	private final IModelFactory modelFactory;
-	private final IWVWModelFactory wvwModelFactory;
-	private final IWVWModelEventFactory wvwModelEventFactory;
-	private final IWVWWrapper wrapper;
+	private final ModelFactory modelFactory;
+	private final WVWModelFactory wvwModelFactory;
+	private final WVWModelEventFactory wvwModelEventFactory;
+	private final WVWWrapper wrapper;
 
 	private YAGW2APIWrapper() {
 		final Injector injector = Guice.createInjector(new Module());
@@ -53,29 +53,29 @@ public enum YAGW2APIWrapper {
 						LOGGER.error("Uncought exception thrown in {}", t, e);
 					}
 				}, false);
-		this.modelFactory = injector.getInstance(IModelFactory.class);
-		this.wvwModelFactory = injector.getInstance(IWVWModelFactory.class);
-		this.wvwModelEventFactory = injector.getInstance(IWVWModelEventFactory.class);
-		this.wrapper = injector.getInstance(IWVWWrapper.class);
+		this.modelFactory = injector.getInstance(ModelFactory.class);
+		this.wvwModelFactory = injector.getInstance(WVWModelFactory.class);
+		this.wvwModelEventFactory = injector.getInstance(WVWModelEventFactory.class);
+		this.wrapper = injector.getInstance(WVWWrapper.class);
 	}
 
 	public ForkJoinPool getForkJoinPool() {
 		return this.forkJoinPool;
 	}
 
-	public IModelFactory getModelFactory() {
+	public ModelFactory getModelFactory() {
 		return this.modelFactory;
 	}
 
-	public IWVWModelFactory getWVWModelFactory() {
+	public WVWModelFactory getWVWModelFactory() {
 		return this.wvwModelFactory;
 	}
 
-	public IWVWModelEventFactory getWVWModelEventFactory() {
+	public WVWModelEventFactory getWVWModelEventFactory() {
 		return this.wvwModelEventFactory;
 	}
 
-	public IWVWWrapper getWVWWrapper() {
+	public WVWWrapper getWVWWrapper() {
 		return this.wrapper;
 	}
 }

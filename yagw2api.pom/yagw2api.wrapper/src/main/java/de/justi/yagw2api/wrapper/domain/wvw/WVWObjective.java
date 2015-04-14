@@ -20,361 +20,60 @@ package de.justi.yagw2api.wrapper.domain.wvw;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
-
-import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
 import com.google.common.base.Optional;
-import com.google.common.eventbus.EventBus;
 
-import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
-import de.justi.yagw2api.arenanet.dto.guild.GuildDetailsDTO;
 import de.justi.yagw2api.arenanet.dto.wvw.WVWObjectiveDTO;
-import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
-import de.justi.yagw2api.wrapper.domain.IModelFactory;
-import de.justi.yagw2api.wrapper.domain.guild.IGuild;
-import de.justi.yagw2api.wrapper.domain.world.IWorld;
-import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWModelEventFactory;
-import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWObjectiveCaptureEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWObjectiveClaimedEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWObjectiveUnclaimedEvent;
-import de.justi.yagwapi.common.AbstractHasChannel;
-import de.justi.yagwapi.common.IUnmodifiable;
+import de.justi.yagw2api.wrapper.domain.guild.Guild;
+import de.justi.yagw2api.wrapper.domain.world.World;
+import de.justi.yagwapi.common.HasChannel;
 
-final class WVWObjective extends AbstractHasChannel implements IWVWObjective {
-	private static final Logger LOGGER = LoggerFactory.getLogger(WVWObjective.class);
-	private static final IWVWModelEventFactory WVW_MODEL_EVENTS_FACTORY = YAGW2APIWrapper.INSTANCE.getWVWModelEventFactory();
-	private static final IModelFactory MODEL_FACTORY = YAGW2APIWrapper.INSTANCE.getModelFactory();
+public interface WVWObjective extends HasWVWLocation<WVWObjective>, HasChannel {
+	static interface WVWObjectiveBuilder {
+		WVWObjective build();
 
-	final class UnmodifiableWVWObjective implements IWVWObjective, IUnmodifiable {
+		WVWObjectiveBuilder map(WVWMap map);
 
-		@Override
-		public IWVWLocationType getLocation() {
-			return WVWObjective.this.getLocation();
-		}
+		WVWObjectiveBuilder location(WVWLocationType location);
 
-		@Override
-		public IWVWObjective createUnmodifiableReference() {
-			return this;
-		}
+		WVWObjectiveBuilder fromDTO(WVWObjectiveDTO dto);
 
-		@Override
-		public EventBus getChannel() {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName()
-					+ " and therefore can not be modified.");
-		}
+		WVWObjectiveBuilder owner(World world);
 
-		@Override
-		public Optional<String> getLabel() {
-			return WVWObjective.this.getLabel();
-		}
-
-		@Override
-		public IWVWObjectiveType getType() {
-			return WVWObjective.this.getType();
-		}
-
-		@Override
-		public Optional<IWorld> getOwner() {
-			final Optional<IWorld> buffer = WVWObjective.this.getOwner();
-			return buffer.isPresent() ? Optional.of(buffer.get().createUnmodifiableReference()) : buffer;
-		}
-
-		@Override
-		public void capture(final IWorld capturingWorld) {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName()
-					+ " and therefore can not be modified.");
-		}
-
-		@Override
-		public long getRemainingBuffDuration(final TimeUnit unit) {
-			return WVWObjective.this.getRemainingBuffDuration(unit);
-		}
-
-		@Override
-		public Optional<IWVWMap> getMap() {
-			final Optional<IWVWMap> buffer = WVWObjective.this.getMap();
-			return buffer.isPresent() ? Optional.of(buffer.get().createUnmodifiableReference()) : buffer;
-		}
-
-		@Override
-		public void connectWithMap(final IWVWMap map) {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName()
-					+ " and therefore can not be modified.");
-		}
-
-		@Override
-		public String toString() {
-			return MoreObjects.toStringHelper(this).addValue(WVWObjective.this.toString()).toString();
-		}
-
-		@Override
-		public void updateOnSynchronization() {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName()
-					+ " and therefore can not be modified.");
-		}
-
-		@Override
-		public void initializeOwner(final IWorld owningWorld) {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName()
-					+ " and therefore can not be modified.");
-		}
-
-		@Override
-		public Optional<LocalDateTime> getEndOfBuffTimestamp() {
-			return WVWObjective.this.getEndOfBuffTimestamp();
-		}
-
-		@Override
-		public int hashCode() {
-			return WVWObjective.this.hashCode();
-		}
-
-		@Override
-		public boolean equals(final Object obj) {
-			return WVWObjective.this.equals(obj);
-		}
-
-		@Override
-		public Optional<IGuild> getClaimedByGuild() {
-			return WVWObjective.this.getClaimedByGuild();
-		}
-
-		@Override
-		public void claim(final IGuild guild) {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName()
-					+ " and therefore can not be modified.");
-		}
-
-		@Override
-		public void initializeClaimedByGuild(final IGuild guild) {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName()
-					+ " and therefore can not be modified.");
-		}
+		WVWObjectiveBuilder claimedBy(Guild guild);
 	}
 
-	public static class WVWObjectiveBuilder implements IWVWObjective.IWVWObjectiveBuilder {
-		private Optional<IWVWLocationType> location = Optional.absent();
-		private Optional<IWorld> owner = Optional.absent();
-		private Optional<IWVWMap> map = Optional.absent();
-		private Optional<IGuild> claimedByGuild = Optional.absent();
+	Optional<String> getLabel();
 
-		@Override
-		public IWVWObjective build() {
-			checkState(this.location.isPresent());
-			checkState(this.map != null);
+	Optional<Guild> getClaimedByGuild();
 
-			final IWVWObjective result = new WVWObjective(this.location.get());
-			if (this.map.isPresent()) {
-				result.connectWithMap(this.map.get());
-			}
-			result.initializeOwner(this.owner.orNull());
-			result.initializeClaimedByGuild(this.claimedByGuild.orNull());
-			return result;
-		}
+	WVWObjectiveType getType();
 
-		@Override
-		public IWVWObjective.IWVWObjectiveBuilder fromDTO(final WVWObjectiveDTO dto) {
-			checkNotNull(dto);
-			final Optional<GuildDetailsDTO> guildDetails = dto.getGuildDetails();
-			if (guildDetails.isPresent()) {
-				final IGuild guild = MODEL_FACTORY.getOrCreateGuild(guildDetails.get().getId(), guildDetails.get().getName(), guildDetails.get().getTag());
-				checkState(guild != null);
-				this.claimedBy(guild);
-			}
-			return this.location(WVWLocationType.forObjectiveId(dto.getId()).get());
-		}
+	Optional<World> getOwner();
 
-		@Override
-		public IWVWObjective.IWVWObjectiveBuilder location(final IWVWLocationType location) {
-			this.location = Optional.fromNullable(location);
-			return this;
-		}
+	void capture(World capturingWorld);
 
-		@Override
-		public IWVWObjective.IWVWObjectiveBuilder owner(final IWorld world) {
-			this.owner = Optional.fromNullable(world);
-			return this;
-		}
+	void initializeOwner(World owningWorld);
 
-		@Override
-		public IWVWObjectiveBuilder map(final IWVWMap map) {
-			this.map = Optional.fromNullable(map);
-			return this;
-		}
+	void claim(Guild guild);
 
-		@Override
-		public IWVWObjectiveBuilder claimedBy(final IGuild guild) {
-			this.claimedByGuild = Optional.fromNullable(guild);
-			return this;
-		}
-	}
+	void initializeClaimedByGuild(Guild guild);
 
-	private final IWVWLocationType location;
-	private Optional<IWorld> owningWorld = Optional.absent();
-	private Optional<LocalDateTime> lastCaptureEventTimestamp = Optional.absent();
-	private boolean postedEndOfBuffEvent = true;
-	private Optional<IGuild> claimedByGuild = Optional.absent();
-	private Optional<IWVWMap> map = Optional.absent();
+	void updateOnSynchronization();
 
-	private WVWObjective(final IWVWLocationType location) {
-		checkNotNull(location);
-		checkArgument(location.getObjectiveId().isPresent());
-		checkArgument(location.getObjectiveType().isPresent());
-		this.location = location;
-	}
+	long getRemainingBuffDuration(TimeUnit unit);
 
-	@Override
-	public Optional<String> getLabel() {
-		return this.location.getLabel(YAGW2APIArenanet.INSTANCE.getCurrentLocale());
-	}
+	Optional<LocalDateTime> getEndOfBuffTimestamp();
 
-	@Override
-	public IWVWObjectiveType getType() {
-		return this.location.getObjectiveType().get();
-	}
+	Optional<WVWMap> getMap();
 
-	@Override
-	public String toString() {
-		return MoreObjects.toStringHelper(this).add("type", this.getType()).add("name", this.getLabel()).add("location", this.location).toString();
-	}
-
-	@Override
-	public IWVWLocationType getLocation() {
-		return this.location;
-	}
-
-	@Override
-	public void initializeOwner(final IWorld owningWorld) {
-		checkState(!this.owningWorld.isPresent());
-		checkState(!this.lastCaptureEventTimestamp.isPresent());
-		checkState(this.postedEndOfBuffEvent);
-		this.owningWorld = Optional.fromNullable(owningWorld);
-	}
-
-	@Override
-	public long getRemainingBuffDuration(final TimeUnit unit) {
-		final LocalDateTime now = LocalDateTime.now();
-		final Duration duration = Duration.between(this.lastCaptureEventTimestamp.or(now), now);
-		return unit.convert(this.getType().getBuffDuration(TimeUnit.SECONDS) - duration.get(ChronoUnit.SECONDS), TimeUnit.SECONDS);
-	}
-
-	@Override
-	public Optional<IWorld> getOwner() {
-		return this.owningWorld;
-	}
-
-	@Override
-	public Optional<IWVWMap> getMap() {
-		return this.map;
-	}
-
-	@Override
-	public void connectWithMap(final IWVWMap map) {
-		checkNotNull(map);
-		checkState(!this.map.isPresent(), "Connect with map can only be called once.");
-		this.map = Optional.of(map);
-	}
-
-	@Override
-	public IWVWObjective createUnmodifiableReference() {
-		return new UnmodifiableWVWObjective();
-	}
-
-	@Override
-	public void updateOnSynchronization() {
-		final long remainingBuffMillis = this.getRemainingBuffDuration(TimeUnit.MILLISECONDS);
-		if (!this.postedEndOfBuffEvent && (remainingBuffMillis == 0)) {
-			synchronized (this) {
-				if (!this.postedEndOfBuffEvent) {
-					this.postedEndOfBuffEvent = true;
-					this.getChannel().post(WVW_MODEL_EVENTS_FACTORY.newObjectiveEndOfBuffEvent(this));
-				}
-			}
-		} else if ((remainingBuffMillis > 0) && LOGGER.isTraceEnabled()) {
-			LOGGER.trace("Remaining buff duration for {} is {}ms", this, remainingBuffMillis);
-		}
-	}
-
-	@Override
-	public Optional<LocalDateTime> getEndOfBuffTimestamp() {
-		if (this.lastCaptureEventTimestamp.isPresent()) {
-			final LocalDateTime timestamp = this.lastCaptureEventTimestamp.get().plus(this.getType().getBuffDuration(TimeUnit.SECONDS), ChronoUnit.SECONDS);
-			return Optional.of(timestamp);
-		} else {
-			return Optional.absent();
-		}
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hashCode(this.getClass().getName(), this.getLocation().getObjectiveId().orNull());
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if ((obj == null) || !(obj instanceof IWVWObjective)) {
-			return false;
-		} else {
-			final IWVWObjective objective = (IWVWObjective) obj;
-			return Objects.equal(this.getLocation().getObjectiveId().orNull(), objective.getLocation().getObjectiveId().orNull());
-		}
-	}
-
-	@Override
-	public Optional<IGuild> getClaimedByGuild() {
-		return this.claimedByGuild;
-	}
-
-	@Override
-	public void claim(final IGuild guild) {
-		if ((guild != null) && (!this.claimedByGuild.isPresent() || !this.claimedByGuild.get().equals(guild))) {
-			// changed claiming guild
-			final IWVWObjectiveClaimedEvent event = WVW_MODEL_EVENTS_FACTORY.newObjectiveClaimedEvent(this, guild, this.claimedByGuild);
-			LOGGER.debug("{} has been claimed by {}", this, guild);
-			this.claimedByGuild = Optional.of(guild);
-			this.getChannel().post(event);
-		} else if ((guild == null) && this.claimedByGuild.isPresent()) {
-			// unclaim (e.g. after capture)
-			final IWVWObjectiveUnclaimedEvent event = WVW_MODEL_EVENTS_FACTORY.newObjectiveUnclaimedEvent(this, this.claimedByGuild);
-			LOGGER.debug("{} was unclaimed from {}", this, this.claimedByGuild);
-			this.claimedByGuild = Optional.absent();
-			this.getChannel().post(event);
-		} else {
-			// no change
-			LOGGER.trace("{} has already been claimed by {}", this, guild);
-		}
-	}
-
-	@Override
-	public void capture(final IWorld capturingWorld) {
-		if ((capturingWorld != null) && (!this.owningWorld.isPresent() || !this.owningWorld.get().equals(capturingWorld))) {
-			// changed owning world
-			final IWVWObjectiveCaptureEvent event = WVW_MODEL_EVENTS_FACTORY.newObjectiveCapturedEvent(this, capturingWorld, this.owningWorld);
-			LOGGER.debug("{} has captured {} when expected remaining buff duration was {}s", capturingWorld, this, this.getRemainingBuffDuration(TimeUnit.SECONDS));
-			this.owningWorld = Optional.of(capturingWorld);
-			this.lastCaptureEventTimestamp = Optional.of(event.getTimestamp());
-			this.postedEndOfBuffEvent = false;
-			this.getChannel().post(event);
-		} else {
-			// no change
-			LOGGER.trace("{} has already been captured by {}", this, capturingWorld);
-		}
-	}
-
-	@Override
-	public void initializeClaimedByGuild(final IGuild guild) {
-		this.claimedByGuild = Optional.fromNullable(guild);
-	}
-
+	/**
+	 * can only be called once
+	 *
+	 * @param map
+	 *            not null
+	 */
+	void connectWithMap(WVWMap map);
 }

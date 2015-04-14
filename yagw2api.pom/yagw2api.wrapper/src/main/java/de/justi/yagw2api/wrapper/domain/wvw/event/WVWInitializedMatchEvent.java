@@ -20,21 +20,5 @@ package de.justi.yagw2api.wrapper.domain.wvw.event;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWMatch;
-import de.justi.yagwapi.common.AbstractEvent;
-
-final class WVWInitializedMatchEvent extends AbstractEvent implements IWVWInitializedMatchEvent {
-	private final IWVWMatch match;
-
-	public WVWInitializedMatchEvent(final IWVWMatch match) {
-		super();
-		this.match = checkNotNull(match);
-	}
-
-	@Override
-	public IWVWMatch getMatch() {
-		return this.match;
-	}
-
+public interface WVWInitializedMatchEvent extends WVWMatchEvent {
 }

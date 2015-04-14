@@ -20,36 +20,6 @@ package de.justi.yagw2api.wrapper.domain.wvw.event;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-import static com.google.common.base.Preconditions.checkNotNull;
+public interface WVWMapScoresChangedEvent extends WVWScoresChangedEvent, WVWMapEvent {
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.Optional;
-
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWMap;
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWMatch;
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWScores;
-
-final class WVWMapScoresChangedEvent extends AbstractWVWScoresChangedEvent implements IWVWMapScoresChangedEvent {
-	private final IWVWMap map;
-
-	public WVWMapScoresChangedEvent(final IWVWScores scores, final int deltaRed, final int deltaGreen, final int deltaBlue, final IWVWMap map) {
-		super(checkNotNull(scores), deltaRed, deltaGreen, deltaBlue);
-		this.map = checkNotNull(map);
-	}
-
-	@Override
-	public IWVWMap getMap() {
-		return this.map;
-	}
-
-	@Override
-	public String toString() {
-		final Optional<IWVWMatch> matchOptional = this.getMap().getMatch();
-		final com.google.common.base.MoreObjects.ToStringHelper helper = MoreObjects.toStringHelper(this).add("super", super.toString()).add("scores", this.getScores())
-				.add("delta", "r:" + this.getDeltaRed() + ",g:" + this.getDeltaGreen() + ",b:" + this.getDeltaBlue()).add("mapType", this.getMap().getType());
-		if (matchOptional.isPresent()) {
-			helper.add("matchId", matchOptional.get().getId());
-		}
-		return helper.toString();
-	}
 }

@@ -42,21 +42,21 @@ import de.justi.yagw2api.arenanet.WVWService;
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
 import de.justi.yagw2api.arenanet.dto.wvw.WVWMatchesDTO;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
-import de.justi.yagw2api.wrapper.domain.world.IWorld;
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWMatch;
-import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWInitializedMatchEvent;
-import de.justi.yagwapi.common.IEvent;
-import de.justi.yagwapi.common.IHasChannel;
+import de.justi.yagw2api.wrapper.domain.world.World;
+import de.justi.yagw2api.wrapper.domain.wvw.WVWMatch;
+import de.justi.yagw2api.wrapper.domain.wvw.event.WVWInitializedMatchEvent;
+import de.justi.yagwapi.common.Event;
+import de.justi.yagwapi.common.HasChannel;
 
-final class WVWSynchronizer extends AbstractScheduledService implements IHasChannel {
+final class WVWSynchronizer extends AbstractScheduledService implements HasChannel {
 	private static final WVWService SERVICE = YAGW2APIArenanet.getInstance().getWVWService();
 	private static final long DELAY_MILLIS = 500;
 	private static final Logger LOGGER = LoggerFactory.getLogger(WVWSynchronizer.class);
 
-	private Map<String, IWVWMatch> matchesMappedById = new CopyOnWriteHashMap<String, IWVWMatch>();
+	private Map<String, WVWMatch> matchesMappedById = new CopyOnWriteHashMap<String, WVWMatch>();
 
-	private Set<IWVWMatch> matches = new CopyOnWriteArraySet<IWVWMatch>();
-	private Set<IWorld> worlds = new CopyOnWriteArraySet<IWorld>();
+	private Set<WVWMatch> matches = new CopyOnWriteArraySet<WVWMatch>();
+	private Set<World> worlds = new CopyOnWriteArraySet<World>();
 
 	private final EventBus channel = new EventBus(this.getClass().getName());
 
@@ -97,24 +97,24 @@ final class WVWSynchronizer extends AbstractScheduledService implements IHasChan
 		}
 	}
 
-	public Set<IWVWMatch> getAllMatches() {
+	public Set<WVWMatch> getAllMatches() {
 		return Collections.unmodifiableSet(this.matches);
 	}
 
-	public Set<IWorld> getAllWorlds() {
+	public Set<World> getAllWorlds() {
 		return Collections.unmodifiableSet(this.worlds);
 	}
 
-	public Map<String, IWVWMatch> getMatchesMappedById() {
+	public Map<String, WVWMatch> getMatchesMappedById() {
 		return Collections.unmodifiableMap(this.matchesMappedById);
 	}
 
 	@Subscribe
-	public void onEvent(final IEvent event) {
+	public void onEvent(final Event event) {
 		checkNotNull(event);
 		try {
-			if (event instanceof IWVWInitializedMatchEvent) {
-				final IWVWInitializedMatchEvent initializeEvent = (IWVWInitializedMatchEvent) event;
+			if (event instanceof WVWInitializedMatchEvent) {
+				final WVWInitializedMatchEvent initializeEvent = (WVWInitializedMatchEvent) event;
 				initializeEvent.getMatch().getChannel().register(this);
 				this.matchesMappedById.put(initializeEvent.getMatch().getId(), initializeEvent.getMatch());
 				this.matches.add(initializeEvent.getMatch());
@@ -135,7 +135,7 @@ final class WVWSynchronizer extends AbstractScheduledService implements IHasChan
 	@Override
 	protected void runOneIteration() throws Exception {
 		try {
-			final Map<String, IWVWMatch> defensiveCopyOfMatchesMappedById = Collections.unmodifiableMap(new HashMap<String, IWVWMatch>(this.getMatchesMappedById()));
+			final Map<String, WVWMatch> defensiveCopyOfMatchesMappedById = Collections.unmodifiableMap(new HashMap<String, WVWMatch>(this.getMatchesMappedById()));
 			final long startTimestamp = System.currentTimeMillis();
 			final WVWSynchronizerAction action = new WVWSynchronizerAction(defensiveCopyOfMatchesMappedById);
 			YAGW2APIWrapper.INSTANCE.getForkJoinPool().invoke(action);

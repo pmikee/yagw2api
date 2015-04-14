@@ -25,7 +25,7 @@ import java.util.Locale;
 
 import com.google.common.base.Optional;
 
-import de.justi.yagw2api.wrapper.domain.world.IWorld;
+import de.justi.yagw2api.wrapper.domain.world.World;
 
 public interface IWorldEnityDAO {
 	/**
@@ -54,7 +54,7 @@ public interface IWorldEnityDAO {
 	 * </p>
 	 *
 	 * @param originId
-	 *            see {@link IWorld#getId()}
+	 *            see {@link World#getId()}
 	 * @return {@link Optional#absent()} if there was no matching {@link IWorldEntity}, else {@link Optional#or(Object)} of matching {@link IWorldEntity} is returned
 	 */
 	Optional<IWorldEntity> findWorldEntityByOriginId(int originId);
@@ -93,17 +93,17 @@ public interface IWorldEnityDAO {
 
 	/**
 	 * <p>
-	 * try to find the {@link IWorldEntity} that belongs to the given {@link IWorld}
+	 * try to find the {@link IWorldEntity} that belongs to the given {@link World}
 	 * </p>
 	 *
 	 * @param world
 	 * @return {@link Optional#absent()} if there is no such {@link IWorldEntity}, else an {@link Optional} of that {@link IWorldEntity} is returned
 	 */
-	Optional<IWorldEntity> findWorldEntityOf(IWorld world);
+	Optional<IWorldEntity> findWorldEntityOf(World world);
 
 	/**
 	 * <p>
-	 * returns the {@link IWorldEntity} that belongs to the given {@link IWorld}
+	 * returns the {@link IWorldEntity} that belongs to the given {@link World}
 	 * </p>
 	 * <p>
 	 * if there is no such {@link IWorldEntity} a new will be created
@@ -112,18 +112,18 @@ public interface IWorldEnityDAO {
 	 * @param world
 	 * @return
 	 */
-	IWorldEntity findOrCreateWorldEntityOf(IWorld world);
+	IWorldEntity findOrCreateWorldEntityOf(World world);
 
 	/**
 	 * <p>
-	 * try to create a new {@link IWorldEntity} for the given {@link IWorld}
+	 * try to create a new {@link IWorldEntity} for the given {@link World}
 	 * </p>
 	 *
 	 * @param world
-	 * @return {@link Optional#absent()} if unable to create a new {@link IWorldEntity} (that might caused by an already existing {@link IWorldEntity} for the given {@link IWorld}
+	 * @return {@link Optional#absent()} if unable to create a new {@link IWorldEntity} (that might caused by an already existing {@link IWorldEntity} for the given {@link World}
 	 *         ), otherwise an {@link Optional} of the new {@link IWorldEntity} will be returned
 	 */
-	Optional<IWorldEntity> newWorldEntityOf(IWorld world);
+	Optional<IWorldEntity> newWorldEntityOf(World world);
 
 	/**
 	 * <p>

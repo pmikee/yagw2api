@@ -19,30 +19,5 @@ package de.justi.yagw2api.wrapper.domain.wvw.event;
  * limitations under the License.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import com.google.common.base.MoreObjects;
-
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWMatch;
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWScores;
-
-final class WVWMatchScoresChangedEvent extends AbstractWVWScoresChangedEvent implements IWVWMatchScoresChangedEvent {
-	private final IWVWMatch match;
-
-	public WVWMatchScoresChangedEvent(final IWVWScores scores, final int deltaRed, final int deltaGreen, final int deltaBlue, final IWVWMatch match) {
-		super(checkNotNull(scores), deltaRed, deltaGreen, deltaBlue);
-		this.match = checkNotNull(match);
-	}
-
-	@Override
-	public IWVWMatch getMatch() {
-		return this.match;
-	}
-
-	@Override
-	public String toString() {
-		return MoreObjects.toStringHelper(this).add("super", super.toString()).add("scores", this.getScores())
-				.add("delta", "r:" + this.getDeltaRed() + ",g:" + this.getDeltaGreen() + ",b:" + this.getDeltaBlue()).add("matchId", this.getMatch().getId()).toString();
-	}
+public interface WVWMatchScoresChangedEvent extends WVWScoresChangedEvent, WVWMatchEvent {
 }

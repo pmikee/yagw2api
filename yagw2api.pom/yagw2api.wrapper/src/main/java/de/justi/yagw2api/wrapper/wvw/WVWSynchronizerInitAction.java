@@ -39,32 +39,32 @@ import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
 import de.justi.yagw2api.arenanet.dto.wvw.WVWMatchDTO;
 import de.justi.yagw2api.wrapper.AbstractSynchronizerAction;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
-import de.justi.yagw2api.wrapper.domain.world.IWorld;
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWMatch;
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWModelFactory;
-import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWModelEventFactory;
-import de.justi.yagwapi.common.IHasChannel;
+import de.justi.yagw2api.wrapper.domain.world.World;
+import de.justi.yagw2api.wrapper.domain.wvw.WVWMatch;
+import de.justi.yagw2api.wrapper.domain.wvw.WVWModelFactory;
+import de.justi.yagw2api.wrapper.domain.wvw.event.WVWModelEventFactory;
+import de.justi.yagwapi.common.HasChannel;
 
-final class WVWSynchronizerInitAction extends AbstractSynchronizerAction<WVWMatchDTO, WVWSynchronizerInitAction> implements IHasChannel {
+final class WVWSynchronizerInitAction extends AbstractSynchronizerAction<WVWMatchDTO, WVWSynchronizerInitAction> implements HasChannel {
 	private static final Logger LOGGER = LoggerFactory.getLogger(WVWSynchronizerInitAction.class);
 	private static final long serialVersionUID = 2446713690087630720L;
 	private static final int MAX_CHUNK_SIZE = 100; // init all matches with one
 													// thread
-	private static final IWVWModelFactory WVW_MODEL_FACTORY = YAGW2APIWrapper.INSTANCE.getWVWModelFactory();
-	private static final IWVWModelEventFactory WVW_MODEL_EVENT_FACTORY = YAGW2APIWrapper.INSTANCE.getWVWModelEventFactory();
+	private static final WVWModelFactory WVW_MODEL_FACTORY = YAGW2APIWrapper.INSTANCE.getWVWModelFactory();
+	private static final WVWModelEventFactory WVW_MODEL_EVENT_FACTORY = YAGW2APIWrapper.INSTANCE.getWVWModelEventFactory();
 
-	final Set<IWVWMatch> matchReferencesBuffer;
-	final Set<IWorld> worldReferencesBuffer;
-	final Map<String, IWVWMatch> matchesBuffer;
+	final Set<WVWMatch> matchReferencesBuffer;
+	final Set<World> worldReferencesBuffer;
+	final Map<String, WVWMatch> matchesBuffer;
 	final EventBus eventBus;
 
 	public WVWSynchronizerInitAction(final List<WVWMatchDTO> content) {
-		this(ImmutableList.copyOf(content), MAX_CHUNK_SIZE, 0, content.size(), new HashSet<IWVWMatch>(), new HashSet<IWorld>(), new HashMap<String, IWVWMatch>(), new EventBus(
+		this(ImmutableList.copyOf(content), MAX_CHUNK_SIZE, 0, content.size(), new HashSet<WVWMatch>(), new HashSet<World>(), new HashMap<String, WVWMatch>(), new EventBus(
 				WVWSynchronizerInitAction.class.getName()));
 	}
 
 	private WVWSynchronizerInitAction(final List<WVWMatchDTO> content, final int chunkSize, final int fromInclusive, final int toExclusive,
-			final Set<IWVWMatch> matchReferencesBuffer, final Set<IWorld> worldReferencesBuffer, final Map<String, IWVWMatch> matchesBuffer, final EventBus eventBus) {
+			final Set<WVWMatch> matchReferencesBuffer, final Set<World> worldReferencesBuffer, final Map<String, WVWMatch> matchesBuffer, final EventBus eventBus) {
 		super(content, chunkSize, fromInclusive, toExclusive);
 		this.matchReferencesBuffer = checkNotNull(matchReferencesBuffer);
 		this.worldReferencesBuffer = checkNotNull(worldReferencesBuffer);
@@ -89,10 +89,10 @@ final class WVWSynchronizerInitAction extends AbstractSynchronizerAction<WVWMatc
 		if (LOGGER.isTraceEnabled()) {
 			LOGGER.trace("Going to perform " + this.getClass().getSimpleName() + " using content=" + content);
 		}
-		final IWVWMatch match = WVW_MODEL_FACTORY.newMatchBuilder().fromMatchDTO(content, YAGW2APIArenanet.INSTANCE.getCurrentLocale()).build();
+		final WVWMatch match = WVW_MODEL_FACTORY.newMatchBuilder().fromMatchDTO(content, YAGW2APIArenanet.INSTANCE.getCurrentLocale()).build();
 		final long completedMatchModelBuildTimestamp = System.currentTimeMillis();
 		if (LOGGER.isTraceEnabled()) {
-			LOGGER.trace("Done with build of " + IWVWMatch.class.getSimpleName() + " for content=" + content + " after " + (completedMatchModelBuildTimestamp - startTimestamp)
+			LOGGER.trace("Done with build of " + WVWMatch.class.getSimpleName() + " for content=" + content + " after " + (completedMatchModelBuildTimestamp - startTimestamp)
 					+ "ms");
 		}
 		match.getChannel().register(this);
@@ -110,15 +110,15 @@ final class WVWSynchronizerInitAction extends AbstractSynchronizerAction<WVWMatc
 		this.eventBus.post(WVW_MODEL_EVENT_FACTORY.newInitializedMatchEvent(match));
 	}
 
-	public final Set<IWVWMatch> getMatchReferencesBuffer() {
+	public final Set<WVWMatch> getMatchReferencesBuffer() {
 		return this.matchReferencesBuffer;
 	}
 
-	public final Set<IWorld> getWorldReferencesBuffer() {
+	public final Set<World> getWorldReferencesBuffer() {
 		return this.worldReferencesBuffer;
 	}
 
-	public final Map<String, IWVWMatch> getMatchesBuffer() {
+	public final Map<String, WVWMatch> getMatchesBuffer() {
 		return this.matchesBuffer;
 	}
 

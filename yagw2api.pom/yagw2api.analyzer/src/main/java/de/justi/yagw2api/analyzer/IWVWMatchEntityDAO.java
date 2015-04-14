@@ -24,10 +24,10 @@ import java.time.LocalDateTime;
 
 import com.google.common.base.Optional;
 
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWMatch;
+import de.justi.yagw2api.wrapper.domain.wvw.WVWMatch;
 
 public interface IWVWMatchEntityDAO {
-	Optional<IWVWMatchEntity> newMatchEntityOf(IWVWMatch match);
+	Optional<IWVWMatchEntity> newMatchEntityOf(WVWMatch match);
 
 	boolean save(IWVWMatchEntity entity);
 
@@ -35,7 +35,7 @@ public interface IWVWMatchEntityDAO {
 
 	/**
 	 * <p>
-	 * returns the {@link IWVWMatchEntity} that belongs to the given {@link IWVWMatch}
+	 * returns the {@link IWVWMatchEntity} that belongs to the given {@link WVWMatch}
 	 * </p>
 	 * <p>
 	 * if there is no such {@link IWVWMatchEntity} a new will be created
@@ -44,11 +44,11 @@ public interface IWVWMatchEntityDAO {
 	 * @param world
 	 * @return
 	 */
-	IWVWMatchEntity findOrCreateWVWMatchEntityOf(IWVWMatch match);
+	IWVWMatchEntity findOrCreateWVWMatchEntityOf(WVWMatch match);
 
 	/**
 	 * <p>
-	 * Synchronize this with the given {@link IWVWMatch}
+	 * Synchronize this with the given {@link WVWMatch}
 	 * </p>
 	 * <p>
 	 * Synchronization is not persisted directly, therefore you have to use {@link IWVWMatchEntityDAO#save(IWVWMatchEntity)} to persist them.
@@ -58,5 +58,5 @@ public interface IWVWMatchEntityDAO {
 	 * @param timestamp
 	 * @param model
 	 */
-	void synchronizeEntityWithModel(IWVWMatchEntity entity, LocalDateTime timestamp, IWVWMatch model);
+	void synchronizeEntityWithModel(IWVWMatchEntity entity, LocalDateTime timestamp, WVWMatch model);
 }

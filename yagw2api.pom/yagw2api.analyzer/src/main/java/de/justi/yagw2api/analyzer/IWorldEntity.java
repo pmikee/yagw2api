@@ -25,8 +25,8 @@ import java.util.Locale;
 
 import com.google.common.base.Optional;
 
-import de.justi.yagw2api.wrapper.domain.world.IWorld;
-import de.justi.yagw2api.wrapper.domain.world.IWorldLocationType;
+import de.justi.yagw2api.wrapper.domain.world.World;
+import de.justi.yagw2api.wrapper.domain.world.WorldLocationType;
 
 public interface IWorldEntity extends IEntity {
 	Optional<String> getName(Locale locale);
@@ -43,7 +43,7 @@ public interface IWorldEntity extends IEntity {
 
 	Optional<Integer> getOriginWorldId();
 
-	IWorldLocationType getLocation();
+	WorldLocationType getLocation();
 
 	Optional<Locale> getWorldLocale();
 
@@ -63,7 +63,7 @@ public interface IWorldEntity extends IEntity {
 
 	/**
 	 * <p>
-	 * Synchronize this with the given {@link IWorld}
+	 * Synchronize this with the given {@link World}
 	 * </p>
 	 * <p>
 	 * Synchronization is not persisted directly, therefore you have to use {@link IWorldEnityDAO#save(IWorldEntity)} to persist them.
@@ -72,5 +72,5 @@ public interface IWorldEntity extends IEntity {
 	 * @param model
 	 * @return true if successfully, else false
 	 */
-	boolean synchronizeWithModel(IWorld model);
+	boolean synchronizeWithModel(World model);
 }

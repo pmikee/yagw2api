@@ -20,288 +20,129 @@ package de.justi.yagw2api.wrapper.wvw;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import de.justi.yagw2api.wrapper.domain.world.World;
+import de.justi.yagw2api.wrapper.domain.wvw.WVWMap;
+import de.justi.yagw2api.wrapper.domain.wvw.WVWMatch;
+import de.justi.yagw2api.wrapper.domain.wvw.event.WVWMapListener;
+import de.justi.yagw2api.wrapper.domain.wvw.event.WVWMatchListener;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.eventbus.Subscribe;
-import com.sun.jersey.client.impl.CopyOnWriteHashMap;
+public interface WVWWrapper {
+	/**
+	 * <p>
+	 * start the arenanet api sync deamon
+	 * </p>
+	 * <p>
+	 * initialization is performed asynchronously
+	 * </p>
+	 */
+	void start();
 
-import de.justi.yagw2api.wrapper.domain.world.IWorld;
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWMap;
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWMatch;
-import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWInitializedMatchEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWMapEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWMapListener;
-import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWMapScoresChangedEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWMatchEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWMatchListener;
-import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWMatchScoresChangedEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWObjectiveCaptureEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWObjectiveClaimedEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWObjectiveEndOfBuffEvent;
+	/**
+	 * <p>
+	 * stop the arenanet api sync deamon
+	 * </p>
+	 * <p>
+	 * shutdown is performed asynchronously
+	 * </p>
+	 */
+	void stop();
 
-public final class WVWWrapper implements IWVWWrapper {
-	private static final Logger LOGGER = LoggerFactory.getLogger(WVWWrapper.class);
-	private WVWSynchronizer deamon = null;
-	private final Map<IWVWMatch, Collection<IWVWMatchListener>> singleMatchListeners = new CopyOnWriteHashMap<IWVWMatch, Collection<IWVWMatchListener>>();
-	private final Collection<IWVWMatchListener> allMatchesListeners = new CopyOnWriteArrayList<IWVWMatchListener>();
-	private final Map<IWVWMap, Collection<IWVWMapListener>> singleMapListeners = new CopyOnWriteHashMap<IWVWMap, Collection<IWVWMapListener>>();
-	private final Map<IWVWMatch, Collection<IWVWMapListener>> allMapsOfSingleMatchListeners = new CopyOnWriteHashMap<IWVWMatch, Collection<IWVWMapListener>>();
-	private final Collection<IWVWMapListener> allMapsOfAllMatchesListeners = new CopyOnWriteArrayList<IWVWMapListener>();
+	/**
+	 * check if the arenanet api sync deamon is running
+	 * 
+	 * @return
+	 */
+	boolean isRunning();
 
-	public WVWWrapper() {
-	}
+	/**
+	 * retrieve unmodifiable access to all matches
+	 * 
+	 * @return
+	 */
+	Set<WVWMatch> getAllMatches();
 
-	private void initDemaonIfRequired() {
-		if (this.deamon == null) {
-			synchronized (this) {
-				if (this.deamon == null) {
-					this.deamon = new WVWSynchronizer();
-					this.deamon.getChannel().register(this);
-				}
-			}
-		}
-	}
+	/**
+	 * <p>
+	 * retrieve unmodifiable access to all matches mapped by their id
+	 * </p>
+	 * <p>
+	 * <strong>potentially expensive</strong>, because this map is build on each method call
+	 * </p>
+	 * 
+	 * @return
+	 */
+	Map<String, WVWMatch> getAllMatchesMappedById();
 
-	@Override
-	public void start() {
-		this.initDemaonIfRequired();
-		checkState(this.deamon != null);
-		checkState(!this.deamon.isRunning());
-		this.deamon.startAsync();
-	}
+	/**
+	 * retrieve unmodifiable access to all worlds
+	 * 
+	 * @return
+	 */
+	Set<World> getAllWorlds();
 
-	@Override
-	public void stop() {
-		checkState(this.deamon != null);
-		checkState(this.deamon.isRunning());
-		this.deamon.stopAsync();
-	}
+	/**
+	 * <p>
+	 * retrieve unmodifiable access to all worlds mapped by their id
+	 * </p>
+	 * <p>
+	 * <strong>potentially expensive</strong>, because this map is build on each method call
+	 * </p>
+	 * 
+	 * @return
+	 */
+	Map<Integer, World> getAllWorldMappedById();
 
-	@Override
-	public boolean isRunning() {
-		return (this.deamon != null) && this.deamon.isRunning();
-	}
+	/**
+	 * register a listener for a single match
+	 * 
+	 * @param matchId
+	 * @param listener
+	 */
+	void registerWVWMatchListener(WVWMatch match, WVWMatchListener listener);
 
-	@Subscribe
-	public void onWVWMatchEvent(final IWVWMatchEvent event) {
-		checkNotNull(event);
-		LOGGER.debug(this + " will now inform it's registered listeners about " + event);
-		final IWVWMatch match = event.getMatch();
+	/**
+	 * register a listener for all matches
+	 * 
+	 * @param listener
+	 */
+	void registerWVWMatchListener(WVWMatchListener listener);
 
-		for (IWVWMatchListener listener : this.allMatchesListeners) {
-			this.notifyWVWMatchListener(listener, event);
-		}
-		if (this.singleMatchListeners.containsKey(match)) {
-			for (IWVWMatchListener listener : this.singleMatchListeners.get(match)) {
-				this.notifyWVWMatchListener(listener, event);
-			}
-		}
-	}
+	/**
+	 * unregisters a given match listener
+	 * 
+	 * @param listener
+	 */
+	void unregisterWVWMatchListener(WVWMatchListener listener);
 
-	private void notifyWVWMatchListener(final IWVWMatchListener listener, final IWVWMatchEvent event) {
-		checkNotNull(listener);
-		checkNotNull(event);
-		LOGGER.trace("Going to notify " + listener + " about " + event);
-		if (event instanceof IWVWMatchScoresChangedEvent) {
-			listener.onMatchScoreChangedEvent((IWVWMatchScoresChangedEvent) event);
-		} else if (event instanceof IWVWInitializedMatchEvent) {
-			listener.onInitializedMatchForWrapper((IWVWInitializedMatchEvent) event);
-		}
-	}
+	/**
+	 * register a listener for all maps in all matches
+	 * 
+	 * @param listener
+	 */
+	void registerWVWMapListener(WVWMapListener listener);
 
-	@Subscribe
-	public void onWVWMapEvent(final IWVWMapEvent event) {
-		checkNotNull(event);
-		checkArgument(event.getMap().getMatch().isPresent());
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug(this + " will now inform it's registered listeners about " + event);
-		}
-		final IWVWMap map = event.getMap();
-		final IWVWMatch match = map.getMatch().get();
+	/**
+	 * register a listener for all maps of a given match
+	 * 
+	 * @param listener
+	 */
+	void registerWVWMapListener(WVWMatch match, WVWMapListener listener);
 
-		final Collection<IWVWMapListener> notifiedListeners = new ArrayList<IWVWMapListener>();
+	/**
+	 * register a listener for a single map
+	 * 
+	 * @param map
+	 * @param listener
+	 */
+	void registerWVWMapListener(WVWMap map, WVWMapListener listener);
 
-		for (IWVWMapListener listener : this.allMapsOfAllMatchesListeners) {
-			this.notifyWVWMapListener(listener, event);
-			notifiedListeners.add(listener);
-		}
-		if (this.allMapsOfSingleMatchListeners.containsKey(match)) {
-			for (IWVWMapListener listener : this.allMapsOfSingleMatchListeners.get(match)) {
-				this.notifyWVWMapListener(listener, event);
-				notifiedListeners.add(listener);
-			}
-		}
-		if (this.singleMapListeners.containsKey(map)) {
-			for (IWVWMapListener listener : this.singleMapListeners.get(map)) {
-				this.notifyWVWMapListener(listener, event);
-				notifiedListeners.add(listener);
-			}
-		}
-
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Notified " + notifiedListeners + " about " + event);
-		}
-	}
-
-	private void notifyWVWMapListener(final IWVWMapListener listener, final IWVWMapEvent event) {
-		checkNotNull(listener);
-		checkNotNull(event);
-		LOGGER.trace("Going to notify " + listener + " about " + event);
-		if (event instanceof IWVWMapScoresChangedEvent) {
-			listener.onChangedMapScoreEvent((IWVWMapScoresChangedEvent) event);
-
-		} else if (event instanceof IWVWObjectiveCaptureEvent) {
-			listener.onObjectiveCapturedEvent((IWVWObjectiveCaptureEvent) event);
-
-		} else if (event instanceof IWVWObjectiveEndOfBuffEvent) {
-			listener.onObjectiveEndOfBuffEvent((IWVWObjectiveEndOfBuffEvent) event);
-
-		} else if (event instanceof IWVWObjectiveClaimedEvent) {
-			listener.onObjectiveClaimedEvent((IWVWObjectiveClaimedEvent) event);
-		}
-	}
-
-	@Override
-	public void registerWVWMatchListener(final IWVWMatch match, final IWVWMatchListener listener) {
-		checkNotNull(match);
-		checkNotNull(listener);
-		checkState(!this.singleMatchListeners.containsKey(match) || !this.singleMatchListeners.get(match).contains(listener));
-
-		// add listener references
-		if (!this.singleMatchListeners.containsKey(match)) {
-			synchronized (this.singleMatchListeners) {
-				if (!this.singleMatchListeners.containsKey(match)) {
-					this.singleMatchListeners.put(match, new CopyOnWriteArrayList<IWVWMatchListener>());
-				}
-			}
-		}
-		checkState(this.singleMatchListeners.containsKey(match));
-		this.singleMatchListeners.get(match).add(listener);
-	}
-
-	@Override
-	public void registerWVWMatchListener(final IWVWMatchListener listener) {
-		checkNotNull(listener);
-		checkState(!this.allMatchesListeners.contains(listener));
-
-		// add listener references
-		this.allMatchesListeners.add(listener);
-	}
-
-	@Override
-	public void unregisterWVWMatchListener(final IWVWMatchListener listener) {
-		checkNotNull(listener);
-
-		// remove listener references
-		for (IWVWMatch key : this.singleMatchListeners.keySet()) {
-			if (this.singleMatchListeners.get(key).contains(listener)) {
-				this.singleMatchListeners.get(key).remove(listener);
-			}
-		}
-		this.allMatchesListeners.remove(listener);
-	}
-
-	@Override
-	public void unregisterWVWMapListener(final IWVWMapListener listener) {
-		checkNotNull(listener);
-
-		// remove listener references
-		for (IWVWMap key : this.singleMapListeners.keySet()) {
-			if (this.singleMapListeners.get(key).contains(listener)) {
-				this.singleMapListeners.get(key).remove(listener);
-			}
-		}
-		for (IWVWMatch key : this.allMapsOfSingleMatchListeners.keySet()) {
-			if (this.allMapsOfSingleMatchListeners.get(key).contains(listener)) {
-				this.allMapsOfSingleMatchListeners.get(key).remove(listener);
-			}
-		}
-		this.allMapsOfAllMatchesListeners.remove(listener);
-	}
-
-	@Override
-	public void registerWVWMapListener(final IWVWMapListener listener) {
-		checkNotNull(listener);
-		checkState(!this.allMapsOfAllMatchesListeners.contains(listener));
-
-		// add listener references
-		this.allMapsOfAllMatchesListeners.add(listener);
-	}
-
-	@Override
-	public void registerWVWMapListener(final IWVWMatch match, final IWVWMapListener listener) {
-		checkNotNull(match);
-		checkNotNull(listener);
-		checkState(!this.allMapsOfSingleMatchListeners.containsKey(match) || !this.allMapsOfSingleMatchListeners.get(match).contains(listener));
-
-		// add listener references
-		if (!this.allMapsOfSingleMatchListeners.containsKey(match)) {
-			synchronized (this.allMapsOfSingleMatchListeners) {
-				if (!this.allMapsOfSingleMatchListeners.containsKey(match)) {
-					this.allMapsOfSingleMatchListeners.put(match, new CopyOnWriteArrayList<IWVWMapListener>());
-				}
-			}
-		}
-		checkState(this.allMapsOfSingleMatchListeners.containsKey(match));
-		this.allMapsOfSingleMatchListeners.get(match).add(listener);
-	}
-
-	@Override
-	public void registerWVWMapListener(final IWVWMap map, final IWVWMapListener listener) {
-		checkNotNull(map);
-		checkNotNull(listener);
-		checkState(!this.singleMapListeners.containsKey(map) || !this.singleMapListeners.get(map).contains(listener));
-
-		// add listener references
-		if (!this.singleMapListeners.containsKey(map)) {
-			synchronized (this.singleMapListeners) {
-				if (!this.singleMapListeners.containsKey(map)) {
-					this.singleMapListeners.put(map, new CopyOnWriteArrayList<IWVWMapListener>());
-				}
-			}
-		}
-		checkState(this.singleMapListeners.containsKey(map));
-		this.singleMapListeners.get(map).add(listener);
-	}
-
-	@Override
-	public Set<IWVWMatch> getAllMatches() {
-		return this.deamon.getAllMatches();
-	}
-
-	@Override
-	public Set<IWorld> getAllWorlds() {
-		return this.deamon.getAllWorlds();
-	}
-
-	@Override
-	public Map<String, IWVWMatch> getAllMatchesMappedById() {
-		final Map<String, IWVWMatch> matchesMap = new HashMap<String, IWVWMatch>();
-		for (IWVWMatch match : this.deamon.getAllMatches()) {
-			matchesMap.put(match.getId(), match);
-		}
-		return ImmutableMap.copyOf(matchesMap);
-	}
-
-	@Override
-	public Map<Integer, IWorld> getAllWorldMappedById() {
-		final Map<Integer, IWorld> worldMap = new HashMap<Integer, IWorld>();
-		for (IWorld world : this.deamon.getAllWorlds()) {
-			worldMap.put(world.getId(), world);
-		}
-		return ImmutableMap.copyOf(worldMap);
-	}
+	/**
+	 * unregister a given map listener
+	 * 
+	 * @param listener
+	 */
+	void unregisterWVWMapListener(WVWMapListener listener);
 }

@@ -53,10 +53,10 @@ import com.google.common.collect.Maps;
 import de.justi.yagw2api.analyzer.IWVWMapEntity;
 import de.justi.yagw2api.analyzer.IWVWMatchEntity;
 import de.justi.yagw2api.analyzer.IWVWScoresEmbeddable;
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWMapType;
 import de.justi.yagw2api.wrapper.domain.wvw.WVWMapType;
+import de.justi.yagw2api.wrapper.domain.wvw.DefaultWVWMapType;
 
-@ObjectTypeConverters({ @ObjectTypeConverter(name = "MapTypeConverter", objectType = WVWMapType.class, dataType = String.class, conversionValues = {
+@ObjectTypeConverters({ @ObjectTypeConverter(name = "MapTypeConverter", objectType = DefaultWVWMapType.class, dataType = String.class, conversionValues = {
 		@ConversionValue(objectValue = "CENTER", dataValue = "CENTER"), @ConversionValue(objectValue = "RED", dataValue = "RED"),
 		@ConversionValue(objectValue = "GREEN", dataValue = "GREEN"), @ConversionValue(objectValue = "BLUE", dataValue = "BLUE") }) })
 @Entity(name = "map")
@@ -75,15 +75,15 @@ public final class WVWMapEntity extends AbstractEntity implements IWVWMapEntity 
 
 	@Column(name = "map_type", unique = false, nullable = false)
 	@Convert("MapTypeConverter")
-	private IWVWMapType type = null;
+	private WVWMapType type = null;
 
 	@Override
-	public IWVWMapType getType() {
+	public WVWMapType getType() {
 		return this.type;
 	}
 
 	@Override
-	public void setType(final IWVWMapType type) {
+	public void setType(final WVWMapType type) {
 		this.type = checkNotNull(type);
 	}
 

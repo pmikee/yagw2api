@@ -20,10 +20,10 @@ package de.justi.yagw2api.analyzer;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-import de.justi.yagw2api.wrapper.domain.world.IWorld;
-import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWMapListener;
-import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWMatchListener;
+import de.justi.yagw2api.wrapper.domain.world.World;
+import de.justi.yagw2api.wrapper.domain.wvw.event.WVWMapListener;
+import de.justi.yagw2api.wrapper.domain.wvw.event.WVWMatchListener;
 
-public interface IWVWAnalyzer extends IWVWMatchListener, IWVWMapListener {
-	IWorldEntity worldEntityOf(IWorld world);
+public interface IWVWAnalyzer extends WVWMatchListener, WVWMapListener {
+	IWorldEntity worldEntityOf(World world);
 }

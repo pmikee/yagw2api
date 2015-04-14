@@ -55,12 +55,12 @@ import de.justi.yagw2api.explorer.rcp.swt.AggregatingSelectionProvider;
 import de.justi.yagw2api.explorer.rcp.swt.FixedColoredTypeSafeColumnLabelProvider;
 import de.justi.yagw2api.explorer.rcp.swt.TypeSafeColumnLabelProvider;
 import de.justi.yagw2api.explorer.rcp.swt.TypeSafeTableViewerColumnSorter;
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWMatch;
-import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWInitializedMatchEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWMatchListener;
-import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWMatchScoresChangedEvent;
+import de.justi.yagw2api.wrapper.domain.wvw.WVWMatch;
+import de.justi.yagw2api.wrapper.domain.wvw.event.WVWInitializedMatchEvent;
+import de.justi.yagw2api.wrapper.domain.wvw.event.WVWMatchListener;
+import de.justi.yagw2api.wrapper.domain.wvw.event.WVWMatchScoresChangedEvent;
 
-public class MatchSelectorViewPart extends ViewPart implements IWVWMatchListener, ISelectionListener {
+public class MatchSelectorViewPart extends ViewPart implements WVWMatchListener, ISelectionListener {
 	public static final String ID = "yagw2api.explorer.rcp.wvw.matchselector"; //$NON-NLS-1$
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MatchSelectorViewPart.class);
@@ -102,15 +102,15 @@ public class MatchSelectorViewPart extends ViewPart implements IWVWMatchListener
 				this.matchesTable.setLinesVisible(true);
 				{
 					TableViewerColumn tableViewerColumn = new TableViewerColumn(this.matchesTableViewer, SWT.NONE);
-					tableViewerColumn.setLabelProvider(new TypeSafeColumnLabelProvider<IWVWMatch>(IWVWMatch.class) {
+					tableViewerColumn.setLabelProvider(new TypeSafeColumnLabelProvider<WVWMatch>(WVWMatch.class) {
 						@Override
-						protected String getTypeSafeText(final IWVWMatch element) {
+						protected String getTypeSafeText(final WVWMatch element) {
 							return element.getRedWorld().getWorldLocation().toString();
 						}
 					});
-					new TypeSafeTableViewerColumnSorter<IWVWMatch>(tableViewerColumn, IWVWMatch.class) {
+					new TypeSafeTableViewerColumnSorter<WVWMatch>(tableViewerColumn, WVWMatch.class) {
 						@Override
-						protected String getTypeSafeValue(final IWVWMatch o) {
+						protected String getTypeSafeValue(final WVWMatch o) {
 							return o.getRedWorld().getWorldLocation().toString();
 						}
 					};
@@ -120,16 +120,16 @@ public class MatchSelectorViewPart extends ViewPart implements IWVWMatchListener
 				}
 				{
 					TableViewerColumn tableViewerColumn = new TableViewerColumn(this.matchesTableViewer, SWT.NONE);
-					tableViewerColumn.setLabelProvider(new TypeSafeColumnLabelProvider<IWVWMatch>(IWVWMatch.class) {
+					tableViewerColumn.setLabelProvider(new TypeSafeColumnLabelProvider<WVWMatch>(WVWMatch.class) {
 						@Override
-						protected String getTypeSafeText(final IWVWMatch element) {
+						protected String getTypeSafeText(final WVWMatch element) {
 							return WVWUIConstants.NUMBER_FORMAT_POINTS.format(element.getScores().getRedScore() + element.getScores().getGreenScore()
 									+ element.getScores().getBlueScore());
 						}
 					});
-					new TypeSafeTableViewerColumnSorter<IWVWMatch>(tableViewerColumn, IWVWMatch.class) {
+					new TypeSafeTableViewerColumnSorter<WVWMatch>(tableViewerColumn, WVWMatch.class) {
 						@Override
-						protected Integer getTypeSafeValue(final IWVWMatch o) {
+						protected Integer getTypeSafeValue(final WVWMatch o) {
 							return o.getScores().getRedScore() + o.getScores().getGreenScore() + o.getScores().getBlueScore();
 						}
 					};
@@ -139,16 +139,16 @@ public class MatchSelectorViewPart extends ViewPart implements IWVWMatchListener
 				}
 				{
 					TableViewerColumn tableViewerColumn = new TableViewerColumn(this.matchesTableViewer, SWT.NONE);
-					tableViewerColumn.setLabelProvider(new FixedColoredTypeSafeColumnLabelProvider<IWVWMatch>(IWVWMatch.class, WVWUIConstants.RGB_RED_WORLD_BG,
+					tableViewerColumn.setLabelProvider(new FixedColoredTypeSafeColumnLabelProvider<WVWMatch>(WVWMatch.class, WVWUIConstants.RGB_RED_WORLD_BG,
 							WVWUIConstants.RGB_RED_WORLD_FG) {
 						@Override
-						protected String getTypeSafeText(final IWVWMatch element) {
+						protected String getTypeSafeText(final WVWMatch element) {
 							return element.getRedWorld().getName().or("");
 						}
 					});
-					new TypeSafeTableViewerColumnSorter<IWVWMatch>(tableViewerColumn, IWVWMatch.class) {
+					new TypeSafeTableViewerColumnSorter<WVWMatch>(tableViewerColumn, WVWMatch.class) {
 						@Override
-						protected String getTypeSafeValue(final IWVWMatch o) {
+						protected String getTypeSafeValue(final WVWMatch o) {
 							return o.getRedWorld().getName().orNull();
 						}
 					};
@@ -158,16 +158,16 @@ public class MatchSelectorViewPart extends ViewPart implements IWVWMatchListener
 				}
 				{
 					TableViewerColumn tableViewerColumn = new TableViewerColumn(this.matchesTableViewer, SWT.NONE);
-					tableViewerColumn.setLabelProvider(new FixedColoredTypeSafeColumnLabelProvider<IWVWMatch>(IWVWMatch.class, WVWUIConstants.RGB_GREEN_WORLD_BG,
+					tableViewerColumn.setLabelProvider(new FixedColoredTypeSafeColumnLabelProvider<WVWMatch>(WVWMatch.class, WVWUIConstants.RGB_GREEN_WORLD_BG,
 							WVWUIConstants.RGB_GREEN_WORLD_FG) {
 						@Override
-						protected String getTypeSafeText(final IWVWMatch element) {
+						protected String getTypeSafeText(final WVWMatch element) {
 							return element.getGreenWorld().getName().or("");
 						}
 					});
-					new TypeSafeTableViewerColumnSorter<IWVWMatch>(tableViewerColumn, IWVWMatch.class) {
+					new TypeSafeTableViewerColumnSorter<WVWMatch>(tableViewerColumn, WVWMatch.class) {
 						@Override
-						protected String getTypeSafeValue(final IWVWMatch o) {
+						protected String getTypeSafeValue(final WVWMatch o) {
 							return o.getGreenWorld().getName().orNull();
 						}
 					};
@@ -177,16 +177,16 @@ public class MatchSelectorViewPart extends ViewPart implements IWVWMatchListener
 				}
 				{
 					TableViewerColumn tableViewerColumn = new TableViewerColumn(this.matchesTableViewer, SWT.NONE);
-					tableViewerColumn.setLabelProvider(new FixedColoredTypeSafeColumnLabelProvider<IWVWMatch>(IWVWMatch.class, WVWUIConstants.RGB_BLUE_WORLD_BG,
+					tableViewerColumn.setLabelProvider(new FixedColoredTypeSafeColumnLabelProvider<WVWMatch>(WVWMatch.class, WVWUIConstants.RGB_BLUE_WORLD_BG,
 							WVWUIConstants.RGB_BLUE_WORLD_FG) {
 						@Override
-						protected String getTypeSafeText(final IWVWMatch element) {
+						protected String getTypeSafeText(final WVWMatch element) {
 							return element.getBlueWorld().getName().or("");
 						}
 					});
-					new TypeSafeTableViewerColumnSorter<IWVWMatch>(tableViewerColumn, IWVWMatch.class) {
+					new TypeSafeTableViewerColumnSorter<WVWMatch>(tableViewerColumn, WVWMatch.class) {
 						@Override
-						protected String getTypeSafeValue(final IWVWMatch o) {
+						protected String getTypeSafeValue(final WVWMatch o) {
 							return o.getBlueWorld().getName().orNull();
 						}
 					};
@@ -196,16 +196,16 @@ public class MatchSelectorViewPart extends ViewPart implements IWVWMatchListener
 				}
 				{
 					TableViewerColumn tableViewerColumn = new TableViewerColumn(this.matchesTableViewer, SWT.NONE);
-					tableViewerColumn.setLabelProvider(new FixedColoredTypeSafeColumnLabelProvider<IWVWMatch>(IWVWMatch.class, WVWUIConstants.RGB_RED_WORLD_BG,
+					tableViewerColumn.setLabelProvider(new FixedColoredTypeSafeColumnLabelProvider<WVWMatch>(WVWMatch.class, WVWUIConstants.RGB_RED_WORLD_BG,
 							WVWUIConstants.RGB_RED_WORLD_FG) {
 						@Override
-						protected String getTypeSafeText(final IWVWMatch element) {
+						protected String getTypeSafeText(final WVWMatch element) {
 							return WVWUIConstants.NUMBER_FORMAT_POINTS.format(element.getScores().getRedScore());
 						}
 					});
-					new TypeSafeTableViewerColumnSorter<IWVWMatch>(tableViewerColumn, IWVWMatch.class) {
+					new TypeSafeTableViewerColumnSorter<WVWMatch>(tableViewerColumn, WVWMatch.class) {
 						@Override
-						protected Integer getTypeSafeValue(final IWVWMatch o) {
+						protected Integer getTypeSafeValue(final WVWMatch o) {
 							return o.getScores().getRedScore();
 						}
 					};
@@ -215,16 +215,16 @@ public class MatchSelectorViewPart extends ViewPart implements IWVWMatchListener
 				}
 				{
 					TableViewerColumn tableViewerColumn = new TableViewerColumn(this.matchesTableViewer, SWT.NONE);
-					tableViewerColumn.setLabelProvider(new FixedColoredTypeSafeColumnLabelProvider<IWVWMatch>(IWVWMatch.class, WVWUIConstants.RGB_GREEN_WORLD_BG,
+					tableViewerColumn.setLabelProvider(new FixedColoredTypeSafeColumnLabelProvider<WVWMatch>(WVWMatch.class, WVWUIConstants.RGB_GREEN_WORLD_BG,
 							WVWUIConstants.RGB_GREEN_WORLD_FG) {
 						@Override
-						protected String getTypeSafeText(final IWVWMatch element) {
+						protected String getTypeSafeText(final WVWMatch element) {
 							return WVWUIConstants.NUMBER_FORMAT_POINTS.format(element.getScores().getGreenScore());
 						}
 					});
-					new TypeSafeTableViewerColumnSorter<IWVWMatch>(tableViewerColumn, IWVWMatch.class) {
+					new TypeSafeTableViewerColumnSorter<WVWMatch>(tableViewerColumn, WVWMatch.class) {
 						@Override
-						protected Integer getTypeSafeValue(final IWVWMatch o) {
+						protected Integer getTypeSafeValue(final WVWMatch o) {
 							return o.getScores().getGreenScore();
 						}
 					};
@@ -234,16 +234,16 @@ public class MatchSelectorViewPart extends ViewPart implements IWVWMatchListener
 				}
 				{
 					TableViewerColumn tableViewerColumn = new TableViewerColumn(this.matchesTableViewer, SWT.NONE);
-					tableViewerColumn.setLabelProvider(new FixedColoredTypeSafeColumnLabelProvider<IWVWMatch>(IWVWMatch.class, WVWUIConstants.RGB_BLUE_WORLD_BG,
+					tableViewerColumn.setLabelProvider(new FixedColoredTypeSafeColumnLabelProvider<WVWMatch>(WVWMatch.class, WVWUIConstants.RGB_BLUE_WORLD_BG,
 							WVWUIConstants.RGB_BLUE_WORLD_FG) {
 						@Override
-						protected String getTypeSafeText(final IWVWMatch element) {
+						protected String getTypeSafeText(final WVWMatch element) {
 							return WVWUIConstants.NUMBER_FORMAT_POINTS.format(element.getScores().getBlueScore());
 						}
 					});
-					new TypeSafeTableViewerColumnSorter<IWVWMatch>(tableViewerColumn, IWVWMatch.class) {
+					new TypeSafeTableViewerColumnSorter<WVWMatch>(tableViewerColumn, WVWMatch.class) {
 						@Override
-						protected Integer getTypeSafeValue(final IWVWMatch o) {
+						protected Integer getTypeSafeValue(final WVWMatch o) {
 							return o.getScores().getBlueScore();
 						}
 					};
@@ -253,16 +253,16 @@ public class MatchSelectorViewPart extends ViewPart implements IWVWMatchListener
 				}
 				{
 					TableViewerColumn tableViewerColumn = new TableViewerColumn(this.matchesTableViewer, SWT.NONE);
-					tableViewerColumn.setLabelProvider(new FixedColoredTypeSafeColumnLabelProvider<IWVWMatch>(IWVWMatch.class, WVWUIConstants.RGB_RED_WORLD_BG,
+					tableViewerColumn.setLabelProvider(new FixedColoredTypeSafeColumnLabelProvider<WVWMatch>(WVWMatch.class, WVWUIConstants.RGB_RED_WORLD_BG,
 							WVWUIConstants.RGB_RED_WORLD_FG) {
 						@Override
-						protected String getTypeSafeText(final IWVWMatch element) {
+						protected String getTypeSafeText(final WVWMatch element) {
 							return WVWUIConstants.NUMBER_FORMAT_POINTS.format(element.calculateRedTick());
 						}
 					});
-					new TypeSafeTableViewerColumnSorter<IWVWMatch>(tableViewerColumn, IWVWMatch.class) {
+					new TypeSafeTableViewerColumnSorter<WVWMatch>(tableViewerColumn, WVWMatch.class) {
 						@Override
-						protected Integer getTypeSafeValue(final IWVWMatch o) {
+						protected Integer getTypeSafeValue(final WVWMatch o) {
 							return o.calculateRedTick();
 						}
 					};
@@ -272,16 +272,16 @@ public class MatchSelectorViewPart extends ViewPart implements IWVWMatchListener
 				}
 				{
 					TableViewerColumn tableViewerColumn = new TableViewerColumn(this.matchesTableViewer, SWT.NONE);
-					tableViewerColumn.setLabelProvider(new FixedColoredTypeSafeColumnLabelProvider<IWVWMatch>(IWVWMatch.class, WVWUIConstants.RGB_GREEN_WORLD_BG,
+					tableViewerColumn.setLabelProvider(new FixedColoredTypeSafeColumnLabelProvider<WVWMatch>(WVWMatch.class, WVWUIConstants.RGB_GREEN_WORLD_BG,
 							WVWUIConstants.RGB_GREEN_WORLD_FG) {
 						@Override
-						protected String getTypeSafeText(final IWVWMatch element) {
+						protected String getTypeSafeText(final WVWMatch element) {
 							return WVWUIConstants.NUMBER_FORMAT_POINTS.format(element.calculateGreenTick());
 						}
 					});
-					new TypeSafeTableViewerColumnSorter<IWVWMatch>(tableViewerColumn, IWVWMatch.class) {
+					new TypeSafeTableViewerColumnSorter<WVWMatch>(tableViewerColumn, WVWMatch.class) {
 						@Override
-						protected Integer getTypeSafeValue(final IWVWMatch o) {
+						protected Integer getTypeSafeValue(final WVWMatch o) {
 							return o.calculateGreenTick();
 						}
 					};
@@ -291,16 +291,16 @@ public class MatchSelectorViewPart extends ViewPart implements IWVWMatchListener
 				}
 				{
 					TableViewerColumn tableViewerColumn = new TableViewerColumn(this.matchesTableViewer, SWT.NONE);
-					tableViewerColumn.setLabelProvider(new FixedColoredTypeSafeColumnLabelProvider<IWVWMatch>(IWVWMatch.class, WVWUIConstants.RGB_BLUE_WORLD_BG,
+					tableViewerColumn.setLabelProvider(new FixedColoredTypeSafeColumnLabelProvider<WVWMatch>(WVWMatch.class, WVWUIConstants.RGB_BLUE_WORLD_BG,
 							WVWUIConstants.RGB_BLUE_WORLD_FG) {
 						@Override
-						protected String getTypeSafeText(final IWVWMatch element) {
+						protected String getTypeSafeText(final WVWMatch element) {
 							return WVWUIConstants.NUMBER_FORMAT_POINTS.format(element.calculateBlueTick());
 						}
 					});
-					new TypeSafeTableViewerColumnSorter<IWVWMatch>(tableViewerColumn, IWVWMatch.class) {
+					new TypeSafeTableViewerColumnSorter<WVWMatch>(tableViewerColumn, WVWMatch.class) {
 						@Override
-						protected Integer getTypeSafeValue(final IWVWMatch o) {
+						protected Integer getTypeSafeValue(final WVWMatch o) {
 							return o.calculateBlueTick();
 						}
 					};
@@ -361,13 +361,13 @@ public class MatchSelectorViewPart extends ViewPart implements IWVWMatchListener
 		}
 	}
 
-	private Optional<IWVWMatch> getSelectedMatch() {
+	private Optional<WVWMatch> getSelectedMatch() {
 		if (this.matchesTableViewer.getSelection().isEmpty()) {
 			return Optional.absent();
 		} else {
 			final IStructuredSelection selection = (IStructuredSelection) this.matchesTableViewer.getSelection();
-			checkState(selection.getFirstElement() instanceof IWVWMatch, "expected %s to be instance of %s", selection.getFirstElement(), IWVWMatch.class);
-			return Optional.of((IWVWMatch) selection.getFirstElement());
+			checkState(selection.getFirstElement() instanceof WVWMatch, "expected %s to be instance of %s", selection.getFirstElement(), WVWMatch.class);
+			return Optional.of((WVWMatch) selection.getFirstElement());
 		}
 	}
 
@@ -377,15 +377,15 @@ public class MatchSelectorViewPart extends ViewPart implements IWVWMatchListener
 		checkNotNull(selection, "missing selection");
 		final IStructuredSelection structuredSelection = (IStructuredSelection) selection;
 		if (!structuredSelection.isEmpty()) {
-			if (structuredSelection.getFirstElement() instanceof IWVWMatch) {
-				this.selectMatch((IWVWMatch) structuredSelection.getFirstElement());
+			if (structuredSelection.getFirstElement() instanceof WVWMatch) {
+				this.selectMatch((WVWMatch) structuredSelection.getFirstElement());
 			}
 		}
 	}
 
-	private synchronized void selectMatch(final IWVWMatch match) {
+	private synchronized void selectMatch(final WVWMatch match) {
 		checkNotNull(match, "missing match");
-		final Optional<IWVWMatch> currentMatchSelection = this.getSelectedMatch();
+		final Optional<WVWMatch> currentMatchSelection = this.getSelectedMatch();
 		if (!currentMatchSelection.isPresent() || !currentMatchSelection.get().equals(match)) {
 			LOGGER.trace("Select match: {}", match);
 			this.matchesTableViewer.setSelection(new StructuredSelection(match));
@@ -398,12 +398,12 @@ public class MatchSelectorViewPart extends ViewPart implements IWVWMatchListener
 	}
 
 	@Override
-	public void onInitializedMatchForWrapper(final IWVWInitializedMatchEvent arg0) {
+	public void onInitializedMatchForWrapper(final WVWInitializedMatchEvent arg0) {
 		this.refreshUIForMatchUpdate();
 	}
 
 	@Override
-	public void onMatchScoreChangedEvent(final IWVWMatchScoresChangedEvent arg0) {
+	public void onMatchScoreChangedEvent(final WVWMatchScoresChangedEvent arg0) {
 		this.refreshUIForMatchUpdate();
 	}
 

@@ -19,54 +19,12 @@ package de.justi.yagw2api.wrapper.domain.wvw.event;
  * limitations under the License.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 
-import de.justi.yagw2api.wrapper.domain.world.IWorld;
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWObjective;
+import de.justi.yagw2api.wrapper.domain.world.World;
 
-final class WVWObjectiveCaptureEvent extends AbstractWVWObjectiveEvent implements IWVWObjectiveCaptureEvent {
+public interface WVWObjectiveCaptureEvent extends WVWObjectiveEvent {
+	World getNewOwningWorld();
 
-	private final IWorld newOwningWorld;
-	private final Optional<IWorld> previousOwningWorld;
-
-	public WVWObjectiveCaptureEvent(final IWVWObjective source, final IWorld newOwningWorld) {
-		this(checkNotNull(source), checkNotNull(newOwningWorld), null);
-	}
-
-	public WVWObjectiveCaptureEvent(final IWVWObjective source, final IWorld newOwningWorld, final IWorld previousOwningWorld) {
-		super(checkNotNull(source));
-		this.newOwningWorld = checkNotNull(newOwningWorld);
-		this.previousOwningWorld = Optional.fromNullable(previousOwningWorld);
-	}
-
-	@Override
-	public IWorld getNewOwningWorld() {
-		return this.newOwningWorld;
-	}
-
-	@Override
-	public Optional<IWorld> getPreviousOwningWorld() {
-		return this.previousOwningWorld;
-	}
-
-	@Override
-	public String toString() {
-		final com.google.common.base.MoreObjects.ToStringHelper helper = MoreObjects.toStringHelper(this).add("super", super.toString());
-		helper.add("objective", this.getObjective());
-		if (this.getObjective().getMap().isPresent()) {
-			helper.add("mapType", this.getObjective().getMap().get().getType());
-			if (this.getObjective().getMap().get().getMatch().isPresent()) {
-				helper.add("matchId", this.getObjective().getMap().get().getMatch().get().getId());
-			}
-		}
-		helper.add("capturedBy", this.newOwningWorld);
-		if (this.previousOwningWorld.isPresent()) {
-			helper.add("from", this.previousOwningWorld.get());
-		}
-		return helper.toString();
-	}
+	Optional<World> getPreviousOwningWorld();
 }

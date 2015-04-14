@@ -22,21 +22,21 @@ package de.justi.yagw2api.wrapper;
 
 import com.google.inject.AbstractModule;
 
-import de.justi.yagw2api.wrapper.domain.IModelFactory;
 import de.justi.yagw2api.wrapper.domain.ModelFactory;
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWModelFactory;
+import de.justi.yagw2api.wrapper.domain.DefaultModelFactory;
 import de.justi.yagw2api.wrapper.domain.wvw.WVWModelFactory;
-import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWModelEventFactory;
+import de.justi.yagw2api.wrapper.domain.wvw.DefaultWVWModelFactory;
 import de.justi.yagw2api.wrapper.domain.wvw.event.WVWModelEventFactory;
-import de.justi.yagw2api.wrapper.wvw.IWVWWrapper;
+import de.justi.yagw2api.wrapper.domain.wvw.event.DefaultWVWModelEventFactory;
 import de.justi.yagw2api.wrapper.wvw.WVWWrapper;
+import de.justi.yagw2api.wrapper.wvw.DefaultWVWWrapper;
 
 final public class Module extends AbstractModule {
 	@Override
 	protected void configure() {
-		this.bind(IModelFactory.class).to(ModelFactory.class).asEagerSingleton();
-		this.bind(IWVWModelFactory.class).to(WVWModelFactory.class).asEagerSingleton();
-		this.bind(IWVWModelEventFactory.class).to(WVWModelEventFactory.class).asEagerSingleton();
-		this.bind(IWVWWrapper.class).to(WVWWrapper.class);
+		this.bind(ModelFactory.class).to(DefaultModelFactory.class).asEagerSingleton();
+		this.bind(WVWModelFactory.class).to(DefaultWVWModelFactory.class).asEagerSingleton();
+		this.bind(WVWModelEventFactory.class).to(DefaultWVWModelEventFactory.class).asEagerSingleton();
+		this.bind(WVWWrapper.class).to(DefaultWVWWrapper.class);
 	}
 }

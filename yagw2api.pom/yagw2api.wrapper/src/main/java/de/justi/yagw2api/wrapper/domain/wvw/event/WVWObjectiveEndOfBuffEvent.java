@@ -20,10 +20,6 @@ package de.justi.yagw2api.wrapper.domain.wvw.event;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWObjective;
+public interface WVWObjectiveEndOfBuffEvent extends WVWObjectiveEvent {
 
-final class WVWObjectiveEndOfBuffEvent extends AbstractWVWObjectiveEvent implements IWVWObjectiveEndOfBuffEvent {
-	public WVWObjectiveEndOfBuffEvent(final IWVWObjective source) {
-		super(source);
-	}
 }

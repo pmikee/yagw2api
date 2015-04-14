@@ -41,14 +41,14 @@ import de.justi.yagw2api.analyzer.IWVWMatchEntityDAO;
 import de.justi.yagw2api.analyzer.IWVWScoresEmbeddable;
 import de.justi.yagw2api.analyzer.YAGW2APIAnalyzer;
 import de.justi.yagw2api.analyzer.YAGW2APIAnalyzerPersistence;
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWMatch;
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWScores;
+import de.justi.yagw2api.wrapper.domain.wvw.WVWMatch;
+import de.justi.yagw2api.wrapper.domain.wvw.WVWScores;
 
 public final class WVWMatchEntityDAO implements IWVWMatchEntityDAO {
 	private static final Logger LOGGER = LoggerFactory.getLogger(WVWMatchEntityDAO.class);
 
 	@Override
-	public synchronized Optional<IWVWMatchEntity> newMatchEntityOf(final IWVWMatch match) {
+	public synchronized Optional<IWVWMatchEntity> newMatchEntityOf(final WVWMatch match) {
 		checkNotNull(match);
 		checkState(YAGW2APIAnalyzerPersistence.getDefaultEM().isOpen());
 		final EntityTransaction tx = YAGW2APIAnalyzerPersistence.getDefaultEM().getTransaction();
@@ -122,7 +122,7 @@ public final class WVWMatchEntityDAO implements IWVWMatchEntityDAO {
 	}
 
 	@Override
-	public synchronized IWVWMatchEntity findOrCreateWVWMatchEntityOf(final IWVWMatch match) {
+	public synchronized IWVWMatchEntity findOrCreateWVWMatchEntityOf(final WVWMatch match) {
 		checkNotNull(match);
 		checkState(YAGW2APIAnalyzerPersistence.getDefaultEM().isOpen());
 		final Optional<IWVWMatchEntity> alreadyThere = this.findWVWMatchEntity(match.getStartTimestamp(), match.getEndTimestamp(), match.getId());
@@ -137,13 +137,13 @@ public final class WVWMatchEntityDAO implements IWVWMatchEntityDAO {
 		}
 	}
 
-	private boolean doesModelScoreDiffFromEntityScore(final IWVWScoresEmbeddable scoreEntity, final IWVWScores scoreModel) {
+	private boolean doesModelScoreDiffFromEntityScore(final IWVWScoresEmbeddable scoreEntity, final WVWScores scoreModel) {
 		return (scoreEntity.getBlueScore() != scoreModel.getBlueScore()) || (scoreEntity.getGreenScore() != scoreModel.getGreenScore())
 				|| (scoreEntity.getRedScore() != scoreModel.getRedScore());
 	}
 
 	@Override
-	public synchronized void synchronizeEntityWithModel(final IWVWMatchEntity entity, final LocalDateTime timestamp, final IWVWMatch model) {
+	public synchronized void synchronizeEntityWithModel(final IWVWMatchEntity entity, final LocalDateTime timestamp, final WVWMatch model) {
 		checkNotNull(entity);
 		checkNotNull(timestamp);
 		checkNotNull(model);

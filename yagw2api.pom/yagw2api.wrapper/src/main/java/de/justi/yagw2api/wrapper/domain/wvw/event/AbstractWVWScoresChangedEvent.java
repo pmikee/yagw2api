@@ -22,16 +22,16 @@ package de.justi.yagw2api.wrapper.domain.wvw.event;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWScores;
+import de.justi.yagw2api.wrapper.domain.wvw.WVWScores;
 import de.justi.yagwapi.common.AbstractEvent;
 
-abstract class AbstractWVWScoresChangedEvent extends AbstractEvent implements IWVWScoresChangedEvent {
-	private final IWVWScores scores;
+abstract class AbstractWVWScoresChangedEvent extends AbstractEvent implements WVWScoresChangedEvent {
+	private final WVWScores scores;
 	private final int deltaRed;
 	private final int deltaGreen;
 	private final int deltaBlue;
 
-	public AbstractWVWScoresChangedEvent(final IWVWScores scores, final int deltaRed, final int deltaGreen, final int deltaBlue) {
+	public AbstractWVWScoresChangedEvent(final WVWScores scores, final int deltaRed, final int deltaGreen, final int deltaBlue) {
 		super();
 		checkNotNull(scores);
 		checkArgument(deltaRed >= 0);
@@ -45,7 +45,7 @@ abstract class AbstractWVWScoresChangedEvent extends AbstractEvent implements IW
 	}
 
 	@Override
-	public IWVWScores getScores() {
+	public WVWScores getScores() {
 		return this.scores;
 	}
 

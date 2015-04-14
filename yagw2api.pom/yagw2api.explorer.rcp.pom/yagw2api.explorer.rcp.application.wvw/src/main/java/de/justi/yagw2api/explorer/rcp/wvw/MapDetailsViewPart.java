@@ -66,31 +66,31 @@ import de.justi.yagw2api.explorer.rcp.swt.AggregatingSelectionProvider;
 import de.justi.yagw2api.explorer.rcp.swt.TypeSafeContentProvider;
 import de.justi.yagw2api.explorer.rcp.swt.TypeSafeTableViewerColumnSorter;
 import de.justi.yagw2api.explorer.rcp.swt.TypeSafeViewerLabelProvider;
-import de.justi.yagw2api.wrapper.domain.guild.IGuild;
-import de.justi.yagw2api.wrapper.domain.world.IWorld;
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWMap;
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWMatch;
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWObjective;
-import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWInitializedMatchEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWMapListener;
-import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWMapScoresChangedEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWMatchListener;
-import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWMatchScoresChangedEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWObjectiveCaptureEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWObjectiveClaimedEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWObjectiveEndOfBuffEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.IWVWObjectiveUnclaimedEvent;
+import de.justi.yagw2api.wrapper.domain.guild.Guild;
+import de.justi.yagw2api.wrapper.domain.world.World;
+import de.justi.yagw2api.wrapper.domain.wvw.WVWMap;
+import de.justi.yagw2api.wrapper.domain.wvw.WVWMatch;
+import de.justi.yagw2api.wrapper.domain.wvw.WVWObjective;
+import de.justi.yagw2api.wrapper.domain.wvw.event.WVWInitializedMatchEvent;
+import de.justi.yagw2api.wrapper.domain.wvw.event.WVWMapListener;
+import de.justi.yagw2api.wrapper.domain.wvw.event.WVWMapScoresChangedEvent;
+import de.justi.yagw2api.wrapper.domain.wvw.event.WVWMatchListener;
+import de.justi.yagw2api.wrapper.domain.wvw.event.WVWMatchScoresChangedEvent;
+import de.justi.yagw2api.wrapper.domain.wvw.event.WVWObjectiveCaptureEvent;
+import de.justi.yagw2api.wrapper.domain.wvw.event.WVWObjectiveClaimedEvent;
+import de.justi.yagw2api.wrapper.domain.wvw.event.WVWObjectiveEndOfBuffEvent;
+import de.justi.yagw2api.wrapper.domain.wvw.event.WVWObjectiveUnclaimedEvent;
 
-public class MapDetailsViewPart extends ViewPart implements ISelectionListener, ISelectionChangedListener, IWVWMatchListener, IWVWMapListener {
-	private static class MatchMapsContentProvider extends TypeSafeContentProvider<IWVWMatch> {
+public class MapDetailsViewPart extends ViewPart implements ISelectionListener, ISelectionChangedListener, WVWMatchListener, WVWMapListener {
+	private static class MatchMapsContentProvider extends TypeSafeContentProvider<WVWMatch> {
 		public MatchMapsContentProvider() {
-			super(IWVWMatch.class);
+			super(WVWMatch.class);
 		}
 
 		@Override
-		protected Object[] getTypeSafeElements(final IWVWMatch inputElement) {
+		protected Object[] getTypeSafeElements(final WVWMatch inputElement) {
 			if (inputElement != null) {
-				return new IWVWMap[] { inputElement.getRedMap(), inputElement.getGreenMap(), inputElement.getBlueMap(), inputElement.getCenterMap() };
+				return new WVWMap[] { inputElement.getRedMap(), inputElement.getGreenMap(), inputElement.getBlueMap(), inputElement.getCenterMap() };
 			} else {
 				return super.getTypeSafeElements(inputElement);
 			}
@@ -101,19 +101,19 @@ public class MapDetailsViewPart extends ViewPart implements ISelectionListener, 
 		}
 
 		@Override
-		protected void typeSafeInputChanged(final Viewer viewer, final IWVWMatch oldInput, final IWVWMatch newInput) {
+		protected void typeSafeInputChanged(final Viewer viewer, final WVWMatch oldInput, final WVWMatch newInput) {
 		}
 	}
 
-	private static class MapObjectivesContentProvider extends TypeSafeContentProvider<IWVWMap> {
+	private static class MapObjectivesContentProvider extends TypeSafeContentProvider<WVWMap> {
 		public MapObjectivesContentProvider() {
-			super(IWVWMap.class);
+			super(WVWMap.class);
 		}
 
 		@Override
-		protected Object[] getTypeSafeElements(final IWVWMap inputElement) {
+		protected Object[] getTypeSafeElements(final WVWMap inputElement) {
 			if (inputElement != null) {
-				return inputElement.getObjectives().toArray(new IWVWObjective[inputElement.getObjectives().size()]);
+				return inputElement.getObjectives().toArray(new WVWObjective[inputElement.getObjectives().size()]);
 			} else {
 				return super.getTypeSafeElements(inputElement);
 			}
@@ -124,15 +124,15 @@ public class MapDetailsViewPart extends ViewPart implements ISelectionListener, 
 		}
 
 		@Override
-		protected void typeSafeInputChanged(final Viewer viewer, final IWVWMap oldInput, final IWVWMap newInput) {
+		protected void typeSafeInputChanged(final Viewer viewer, final WVWMap oldInput, final WVWMap newInput) {
 		}
 	}
 
 	public static final String ID = "yagw2api.explorer.rcp.wvw.mapdetails"; //$NON-NLS-1$
 	private static final Logger LOGGER = LoggerFactory.getLogger(MapDetailsViewPart.class);
-	private static final Function<Optional<IGuild>, String> GUILD_2_STRING = guild -> guild.isPresent() ? "[" + guild.get().getTag() + "] " + guild.get().getName() : "";
-	private static final Function<Optional<IWorld>, String> WORLD_2_STRING = world -> world.isPresent() ? world.get().getName().or(String.valueOf(world.get().getId())) : "";
-	private static final Function<IWVWObjective, String> OBJECTIVE_2_STRING = objective -> objective.getLabel().or(objective.getType().getLabel());
+	private static final Function<Optional<Guild>, String> GUILD_2_STRING = guild -> guild.isPresent() ? "[" + guild.get().getTag() + "] " + guild.get().getName() : "";
+	private static final Function<Optional<World>, String> WORLD_2_STRING = world -> world.isPresent() ? world.get().getName().or(String.valueOf(world.get().getId())) : "";
+	private static final Function<WVWObjective, String> OBJECTIVE_2_STRING = objective -> objective.getLabel().or(objective.getType().getLabel());
 
 	private final AggregatingSelectionProvider selectionProvider;
 
@@ -166,9 +166,9 @@ public class MapDetailsViewPart extends ViewPart implements ISelectionListener, 
 		{
 			this.matchSelectionComboViewer = new ComboViewer(container, SWT.READ_ONLY);
 			this.matchSelectionComboViewer.addSelectionChangedListener(this.selectionProvider);
-			this.matchSelectionComboViewer.setLabelProvider(new TypeSafeViewerLabelProvider<IWVWMatch>(IWVWMatch.class) {
+			this.matchSelectionComboViewer.setLabelProvider(new TypeSafeViewerLabelProvider<WVWMatch>(WVWMatch.class) {
 				@Override
-				protected String getTypeSafeText(final IWVWMatch element) {
+				protected String getTypeSafeText(final WVWMatch element) {
 					return element.getRedWorld().getWorldLocation() + ": " + element.getRedWorld().getName().get() + " vs. " + element.getGreenWorld().getName().get() + " vs. "
 							+ element.getBlueWorld().getName().get();
 				}
@@ -187,9 +187,9 @@ public class MapDetailsViewPart extends ViewPart implements ISelectionListener, 
 		{
 			this.mapSelectionComboViewer = new ComboViewer(container, SWT.READ_ONLY);
 			this.mapSelectionComboViewer.addSelectionChangedListener(this.selectionProvider);
-			this.mapSelectionComboViewer.setLabelProvider(new TypeSafeViewerLabelProvider<IWVWMap>(IWVWMap.class) {
+			this.mapSelectionComboViewer.setLabelProvider(new TypeSafeViewerLabelProvider<WVWMap>(WVWMap.class) {
 				@Override
-				protected String getTypeSafeText(final IWVWMap element) {
+				protected String getTypeSafeText(final WVWMap element) {
 					final String fallback = element.getType().getLabel(Activator.getDefault().getLocale()).or(element.getType().toString());
 					if (element.getMatch().isPresent()) {
 						if (element.getType().isRed()) {
@@ -225,13 +225,13 @@ public class MapDetailsViewPart extends ViewPart implements ISelectionListener, 
 					TableViewerColumn tableViewerColumn = new TableViewerColumn(this.mapObjectivesTableViewer, SWT.NONE);
 					tableViewerColumn.setLabelProvider(new OwningWorldMatchingObjectiveColumnLabelProvider() {
 						@Override
-						protected String getTypeSafeText(final IWVWObjective element) {
+						protected String getTypeSafeText(final WVWObjective element) {
 							return OBJECTIVE_2_STRING.apply(element);
 						}
 					});
-					new TypeSafeTableViewerColumnSorter<IWVWObjective>(tableViewerColumn, IWVWObjective.class) {
+					new TypeSafeTableViewerColumnSorter<WVWObjective>(tableViewerColumn, WVWObjective.class) {
 						@Override
-						protected Object getTypeSafeValue(final IWVWObjective o) {
+						protected Object getTypeSafeValue(final WVWObjective o) {
 							return OBJECTIVE_2_STRING.apply(o);
 						}
 					};
@@ -243,13 +243,13 @@ public class MapDetailsViewPart extends ViewPart implements ISelectionListener, 
 					TableViewerColumn tableViewerColumn = new TableViewerColumn(this.mapObjectivesTableViewer, SWT.NONE);
 					tableViewerColumn.setLabelProvider(new OwningWorldMatchingObjectiveColumnLabelProvider() {
 						@Override
-						protected String getTypeSafeText(final IWVWObjective element) {
+						protected String getTypeSafeText(final WVWObjective element) {
 							return element.getType().getLabel();
 						}
 					});
-					new TypeSafeTableViewerColumnSorter<IWVWObjective>(tableViewerColumn, IWVWObjective.class) {
+					new TypeSafeTableViewerColumnSorter<WVWObjective>(tableViewerColumn, WVWObjective.class) {
 						@Override
-						protected Object getTypeSafeValue(final IWVWObjective o) {
+						protected Object getTypeSafeValue(final WVWObjective o) {
 							return o.getType().getLabel();
 						}
 					};
@@ -261,14 +261,14 @@ public class MapDetailsViewPart extends ViewPart implements ISelectionListener, 
 					TableViewerColumn tableViewerColumn = new TableViewerColumn(this.mapObjectivesTableViewer, SWT.NONE);
 					tableViewerColumn.setLabelProvider(new OwningWorldMatchingObjectiveColumnLabelProvider() {
 						@Override
-						protected String getTypeSafeText(final IWVWObjective element) {
+						protected String getTypeSafeText(final WVWObjective element) {
 							return String.valueOf(element.getType().getPoints());
 						}
 
 					});
-					new TypeSafeTableViewerColumnSorter<IWVWObjective>(tableViewerColumn, IWVWObjective.class) {
+					new TypeSafeTableViewerColumnSorter<WVWObjective>(tableViewerColumn, WVWObjective.class) {
 						@Override
-						protected Object getTypeSafeValue(final IWVWObjective o) {
+						protected Object getTypeSafeValue(final WVWObjective o) {
 							return o.getType().getPoints();
 						}
 					};
@@ -280,13 +280,13 @@ public class MapDetailsViewPart extends ViewPart implements ISelectionListener, 
 					TableViewerColumn tableViewerColumn = new TableViewerColumn(this.mapObjectivesTableViewer, SWT.NONE);
 					tableViewerColumn.setLabelProvider(new OwningWorldMatchingObjectiveColumnLabelProvider() {
 						@Override
-						protected String getTypeSafeText(final IWVWObjective element) {
+						protected String getTypeSafeText(final WVWObjective element) {
 							return WORLD_2_STRING.apply(element.getOwner());
 						}
 					});
-					new TypeSafeTableViewerColumnSorter<IWVWObjective>(tableViewerColumn, IWVWObjective.class) {
+					new TypeSafeTableViewerColumnSorter<WVWObjective>(tableViewerColumn, WVWObjective.class) {
 						@Override
-						protected Object getTypeSafeValue(final IWVWObjective o) {
+						protected Object getTypeSafeValue(final WVWObjective o) {
 							return WORLD_2_STRING.apply(o.getOwner());
 						}
 					};
@@ -298,13 +298,13 @@ public class MapDetailsViewPart extends ViewPart implements ISelectionListener, 
 					TableViewerColumn tableViewerColumn = new TableViewerColumn(this.mapObjectivesTableViewer, SWT.NONE);
 					tableViewerColumn.setLabelProvider(new OwningWorldMatchingObjectiveColumnLabelProvider() {
 						@Override
-						protected String getTypeSafeText(final IWVWObjective element) {
+						protected String getTypeSafeText(final WVWObjective element) {
 							return GUILD_2_STRING.apply(element.getClaimedByGuild());
 						}
 					});
-					new TypeSafeTableViewerColumnSorter<IWVWObjective>(tableViewerColumn, IWVWObjective.class) {
+					new TypeSafeTableViewerColumnSorter<WVWObjective>(tableViewerColumn, WVWObjective.class) {
 						@Override
-						protected Object getTypeSafeValue(final IWVWObjective o) {
+						protected Object getTypeSafeValue(final WVWObjective o) {
 							return GUILD_2_STRING.apply(o.getClaimedByGuild());
 						}
 					};
@@ -316,14 +316,14 @@ public class MapDetailsViewPart extends ViewPart implements ISelectionListener, 
 					TableViewerColumn tableViewerColumn = new TableViewerColumn(this.mapObjectivesTableViewer, SWT.NONE);
 					tableViewerColumn.setLabelProvider(new OwningWorldMatchingObjectiveColumnLabelProvider() {
 						@Override
-						protected String getTypeSafeText(final IWVWObjective element) {
+						protected String getTypeSafeText(final WVWObjective element) {
 							return WVWUIConstants.DURATION_FORMAT.apply(Duration.of(element.getRemainingBuffDuration(TimeUnit.SECONDS), ChronoUnit.SECONDS));
 
 						}
 					});
-					new TypeSafeTableViewerColumnSorter<IWVWObjective>(tableViewerColumn, IWVWObjective.class) {
+					new TypeSafeTableViewerColumnSorter<WVWObjective>(tableViewerColumn, WVWObjective.class) {
 						@Override
-						protected Object getTypeSafeValue(final IWVWObjective o) {
+						protected Object getTypeSafeValue(final WVWObjective o) {
 							return o.getRemainingBuffDuration(TimeUnit.SECONDS);
 						}
 					};
@@ -394,10 +394,10 @@ public class MapDetailsViewPart extends ViewPart implements ISelectionListener, 
 		checkNotNull(part, "missing part");
 		checkNotNull(selection, "missing selection");
 		final IStructuredSelection structuredSelection = (IStructuredSelection) selection;
-		if (structuredSelection.getFirstElement() instanceof IWVWMatch) {
-			this.selectMatch((IWVWMatch) structuredSelection.getFirstElement());
-		} else if (structuredSelection.getFirstElement() instanceof IWVWMap) {
-			this.selectMap((IWVWMap) structuredSelection.getFirstElement());
+		if (structuredSelection.getFirstElement() instanceof WVWMatch) {
+			this.selectMatch((WVWMatch) structuredSelection.getFirstElement());
+		} else if (structuredSelection.getFirstElement() instanceof WVWMap) {
+			this.selectMap((WVWMap) structuredSelection.getFirstElement());
 		}
 	}
 
@@ -405,10 +405,10 @@ public class MapDetailsViewPart extends ViewPart implements ISelectionListener, 
 	public void selectionChanged(final SelectionChangedEvent event) {
 		checkNotNull(event, "missing selection  event");
 		final IStructuredSelection structuredSelection = (IStructuredSelection) event.getSelection();
-		if (structuredSelection.getFirstElement() instanceof IWVWMatch) {
-			this.selectMatch((IWVWMatch) structuredSelection.getFirstElement());
-		} else if (structuredSelection.getFirstElement() instanceof IWVWMap) {
-			this.selectMap((IWVWMap) structuredSelection.getFirstElement());
+		if (structuredSelection.getFirstElement() instanceof WVWMatch) {
+			this.selectMatch((WVWMatch) structuredSelection.getFirstElement());
+		} else if (structuredSelection.getFirstElement() instanceof WVWMap) {
+			this.selectMap((WVWMap) structuredSelection.getFirstElement());
 		}
 	}
 
@@ -434,35 +434,35 @@ public class MapDetailsViewPart extends ViewPart implements ISelectionListener, 
 		});
 	}
 
-	private Optional<IWVWMap> getSelectedMap() {
+	private Optional<WVWMap> getSelectedMap() {
 		if (this.mapSelectionComboViewer.getSelection().isEmpty()) {
 			return Optional.absent();
 		} else {
 			final IStructuredSelection selection = (IStructuredSelection) this.mapSelectionComboViewer.getSelection();
-			checkState(selection.getFirstElement() instanceof IWVWMap, "expected %s to be instance of %s", selection.getFirstElement(), IWVWMap.class);
-			return Optional.of((IWVWMap) selection.getFirstElement());
+			checkState(selection.getFirstElement() instanceof WVWMap, "expected %s to be instance of %s", selection.getFirstElement(), WVWMap.class);
+			return Optional.of((WVWMap) selection.getFirstElement());
 		}
 	}
 
-	private Optional<IWVWMatch> getSelectedMatch() {
+	private Optional<WVWMatch> getSelectedMatch() {
 		if (this.matchSelectionComboViewer.getSelection().isEmpty()) {
 			return Optional.absent();
 		} else {
 			final IStructuredSelection selection = (IStructuredSelection) this.matchSelectionComboViewer.getSelection();
-			checkState(selection.getFirstElement() instanceof IWVWMatch, "expected %s to be instance of %s", selection.getFirstElement(), IWVWMatch.class);
-			return Optional.of((IWVWMatch) selection.getFirstElement());
+			checkState(selection.getFirstElement() instanceof WVWMatch, "expected %s to be instance of %s", selection.getFirstElement(), WVWMatch.class);
+			return Optional.of((WVWMatch) selection.getFirstElement());
 		}
 	}
 
-	private synchronized void selectMatch(final IWVWMatch match) {
+	private synchronized void selectMatch(final WVWMatch match) {
 		checkNotNull(match, "missing match");
-		final Optional<IWVWMatch> currentMatchSelection = this.getSelectedMatch();
+		final Optional<WVWMatch> currentMatchSelection = this.getSelectedMatch();
 		if (!currentMatchSelection.isPresent() || !currentMatchSelection.get().equals(match)) {
 			LOGGER.trace("Select match: {}", match);
 			this.matchSelectionComboViewer.setSelection(new StructuredSelection(match));
 			this.mapSelectionComboViewer.setInput(match);
 		}
-		final Optional<IWVWMap> currentMapSelection = this.getSelectedMap();
+		final Optional<WVWMap> currentMapSelection = this.getSelectedMap();
 		if (currentMapSelection.isPresent()) {
 			LOGGER.trace("Clear map selection for {}", match);
 			this.mapSelectionComboViewer.setSelection(StructuredSelection.EMPTY);
@@ -471,12 +471,12 @@ public class MapDetailsViewPart extends ViewPart implements ISelectionListener, 
 		}
 	}
 
-	private synchronized void selectMap(final IWVWMap map) {
+	private synchronized void selectMap(final WVWMap map) {
 		checkNotNull(map, "missing map");
-		final Optional<IWVWMap> currentMapSelection = this.getSelectedMap();
+		final Optional<WVWMap> currentMapSelection = this.getSelectedMap();
 		if (!currentMapSelection.isPresent() || !currentMapSelection.get().equals(map)) {
 			LOGGER.trace("Select map: {}", map);
-			final Optional<IWVWMatch> currentMatchSelection = this.getSelectedMatch();
+			final Optional<WVWMatch> currentMatchSelection = this.getSelectedMatch();
 			if (!currentMatchSelection.isPresent() && map.getMatch().isPresent()) {
 				this.selectMatch(map.getMatch().get());
 			}
@@ -496,37 +496,37 @@ public class MapDetailsViewPart extends ViewPart implements ISelectionListener, 
 	}
 
 	@Override
-	public void onInitializedMatchForWrapper(final IWVWInitializedMatchEvent e) {
+	public void onInitializedMatchForWrapper(final WVWInitializedMatchEvent e) {
 		this.refreshUIForMatchUpdate();
 	}
 
 	@Override
-	public void onMatchScoreChangedEvent(final IWVWMatchScoresChangedEvent e) {
+	public void onMatchScoreChangedEvent(final WVWMatchScoresChangedEvent e) {
 		this.refreshUIForMatchUpdate();
 	}
 
 	@Override
-	public void onChangedMapScoreEvent(final IWVWMapScoresChangedEvent e) {
+	public void onChangedMapScoreEvent(final WVWMapScoresChangedEvent e) {
 		this.refreshUIForMapUpdate();
 	}
 
 	@Override
-	public void onObjectiveCapturedEvent(final IWVWObjectiveCaptureEvent e) {
+	public void onObjectiveCapturedEvent(final WVWObjectiveCaptureEvent e) {
 		this.refreshUIForMapUpdate();
 	}
 
 	@Override
-	public void onObjectiveClaimedEvent(final IWVWObjectiveClaimedEvent e) {
+	public void onObjectiveClaimedEvent(final WVWObjectiveClaimedEvent e) {
 		this.refreshUIForMapUpdate();
 	}
 
 	@Override
-	public void onObjectiveEndOfBuffEvent(final IWVWObjectiveEndOfBuffEvent e) {
+	public void onObjectiveEndOfBuffEvent(final WVWObjectiveEndOfBuffEvent e) {
 		this.refreshUIForMapUpdate();
 	}
 
 	@Override
-	public void onObjectiveUnclaimedEvent(final IWVWObjectiveUnclaimedEvent e) {
+	public void onObjectiveUnclaimedEvent(final WVWObjectiveUnclaimedEvent e) {
 		this.refreshUIForMapUpdate();
 	}
 }

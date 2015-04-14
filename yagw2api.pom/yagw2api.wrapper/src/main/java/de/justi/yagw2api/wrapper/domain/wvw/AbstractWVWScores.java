@@ -29,16 +29,16 @@ import com.google.common.base.MoreObjects;
 import com.google.common.eventbus.EventBus;
 
 import de.justi.yagwapi.common.AbstractHasChannel;
-import de.justi.yagwapi.common.IUnmodifiable;
+import de.justi.yagwapi.common.Unmodifiable;
 
-abstract class AbstractWVWScores extends AbstractHasChannel implements IWVWScores {
+abstract class AbstractWVWScores extends AbstractHasChannel implements WVWScores {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractWVWScores.class);
 
-	final class UnmodifiableWVWScores implements IWVWScores, IUnmodifiable {
+	final class UnmodifiableWVWScores implements WVWScores, Unmodifiable {
 		@Override
 		public EventBus getChannel() {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName()
+			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + Unmodifiable.class.getSimpleName()
 					+ " and therefore can not be modified.");
 		}
 
@@ -59,12 +59,12 @@ abstract class AbstractWVWScores extends AbstractHasChannel implements IWVWScore
 
 		@Override
 		public void update(final int redScore, final int greenScore, final int blueScore) {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName()
+			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + Unmodifiable.class.getSimpleName()
 					+ " and therefore can not be modified.");
 		}
 
 		@Override
-		public IWVWScores createUnmodifiableReference() {
+		public WVWScores createUnmodifiableReference() {
 			return this;
 		}
 
@@ -121,7 +121,7 @@ abstract class AbstractWVWScores extends AbstractHasChannel implements IWVWScore
 	protected abstract void onChange(int deltaRed, int deltaGreen, int deltaBlue);
 
 	@Override
-	public IWVWScores createUnmodifiableReference() {
+	public WVWScores createUnmodifiableReference() {
 		return new UnmodifiableWVWScores();
 	}
 }

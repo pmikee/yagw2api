@@ -20,203 +20,37 @@ package de.justi.yagw2api.wrapper.domain.world;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
-
 import java.util.Locale;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 
 import de.justi.yagw2api.arenanet.dto.world.WorldNameDTO;
-import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
-import de.justi.yagw2api.wrapper.domain.IModelFactory;
-import de.justi.yagwapi.common.IUnmodifiable;
 
-public final class World implements IWorld {
-	private static final IModelFactory MODEL_FACTORY = YAGW2APIWrapper.INSTANCE.getModelFactory();
+public interface World {
 
-	public static final class WorldBuilder implements IWorld.IWorldBuilder {
-		private Optional<Integer> id = Optional.absent();
-		private Optional<Locale> locale = Optional.absent();
-		private Optional<IWorldLocationType> location = Optional.absent();
-		private Optional<String> name = Optional.absent();
+	static interface WorldBuilder {
+		World build();
 
-		@Override
-		public IWorld build() {
-			checkState(this.location.isPresent());
-			checkState(this.id.isPresent());
-			checkState(this.id.get() > 0);
-			final Optional<IWorld> worldOptional = MODEL_FACTORY.getWorld(this.id.get());
-			checkState(!worldOptional.isPresent() || (worldOptional.get() instanceof World));
-			final World world;
-			if (worldOptional.isPresent()) {
-				world = (World) worldOptional.get();
-				checkState(world.getId() == this.id.get());
-				checkState(((world.getWorldLocale() == null) && !this.locale.isPresent()) || world.getWorldLocale().equals(this.locale.orNull()));
-				checkState(world.getWorldLocation().equals(this.location.get()));
-			} else {
-				world = new World(this.id.get(), this.locale.orNull(), this.location.get());
-			}
-			if (this.name.isPresent()) {
-				world.setName(this.name.get());
-			}
-			return world;
-		}
+		WorldBuilder fromDTO(WorldNameDTO dto);
 
-		@Override
-		public IWorldBuilder fromDTO(final WorldNameDTO dto) {
-			checkArgument(dto.isEurope() ^ dto.isNorthAmerica());
-			if (dto.isEurope()) {
-				this.worldLocation(WorldLocationType.EUROPE);
-			} else if (dto.isNorthAmerica()) {
-				this.worldLocation(WorldLocationType.NORTH_AMERICA);
-			}
-			this.name(dto.getNameWithoutLocale());
-			this.worldLocale(dto.getWorldLocale().orNull());
-			this.id(dto.getId());
-			return this;
-		}
+		WorldBuilder worldLocation(WorldLocationType location);
 
-		@Override
-		public IWorldBuilder worldLocation(final IWorldLocationType location) {
-			this.location = Optional.fromNullable(location);
-			return this;
-		}
+		WorldBuilder name(String name);
 
-		@Override
-		public IWorldBuilder name(final String name) {
-			this.name = Optional.fromNullable(name);
-			return this;
-		}
+		WorldBuilder id(int id);
 
-		@Override
-		public IWorldBuilder id(final int id) {
-			checkArgument(id > 0);
-			this.id = Optional.of(id);
-			return this;
-		}
-
-		@Override
-		public IWorldBuilder worldLocale(final Locale locale) {
-			this.locale = Optional.fromNullable(locale);
-			return this;
-		}
-
+		WorldBuilder worldLocale(Locale locale);
 	}
 
-	class UnmodifiableWorld implements IUnmodifiable, IWorld {
+	int getId();
 
-		@Override
-		public int getId() {
-			return World.this.getId();
-		}
+	Optional<String> getName();
 
-		@Override
-		public Optional<String> getName() {
-			return World.this.getName();
-		}
+	void setName(String name);
 
-		@Override
-		public void setName(final String name) {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + IUnmodifiable.class.getSimpleName()
-					+ " and therefore can not be modified.");
-		}
+	Optional<Locale> getWorldLocale();
 
-		@Override
-		public IWorld createUnmodifiableReference() {
-			return this;
-		}
+	WorldLocationType getWorldLocation();
 
-		@Override
-		public String toString() {
-			return MoreObjects.toStringHelper(this).addValue(World.this.toString()).toString();
-		}
-
-		@Override
-		public int hashCode() {
-			return World.this.hashCode();
-		}
-
-		@Override
-		public boolean equals(final Object obj) {
-			return World.this.equals(obj);
-		}
-
-		@Override
-		public Optional<Locale> getWorldLocale() {
-			return World.this.getWorldLocale();
-		}
-
-		@Override
-		public IWorldLocationType getWorldLocation() {
-			return World.this.getWorldLocation();
-		}
-	}
-
-	private final int id;
-	private Optional<String> name = Optional.absent();
-	private final Optional<Locale> locale;
-	private final IWorldLocationType location;
-
-	public World(final int id, final Locale locale, final IWorldLocationType location) {
-		checkArgument(id > 0);
-		this.id = id;
-		this.locale = Optional.fromNullable(locale);
-		this.location = location;
-	}
-
-	@Override
-	public int getId() {
-		return this.id;
-	}
-
-	@Override
-	public Optional<String> getName() {
-		return this.name;
-	}
-
-	@Override
-	public String toString() {
-		return MoreObjects.toStringHelper(this).add("id", this.id).add("name", this.name).add("locale", this.locale).add("location", this.location).toString();
-	}
-
-	@Override
-	public void setName(final String name) {
-		checkNotNull(name);
-		this.name = Optional.of(name);
-	}
-
-	@Override
-	public IWorld createUnmodifiableReference() {
-		return this;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hashCode(this.getClass().getName(), this.id);
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if ((obj == null) || !(obj instanceof IWorld)) {
-			return false;
-		} else {
-			final IWorld world = (IWorld) obj;
-			return Objects.equal(this.id, world.getId());
-		}
-	}
-
-	@Override
-	public Optional<Locale> getWorldLocale() {
-		return this.locale;
-	}
-
-	@Override
-	public IWorldLocationType getWorldLocation() {
-		return this.location;
-	}
-
+	World createUnmodifiableReference();
 }

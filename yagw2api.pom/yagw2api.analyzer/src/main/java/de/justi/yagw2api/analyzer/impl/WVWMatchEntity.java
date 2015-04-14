@@ -55,8 +55,8 @@ import de.justi.yagw2api.analyzer.IWVWMapEntity;
 import de.justi.yagw2api.analyzer.IWVWMatchEntity;
 import de.justi.yagw2api.analyzer.IWVWScoresEmbeddable;
 import de.justi.yagw2api.analyzer.IWorldEntity;
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWMapType;
 import de.justi.yagw2api.wrapper.domain.wvw.WVWMapType;
+import de.justi.yagw2api.wrapper.domain.wvw.DefaultWVWMapType;
 
 @Entity(name = "wvw_match")
 @Converter(name = "localdatetime_converter", converterClass = LocalDateTimeConverter.class)
@@ -79,8 +79,8 @@ public final class WVWMatchEntity extends AbstractEntity implements IWVWMatchEnt
 
 	@OneToMany(targetEntity = WVWMapEntity.class, mappedBy = "match", cascade = { CascadeType.ALL })
 	@MapKeyColumn(name = "mapType")
-	@MapKeyClass(WVWMapType.class)
-	private Map<IWVWMapType, IWVWMapEntity> maps = Maps.newHashMap();
+	@MapKeyClass(DefaultWVWMapType.class)
+	private Map<WVWMapType, IWVWMapEntity> maps = Maps.newHashMap();
 
 	@Column(name = "startOfMatch")
 	@Temporal(TemporalType.TIMESTAMP)
@@ -154,22 +154,22 @@ public final class WVWMatchEntity extends AbstractEntity implements IWVWMatchEnt
 
 	@Override
 	public IWVWMapEntity getRedMap() {
-		return this.maps.get(WVWMapType.RED);
+		return this.maps.get(DefaultWVWMapType.RED);
 	}
 
 	@Override
 	public IWVWMapEntity getGreenMap() {
-		return this.maps.get(WVWMapType.GREEN);
+		return this.maps.get(DefaultWVWMapType.GREEN);
 	}
 
 	@Override
 	public IWVWMapEntity getBlueMap() {
-		return this.maps.get(WVWMapType.BLUE);
+		return this.maps.get(DefaultWVWMapType.BLUE);
 	}
 
 	@Override
 	public IWVWMapEntity getCenterMap() {
-		return this.maps.get(WVWMapType.CENTER);
+		return this.maps.get(DefaultWVWMapType.CENTER);
 	}
 
 	@Override
@@ -187,28 +187,28 @@ public final class WVWMatchEntity extends AbstractEntity implements IWVWMatchEnt
 	public void setRedMap(final IWVWMapEntity map) {
 		checkNotNull(map);
 		checkState(this.getRedMap() == null);
-		this.maps.put(WVWMapType.RED, map);
+		this.maps.put(DefaultWVWMapType.RED, map);
 	}
 
 	@Override
 	public void setGreenMap(final IWVWMapEntity map) {
 		checkNotNull(map);
 		checkState(this.getGreenMap() == null);
-		this.maps.put(WVWMapType.GREEN, map);
+		this.maps.put(DefaultWVWMapType.GREEN, map);
 	}
 
 	@Override
 	public void setBlueMap(final IWVWMapEntity map) {
 		checkNotNull(map);
 		checkState(this.getBlueMap() == null);
-		this.maps.put(WVWMapType.BLUE, map);
+		this.maps.put(DefaultWVWMapType.BLUE, map);
 	}
 
 	@Override
 	public void setCenterMap(final IWVWMapEntity map) {
 		checkNotNull(map);
 		checkState(this.getCenterMap() == null);
-		this.maps.put(WVWMapType.CENTER, map);
+		this.maps.put(DefaultWVWMapType.CENTER, map);
 	}
 
 	@Override

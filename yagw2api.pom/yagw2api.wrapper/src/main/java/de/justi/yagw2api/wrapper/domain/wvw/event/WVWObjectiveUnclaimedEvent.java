@@ -19,23 +19,11 @@ package de.justi.yagw2api.wrapper.domain.wvw.event;
  * limitations under the License.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-
 import com.google.common.base.Optional;
 
-import de.justi.yagw2api.wrapper.domain.guild.IGuild;
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWObjective;
+import de.justi.yagw2api.wrapper.domain.guild.Guild;
 
-final class WVWObjectiveUnclaimedEvent extends AbstractWVWObjectiveEvent implements IWVWObjectiveUnclaimedEvent {
-	private final Optional<IGuild> previousClaimedByGuild;
-
-	public WVWObjectiveUnclaimedEvent(final IWVWObjective source, final IGuild previousClaimedByGuild) {
-		super(source);
-		this.previousClaimedByGuild = Optional.fromNullable(previousClaimedByGuild);
-	}
-
-	@Override
-	public Optional<IGuild> previousClaimedByGuild() {
-		return this.previousClaimedByGuild;
-	}
+public interface WVWObjectiveUnclaimedEvent extends WVWObjectiveEvent {
+	Optional<Guild> previousClaimedByGuild();
 
 }

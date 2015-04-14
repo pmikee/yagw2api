@@ -21,25 +21,25 @@ package de.justi.yagw2api.wrapper.domain.wvw.event;
  */
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWMap;
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWObjective;
+import de.justi.yagw2api.wrapper.domain.wvw.WVWMap;
+import de.justi.yagw2api.wrapper.domain.wvw.WVWObjective;
 import de.justi.yagwapi.common.AbstractEvent;
 
-abstract class AbstractWVWObjectiveEvent extends AbstractEvent implements IWVWObjectiveEvent {
-	private final IWVWObjective source;
+abstract class AbstractWVWObjectiveEvent extends AbstractEvent implements WVWObjectiveEvent {
+	private final WVWObjective source;
 
-	public AbstractWVWObjectiveEvent(final IWVWObjective source) {
+	public AbstractWVWObjectiveEvent(final WVWObjective source) {
 		super();
 		this.source = checkNotNull(source);
 	}
 
 	@Override
-	public IWVWObjective getObjective() {
+	public WVWObjective getObjective() {
 		return this.source;
 	}
 
 	@Override
-	public IWVWMap getMap() {
+	public WVWMap getMap() {
 		checkState(this.getObjective().getMap().isPresent());
 		return this.getObjective().getMap().get();
 	}

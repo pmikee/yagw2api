@@ -21,7 +21,7 @@ package de.justi.yagwapi.common;
  */
 import com.google.common.eventbus.EventBus;
 
-public abstract class AbstractHasChannel implements IHasChannel {
+public abstract class AbstractHasChannel implements HasChannel {
 	private final EventBus channel = new EventBus(this.getChannelName());
 
 	@Override

@@ -26,18 +26,18 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 import de.justi.yagw2api.explorer.rcp.swt.TypeSafeContentProvider;
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWMatch;
-import de.justi.yagw2api.wrapper.wvw.IWVWWrapper;
+import de.justi.yagw2api.wrapper.domain.wvw.WVWMatch;
+import de.justi.yagw2api.wrapper.wvw.WVWWrapper;
 
-final class MatchesContentProvider extends TypeSafeContentProvider<IWVWWrapper> implements IStructuredContentProvider {
+final class MatchesContentProvider extends TypeSafeContentProvider<WVWWrapper> implements IStructuredContentProvider {
 	public MatchesContentProvider() {
-		super(IWVWWrapper.class);
+		super(WVWWrapper.class);
 	}
 
 	@Override
-	public Object[] getTypeSafeElements(final IWVWWrapper inputElement) {
-		final Set<IWVWMatch> matches = inputElement.getAllMatches();
-		return matches.toArray(new IWVWMatch[matches.size()]);
+	public Object[] getTypeSafeElements(final WVWWrapper inputElement) {
+		final Set<WVWMatch> matches = inputElement.getAllMatches();
+		return matches.toArray(new WVWMatch[matches.size()]);
 	}
 
 	@Override
@@ -45,6 +45,6 @@ final class MatchesContentProvider extends TypeSafeContentProvider<IWVWWrapper> 
 	}
 
 	@Override
-	public void typeSafeInputChanged(final Viewer viewer, final IWVWWrapper oldInput, final IWVWWrapper newInput) {
+	public void typeSafeInputChanged(final Viewer viewer, final WVWWrapper oldInput, final WVWWrapper newInput) {
 	}
 }

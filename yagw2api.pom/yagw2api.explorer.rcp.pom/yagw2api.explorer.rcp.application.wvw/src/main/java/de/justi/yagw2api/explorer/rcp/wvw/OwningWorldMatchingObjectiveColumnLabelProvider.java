@@ -23,20 +23,20 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import de.justi.yagw2api.explorer.rcp.swt.TypeSafeColumnLabelProvider;
-import de.justi.yagw2api.wrapper.domain.world.IWorld;
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWMatch;
-import de.justi.yagw2api.wrapper.domain.wvw.IWVWObjective;
+import de.justi.yagw2api.wrapper.domain.world.World;
+import de.justi.yagw2api.wrapper.domain.wvw.WVWMatch;
+import de.justi.yagw2api.wrapper.domain.wvw.WVWObjective;
 
-class OwningWorldMatchingObjectiveColumnLabelProvider extends TypeSafeColumnLabelProvider<IWVWObjective> {
+class OwningWorldMatchingObjectiveColumnLabelProvider extends TypeSafeColumnLabelProvider<WVWObjective> {
 	public OwningWorldMatchingObjectiveColumnLabelProvider() {
-		super(IWVWObjective.class);
+		super(WVWObjective.class);
 	}
 
 	@Override
-	protected Color getTypeSafeBackground(final IWVWObjective element) {
+	protected Color getTypeSafeBackground(final WVWObjective element) {
 		if (element.getOwner().isPresent() && element.getMap().isPresent() && element.getMap().get().getMatch().isPresent()) {
-			final IWorld world = element.getOwner().get();
-			final IWVWMatch match = element.getMap().get().getMatch().get();
+			final World world = element.getOwner().get();
+			final WVWMatch match = element.getMap().get().getMatch().get();
 			if (world.equals(match.getRedWorld())) {
 				return SWTResourceManager.getColor(WVWUIConstants.RGB_RED_WORLD_BG);
 			} else if (world.equals(match.getGreenWorld())) {
@@ -52,10 +52,10 @@ class OwningWorldMatchingObjectiveColumnLabelProvider extends TypeSafeColumnLabe
 	}
 
 	@Override
-	protected Color getTypeSafeForeground(final IWVWObjective element) {
+	protected Color getTypeSafeForeground(final WVWObjective element) {
 		if (element.getOwner().isPresent() && element.getMap().isPresent() && element.getMap().get().getMatch().isPresent()) {
-			final IWorld world = element.getOwner().get();
-			final IWVWMatch match = element.getMap().get().getMatch().get();
+			final World world = element.getOwner().get();
+			final WVWMatch match = element.getMap().get().getMatch().get();
 			if (world.equals(match.getRedWorld())) {
 				return SWTResourceManager.getColor(WVWUIConstants.RGB_RED_WORLD_FG);
 			} else if (world.equals(match.getGreenWorld())) {
