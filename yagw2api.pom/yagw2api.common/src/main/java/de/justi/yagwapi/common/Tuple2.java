@@ -92,7 +92,7 @@ public final class Tuple2<V1, V2> implements Tuple<V1, V2> {
 
 	@Override
 	public String toString() {
-		return MoreObjects.toStringHelper(this).add("v1", this.value1).add("v2", this.value2).toString();
+		return MoreObjects.toStringHelper("").addValue(this.value1).addValue(this.value2).toString();
 	}
 
 	@Override

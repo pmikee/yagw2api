@@ -57,7 +57,7 @@ final class WVWSynchronizerAction extends AbstractSynchronizerAction<String, WVW
 	private static final int MAX_CHUNK_SIZE = 1;
 	private static final Logger LOGGER = LoggerFactory.getLogger(WVWSynchronizerAction.class);
 	private static final WVWService WVW_SERVICE = YAGW2APIArenanet.INSTANCE.getWVWService();
-	private static final DomainFactory MODEL_FACTORY = YAGW2APIWrapper.INSTANCE.getModelFactory();
+	private static final DomainFactory MODEL_FACTORY = YAGW2APIWrapper.INSTANCE.getDomainFactory();
 
 	private final Map<String, WVWMatch> matchesMappedById;
 

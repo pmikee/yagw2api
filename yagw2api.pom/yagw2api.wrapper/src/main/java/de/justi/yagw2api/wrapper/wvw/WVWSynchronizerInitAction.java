@@ -50,8 +50,8 @@ final class WVWSynchronizerInitAction extends AbstractSynchronizerAction<WVWMatc
 	private static final long serialVersionUID = 2446713690087630720L;
 	private static final int MAX_CHUNK_SIZE = 100; // init all matches with one
 													// thread
-	private static final WVWDomainFactory WVW_MODEL_FACTORY = YAGW2APIWrapper.INSTANCE.getWVWModelFactory();
-	private static final WVWModelEventFactory WVW_MODEL_EVENT_FACTORY = YAGW2APIWrapper.INSTANCE.getWVWModelEventFactory();
+	private static final WVWDomainFactory WVW_MODEL_FACTORY = YAGW2APIWrapper.INSTANCE.getWVWDomainFactory();
+	private static final WVWModelEventFactory WVW_MODEL_EVENT_FACTORY = YAGW2APIWrapper.INSTANCE.getWVWDomainEventFactory();
 
 	final Set<WVWMatch> matchReferencesBuffer;
 	final Set<World> worldReferencesBuffer;

@@ -44,6 +44,7 @@ import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
 
 import de.justi.yagw2api.arenanet.dto.map.MapContinentDTO;
+import de.justi.yagw2api.arenanet.dto.map.MapContinentWithIdDTO;
 import de.justi.yagw2api.arenanet.dto.map.MapContinentsDTO;
 import de.justi.yagw2api.arenanet.dto.map.MapDTOFactory;
 import de.justi.yagwapi.common.RetryClientFilter;
@@ -62,10 +63,10 @@ final class DefaultMapContinentService implements MapContinentService {
 	}
 
 	// FIELDS
-	private final LoadingCache<Locale, Iterable<MapContinentDTO>> mapContinentsCache = CacheBuilder.newBuilder().expireAfterWrite(CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS)
-			.build(new CacheLoader<Locale, Iterable<MapContinentDTO>>() {
+	private final LoadingCache<Locale, Iterable<MapContinentWithIdDTO>> mapContinentsCache = CacheBuilder.newBuilder().expireAfterWrite(CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS)
+			.build(new CacheLoader<Locale, Iterable<MapContinentWithIdDTO>>() {
 				@Override
-				public Iterable<MapContinentDTO> load(final Locale key) throws Exception {
+				public Iterable<MapContinentWithIdDTO> load(final Locale key) throws Exception {
 					final WebResource resource = ArenanetUtils.REST_CLIENT.resource(MAP_CONTINENTS_URL.toExternalForm()).queryParam("lang", key.toLanguageTag());
 					try {
 						resource.addFilter(new RetryClientFilter(ArenanetUtils.REST_RETRY_COUNT));
@@ -92,7 +93,7 @@ final class DefaultMapContinentService implements MapContinentService {
 	// METHODS
 
 	@Override
-	public Iterable<MapContinentDTO> retrieveAllContinents(final Locale lang) {
+	public Iterable<MapContinentWithIdDTO> retrieveAllContinents(final Locale lang) {
 		checkNotNull(lang, "missing lang");
 		try {
 			return this.mapContinentsCache.get(lang);
@@ -100,5 +101,10 @@ final class DefaultMapContinentService implements MapContinentService {
 			LOGGER.error("Failed to retrieve {} from cache for  lang={}", MapContinentDTO.class, lang, e);
 			throw new IllegalStateException("Failed to retrieve " + MapContinentDTO.class.getSimpleName() + " from cache forlang=" + lang, e);
 		}
+	}
+
+	@Override
+	public Iterable<MapContinentWithIdDTO> retrieveAllContinents() {
+		return this.retrieveAllContinents(YAGW2APIArenanet.INSTANCE.getCurrentLocale());
 	}
 }

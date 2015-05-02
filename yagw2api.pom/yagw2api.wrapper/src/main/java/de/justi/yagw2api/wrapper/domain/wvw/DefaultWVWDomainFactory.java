@@ -22,7 +22,8 @@ package de.justi.yagw2api.wrapper.domain.wvw;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public final class DefaultWVWDomainFactory implements WVWDomainFactory {
+public enum DefaultWVWDomainFactory implements WVWDomainFactory {
+	INSTANCE;
 
 	@Override
 	public WVWMap.WVWMapBuilder newMapBuilder() {

@@ -60,8 +60,8 @@ import de.justi.yagwapi.common.Unmodifiable;
 
 final class DefaultWVWMatch extends AbstractHasChannel implements WVWMatch {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultWVWMatch.class);
-	private static final WVWDomainFactory WVW_MODEL_FACTORY = YAGW2APIWrapper.INSTANCE.getWVWModelFactory();
-	private static final DomainFactory MODEL_FACTORY = YAGW2APIWrapper.INSTANCE.getModelFactory();
+	private static final WVWDomainFactory WVW_MODEL_FACTORY = YAGW2APIWrapper.INSTANCE.getWVWDomainFactory();
+	private static final DomainFactory MODEL_FACTORY = YAGW2APIWrapper.INSTANCE.getDomainFactory();
 
 	final class UnmodifiableWVWMatch implements WVWMatch, Unmodifiable {
 

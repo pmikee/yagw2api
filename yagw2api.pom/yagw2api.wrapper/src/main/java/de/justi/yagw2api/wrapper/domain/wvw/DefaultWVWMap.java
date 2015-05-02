@@ -59,7 +59,7 @@ import de.justi.yagwapi.common.Unmodifiable;
 final class DefaultWVWMap extends AbstractHasChannel implements WVWMap {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultWVWMap.class);
-	private static final WVWDomainFactory WVW_MODEL_FACTORY = YAGW2APIWrapper.INSTANCE.getWVWModelFactory();
+	private static final WVWDomainFactory WVW_MODEL_FACTORY = YAGW2APIWrapper.INSTANCE.getWVWDomainFactory();
 
 	class UnmodifiableWVWMap implements WVWMap, Unmodifiable {
 

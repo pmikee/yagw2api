@@ -114,7 +114,7 @@ public final class Tuple4<V1, V2, V3, V4> implements Tuple<V1, V4> {
 
 	@Override
 	public String toString() {
-		return MoreObjects.toStringHelper(this).add("v1", this.value1).add("v2", this.value2).add("v3", this.value3).add("v4", this.value4).toString();
+		return MoreObjects.toStringHelper("").addValue(this.value1).addValue(this.value2).addValue(this.value3).addValue(this.value4).toString();
 	}
 
 	@Override

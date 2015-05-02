@@ -32,7 +32,7 @@ import de.justi.yagw2api.wrapper.domain.wvw.event.WVWModelEventFactory;
 
 final class DefaultWVWMatchScores extends AbstractWVWScores {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultWVWMatchScores.class);
-	private static final WVWModelEventFactory WVW_MODEL_EVENT_FACTORY = YAGW2APIWrapper.INSTANCE.getWVWModelEventFactory();
+	private static final WVWModelEventFactory WVW_MODEL_EVENT_FACTORY = YAGW2APIWrapper.INSTANCE.getWVWDomainEventFactory();
 
 	private final WVWMatch match;
 

@@ -36,7 +36,7 @@ import de.justi.yagw2api.wrapper.domain.DomainFactory;
 import de.justi.yagwapi.common.Unmodifiable;
 
 public final class DefaultWorld implements World {
-	private static final DomainFactory MODEL_FACTORY = YAGW2APIWrapper.INSTANCE.getModelFactory();
+	private static final DomainFactory MODEL_FACTORY = YAGW2APIWrapper.INSTANCE.getDomainFactory();
 
 	public static final class DefaultWorldBuilder implements World.WorldBuilder {
 		private Optional<Integer> id = Optional.absent();

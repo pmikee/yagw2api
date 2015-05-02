@@ -37,7 +37,7 @@ import de.justi.yagw2api.wrapper.domain.world.DefaultWorldLocationType;
 
 public final class WVWWorldEntityDAOTest extends AbstractAnalyzerTest {
 
-	private DomainFactory modelFactory = YAGW2APIWrapper.INSTANCE.getModelFactory();
+	private DomainFactory modelFactory = YAGW2APIWrapper.INSTANCE.getDomainFactory();
 
 	private World world1;
 	private World world2;

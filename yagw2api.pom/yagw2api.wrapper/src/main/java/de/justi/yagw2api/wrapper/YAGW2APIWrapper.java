@@ -29,6 +29,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 import de.justi.yagw2api.wrapper.domain.DomainFactory;
+import de.justi.yagw2api.wrapper.domain.map.MapDomainFactory;
 import de.justi.yagw2api.wrapper.domain.wvw.WVWDomainFactory;
 import de.justi.yagw2api.wrapper.domain.wvw.event.WVWModelEventFactory;
 import de.justi.yagw2api.wrapper.wvw.WVWWrapper;
@@ -39,9 +40,10 @@ public enum YAGW2APIWrapper {
 	private static final int THREAD_COUNT_PER_PROCESSOR = 2;
 
 	private final ForkJoinPool forkJoinPool;
-	private final DomainFactory modelFactory;
-	private final WVWDomainFactory wvwModelFactory;
-	private final WVWModelEventFactory wvwModelEventFactory;
+	private final DomainFactory domainFactory;
+	private final WVWDomainFactory wvwDomainFactory;
+	private final WVWModelEventFactory wvwDomainEventFactory;
+	private final MapDomainFactory mapDomainFactory;
 	private final WVWWrapper wrapper;
 
 	private YAGW2APIWrapper() {
@@ -53,9 +55,10 @@ public enum YAGW2APIWrapper {
 						LOGGER.error("Uncought exception thrown in {}", t, e);
 					}
 				}, false);
-		this.modelFactory = injector.getInstance(DomainFactory.class);
-		this.wvwModelFactory = injector.getInstance(WVWDomainFactory.class);
-		this.wvwModelEventFactory = injector.getInstance(WVWModelEventFactory.class);
+		this.domainFactory = injector.getInstance(DomainFactory.class);
+		this.wvwDomainFactory = injector.getInstance(WVWDomainFactory.class);
+		this.mapDomainFactory = injector.getInstance(MapDomainFactory.class);
+		this.wvwDomainEventFactory = injector.getInstance(WVWModelEventFactory.class);
 		this.wrapper = injector.getInstance(WVWWrapper.class);
 	}
 
@@ -63,16 +66,20 @@ public enum YAGW2APIWrapper {
 		return this.forkJoinPool;
 	}
 
-	public DomainFactory getModelFactory() {
-		return this.modelFactory;
+	public DomainFactory getDomainFactory() {
+		return this.domainFactory;
 	}
 
-	public WVWDomainFactory getWVWModelFactory() {
-		return this.wvwModelFactory;
+	public MapDomainFactory getMapDomainFactory() {
+		return this.mapDomainFactory;
 	}
 
-	public WVWModelEventFactory getWVWModelEventFactory() {
-		return this.wvwModelEventFactory;
+	public WVWDomainFactory getWVWDomainFactory() {
+		return this.wvwDomainFactory;
+	}
+
+	public WVWModelEventFactory getWVWDomainEventFactory() {
+		return this.wvwDomainEventFactory;
 	}
 
 	public WVWWrapper getWVWWrapper() {

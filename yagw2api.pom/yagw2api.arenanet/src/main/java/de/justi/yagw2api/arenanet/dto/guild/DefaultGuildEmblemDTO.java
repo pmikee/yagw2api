@@ -22,7 +22,7 @@ package de.justi.yagw2api.arenanet.dto.guild;
 
 import java.util.Arrays;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 
@@ -84,7 +84,7 @@ final class DefaultGuildEmblemDTO implements GuildEmblemDTO {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("backgroundId", this.getBackgroundId()).add("foregroundId", this.getForegroundId())
+		return MoreObjects.toStringHelper(this).add("backgroundId", this.getBackgroundId()).add("foregroundId", this.getForegroundId())
 				.add("backgroundColorId", this.getBackgroundColorId()).add("foregroundPrimaryColorId", this.getForegroundPrimaryColorId())
 				.add("foregroundSecondaryColorId", this.getForegroundSecondaryColorId()).add("flags", Arrays.deepToString(this.flags)).toString();
 	}

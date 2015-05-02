@@ -53,8 +53,8 @@ import de.justi.yagwapi.common.Unmodifiable;
 
 final class DefaultWVWObjective extends AbstractHasChannel implements WVWObjective {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultWVWObjective.class);
-	private static final WVWModelEventFactory WVW_MODEL_EVENTS_FACTORY = YAGW2APIWrapper.INSTANCE.getWVWModelEventFactory();
-	private static final DomainFactory MODEL_FACTORY = YAGW2APIWrapper.INSTANCE.getModelFactory();
+	private static final WVWModelEventFactory WVW_MODEL_EVENTS_FACTORY = YAGW2APIWrapper.INSTANCE.getWVWDomainEventFactory();
+	private static final DomainFactory MODEL_FACTORY = YAGW2APIWrapper.INSTANCE.getDomainFactory();
 
 	final class UnmodifiableWVWObjective implements WVWObjective, Unmodifiable {
 
