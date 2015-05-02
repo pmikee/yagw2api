@@ -38,19 +38,19 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.eventbus.Subscribe;
 import com.sun.jersey.client.impl.CopyOnWriteHashMap;
 
-import de.justi.yagw2api.wrapper.domain.world.World;
-import de.justi.yagw2api.wrapper.domain.wvw.WVWMap;
-import de.justi.yagw2api.wrapper.domain.wvw.WVWMatch;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWInitializedMatchEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWMapEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWMapListener;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWMapScoresChangedEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWMatchEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWMatchListener;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWMatchScoresChangedEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWObjectiveCaptureEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWObjectiveClaimedEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWObjectiveEndOfBuffEvent;
+import de.justi.yagw2api.wrapper.world.domain.World;
+import de.justi.yagw2api.wrapper.wvw.domain.WVWMap;
+import de.justi.yagw2api.wrapper.wvw.domain.WVWMatch;
+import de.justi.yagw2api.wrapper.wvw.event.WVWInitializedMatchEvent;
+import de.justi.yagw2api.wrapper.wvw.event.WVWMapEvent;
+import de.justi.yagw2api.wrapper.wvw.event.WVWMapListener;
+import de.justi.yagw2api.wrapper.wvw.event.WVWMapScoresChangedEvent;
+import de.justi.yagw2api.wrapper.wvw.event.WVWMatchEvent;
+import de.justi.yagw2api.wrapper.wvw.event.WVWMatchListener;
+import de.justi.yagw2api.wrapper.wvw.event.WVWMatchScoresChangedEvent;
+import de.justi.yagw2api.wrapper.wvw.event.WVWObjectiveCaptureEvent;
+import de.justi.yagw2api.wrapper.wvw.event.WVWObjectiveClaimedEvent;
+import de.justi.yagw2api.wrapper.wvw.event.WVWObjectiveEndOfBuffEvent;
 
 public final class DefaultWVWWrapper implements WVWWrapper {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultWVWWrapper.class);

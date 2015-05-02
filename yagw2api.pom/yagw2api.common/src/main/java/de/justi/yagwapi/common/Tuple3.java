@@ -77,6 +77,21 @@ public final class Tuple3<V1, V2, V3> implements Tuple<V1, V3> {
 		return Optional.fromNullable(this.value3);
 	}
 
+	@Nullable
+	public final V1 v1() {
+		return this.value1;
+	}
+
+	@Nullable
+	public final V2 v2() {
+		return this.value2;
+	}
+
+	@Nullable
+	public final V3 v3() {
+		return this.value3;
+	}
+
 	public final Optional<V1> getValue1() {
 		return Optional.fromNullable(this.value1);
 	}

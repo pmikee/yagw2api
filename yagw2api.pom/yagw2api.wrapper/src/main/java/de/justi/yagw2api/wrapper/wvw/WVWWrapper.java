@@ -23,11 +23,11 @@ package de.justi.yagw2api.wrapper.wvw;
 import java.util.Map;
 import java.util.Set;
 
-import de.justi.yagw2api.wrapper.domain.world.World;
-import de.justi.yagw2api.wrapper.domain.wvw.WVWMap;
-import de.justi.yagw2api.wrapper.domain.wvw.WVWMatch;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWMapListener;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWMatchListener;
+import de.justi.yagw2api.wrapper.world.domain.World;
+import de.justi.yagw2api.wrapper.wvw.domain.WVWMap;
+import de.justi.yagw2api.wrapper.wvw.domain.WVWMatch;
+import de.justi.yagw2api.wrapper.wvw.event.WVWMapListener;
+import de.justi.yagw2api.wrapper.wvw.event.WVWMatchListener;
 
 public interface WVWWrapper {
 	/**

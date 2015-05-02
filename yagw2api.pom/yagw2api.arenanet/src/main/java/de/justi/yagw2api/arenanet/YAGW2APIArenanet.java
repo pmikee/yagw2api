@@ -74,7 +74,7 @@ public enum YAGW2APIArenanet implements Arenanet, UncaughtExceptionHandler {
 	// CONSTRUCTOR
 	private YAGW2APIArenanet() {
 		this.forkJoinPool = new ForkJoinPool(Runtime.getRuntime().availableProcessors() * THREAD_COUNT_PER_PROCESSOR, ForkJoinPool.defaultForkJoinWorkerThreadFactory, this, false);
-		final Injector injector = Guice.createInjector(new Module());
+		final Injector injector = Guice.createInjector(new ArenanetModule());
 		injector.injectMembers(this);
 		checkNotNull(this.wvwService, "missing wvwService");
 		checkNotNull(this.guildService, "missing guildService");

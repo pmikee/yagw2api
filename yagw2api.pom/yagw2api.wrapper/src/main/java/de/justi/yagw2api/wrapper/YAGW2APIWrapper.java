@@ -20,6 +20,8 @@ package de.justi.yagw2api.wrapper;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.concurrent.ForkJoinPool;
 
 import org.slf4j.Logger;
@@ -28,11 +30,10 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-import de.justi.yagw2api.wrapper.domain.DomainFactory;
-import de.justi.yagw2api.wrapper.domain.map.MapDomainFactory;
-import de.justi.yagw2api.wrapper.domain.wvw.WVWDomainFactory;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWModelEventFactory;
+import de.justi.yagw2api.wrapper.map.domain.MapDomainFactory;
 import de.justi.yagw2api.wrapper.wvw.WVWWrapper;
+import de.justi.yagw2api.wrapper.wvw.domain.WVWDomainFactory;
+import de.justi.yagw2api.wrapper.wvw.event.WVWModelEventFactory;
 
 public enum YAGW2APIWrapper {
 	INSTANCE;
@@ -40,14 +41,13 @@ public enum YAGW2APIWrapper {
 	private static final int THREAD_COUNT_PER_PROCESSOR = 2;
 
 	private final ForkJoinPool forkJoinPool;
-	private final DomainFactory domainFactory;
 	private final WVWDomainFactory wvwDomainFactory;
 	private final WVWModelEventFactory wvwDomainEventFactory;
 	private final MapDomainFactory mapDomainFactory;
 	private final WVWWrapper wrapper;
 
 	private YAGW2APIWrapper() {
-		final Injector injector = Guice.createInjector(new Module());
+		final Injector injector = Guice.createInjector(new WrapperModule());
 		this.forkJoinPool = new ForkJoinPool(Runtime.getRuntime().availableProcessors() * THREAD_COUNT_PER_PROCESSOR, ForkJoinPool.defaultForkJoinWorkerThreadFactory,
 				new Thread.UncaughtExceptionHandler() {
 					@Override
@@ -55,19 +55,14 @@ public enum YAGW2APIWrapper {
 						LOGGER.error("Uncought exception thrown in {}", t, e);
 					}
 				}, false);
-		this.domainFactory = injector.getInstance(DomainFactory.class);
-		this.wvwDomainFactory = injector.getInstance(WVWDomainFactory.class);
-		this.mapDomainFactory = injector.getInstance(MapDomainFactory.class);
-		this.wvwDomainEventFactory = injector.getInstance(WVWModelEventFactory.class);
-		this.wrapper = injector.getInstance(WVWWrapper.class);
+		this.wvwDomainFactory = checkNotNull(injector.getInstance(WVWDomainFactory.class), "failed to inject WVWDomainFactory via %s", injector);
+		this.mapDomainFactory = checkNotNull(injector.getInstance(MapDomainFactory.class), "failed to inject MapDomainFactory via %s", injector);
+		this.wvwDomainEventFactory = checkNotNull(injector.getInstance(WVWModelEventFactory.class), "failed to inject WVWModelEventFactory via %s", injector);
+		this.wrapper = checkNotNull(injector.getInstance(WVWWrapper.class), "failed to inject WVWWrapper via %s", injector);
 	}
 
 	public ForkJoinPool getForkJoinPool() {
 		return this.forkJoinPool;
-	}
-
-	public DomainFactory getDomainFactory() {
-		return this.domainFactory;
 	}
 
 	public MapDomainFactory getMapDomainFactory() {

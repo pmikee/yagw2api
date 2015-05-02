@@ -29,8 +29,7 @@ import de.justi.yagw2api.arenanet.MapContinentService;
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
 import de.justi.yagw2api.arenanet.dto.map.MapContinentWithIdDTO;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
-import de.justi.yagw2api.wrapper.domain.map.Continent;
-import de.justi.yagw2api.wrapper.domain.map.ContinentMap;
+import de.justi.yagw2api.wrapper.map.domain.Continent;
 
 public enum DefaultMapWrapper implements MapWrapper {
 	INSTANCE;
@@ -53,11 +52,4 @@ public enum DefaultMapWrapper implements MapWrapper {
 	public Iterable<Continent> getContinents() {
 		return Iterables.transform(SERVICE.retrieveAllContinents(), CONTINENT_CONVERTER);
 	}
-
-	@Override
-	public ContinentMap getContinentMap(final Continent continent) {
-		// FIXME
-		return null;
-	}
-
 }

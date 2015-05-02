@@ -39,10 +39,10 @@ import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
 import de.justi.yagw2api.arenanet.dto.wvw.WVWMatchDTO;
 import de.justi.yagw2api.wrapper.AbstractSynchronizerAction;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
-import de.justi.yagw2api.wrapper.domain.world.World;
-import de.justi.yagw2api.wrapper.domain.wvw.WVWMatch;
-import de.justi.yagw2api.wrapper.domain.wvw.WVWDomainFactory;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWModelEventFactory;
+import de.justi.yagw2api.wrapper.world.domain.World;
+import de.justi.yagw2api.wrapper.wvw.domain.WVWDomainFactory;
+import de.justi.yagw2api.wrapper.wvw.domain.WVWMatch;
+import de.justi.yagw2api.wrapper.wvw.event.WVWModelEventFactory;
 import de.justi.yagwapi.common.HasChannel;
 
 final class WVWSynchronizerInitAction extends AbstractSynchronizerAction<WVWMatchDTO, WVWSynchronizerInitAction> implements HasChannel {

@@ -1,7 +1,6 @@
 package de.justi.yagw2api.wrapper.map;
 
-import de.justi.yagw2api.wrapper.domain.map.Continent;
-import de.justi.yagw2api.wrapper.domain.map.ContinentMap;
+import de.justi.yagw2api.wrapper.map.domain.Continent;
 
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -25,6 +24,4 @@ import de.justi.yagw2api.wrapper.domain.map.ContinentMap;
 
 public interface MapWrapper {
 	Iterable<Continent> getContinents();
-
-	ContinentMap getContinentMap(Continent continent);
 }

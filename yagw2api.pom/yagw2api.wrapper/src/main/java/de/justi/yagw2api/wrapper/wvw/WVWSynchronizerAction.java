@@ -43,21 +43,18 @@ import de.justi.yagw2api.arenanet.dto.wvw.WVWMatchDetailsDTO;
 import de.justi.yagw2api.arenanet.dto.wvw.WVWObjectiveDTO;
 import de.justi.yagw2api.arenanet.dto.wvw.WVWObjectiveNameDTO;
 import de.justi.yagw2api.wrapper.AbstractSynchronizerAction;
-import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
-import de.justi.yagw2api.wrapper.domain.DomainFactory;
-import de.justi.yagw2api.wrapper.domain.guild.Guild;
-import de.justi.yagw2api.wrapper.domain.world.World;
-import de.justi.yagw2api.wrapper.domain.wvw.WVWMap;
-import de.justi.yagw2api.wrapper.domain.wvw.WVWMatch;
-import de.justi.yagw2api.wrapper.domain.wvw.WVWObjective;
-import de.justi.yagw2api.wrapper.domain.wvw.DefaultWVWMapType;
+import de.justi.yagw2api.wrapper.guild.domain.Guild;
+import de.justi.yagw2api.wrapper.world.domain.World;
+import de.justi.yagw2api.wrapper.wvw.domain.WVWMap;
+import de.justi.yagw2api.wrapper.wvw.domain.WVWMatch;
+import de.justi.yagw2api.wrapper.wvw.domain.WVWObjective;
+import de.justi.yagw2api.wrapper.wvw.domain.impl.DefaultWVWMapType;
 
 final class WVWSynchronizerAction extends AbstractSynchronizerAction<String, WVWSynchronizerAction> {
 	private static final long serialVersionUID = 8391498327079686666L;
 	private static final int MAX_CHUNK_SIZE = 1;
 	private static final Logger LOGGER = LoggerFactory.getLogger(WVWSynchronizerAction.class);
 	private static final WVWService WVW_SERVICE = YAGW2APIArenanet.INSTANCE.getWVWService();
-	private static final DomainFactory MODEL_FACTORY = YAGW2APIWrapper.INSTANCE.getDomainFactory();
 
 	private final Map<String, WVWMatch> matchesMappedById;
 
