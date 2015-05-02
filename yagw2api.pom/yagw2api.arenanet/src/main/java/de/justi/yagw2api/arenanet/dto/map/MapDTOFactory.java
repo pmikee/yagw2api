@@ -22,6 +22,8 @@ package de.justi.yagw2api.arenanet.dto.map;
 
 public interface MapDTOFactory {
 
+	MapContinentsDTO newMapContinentsOf(String json);
+
 	MapFloorDTO newMapFloorOf(String json);
 
 	MapsDTO newMapsOf(String json);

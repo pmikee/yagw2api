@@ -50,6 +50,7 @@ public final class Module extends AbstractModule {
 		this.bind(MapService.class).to(DefaultMapService.class).asEagerSingleton();
 		this.bind(MapTileService.class).to(DefaultMapTileService.class).asEagerSingleton();
 		this.bind(MapFloorService.class).to(DefaultMapFloorService.class).asEagerSingleton();
+		this.bind(MapContinentService.class).to(DefaultMapContinentService.class).asEagerSingleton();
 
 		// default locale
 		this.bind(Locale.class).toInstance(Locale.getDefault());

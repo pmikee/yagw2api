@@ -28,8 +28,8 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-import de.justi.yagw2api.wrapper.domain.ModelFactory;
-import de.justi.yagw2api.wrapper.domain.wvw.WVWModelFactory;
+import de.justi.yagw2api.wrapper.domain.DomainFactory;
+import de.justi.yagw2api.wrapper.domain.wvw.WVWDomainFactory;
 import de.justi.yagw2api.wrapper.domain.wvw.event.WVWModelEventFactory;
 import de.justi.yagw2api.wrapper.wvw.WVWWrapper;
 
@@ -39,8 +39,8 @@ public enum YAGW2APIWrapper {
 	private static final int THREAD_COUNT_PER_PROCESSOR = 2;
 
 	private final ForkJoinPool forkJoinPool;
-	private final ModelFactory modelFactory;
-	private final WVWModelFactory wvwModelFactory;
+	private final DomainFactory modelFactory;
+	private final WVWDomainFactory wvwModelFactory;
 	private final WVWModelEventFactory wvwModelEventFactory;
 	private final WVWWrapper wrapper;
 
@@ -53,8 +53,8 @@ public enum YAGW2APIWrapper {
 						LOGGER.error("Uncought exception thrown in {}", t, e);
 					}
 				}, false);
-		this.modelFactory = injector.getInstance(ModelFactory.class);
-		this.wvwModelFactory = injector.getInstance(WVWModelFactory.class);
+		this.modelFactory = injector.getInstance(DomainFactory.class);
+		this.wvwModelFactory = injector.getInstance(WVWDomainFactory.class);
 		this.wvwModelEventFactory = injector.getInstance(WVWModelEventFactory.class);
 		this.wrapper = injector.getInstance(WVWWrapper.class);
 	}
@@ -63,11 +63,11 @@ public enum YAGW2APIWrapper {
 		return this.forkJoinPool;
 	}
 
-	public ModelFactory getModelFactory() {
+	public DomainFactory getModelFactory() {
 		return this.modelFactory;
 	}
 
-	public WVWModelFactory getWVWModelFactory() {
+	public WVWDomainFactory getWVWModelFactory() {
 		return this.wvwModelFactory;
 	}
 

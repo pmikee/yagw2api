@@ -44,7 +44,7 @@ import de.justi.yagw2api.arenanet.dto.wvw.WVWObjectiveDTO;
 import de.justi.yagw2api.arenanet.dto.wvw.WVWObjectiveNameDTO;
 import de.justi.yagw2api.wrapper.AbstractSynchronizerAction;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
-import de.justi.yagw2api.wrapper.domain.ModelFactory;
+import de.justi.yagw2api.wrapper.domain.DomainFactory;
 import de.justi.yagw2api.wrapper.domain.guild.Guild;
 import de.justi.yagw2api.wrapper.domain.world.World;
 import de.justi.yagw2api.wrapper.domain.wvw.WVWMap;
@@ -57,7 +57,7 @@ final class WVWSynchronizerAction extends AbstractSynchronizerAction<String, WVW
 	private static final int MAX_CHUNK_SIZE = 1;
 	private static final Logger LOGGER = LoggerFactory.getLogger(WVWSynchronizerAction.class);
 	private static final WVWService WVW_SERVICE = YAGW2APIArenanet.INSTANCE.getWVWService();
-	private static final ModelFactory MODEL_FACTORY = YAGW2APIWrapper.INSTANCE.getModelFactory();
+	private static final DomainFactory MODEL_FACTORY = YAGW2APIWrapper.INSTANCE.getModelFactory();
 
 	private final Map<String, WVWMatch> matchesMappedById;
 

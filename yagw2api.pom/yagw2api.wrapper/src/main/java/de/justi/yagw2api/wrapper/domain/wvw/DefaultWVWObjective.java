@@ -41,7 +41,7 @@ import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
 import de.justi.yagw2api.arenanet.dto.guild.GuildDetailsDTO;
 import de.justi.yagw2api.arenanet.dto.wvw.WVWObjectiveDTO;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
-import de.justi.yagw2api.wrapper.domain.ModelFactory;
+import de.justi.yagw2api.wrapper.domain.DomainFactory;
 import de.justi.yagw2api.wrapper.domain.guild.Guild;
 import de.justi.yagw2api.wrapper.domain.world.World;
 import de.justi.yagw2api.wrapper.domain.wvw.event.WVWModelEventFactory;
@@ -54,7 +54,7 @@ import de.justi.yagwapi.common.Unmodifiable;
 final class DefaultWVWObjective extends AbstractHasChannel implements WVWObjective {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultWVWObjective.class);
 	private static final WVWModelEventFactory WVW_MODEL_EVENTS_FACTORY = YAGW2APIWrapper.INSTANCE.getWVWModelEventFactory();
-	private static final ModelFactory MODEL_FACTORY = YAGW2APIWrapper.INSTANCE.getModelFactory();
+	private static final DomainFactory MODEL_FACTORY = YAGW2APIWrapper.INSTANCE.getModelFactory();
 
 	final class UnmodifiableWVWObjective implements WVWObjective, Unmodifiable {
 

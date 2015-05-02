@@ -65,6 +65,8 @@ public enum YAGW2APIArenanet implements Arenanet, UncaughtExceptionHandler {
 	@Inject
 	private MapFloorService mapFloorService = null;
 	@Inject
+	private MapContinentService mapContinentService = null;
+	@Inject
 	private Locale currentLocale = null;
 
 	private final ForkJoinPool forkJoinPool;
@@ -80,6 +82,7 @@ public enum YAGW2APIArenanet implements Arenanet, UncaughtExceptionHandler {
 		checkNotNull(this.mapService, "missing mapService");
 		checkNotNull(this.mapTileService, "missing mapTileService");
 		checkNotNull(this.mapFloorService, "missing mapFloorService");
+		checkNotNull(this.mapContinentService, "missing mapContinentService");
 		checkNotNull(this.currentLocale, "missing currentLocale");
 	}
 
@@ -157,6 +160,11 @@ public enum YAGW2APIArenanet implements Arenanet, UncaughtExceptionHandler {
 	@Override
 	public MapService getMapService() {
 		return this.mapService;
+	}
+
+	@Override
+	public MapContinentService getMapContinentService() {
+		return this.mapContinentService;
 	}
 
 }

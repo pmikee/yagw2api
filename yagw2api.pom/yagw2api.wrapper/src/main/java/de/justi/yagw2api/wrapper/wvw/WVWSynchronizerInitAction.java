@@ -41,7 +41,7 @@ import de.justi.yagw2api.wrapper.AbstractSynchronizerAction;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
 import de.justi.yagw2api.wrapper.domain.world.World;
 import de.justi.yagw2api.wrapper.domain.wvw.WVWMatch;
-import de.justi.yagw2api.wrapper.domain.wvw.WVWModelFactory;
+import de.justi.yagw2api.wrapper.domain.wvw.WVWDomainFactory;
 import de.justi.yagw2api.wrapper.domain.wvw.event.WVWModelEventFactory;
 import de.justi.yagwapi.common.HasChannel;
 
@@ -50,7 +50,7 @@ final class WVWSynchronizerInitAction extends AbstractSynchronizerAction<WVWMatc
 	private static final long serialVersionUID = 2446713690087630720L;
 	private static final int MAX_CHUNK_SIZE = 100; // init all matches with one
 													// thread
-	private static final WVWModelFactory WVW_MODEL_FACTORY = YAGW2APIWrapper.INSTANCE.getWVWModelFactory();
+	private static final WVWDomainFactory WVW_MODEL_FACTORY = YAGW2APIWrapper.INSTANCE.getWVWModelFactory();
 	private static final WVWModelEventFactory WVW_MODEL_EVENT_FACTORY = YAGW2APIWrapper.INSTANCE.getWVWModelEventFactory();
 
 	final Set<WVWMatch> matchReferencesBuffer;

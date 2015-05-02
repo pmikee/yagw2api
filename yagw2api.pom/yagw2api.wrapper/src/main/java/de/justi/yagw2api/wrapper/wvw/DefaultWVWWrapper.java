@@ -55,11 +55,11 @@ import de.justi.yagw2api.wrapper.domain.wvw.event.WVWObjectiveEndOfBuffEvent;
 public final class DefaultWVWWrapper implements WVWWrapper {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultWVWWrapper.class);
 	private WVWSynchronizer deamon = null;
-	private final Map<WVWMatch, Collection<WVWMatchListener>> singleMatchListeners = new CopyOnWriteHashMap<WVWMatch, Collection<WVWMatchListener>>();
-	private final Collection<WVWMatchListener> allMatchesListeners = new CopyOnWriteArrayList<WVWMatchListener>();
-	private final Map<WVWMap, Collection<WVWMapListener>> singleMapListeners = new CopyOnWriteHashMap<WVWMap, Collection<WVWMapListener>>();
-	private final Map<WVWMatch, Collection<WVWMapListener>> allMapsOfSingleMatchListeners = new CopyOnWriteHashMap<WVWMatch, Collection<WVWMapListener>>();
-	private final Collection<WVWMapListener> allMapsOfAllMatchesListeners = new CopyOnWriteArrayList<WVWMapListener>();
+	private final Map<WVWMatch, Collection<WVWMatchListener>> singleMatchListeners = new CopyOnWriteHashMap<>();
+	private final Collection<WVWMatchListener> allMatchesListeners = new CopyOnWriteArrayList<>();
+	private final Map<WVWMap, Collection<WVWMapListener>> singleMapListeners = new CopyOnWriteHashMap<>();
+	private final Map<WVWMatch, Collection<WVWMapListener>> allMapsOfSingleMatchListeners = new CopyOnWriteHashMap<>();
+	private final Collection<WVWMapListener> allMapsOfAllMatchesListeners = new CopyOnWriteArrayList<>();
 
 	public DefaultWVWWrapper() {
 	}

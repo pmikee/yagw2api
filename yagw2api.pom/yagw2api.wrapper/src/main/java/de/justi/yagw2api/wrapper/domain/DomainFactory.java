@@ -26,7 +26,8 @@ import de.justi.yagw2api.wrapper.domain.guild.Guild;
 import de.justi.yagw2api.wrapper.domain.world.World;
 import de.justi.yagw2api.wrapper.domain.world.World.WorldBuilder;
 
-public interface ModelFactory {
+public interface DomainFactory {
+	// TODO review this interface
 	void clearCache();
 
 	Guild getOrCreateGuild(String id, String name, String tag);

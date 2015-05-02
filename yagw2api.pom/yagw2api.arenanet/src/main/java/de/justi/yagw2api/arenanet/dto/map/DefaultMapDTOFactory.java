@@ -38,7 +38,7 @@ public final class DefaultMapDTOFactory extends AbstractGSONFactory implements M
 	}
 
 	@Override
-	public MapFloorDTO newMapFloorOf(final String json) {
+	public DefaultMapFloorDTO newMapFloorOf(final String json) {
 		final DefaultMapFloorDTO result;
 		try {
 			result = this.getGSON().fromJson(checkNotNull(json), DefaultMapFloorDTO.class);
@@ -46,12 +46,12 @@ public final class DefaultMapDTOFactory extends AbstractGSONFactory implements M
 			LOGGER.error("Invalid response: {}", json, e);
 			throw e;
 		}
-		LOGGER.debug("Built {}", result);
+		LOGGER.trace("Built {}", result);
 		return result;
 	}
 
 	@Override
-	public MapsDTO newMapsOf(final String json) {
+	public DefaultMapsDTO newMapsOf(final String json) {
 		final DefaultMapsDTO result;
 		try {
 			result = this.getGSON().fromJson(checkNotNull(json), DefaultMapsDTO.class);
@@ -59,7 +59,20 @@ public final class DefaultMapDTOFactory extends AbstractGSONFactory implements M
 			LOGGER.error("Invalid response: {}", json, e);
 			throw e;
 		}
-		LOGGER.debug("Built {}", result);
+		LOGGER.trace("Built {}", result);
+		return result;
+	}
+
+	@Override
+	public DefaultMapContinentsDTO newMapContinentsOf(final String json) {
+		final DefaultMapContinentsDTO result;
+		try {
+			result = this.getGSON().fromJson(checkNotNull(json), DefaultMapContinentsDTO.class);
+		} catch (JsonSyntaxException e) {
+			LOGGER.error("Invalid response: {}", json, e);
+			throw e;
+		}
+		LOGGER.trace("Built {}", result);
 		return result;
 	}
 

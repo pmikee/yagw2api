@@ -32,11 +32,11 @@ import com.google.common.base.Optional;
 
 import de.justi.yagw2api.arenanet.dto.world.WorldNameDTO;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
-import de.justi.yagw2api.wrapper.domain.ModelFactory;
+import de.justi.yagw2api.wrapper.domain.DomainFactory;
 import de.justi.yagwapi.common.Unmodifiable;
 
 public final class DefaultWorld implements World {
-	private static final ModelFactory MODEL_FACTORY = YAGW2APIWrapper.INSTANCE.getModelFactory();
+	private static final DomainFactory MODEL_FACTORY = YAGW2APIWrapper.INSTANCE.getModelFactory();
 
 	public static final class DefaultWorldBuilder implements World.WorldBuilder {
 		private Optional<Integer> id = Optional.absent();

@@ -57,6 +57,8 @@ public interface Arenanet {
 
 	MapFloorService getMapFloorService();
 
+	MapContinentService getMapContinentService();
+
 	Locale getCurrentLocale();
 
 	void setCurrentLocale(Locale locale);

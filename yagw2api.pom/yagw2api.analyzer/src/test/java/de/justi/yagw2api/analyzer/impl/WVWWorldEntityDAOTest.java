@@ -31,13 +31,13 @@ import org.junit.Test;
 import de.justi.yagw2api.analyzer.AbstractAnalyzerTest;
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
-import de.justi.yagw2api.wrapper.domain.ModelFactory;
+import de.justi.yagw2api.wrapper.domain.DomainFactory;
 import de.justi.yagw2api.wrapper.domain.world.World;
 import de.justi.yagw2api.wrapper.domain.world.DefaultWorldLocationType;
 
 public final class WVWWorldEntityDAOTest extends AbstractAnalyzerTest {
 
-	private ModelFactory modelFactory = YAGW2APIWrapper.INSTANCE.getModelFactory();
+	private DomainFactory modelFactory = YAGW2APIWrapper.INSTANCE.getModelFactory();
 
 	private World world1;
 	private World world2;

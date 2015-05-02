@@ -1,5 +1,6 @@
 package de.justi.yagw2api.wrapper.domain.wvw;
 
+
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Wrapper
@@ -20,32 +21,16 @@ package de.justi.yagw2api.wrapper.domain.wvw;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-import static com.google.common.base.Preconditions.checkNotNull;
+public interface WVWDomainFactory {
+	// builders
+	WVWMap.WVWMapBuilder newMapBuilder();
 
-public final class DefaultWVWModelFactory implements WVWModelFactory {
+	WVWObjective.WVWObjectiveBuilder newObjectiveBuilder();
 
-	@Override
-	public WVWMap.WVWMapBuilder newMapBuilder() {
-		return new DefaultWVWMap.DefaultWVWMapBuilder();
-	}
+	WVWMatch.WVWMatchBuilder newMatchBuilder();
 
-	@Override
-	public WVWObjective.WVWObjectiveBuilder newObjectiveBuilder() {
-		return new DefaultWVWObjective.DefaultWVWObjectiveBuilder();
-	}
+	// creation
+	WVWScores newMapScores(WVWMap map);
 
-	@Override
-	public WVWScores newMapScores(final WVWMap map) {
-		return new DefaultWVWMapScores(checkNotNull(map));
-	}
-
-	@Override
-	public WVWMatch.WVWMatchBuilder newMatchBuilder() {
-		return new DefaultWVWMatch.DefaultWVWMatchBuilder();
-	}
-
-	@Override
-	public WVWScores newMatchScores(final WVWMatch match) {
-		return new DefaultWVWMatchScores(checkNotNull(match));
-	}
+	WVWScores newMatchScores(WVWMatch match);
 }

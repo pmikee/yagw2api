@@ -38,8 +38,8 @@ import de.justi.yagw2api.wrapper.domain.world.World;
 import de.justi.yagw2api.wrapper.domain.world.World.WorldBuilder;
 import de.justi.yagw2api.wrapper.domain.world.DefaultWorld;
 
-public final class DefaultModelFactory implements ModelFactory {
-	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultModelFactory.class);
+public final class DefaultDomainFactory implements DomainFactory {
+	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultDomainFactory.class);
 	private final Map<String, Guild> guildsMappedById = new HashMap<String, Guild>();
 	private final Map<Integer, World> worldsMappedById = new HashMap<Integer, World>();
 
