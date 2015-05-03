@@ -9,9 +9,9 @@ package de.justi.yagw2api.arenanet;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,9 +29,9 @@ package de.justi.yagw2api.arenanet;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -44,7 +44,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -67,7 +66,7 @@ import de.justi.yagwapi.common.RetryClientFilter;
 
 final class DefaultGuildService implements GuildService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultGuildService.class);
-	private static final long GUILD_DETAILS_CACHE_EXPIRE_MILLIS = 1000 * 60 * 5; // 5m
+	private static final long GUILD_DETAILS_CACHE_EXPIRE_MILLIS = TimeUnit.MINUTES.toMillis(1);
 
 	private static final URL GUILD_DETAILS_URL;
 	static {
@@ -93,22 +92,19 @@ final class DefaultGuildService implements GuildService {
 	public Optional<GuildDetailsDTO> retrieveGuildDetails(final String id) {
 		checkNotNull(id);
 		try {
-			return this.guildDetailsCache.get(id, new Callable<Optional<GuildDetailsDTO>>() {
-				@Override
-				public Optional<GuildDetailsDTO> call() throws Exception {
-					final WebResource resource = ArenanetUtils.REST_CLIENT.resource(GUILD_DETAILS_URL.toExternalForm()).queryParam("guild_id", id);
-					resource.addFilter(new RetryClientFilter(ArenanetUtils.REST_RETRY_COUNT));
-					final WebResource.Builder builder = resource.accept(MediaType.APPLICATION_JSON_TYPE);
-					try {
-						final String response = builder.get(String.class);
-						LOGGER.trace("Retrieved response=" + response);
-						final GuildDetailsDTO result = DefaultGuildService.this.guildDTOFactory.newGuildDetailsOf(response);
-						LOGGER.debug("Built result=" + result);
-						return Optional.of(result);
-					} catch (ClientHandlerException | UniformInterfaceException e) {
-						LOGGER.error("Exception thrown while quering {}", resource, e);
-						return Optional.absent();
-					}
+			return this.guildDetailsCache.get(id, () -> {
+				final WebResource resource = ArenanetUtils.REST_CLIENT.resource(GUILD_DETAILS_URL.toExternalForm()).queryParam("guild_id", id);
+				resource.addFilter(new RetryClientFilter(ArenanetUtils.REST_RETRY_COUNT));
+				final WebResource.Builder builder = resource.accept(MediaType.APPLICATION_JSON_TYPE);
+				try {
+					final String response = builder.get(String.class);
+					LOGGER.trace("Retrieved response=" + response);
+					final GuildDetailsDTO result = DefaultGuildService.this.guildDTOFactory.newGuildDetailsOf(response);
+					LOGGER.debug("Built result=" + result);
+					return Optional.of(result);
+				} catch (ClientHandlerException | UniformInterfaceException e) {
+					LOGGER.error("Exception thrown while quering {}", resource, e);
+					return Optional.absent();
 				}
 			});
 		} catch (ExecutionException e) {

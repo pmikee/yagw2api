@@ -9,9 +9,9 @@ package de.justi.yagw2api.explorer.rcp.wvw;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -66,20 +66,20 @@ import de.justi.yagw2api.explorer.rcp.swt.AggregatingSelectionProvider;
 import de.justi.yagw2api.explorer.rcp.swt.TypeSafeContentProvider;
 import de.justi.yagw2api.explorer.rcp.swt.TypeSafeTableViewerColumnSorter;
 import de.justi.yagw2api.explorer.rcp.swt.TypeSafeViewerLabelProvider;
-import de.justi.yagw2api.wrapper.domain.guild.Guild;
-import de.justi.yagw2api.wrapper.domain.world.World;
-import de.justi.yagw2api.wrapper.domain.wvw.WVWMap;
-import de.justi.yagw2api.wrapper.domain.wvw.WVWMatch;
-import de.justi.yagw2api.wrapper.domain.wvw.WVWObjective;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWInitializedMatchEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWMapListener;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWMapScoresChangedEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWMatchListener;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWMatchScoresChangedEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWObjectiveCaptureEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWObjectiveClaimedEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWObjectiveEndOfBuffEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWObjectiveUnclaimedEvent;
+import de.justi.yagw2api.wrapper.guild.domain.Guild;
+import de.justi.yagw2api.wrapper.world.domain.World;
+import de.justi.yagw2api.wrapper.wvw.domain.WVWMap;
+import de.justi.yagw2api.wrapper.wvw.domain.WVWMatch;
+import de.justi.yagw2api.wrapper.wvw.domain.WVWObjective;
+import de.justi.yagw2api.wrapper.wvw.event.WVWInitializedMatchEvent;
+import de.justi.yagw2api.wrapper.wvw.event.WVWMapListener;
+import de.justi.yagw2api.wrapper.wvw.event.WVWMapScoresChangedEvent;
+import de.justi.yagw2api.wrapper.wvw.event.WVWMatchListener;
+import de.justi.yagw2api.wrapper.wvw.event.WVWMatchScoresChangedEvent;
+import de.justi.yagw2api.wrapper.wvw.event.WVWObjectiveCaptureEvent;
+import de.justi.yagw2api.wrapper.wvw.event.WVWObjectiveClaimedEvent;
+import de.justi.yagw2api.wrapper.wvw.event.WVWObjectiveEndOfBuffEvent;
+import de.justi.yagw2api.wrapper.wvw.event.WVWObjectiveUnclaimedEvent;
 
 public class MapDetailsViewPart extends ViewPart implements ISelectionListener, ISelectionChangedListener, WVWMatchListener, WVWMapListener {
 	private static class MatchMapsContentProvider extends TypeSafeContentProvider<WVWMatch> {

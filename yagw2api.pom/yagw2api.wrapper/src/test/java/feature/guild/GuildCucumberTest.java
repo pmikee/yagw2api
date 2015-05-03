@@ -1,4 +1,4 @@
-package de.justi.yagw2api.wrapper.guild;
+package feature.guild;
 
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -20,14 +20,13 @@ package de.justi.yagw2api.wrapper.guild;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-import com.google.common.base.Optional;
+import org.junit.runner.RunWith;
 
-import de.justi.yagw2api.wrapper.guild.domain.Guild;
-import de.justi.yagw2api.wrapper.guild.domain.NoSuchGuildException;
+import cucumber.api.CucumberOptions;
+import cucumber.api.junit.Cucumber;
 
-public interface GuildWrapper {
+@RunWith(Cucumber.class)
+@CucumberOptions(plugin = { "pretty" }, strict = true, monochrome = true, tags = { "@Unit" })
+public class GuildCucumberTest {
 
-	Guild getGuild(String id) throws NoSuchGuildException;
-
-	Optional<Guild> getGuildUnchecked(String id);
 }

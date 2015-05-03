@@ -1,4 +1,4 @@
-package feature.guild;
+package de.justi.yagw2api.wrapper.world.domain;
 
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -20,13 +20,7 @@ package feature.guild;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-import org.junit.runner.RunWith;
 
-import cucumber.api.CucumberOptions;
-import cucumber.api.junit.Cucumber;
-
-@RunWith(Cucumber.class)
-@CucumberOptions(plugin = { "pretty" }, strict = true, monochrome = true)
-public class CucumberTests {
-
+public interface WorldDomainFactory {
+	World.WorldBuilder newWorldBuilder();
 }

@@ -9,9 +9,9 @@ package de.justi.yagw2api.wrapper.wvw.domain.impl;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,19 +35,22 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
+import com.google.common.base.Throwables;
 import com.google.common.eventbus.EventBus;
+import com.google.inject.Inject;
 
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
 import de.justi.yagw2api.arenanet.dto.guild.GuildDetailsDTO;
 import de.justi.yagw2api.arenanet.dto.wvw.WVWObjectiveDTO;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
+import de.justi.yagw2api.wrapper.guild.GuildWrapper;
 import de.justi.yagw2api.wrapper.guild.domain.Guild;
+import de.justi.yagw2api.wrapper.guild.domain.NoSuchGuildException;
 import de.justi.yagw2api.wrapper.world.domain.World;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWLocationType;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWMap;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWObjective;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWObjectiveType;
-import de.justi.yagw2api.wrapper.wvw.domain.WVWObjective.WVWObjectiveBuilder;
 import de.justi.yagw2api.wrapper.wvw.event.WVWModelEventFactory;
 import de.justi.yagw2api.wrapper.wvw.event.WVWObjectiveCaptureEvent;
 import de.justi.yagw2api.wrapper.wvw.event.WVWObjectiveClaimedEvent;
@@ -56,11 +59,17 @@ import de.justi.yagwapi.common.AbstractHasChannel;
 import de.justi.yagwapi.common.Unmodifiable;
 
 final class DefaultWVWObjective extends AbstractHasChannel implements WVWObjective {
+	// CONSTS
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultWVWObjective.class);
 	private static final WVWModelEventFactory WVW_MODEL_EVENTS_FACTORY = YAGW2APIWrapper.INSTANCE.getWVWDomainEventFactory();
 
+	// EMBEDDED
 	final class UnmodifiableWVWObjective implements WVWObjective, Unmodifiable {
-
+		// CONSTS
+		// EMBEDDED
+		// FIELDS
+		// CONSTRUCTOR
+		// METHODS
 		@Override
 		public WVWLocationType getLocation() {
 			return DefaultWVWObjective.this.getLocation();
@@ -167,11 +176,24 @@ final class DefaultWVWObjective extends AbstractHasChannel implements WVWObjecti
 	}
 
 	public static class DefaultWVWObjectiveBuilder implements WVWObjective.WVWObjectiveBuilder {
+
+		// CONSTS
+		// EMBEDDED
+		// FIELDS
 		private Optional<WVWLocationType> location = Optional.absent();
 		private Optional<World> owner = Optional.absent();
 		private Optional<WVWMap> map = Optional.absent();
 		private Optional<Guild> claimedByGuild = Optional.absent();
 
+		private final GuildWrapper guildWrapper;
+
+		// CONSTRUCTOR
+		@Inject
+		public DefaultWVWObjectiveBuilder(final GuildWrapper guildWrapper) {
+			this.guildWrapper = checkNotNull(guildWrapper, "missing guildWrapper");
+		}
+
+		// METHODS
 		@Override
 		public WVWObjective build() {
 			checkState(this.location.isPresent());
@@ -191,9 +213,12 @@ final class DefaultWVWObjective extends AbstractHasChannel implements WVWObjecti
 			checkNotNull(dto);
 			final Optional<GuildDetailsDTO> guildDetails = dto.getGuildDetails();
 			if (guildDetails.isPresent()) {
-				final Guild guild = MODEL_FACTORY.getOrCreateGuild(guildDetails.get().getId(), guildDetails.get().getName(), guildDetails.get().getTag());
-				checkState(guild != null);
-				this.claimedBy(guild);
+				try {
+					final Guild guild = this.guildWrapper.getGuild(guildDetails.get().getId());
+					this.claimedBy(guild);
+				} catch (NoSuchGuildException e) {
+					Throwables.propagate(e);
+				}
 			}
 			return this.location(DefaultWVWLocationType.forObjectiveId(dto.getId()).get());
 		}

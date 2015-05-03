@@ -9,9 +9,9 @@ package de.justi.yagw2api.wrapper;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,8 +27,12 @@ import de.justi.yagw2api.wrapper.guild.DefaultGuildWrapper;
 import de.justi.yagw2api.wrapper.guild.GuildWrapper;
 import de.justi.yagw2api.wrapper.guild.domain.GuildDomainFactory;
 import de.justi.yagw2api.wrapper.guild.domain.impl.DefaultGuildDomainFactory;
+import de.justi.yagw2api.wrapper.map.DefaultMapWrapper;
+import de.justi.yagw2api.wrapper.map.MapWrapper;
 import de.justi.yagw2api.wrapper.map.domain.MapDomainFactory;
 import de.justi.yagw2api.wrapper.map.domain.impl.DefaultMapDomainFactory;
+import de.justi.yagw2api.wrapper.world.domain.WorldDomainFactory;
+import de.justi.yagw2api.wrapper.world.domain.impl.DefaultWorldDomainFactory;
 import de.justi.yagw2api.wrapper.wvw.DefaultWVWWrapper;
 import de.justi.yagw2api.wrapper.wvw.WVWWrapper;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWDomainFactory;
@@ -42,6 +46,7 @@ final public class WrapperModule extends AbstractModule {
 		this.configureArenanetModule();
 
 		this.configureLocale();
+		this.configureWorld();
 		this.configureGuild();
 		this.configureMap();
 		this.configureWVW();
@@ -55,6 +60,10 @@ final public class WrapperModule extends AbstractModule {
 		this.bind(CurrentLocaleProvider.class).toInstance(() -> YAGW2APIArenanet.getInstance().getCurrentLocale());
 	}
 
+	private void configureWorld() {
+		this.bind(WorldDomainFactory.class).to(DefaultWorldDomainFactory.class).asEagerSingleton();
+	}
+
 	private void configureGuild() {
 		this.bind(GuildDomainFactory.class).to(DefaultGuildDomainFactory.class).asEagerSingleton();
 		this.bind(GuildWrapper.class).to(DefaultGuildWrapper.class).asEagerSingleton();
@@ -62,6 +71,7 @@ final public class WrapperModule extends AbstractModule {
 
 	private void configureMap() {
 		this.bind(MapDomainFactory.class).to(DefaultMapDomainFactory.class).asEagerSingleton();
+		this.bind(MapWrapper.class).to(DefaultMapWrapper.class).asEagerSingleton();
 	}
 
 	private void configureWVW() {

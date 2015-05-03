@@ -9,9 +9,9 @@ package de.justi.yagw2api.wrapper.wvw.domain.impl;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,17 +21,30 @@ package de.justi.yagw2api.wrapper.wvw.domain.impl;
  */
 
 import static com.google.common.base.Preconditions.checkNotNull;
+
+import com.google.inject.Inject;
+
+import de.justi.yagw2api.wrapper.guild.GuildWrapper;
+import de.justi.yagw2api.wrapper.world.domain.WorldDomainFactory;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWDomainFactory;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWMap;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWMatch;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWObjective;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWScores;
-import de.justi.yagw2api.wrapper.wvw.domain.WVWMap.WVWMapBuilder;
-import de.justi.yagw2api.wrapper.wvw.domain.WVWMatch.WVWMatchBuilder;
-import de.justi.yagw2api.wrapper.wvw.domain.WVWObjective.WVWObjectiveBuilder;
 
 public final class DefaultWVWDomainFactory implements WVWDomainFactory {
+	// FIELDS
+	private final GuildWrapper guildWrapper;
+	private final WorldDomainFactory worldDomainFactory;
 
+	// CONSTRUCTOR
+	@Inject
+	public DefaultWVWDomainFactory(final GuildWrapper guildWrapper, final WorldDomainFactory worldDomainFactory) {
+		this.guildWrapper = checkNotNull(guildWrapper, "missing guildWrapper");
+		this.worldDomainFactory = checkNotNull(worldDomainFactory, "missing worldDomainFactory");
+	}
+
+	// METHODS
 	@Override
 	public WVWMap.WVWMapBuilder newMapBuilder() {
 		return new DefaultWVWMap.DefaultWVWMapBuilder();
@@ -39,7 +52,7 @@ public final class DefaultWVWDomainFactory implements WVWDomainFactory {
 
 	@Override
 	public WVWObjective.WVWObjectiveBuilder newObjectiveBuilder() {
-		return new DefaultWVWObjective.DefaultWVWObjectiveBuilder();
+		return new DefaultWVWObjective.DefaultWVWObjectiveBuilder(this.guildWrapper);
 	}
 
 	@Override
@@ -49,7 +62,7 @@ public final class DefaultWVWDomainFactory implements WVWDomainFactory {
 
 	@Override
 	public WVWMatch.WVWMatchBuilder newMatchBuilder() {
-		return new DefaultWVWMatch.DefaultWVWMatchBuilder();
+		return new DefaultWVWMatch.DefaultWVWMatchBuilder(this.worldDomainFactory);
 	}
 
 	@Override

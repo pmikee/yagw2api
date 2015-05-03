@@ -9,9 +9,9 @@ package de.justi.yagw2api.wrapper.wvw;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,8 +30,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Optional;
+import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.inject.Inject;
 
 import de.justi.yagw2api.arenanet.WVWService;
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
@@ -43,7 +45,9 @@ import de.justi.yagw2api.arenanet.dto.wvw.WVWMatchDetailsDTO;
 import de.justi.yagw2api.arenanet.dto.wvw.WVWObjectiveDTO;
 import de.justi.yagw2api.arenanet.dto.wvw.WVWObjectiveNameDTO;
 import de.justi.yagw2api.wrapper.AbstractSynchronizerAction;
+import de.justi.yagw2api.wrapper.guild.GuildWrapper;
 import de.justi.yagw2api.wrapper.guild.domain.Guild;
+import de.justi.yagw2api.wrapper.guild.domain.NoSuchGuildException;
 import de.justi.yagw2api.wrapper.world.domain.World;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWMap;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWMatch;
@@ -51,32 +55,40 @@ import de.justi.yagw2api.wrapper.wvw.domain.WVWObjective;
 import de.justi.yagw2api.wrapper.wvw.domain.impl.DefaultWVWMapType;
 
 final class WVWSynchronizerAction extends AbstractSynchronizerAction<String, WVWSynchronizerAction> {
+	// CONSTS
 	private static final long serialVersionUID = 8391498327079686666L;
 	private static final int MAX_CHUNK_SIZE = 1;
 	private static final Logger LOGGER = LoggerFactory.getLogger(WVWSynchronizerAction.class);
 	private static final WVWService WVW_SERVICE = YAGW2APIArenanet.INSTANCE.getWVWService();
 
+	// FIELDS
 	private final Map<String, WVWMatch> matchesMappedById;
+	private final GuildWrapper guildWrapper;
 
-	public WVWSynchronizerAction(final Map<String, WVWMatch> matchesMappedById) {
-		this(ImmutableMap.copyOf(matchesMappedById), ImmutableList.copyOf(matchesMappedById.keySet()), MAX_CHUNK_SIZE, 0, matchesMappedById.size());
-		if (LOGGER.isTraceEnabled()) {
-			LOGGER.trace("Created new " + this.getClass().getSimpleName() + " that has to handle " + this.matchesMappedById);
-		}
+	// CONSTRUCTOR
+	@Inject
+	public WVWSynchronizerAction(final GuildWrapper guildWrapper, final Map<String, WVWMatch> matchesMappedById) {
+		this(checkNotNull(guildWrapper, "missing guildWrapper"), ImmutableMap.copyOf(matchesMappedById), ImmutableList.copyOf(matchesMappedById.keySet()), MAX_CHUNK_SIZE, 0,
+				matchesMappedById.size());
+		LOGGER.trace("Created new {} that has to handle {}", this.getClass(), this.matchesMappedById);
 	}
 
-	private WVWSynchronizerAction(final Map<String, WVWMatch> matchesMappedById, final List<String> matchIds, final int chunkSize, final int fromInclusive, final int toExclusive) {
+	@Inject
+	private WVWSynchronizerAction(final GuildWrapper guildWrapper, final Map<String, WVWMatch> matchesMappedById, final List<String> matchIds, final int chunkSize,
+			final int fromInclusive, final int toExclusive) {
 		super(matchIds, chunkSize, fromInclusive, toExclusive);
 		checkArgument(chunkSize > 0);
 		checkNotNull(matchIds);
 		checkArgument(fromInclusive >= 0);
 		checkArgument(fromInclusive <= toExclusive);
 		this.matchesMappedById = matchesMappedById;
+		this.guildWrapper = checkNotNull(guildWrapper, "missing guildWrapper");
 	}
 
+	// METHODS
 	@Override
 	protected WVWSynchronizerAction createSubTask(final List<String> mapIds, final int chunkSize, final int fromInclusive, final int toExclusive) {
-		return new WVWSynchronizerAction(this.matchesMappedById, mapIds, chunkSize, fromInclusive, toExclusive);
+		return new WVWSynchronizerAction(this.guildWrapper, this.matchesMappedById, mapIds, chunkSize, fromInclusive, toExclusive);
 	}
 
 	@Override
@@ -149,8 +161,12 @@ final class WVWSynchronizerAction extends AbstractSynchronizerAction<String, WVW
 				// 1.2 synchronize claiming guild
 				claimedByGuildDTO = objectiveDTO.getGuildDetails();
 				if (claimedByGuildDTO.isPresent()) {
-					final Guild guild = MODEL_FACTORY.getOrCreateGuild(claimedByGuildDTO.get().getId(), claimedByGuildDTO.get().getName(), claimedByGuildDTO.get().getTag());
-					objectiveModel.claim(guild);
+					try {
+						final Guild guild = this.guildWrapper.getGuild(claimedByGuildDTO.get().getId());
+						objectiveModel.claim(guild);
+					} catch (NoSuchGuildException e) {
+						Throwables.propagate(e);
+					}
 				} else {
 					objectiveModel.claim(null);
 				}

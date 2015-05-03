@@ -1,4 +1,4 @@
-package de.justi.yagw2api.wrapper.guild;
+package de.justi.yagw2api.wrapper.world.domain.impl;
 
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -9,9 +9,9 @@ package de.justi.yagw2api.wrapper.guild;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,14 +20,14 @@ package de.justi.yagw2api.wrapper.guild;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-import com.google.common.base.Optional;
+import de.justi.yagw2api.wrapper.world.domain.World.WorldBuilder;
+import de.justi.yagw2api.wrapper.world.domain.WorldDomainFactory;
 
-import de.justi.yagw2api.wrapper.guild.domain.Guild;
-import de.justi.yagw2api.wrapper.guild.domain.NoSuchGuildException;
+public final class DefaultWorldDomainFactory implements WorldDomainFactory {
 
-public interface GuildWrapper {
+	@Override
+	public WorldBuilder newWorldBuilder() {
+		return DefaultWorld.builder();
+	}
 
-	Guild getGuild(String id) throws NoSuchGuildException;
-
-	Optional<Guild> getGuildUnchecked(String id);
 }

@@ -9,9 +9,9 @@ package de.justi.yagw2api.wrapper.wvw.domain.impl;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -43,6 +43,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
+import com.google.inject.Inject;
 
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
 import de.justi.yagw2api.arenanet.dto.DTOConstants;
@@ -53,12 +54,12 @@ import de.justi.yagw2api.arenanet.dto.wvw.WVWMatchDetailsDTO;
 import de.justi.yagw2api.arenanet.dto.wvw.WVWObjectiveDTO;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
 import de.justi.yagw2api.wrapper.world.domain.World;
+import de.justi.yagw2api.wrapper.world.domain.WorldDomainFactory;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWDomainFactory;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWMap;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWMatch;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWObjective;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWScores;
-import de.justi.yagw2api.wrapper.wvw.domain.WVWMatch.WVWMatchBuilder;
 import de.justi.yagwapi.common.AbstractHasChannel;
 import de.justi.yagwapi.common.Event;
 import de.justi.yagwapi.common.Unmodifiable;
@@ -191,6 +192,73 @@ final class DefaultWVWMatch extends AbstractHasChannel implements WVWMatch {
 	}
 
 	public static class DefaultWVWMatchBuilder implements WVWMatch.WVWMatchBuilder {
+		// EMBEDDED
+
+		private static final class BuildMapFromDTOAction implements Callable<Void> {
+			private final WVWMapDTO dto;
+			private Optional<WVWMap> result = Optional.absent();
+
+			public BuildMapFromDTOAction(final WVWMapDTO dto) {
+				this.dto = checkNotNull(dto);
+			}
+
+			@Override
+			public String toString() {
+				return MoreObjects.toStringHelper(this).add("dto", this.dto).add("resultPresent", this.result.isPresent()).toString();
+			}
+
+			@Override
+			public Void call() throws Exception {
+				try {
+					this.result = Optional.of(WVW_MODEL_FACTORY.newMapBuilder().fromDTO(this.dto).build());
+				} catch (Exception e) {
+					LOGGER.error("Uncought exception thrown during execution of {}", this, e);
+					throw e;
+				}
+				return null;
+			}
+
+			public Optional<WVWMap> getResult() {
+				return this.result;
+			}
+		}
+
+		private static final class BuildWorldFromDTOAction implements Callable<Void> {
+			// FIELDS
+			private final WorldNameDTO dto;
+			private Optional<World> result = Optional.absent();
+			private final WorldDomainFactory worldDomainFactory;
+
+			// CONSTRUCTOR
+			@Inject
+			public BuildWorldFromDTOAction(final WorldDomainFactory worldDomainFactory, final WorldNameDTO dto) {
+				this.worldDomainFactory = checkNotNull(worldDomainFactory, "missing worldDomainFactory");
+				this.dto = checkNotNull(dto);
+			}
+
+			// METHODS
+			@Override
+			public String toString() {
+				return MoreObjects.toStringHelper(this).add("dto", this.dto).add("resultPresent", this.result.isPresent()).toString();
+			}
+
+			@Override
+			public Void call() throws Exception {
+				try {
+					this.result = Optional.of(this.worldDomainFactory.newWorldBuilder().fromDTO(this.dto).build());
+				} catch (Exception e) {
+					LOGGER.error("Uncought exception thrown during execution of {}", this, e);
+					throw e;
+				}
+				return null;
+			}
+
+			public Optional<World> getResult() {
+				return this.result;
+			}
+		}
+
+		// FIELDS
 		private Optional<WVWMatchDTO> fromMatchDTO = Optional.absent();
 		private Optional<String> id = Optional.absent();
 		private Optional<WVWMap> centerMap = Optional.absent();
@@ -205,7 +273,14 @@ final class DefaultWVWMatch extends AbstractHasChannel implements WVWMatch {
 		private Optional<Integer> blueScore = Optional.absent();
 		private Optional<LocalDateTime> start = Optional.absent();
 		private Optional<LocalDateTime> end = Optional.absent();
+		private final WorldDomainFactory worldDomainFactory;
 
+		// CONSTRUCTOR
+		public DefaultWVWMatchBuilder(final WorldDomainFactory worldDomainFactory) {
+			this.worldDomainFactory = checkNotNull(worldDomainFactory, "missing worldDomainFactory");
+		}
+
+		// METHODS
 		@Override
 		public WVWMatch build() {
 			checkState(this.id.isPresent(), "Missing id in " + this);
@@ -262,64 +337,6 @@ final class DefaultWVWMatch extends AbstractHasChannel implements WVWMatch {
 			}
 		}
 
-		private static final class BuildMapFromDTOAction implements Callable<Void> {
-			private final WVWMapDTO dto;
-			private Optional<WVWMap> result = Optional.absent();
-
-			public BuildMapFromDTOAction(final WVWMapDTO dto) {
-				this.dto = checkNotNull(dto);
-			}
-
-			@Override
-			public String toString() {
-				return MoreObjects.toStringHelper(this).add("dto", this.dto).add("resultPresent", this.result.isPresent()).toString();
-			}
-
-			@Override
-			public Void call() throws Exception {
-				try {
-					this.result = Optional.of(WVW_MODEL_FACTORY.newMapBuilder().fromDTO(this.dto).build());
-				} catch (Exception e) {
-					LOGGER.error("Uncought exception thrown during execution of {}", this, e);
-					throw e;
-				}
-				return null;
-			}
-
-			public Optional<WVWMap> getResult() {
-				return this.result;
-			}
-		}
-
-		private static final class BuildWorldFromDTOAction implements Callable<Void> {
-			private final WorldNameDTO dto;
-			private Optional<World> result = Optional.absent();
-
-			public BuildWorldFromDTOAction(final WorldNameDTO dto) {
-				this.dto = checkNotNull(dto);
-			}
-
-			@Override
-			public String toString() {
-				return MoreObjects.toStringHelper(this).add("dto", this.dto).add("resultPresent", this.result.isPresent()).toString();
-			}
-
-			@Override
-			public Void call() throws Exception {
-				try {
-					this.result = Optional.of(MODEL_FACTORY.newWorldBuilder().fromDTO(this.dto).build());
-				} catch (Exception e) {
-					LOGGER.error("Uncought exception thrown during execution of {}", this, e);
-					throw e;
-				}
-				return null;
-			}
-
-			public Optional<World> getResult() {
-				return this.result;
-			}
-		}
-
 		@SuppressWarnings("unchecked")
 		@Override
 		public WVWMatch.WVWMatchBuilder fromMatchDTO(final WVWMatchDTO dto, final Locale locale) {
@@ -343,9 +360,12 @@ final class DefaultWVWMatch extends AbstractHasChannel implements WVWMatch {
 			final BuildMapFromDTOAction buildRedMapAction = new BuildMapFromDTOAction(dto.getDetails().get().getRedMap());
 			final BuildMapFromDTOAction buildGreenMapAction = new BuildMapFromDTOAction(dto.getDetails().get().getGreenMap());
 			final BuildMapFromDTOAction buildBlueMapAction = new BuildMapFromDTOAction(dto.getDetails().get().getBlueMap());
-			final BuildWorldFromDTOAction buildRedWorldAction = new BuildWorldFromDTOAction(dto.getRedWorldName(YAGW2APIArenanet.INSTANCE.getCurrentLocale()).get());
-			final BuildWorldFromDTOAction buildGreenWorldAction = new BuildWorldFromDTOAction(dto.getGreenWorldName(YAGW2APIArenanet.INSTANCE.getCurrentLocale()).get());
-			final BuildWorldFromDTOAction buildBlueWorldAction = new BuildWorldFromDTOAction(dto.getBlueWorldName(YAGW2APIArenanet.INSTANCE.getCurrentLocale()).get());
+			final BuildWorldFromDTOAction buildRedWorldAction = new BuildWorldFromDTOAction(this.worldDomainFactory, dto.getRedWorldName(
+					YAGW2APIArenanet.INSTANCE.getCurrentLocale()).get());
+			final BuildWorldFromDTOAction buildGreenWorldAction = new BuildWorldFromDTOAction(this.worldDomainFactory, dto.getGreenWorldName(
+					YAGW2APIArenanet.INSTANCE.getCurrentLocale()).get());
+			final BuildWorldFromDTOAction buildBlueWorldAction = new BuildWorldFromDTOAction(this.worldDomainFactory, dto.getBlueWorldName(
+					YAGW2APIArenanet.INSTANCE.getCurrentLocale()).get());
 
 			if (LOGGER.isTraceEnabled()) {
 				LOGGER.trace("Going to execute " + BuildMapFromDTOAction.class.getSimpleName() + "'s and " + BuildWorldFromDTOAction.class.getSimpleName() + "'s to build "

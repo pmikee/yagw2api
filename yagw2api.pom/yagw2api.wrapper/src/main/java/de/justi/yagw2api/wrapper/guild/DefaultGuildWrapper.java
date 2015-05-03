@@ -9,9 +9,9 @@ package de.justi.yagw2api.wrapper.guild;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -72,13 +72,23 @@ public final class DefaultGuildWrapper implements GuildWrapper {
 
 	@Override
 	public Guild getGuild(final String id) throws NoSuchGuildException {
-		checkNotNull(id);
+		checkNotNull(id, "missing id");
 		try {
 			return this.cache.get(id);
 		} catch (ExecutionException e) {
 			Throwables.propagateIfInstanceOf(e.getCause(), NoSuchGuildException.class);
 			LOGGER.error("Failed to retrieve cached guild for id={}", id, e);
 			throw Throwables.propagate(e);
+		}
+	}
+
+	@Override
+	public Optional<Guild> getGuildUnchecked(final String id) {
+		checkNotNull(id, "missing id");
+		try {
+			return Optional.of(this.getGuild(id));
+		} catch (NoSuchGuildException e) {
+			return Optional.absent();
 		}
 	}
 }

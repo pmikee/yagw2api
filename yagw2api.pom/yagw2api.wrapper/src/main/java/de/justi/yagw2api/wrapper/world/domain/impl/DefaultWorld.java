@@ -9,9 +9,9 @@ package de.justi.yagw2api.wrapper.world.domain.impl;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,8 +37,13 @@ import de.justi.yagw2api.wrapper.world.domain.WorldLocationType;
 import de.justi.yagwapi.common.Unmodifiable;
 
 public final class DefaultWorld implements World {
+	// STATIC
+	public static WorldBuilder builder() {
+		return new DefaultWorldBuilder();
+	}
 
-	public static final class DefaultWorldBuilder implements World.WorldBuilder {
+	// EMBEDDED
+	private static final class DefaultWorldBuilder implements World.WorldBuilder {
 		// FIELDS
 		@Nullable
 		private Integer id = null;

@@ -29,16 +29,10 @@
 		<!-- DEPENDENCIES -->
 		<jsr305.version>3.0.0</jsr305.version>
 		<jna-platform.version>4.1.0</jna-platform.version>
-		<mydoggy.version>1.5.0-beta-r1389</mydoggy.version>
-		<jfreechart.version>1.0.19</jfreechart.version>
-		<jgrapht.version>0.9.0</jgrapht.version>
-		<jgraph.version>5.13.0</jgraph.version>
 		<eclipselink.version>2.5.2</eclipselink.version>
-		<derby.version>10.11.1.1</derby.version>
-		<slf4j.version>1.7.10</slf4j.version>
+		<slf4j.version>1.7.12</slf4j.version>
 		<jersey.version>1.18.3</jersey.version>
 		<guava.version>18.0</guava.version>
-		<miglayout.version>3.7.4</miglayout.version>
 		<gson.version>2.3.1</gson.version>
 		<guice.version>3.0</guice.version>
 		<junit.version>4.12</junit.version>
@@ -151,6 +145,13 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>${maven-surefire-plugin.version}</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>test</goal>
+							</goals>
+						</execution>
+					</executions>
 					<configuration>
 						<disableXmlReport>true</disableXmlReport>
 						<failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
@@ -161,6 +162,14 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-failsafe-plugin</artifactId>
 					<version>${maven-failsafe-plugin.version}</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>integration-test</goal>
+								<goal>verify</goal>
+							</goals>
+						</execution>
+					</executions>
 					<configuration>
 						<disableXmlReport>true</disableXmlReport>
 						<failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
@@ -176,6 +185,33 @@
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>license-maven-plugin</artifactId>
 					<version>${license-maven-plugin.version}</version>
+				</plugin>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.codehaus.mojo</groupId>
+										<artifactId>license-maven-plugin</artifactId>
+										<versionRange>[1.8,)</versionRange>
+										<goals>
+											<goal>check-file-header</goal>
+											<goal>update-file-header</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<execute></execute>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -317,61 +353,9 @@
 				<version>${jna-platform.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>net.sourceforge.mydoggy</groupId>
-				<artifactId>mydoggy-api</artifactId>
-				<version>${mydoggy.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>net.sourceforge.mydoggy</groupId>
-				<artifactId>mydoggy-res</artifactId>
-				<version>${mydoggy.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>net.sourceforge.mydoggy</groupId>
-				<artifactId>mydoggy-plaf</artifactId>
-				<version>${mydoggy.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.jfree</groupId>
-				<artifactId>jfreechart</artifactId>
-				<version>${jfreechart.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>jgrapht</groupId>
-				<artifactId>jgrapht</artifactId>
-				<version>${jgrapht.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>jgraph</groupId>
-				<artifactId>jgraph</artifactId>
-				<version>${jgraph.version}</version>
-			</dependency>
-			<dependency>
 				<groupId>org.eclipse.persistence</groupId>
 				<artifactId>org.eclipse.persistence.jpa</artifactId>
 				<version>${eclipselink.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.derby</groupId>
-				<artifactId>derbytools</artifactId>
-				<version>${derby.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.derby</groupId>
-				<artifactId>derbynet</artifactId>
-				<version>${derby.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.derby</groupId>
-				<artifactId>derby</artifactId>
-				<version>${derby.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.derby</groupId>
-				<artifactId>derbyclient</artifactId>
-				<version>${derby.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.sun.jersey</groupId>
@@ -387,11 +371,6 @@
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
 				<version>${guava.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.miglayout</groupId>
-				<artifactId>miglayout</artifactId>
-				<version>${miglayout.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.google.code.gson</groupId>
