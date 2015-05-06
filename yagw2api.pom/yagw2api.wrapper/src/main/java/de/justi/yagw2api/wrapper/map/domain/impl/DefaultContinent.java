@@ -103,7 +103,7 @@ final class DefaultContinent implements Continent {
 		this.id = checkNotNull(builder.id, "missing id in %s", builder);
 		this.name = checkNotNull(builder.name, "missing name in %s", builder);
 		this.dimension = checkNotNull(builder.dimension, "missing dimension in %s", builder);
-		this.map = checkNotNull(builder.map, "missing map in %s", this.map);
+		this.map = checkNotNull(builder.map, "missing map in %s", builder);
 	}
 
 	// METHODS

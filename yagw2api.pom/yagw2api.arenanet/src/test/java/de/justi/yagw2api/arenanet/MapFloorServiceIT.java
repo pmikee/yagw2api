@@ -9,9 +9,9 @@ package de.justi.yagw2api.arenanet;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,8 +38,8 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 
-import de.justi.yagw2api.arenanet.dto.map.MapFloorDTO;
 import de.justi.yagw2api.arenanet.dto.map.DefaultMapDTOFactory;
+import de.justi.yagw2api.arenanet.dto.map.MapFloorDTO;
 import de.justi.yagw2api.test.AbstractYAGW2APITest;
 
 @RunWith(Parameterized.class)
@@ -52,26 +52,22 @@ public final class MapFloorServiceIT extends AbstractYAGW2APITest {
 	public static Collection<Object[]> parameters() {
 		//@formatter:off
 		return ImmutableList.copyOf(new Object[][]{
-				{ 1, 1, Locale.GERMAN },
-				{ 1, 1, Locale.ENGLISH },
-				{ 1, 1, Locale.FRENCH },
-				{ 1, 2, Locale.GERMAN },
-				{ 1, 2, Locale.ENGLISH },
-				{ 1, 2, Locale.FRENCH },
-				{ 2, 1, Locale.GERMAN },
-				{ 2, 1, Locale.ENGLISH },
-				{ 2, 1, Locale.FRENCH }				
+				{ "1", 1, Locale.GERMAN },
+				{ "1", 1, Locale.FRENCH },
+				{ "1", 2, Locale.ENGLISH },
+				{ "2", 3, Locale.GERMAN },
+				{ "2", 2, Locale.FRENCH }
 		});
 		//@formatter:on
 	}
 
 	// FIELDS
-	private final int continentId;
+	private final String continentId;
 	private final int floor;
 	private final Locale locale;
 
 	// CONSTRUCTOR
-	public MapFloorServiceIT(final int continentId, final int floor, final Locale locale) {
+	public MapFloorServiceIT(final String continentId, final int floor, final Locale locale) {
 		this.continentId = continentId;
 		this.floor = floor;
 		this.locale = checkNotNull(locale, "missing locale");
@@ -82,7 +78,7 @@ public final class MapFloorServiceIT extends AbstractYAGW2APITest {
 	public void testRetrieveMapFloor() {
 
 		final DefaultMapDTOFactory dtoFactory = new DefaultMapDTOFactory();
-		final DefaultMapFloorService service = new DefaultMapFloorService(dtoFactory);
+		final DefaultMapFloorService service = new DefaultMapFloorService(Locale.GERMANY, dtoFactory);
 
 		final Optional<MapFloorDTO> floor = service.retrieveMapFloor(this.continentId, this.floor, this.locale);
 
