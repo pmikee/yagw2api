@@ -9,9 +9,9 @@ package de.justi.yagw2api.wrapper.map.domain.impl;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,7 +28,6 @@ import com.google.common.base.MoreObjects;
 
 import de.justi.yagw2api.wrapper.map.domain.Continent;
 import de.justi.yagw2api.wrapper.map.domain.ContinentMap;
-import de.justi.yagw2api.wrapper.map.domain.Continent.ContinentBuilder;
 import de.justi.yagwapi.common.Tuple2;
 
 final class DefaultContinent implements Continent {
@@ -48,6 +47,8 @@ final class DefaultContinent implements Continent {
 		private String name = null;
 		@Nullable
 		private Tuple2<Integer, Integer> dimension = null;
+		@Nullable
+		private ContinentMap map = null;
 
 		// CONSTRUCTOR
 		private DefaultContinentBuilder() {
@@ -60,26 +61,32 @@ final class DefaultContinent implements Continent {
 		}
 
 		@Override
-		public ContinentBuilder name(@Nullable final String name) {
+		public DefaultContinentBuilder name(@Nullable final String name) {
 			this.name = name;
 			return this;
 		}
 
 		@Override
-		public ContinentBuilder id(@Nullable final String id) {
+		public DefaultContinentBuilder id(@Nullable final String id) {
 			this.id = id;
 			return this;
 		}
 
 		@Override
-		public ContinentBuilder dimension(@Nullable final Tuple2<Integer, Integer> dimension) {
+		public DefaultContinentBuilder dimension(@Nullable final Tuple2<Integer, Integer> dimension) {
 			this.dimension = dimension;
 			return this;
 		}
 
 		@Override
+		public DefaultContinentBuilder map(@Nullable final ContinentMap map) {
+			this.map = map;
+			return this;
+		}
+
+		@Override
 		public String toString() {
-			return MoreObjects.toStringHelper(this).add("id", this.id).add("name", this.name).add("dimension", this.dimension).toString();
+			return MoreObjects.toStringHelper(this).add("id", this.id).add("name", this.name).add("dimension", this.dimension).add("map", this.map).toString();
 		}
 
 	}
@@ -88,6 +95,7 @@ final class DefaultContinent implements Continent {
 	private final String id;
 	private final String name;
 	private final Tuple2<Integer, Integer> dimension;
+	private final ContinentMap map;
 
 	// CONSTRUCTOR
 	private DefaultContinent(final DefaultContinentBuilder builder) {
@@ -95,6 +103,7 @@ final class DefaultContinent implements Continent {
 		this.id = checkNotNull(builder.id, "missing id in %s", builder);
 		this.name = checkNotNull(builder.name, "missing name in %s", builder);
 		this.dimension = checkNotNull(builder.dimension, "missing dimension in %s", builder);
+		this.map = checkNotNull(builder.map, "missing map in %s", this.map);
 	}
 
 	// METHODS
@@ -115,13 +124,12 @@ final class DefaultContinent implements Continent {
 	}
 
 	@Override
-	public String toString() {
-		return MoreObjects.toStringHelper(this).add("id", this.id).add("name", this.name).add("dimension", this.dimension).toString();
+	public ContinentMap getMap() {
+		return this.map;
 	}
 
 	@Override
-	public ContinentMap getMap() {
-		return null;
+	public String toString() {
+		return MoreObjects.toStringHelper(this).add("id", this.id).add("name", this.name).add("dimension", this.dimension).add("map", this.map).toString();
 	}
-
 }

@@ -9,9 +9,9 @@ package de.justi.yagw2api.wrapper.map.domain;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,15 +21,19 @@ package de.justi.yagw2api.wrapper.map.domain;
  */
 
 import java.util.List;
-
-import de.justi.yagwapi.common.Tuple2;
+import java.util.Set;
 
 public interface ContinentMap {
-	int getContinentId();
 
-	Tuple2<Integer, Integer> getPointDimension();
+	public static interface ContinentMapBuilder {
 
-	Tuple2<Integer, Integer> getTileDimension(MapFloor floor);
+		ContinentMap build();
+
+		ContinentMapBuilder continentId(String continentId);
+
+		ContinentMapBuilder floorIds(Set<Integer> floorIds);
+
+	}
 
 	MapFloorTiles getFloorTiles(MapFloor floor);
 

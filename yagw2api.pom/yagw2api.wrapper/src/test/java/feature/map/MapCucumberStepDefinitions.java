@@ -20,6 +20,8 @@ package feature.map;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
+import static feature.map.ValidContinentMatcher.isValidContinent;
+import static org.hamcrest.Matchers.everyItem;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.iterableWithSize;
 import static org.hamcrest.Matchers.not;
@@ -42,10 +44,14 @@ import com.google.common.collect.Lists;
 import cucumber.api.Scenario;
 import cucumber.api.java8.En;
 import de.justi.yagw2api.arenanet.MapContinentService;
+import de.justi.yagw2api.arenanet.MapFloorService;
+import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
 import de.justi.yagw2api.arenanet.dto.map.MapContinentWithIdDTO;
 import de.justi.yagw2api.wrapper.map.DefaultMapWrapper;
 import de.justi.yagw2api.wrapper.map.MapWrapper;
 import de.justi.yagw2api.wrapper.map.domain.Continent;
+import de.justi.yagw2api.wrapper.map.domain.MapDomainFactory;
+import de.justi.yagw2api.wrapper.map.domain.impl.DefaultMapDomainFactory;
 import de.justi.yagwapi.common.Tuples;
 
 public class MapCucumberStepDefinitions implements En {
@@ -57,6 +63,8 @@ public class MapCucumberStepDefinitions implements En {
 	private static MapCucumberStepDefinitions lastInstance;
 
 	// FIELDS
+	private MapFloorService mapFloorService;
+	private MapDomainFactory mapDomainFactory;
 	private MapContinentService mapContinentService;
 	private MapWrapper mapWrapper;
 	private Iterable<Continent> retrievedContinents;
@@ -99,7 +107,21 @@ public class MapCucumberStepDefinitions implements En {
 			this.givenMapContinents.add(dto);
 		});
 		this.Given("^a continent wrapper under test$", () -> {
-			this.mapWrapper = new DefaultMapWrapper(this.mapContinentService);
+			this.mapWrapper = new DefaultMapWrapper(this.mapDomainFactory, this.mapContinentService);
+		});
+
+		this.Given("^a map floor service that returns empty floors$", () -> {
+			this.mapFloorService = Mockito.mock(MapFloorService.class);
+		});
+
+		this.Given("^a map domain service that uses the given map floor service$", () -> {
+			this.mapDomainFactory = new DefaultMapDomainFactory(this.mapFloorService);
+		});
+		this.Given("^the real map floor service$", () -> {
+			this.mapFloorService = YAGW2APIArenanet.getInstance().getMapFloorService();
+		});
+		this.Given("^the real map continent service$", () -> {
+			this.mapContinentService = YAGW2APIArenanet.getInstance().getMapContinentService();
 		});
 	}
 
@@ -112,6 +134,7 @@ public class MapCucumberStepDefinitions implements En {
 	private void configureThen() {
 		this.Then("^'(\\d+)' continents have been retrieved$", (final Integer count) -> {
 			assertThat(this.retrievedContinents, is(iterableWithSize(count)));
+			assertThat(this.retrievedContinents, everyItem(isValidContinent()));
 		});
 		this.Then("^continent with id=\"(.*?)\" and name=\"(.*?)\" is one of them$", (final String id, final String name) -> {
 			assertThat(Iterables.filter(this.retrievedContinents, (continent) -> {

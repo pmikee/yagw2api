@@ -3,12 +3,16 @@ Feature: Map Wrapper
 
 	Scenario: no continent available
 		Given a map continent service that knows no continent at all
+			And a map floor service that returns empty floors
+			And a map domain service that uses the given map floor service
 			And a continent wrapper under test
 		When the user tries to retrieve all continents
 		Then '0' continents have been retrieved
 
 	Scenario: single continent available
 		Given a map continent service that knows the given continents
+			And a map floor service that returns empty floors
+			And a map domain service that uses the given map floor service
 			And a continent with id="xyz" and name="Pusemuckel"
 			And a continent wrapper under test
 		When the user tries to retrieve all continents
@@ -17,6 +21,8 @@ Feature: Map Wrapper
 
 	Scenario: multiple continents available
 		Given a map continent service that knows the given continents
+			And a map floor service that returns empty floors
+			And a map domain service that uses the given map floor service
 			And a continent with id="xyz" and name="Pusemuckel"
 			And another continent with id="123" and name="Stuttgart"
 			And another continent with id="456" and name="Berlin"
