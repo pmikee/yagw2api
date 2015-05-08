@@ -29,6 +29,7 @@ import de.justi.yagw2api.wrapper.map.domain.Continent.ContinentBuilder;
 import de.justi.yagw2api.wrapper.map.domain.ContinentMap.ContinentMapBuilder;
 import de.justi.yagw2api.wrapper.map.domain.MapDomainFactory;
 import de.justi.yagw2api.wrapper.map.domain.MapFloor.MapFloorBuilder;
+import de.justi.yagw2api.wrapper.map.domain.MapFloorTiles.MapFloorTilesBuilder;
 
 public final class DefaultMapDomainFactory implements MapDomainFactory {
 	// FIELDS
@@ -54,6 +55,11 @@ public final class DefaultMapDomainFactory implements MapDomainFactory {
 	@Override
 	public MapFloorBuilder newMapFloorBuilder() {
 		return DefaultMapFloor.builder();
+	}
+
+	@Override
+	public MapFloorTilesBuilder newMapFloorTilesBuilder() {
+		return DefaultMapFloorTiles.builder();
 	}
 
 }

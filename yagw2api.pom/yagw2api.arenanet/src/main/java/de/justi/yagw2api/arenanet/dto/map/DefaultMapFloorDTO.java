@@ -9,9 +9,9 @@ package de.justi.yagw2api.arenanet.dto.map;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,6 +20,8 @@ package de.justi.yagw2api.arenanet.dto.map;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Collections;
@@ -38,13 +40,13 @@ import de.justi.yagwapi.common.Tuple4;
 import de.justi.yagwapi.common.Tuples;
 
 final class DefaultMapFloorDTO implements MapFloorDTO {
-
+	// FIELDS
 	@SerializedName("texture_dims")
 	@Since(1.0)
-	private final int[] textureDimension = new int[2];
+	private final int[] textureDimension;
 	@SerializedName("clamped_view")
 	@Since(1.0)
-	private final int[][] clampedView = new int[2][2];
+	private final int[][] clampedView;
 
 	@SerializedName("regions")
 	@Since(1.0)
@@ -62,6 +64,24 @@ final class DefaultMapFloorDTO implements MapFloorDTO {
 		return Optional.of(Tuples.of(this.clampedView[0][0], this.clampedView[0][1], this.clampedView[1][0], this.clampedView[1][1]));
 	});
 
+	// CONSTRUCTOR
+	DefaultMapFloorDTO() {
+		this.clampedView = new int[2][2];
+		this.textureDimension = new int[2];
+	}
+
+	DefaultMapFloorDTO(final int[] textureDimension, final int[][] clampedView) {
+		checkNotNull(textureDimension, "missing textureDimension");
+		checkArgument(textureDimension.length == 2, "unexpected length of textureDimension: %s", textureDimension.length);
+		checkNotNull(clampedView, "missing clampedView");
+		checkArgument(clampedView.length == 2, "unexpected length of clampedView: %s", clampedView.length);
+		checkArgument(clampedView[0].length == 2, "unexpected length of clampedView[0]: %s", clampedView[0].length);
+		checkArgument(clampedView[1].length == 2, "unexpected length of clampedView[1]: %s", clampedView[1].length);
+		this.textureDimension = textureDimension;
+		this.clampedView = clampedView;
+	}
+
+	// METHODS
 	@Override
 	public Tuple2<Integer, Integer> getTextureDimension() {
 		return this.textureDimensionTupleSupplier.get();

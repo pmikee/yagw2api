@@ -27,4 +27,6 @@ public interface MapDomainFactory {
 	ContinentMap.ContinentMapBuilder newContinentMapBuilder();
 
 	MapFloor.MapFloorBuilder newMapFloorBuilder();
+
+	MapFloorTiles.MapFloorTilesBuilder newMapFloorTilesBuilder();
 }
