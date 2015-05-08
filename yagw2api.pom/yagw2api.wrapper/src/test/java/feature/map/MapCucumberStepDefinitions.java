@@ -22,9 +22,11 @@ package feature.map;
 
 import static feature.map.ValidContinentMatcher.isValidContinent;
 import static org.hamcrest.Matchers.everyItem;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.iterableWithSize;
 import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.doAnswer;
@@ -36,6 +38,7 @@ import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
@@ -52,6 +55,7 @@ import de.justi.yagw2api.wrapper.map.DefaultMapWrapper;
 import de.justi.yagw2api.wrapper.map.MapWrapper;
 import de.justi.yagw2api.wrapper.map.domain.Continent;
 import de.justi.yagw2api.wrapper.map.domain.MapDomainFactory;
+import de.justi.yagw2api.wrapper.map.domain.MapFloor;
 import de.justi.yagw2api.wrapper.map.domain.impl.DefaultMapDomainFactory;
 import de.justi.yagwapi.common.Tuples;
 
@@ -144,10 +148,23 @@ public class MapCucumberStepDefinitions implements En {
 			assertThat(this.retrievedContinents, is(iterableWithSize(count)));
 			assertThat(this.retrievedContinents, everyItem(isValidContinent()));
 		});
-		this.Then("^continent with id=\"(.*?)\" and name=\"(.*?)\" is one of them$", (final String id, final String name) -> {
+		this.Then("^continent with id=\"(.*?)\" and name=\"(.*?)\" is one of them$", (final String continentId, final String name) -> {
 			assertThat(Iterables.filter(this.retrievedContinents, (continent) -> {
-				return continent.getId().equals(id) && continent.getName().equals(name);
+				return continent.getId().equals(continentId) && continent.getName().equals(name);
 			}), is(iterableWithSize(1)));
+		});
+		this.Then("^the continent with id=\"(.*?)\" continent has a floor with index '(\\d+)'$", (final String continentId, final Integer floorIndex) -> {
+			final List<Continent> continentsMatchingGivenId = FluentIterable.from(this.retrievedContinents).filter((continent) -> {
+				return continent.getId().equals(continentId);
+			}).toList();
+			assertThat(continentsMatchingGivenId, is(iterableWithSize(1)));
+			final Continent continent = continentsMatchingGivenId.get(0);
+			assertThat(continent.getMap(), is(notNullValue()));
+			assertThat(continent.getMap().getFloors().size(), is(greaterThan(0)));
+			final List<MapFloor> floorsMatchingFloorIndex = FluentIterable.from(continent.getMap().getFloors()).filter((final MapFloor floor) -> {
+				return floor.getIndex() == floorIndex;
+			}).toList();
+			assertThat(floorsMatchingFloorIndex, is(iterableWithSize(1)));
 		});
 	}
 }
