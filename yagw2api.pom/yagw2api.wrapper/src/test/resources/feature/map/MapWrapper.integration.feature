@@ -12,3 +12,4 @@ Feature: Map Wrapper
 			And the continent with id="1" continent has a floor with index '1'
 			And the continent with id="1" continent has a floor with index '2'
 			And the continent with id="1" continent has a floor with index '10'
+			And the continent with id="2" continent has a floor with index '1'
