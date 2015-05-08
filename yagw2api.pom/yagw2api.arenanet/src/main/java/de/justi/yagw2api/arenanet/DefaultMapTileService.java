@@ -9,9 +9,9 @@ package de.justi.yagw2api.arenanet;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,7 +23,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.Thread.UncaughtExceptionHandler;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -37,7 +36,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.IntUnaryOperator;
 
 import javax.annotation.concurrent.Immutable;
 
@@ -55,14 +53,9 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 final class DefaultMapTileService implements MapTileService {
 	// CONSTS
 	private static final Path RELATIVE_TEMP_DIR_PATH = Paths.get("yagw2api", DefaultMapTileService.class.getSimpleName());
-	private static final ThreadFactory THREAD_FACTORY = new ThreadFactoryBuilder().setDaemon(true).setNameFormat(DefaultMapTileService.class.getSimpleName() + "-%d")
-			.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
-				@Override
-				public void uncaughtException(final Thread t, final Throwable e) {
-					LOGGER.error("Uncaught exception in {}", t, e);
-				}
-			}).build();
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultMapTileService.class);
+	private static final ThreadFactory THREAD_FACTORY = new ThreadFactoryBuilder().setDaemon(true).setNameFormat(DefaultMapTileService.class.getSimpleName() + "-%d")
+			.setUncaughtExceptionHandler((t, e) -> LOGGER.error("Uncaught exception in {}", t, e)).build();
 
 	// EMBEDDED
 	@Immutable
@@ -74,8 +67,8 @@ final class DefaultMapTileService implements MapTileService {
 		private static final AtomicInteger dnsAliasIndex = new AtomicInteger(1);
 		private static final Map<String, MapTileSelector> instances = Maps.newConcurrentMap();
 
-		public static final MapTileSelector of(final int continentId, final int floor, final int zoom, final int x, final int y) {
-			final String key = String.valueOf(continentId) + floor + zoom + x + y;
+		public static final MapTileSelector of(final String continentId, final int floor, final int zoom, final int x, final int y) {
+			final String key = continentId + floor + zoom + x + y;
 			if (!instances.containsKey(key)) {
 				synchronized (instances) {
 					if (!instances.containsKey(key)) {
@@ -87,15 +80,15 @@ final class DefaultMapTileService implements MapTileService {
 		}
 
 		// FIELDS
-		private final int continentId;
+		private final String continentId;
 		private final int floor;
 		private final int zoom;
 		private final int x;
 		private final int y;
 
 		// CONSTRUCTOR
-		private MapTileSelector(final int continentId, final int floor, final int zoom, final int x, final int y) {
-			this.continentId = continentId;
+		private MapTileSelector(final String continentId, final int floor, final int zoom, final int x, final int y) {
+			this.continentId = checkNotNull(continentId, "missing continentId");
 			this.floor = floor;
 			this.zoom = zoom;
 			this.x = x;
@@ -103,7 +96,7 @@ final class DefaultMapTileService implements MapTileService {
 		}
 
 		// METHODS
-		public final int getContinentId() {
+		public final String getContinentId() {
 			return this.continentId;
 		}
 
@@ -125,13 +118,8 @@ final class DefaultMapTileService implements MapTileService {
 
 		public final URL toURL() {
 			try {
-				return new URL("https", "tiles" + dnsAliasIndex.getAndUpdate(new IntUnaryOperator() {
-
-					@Override
-					public int applyAsInt(final int operand) {
-						return (operand % maxDNSAliasIndex) + 1;
-					}
-				}) + ".guildwars2.com", "/" + this.continentId + "/" + this.floor + "/" + this.zoom + "/" + this.x + "/" + this.y + ".jpg");
+				return new URL("https", "tiles" + dnsAliasIndex.getAndUpdate(operand -> (operand % maxDNSAliasIndex) + 1) + ".guildwars2.com", "/" + this.continentId + "/"
+						+ this.floor + "/" + this.zoom + "/" + this.x + "/" + this.y + ".jpg");
 			} catch (MalformedURLException e) {
 				throw new Error(e);
 			}
@@ -170,7 +158,7 @@ final class DefaultMapTileService implements MapTileService {
 	});
 
 	@Override
-	public Optional<Path> getMapTile(final int continentId, final int floor, final int zoom, final int x, final int y) {
+	public Optional<Path> getMapTile(final String continentId, final int floor, final int zoom, final int x, final int y) {
 		try {
 			return this.getMapTileAsync(continentId, floor, zoom, x, y).get();
 		} catch (InterruptedException | ExecutionException e) {
@@ -179,7 +167,7 @@ final class DefaultMapTileService implements MapTileService {
 	}
 
 	@Override
-	public Future<Optional<Path>> getMapTileAsync(final int continentId, final int floor, final int zoom, final int x, final int y) {
+	public Future<Optional<Path>> getMapTileAsync(final String continentId, final int floor, final int zoom, final int x, final int y) {
 		return this.executor.submit(() -> {
 			final MapTileSelector selector = MapTileSelector.of(continentId, floor, zoom, x, y);
 			try {

@@ -25,6 +25,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.inject.Inject;
 
 import de.justi.yagw2api.arenanet.MapFloorService;
+import de.justi.yagw2api.arenanet.MapTileService;
 import de.justi.yagw2api.wrapper.map.domain.Continent.ContinentBuilder;
 import de.justi.yagw2api.wrapper.map.domain.ContinentMap.ContinentMapBuilder;
 import de.justi.yagw2api.wrapper.map.domain.MapDomainFactory;
@@ -34,11 +35,13 @@ import de.justi.yagw2api.wrapper.map.domain.MapFloorTiles.MapFloorTilesBuilder;
 public final class DefaultMapDomainFactory implements MapDomainFactory {
 	// FIELDS
 	private final MapFloorService mapFloorService;
+	private final MapTileService mapTileService;
 
 	// CONSTRUCTOR
 	@Inject
-	public DefaultMapDomainFactory(final MapFloorService mapFloorService) {
+	public DefaultMapDomainFactory(final MapFloorService mapFloorService, final MapTileService mapTileService) {
 		this.mapFloorService = checkNotNull(mapFloorService, "missing mapFloorService");
+		this.mapTileService = checkNotNull(mapTileService, "missing mapTileService");
 	}
 
 	// METHODS
@@ -59,7 +62,7 @@ public final class DefaultMapDomainFactory implements MapDomainFactory {
 
 	@Override
 	public MapFloorTilesBuilder newMapFloorTilesBuilder() {
-		return DefaultMapFloorTiles.builder();
+		return DefaultMapFloorTiles.builder(this.mapTileService);
 	}
 
 }

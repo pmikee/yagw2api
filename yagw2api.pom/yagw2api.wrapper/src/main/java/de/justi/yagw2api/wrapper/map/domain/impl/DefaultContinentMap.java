@@ -103,7 +103,7 @@ final class DefaultContinentMap implements ContinentMap {
 			checkNotNull(floorIndex, "missing floorIndex");
 			final Optional<MapFloorDTO> floorDTO = DefaultContinentMap.this.mapFloorService.retrieveMapFloor(DefaultContinentMap.this.continentId, floorIndex);
 			if (floorDTO.isPresent()) {
-				return DefaultContinentMap.this.mapDomainFactory.newMapFloorTilesBuilder().build();
+				return DefaultContinentMap.this.mapDomainFactory.newMapFloorTilesBuilder().continentId(DefaultContinentMap.this.continentId).floorIndex(floorIndex).build();
 			} else {
 				throw new Error("Missing map floor for floorIndex=" + floorIndex + " and continentId=" + DefaultContinentMap.this.continentId);
 			}

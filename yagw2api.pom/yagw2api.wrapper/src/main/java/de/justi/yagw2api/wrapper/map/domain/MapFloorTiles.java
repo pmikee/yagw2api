@@ -25,10 +25,14 @@ import java.util.Optional;
 public interface MapFloorTiles {
 
 	public static interface MapFloorTilesBuilder {
+		MapFloorTilesBuilder continentId(String continentId);
+
+		MapFloorTilesBuilder floorIndex(int floorIndex);
+
 		MapFloorTiles build();
 	}
 
-	Optional<MapTile> getTileUnchecked(int x, int y);
+	Optional<MapTile> getTileUnchecked(int x, int y, int zoom);
 
-	MapTile getTile(int x, int y) throws NoSuchMapTileException;
+	MapTile getTile(int x, int y, int zoom) throws NoSuchMapTileException;
 }

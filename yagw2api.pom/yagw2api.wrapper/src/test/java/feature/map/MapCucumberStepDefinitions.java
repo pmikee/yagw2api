@@ -45,6 +45,7 @@ import cucumber.api.Scenario;
 import cucumber.api.java8.En;
 import de.justi.yagw2api.arenanet.MapContinentService;
 import de.justi.yagw2api.arenanet.MapFloorService;
+import de.justi.yagw2api.arenanet.MapTileService;
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
 import de.justi.yagw2api.arenanet.dto.map.MapContinentWithIdDTO;
 import de.justi.yagw2api.wrapper.map.DefaultMapWrapper;
@@ -63,6 +64,7 @@ public class MapCucumberStepDefinitions implements En {
 	private static MapCucumberStepDefinitions lastInstance;
 
 	// FIELDS
+	private MapTileService mapTileService;
 	private MapFloorService mapFloorService;
 	private MapDomainFactory mapDomainFactory;
 	private MapContinentService mapContinentService;
@@ -113,15 +115,21 @@ public class MapCucumberStepDefinitions implements En {
 		this.Given("^a map floor service that returns empty floors$", () -> {
 			this.mapFloorService = Mockito.mock(MapFloorService.class);
 		});
+		this.Given("^a map tile service that returns empty map tiles$", () -> {
+			this.mapTileService = Mockito.mock(MapTileService.class);
+		});
 
 		this.Given("^a map domain service that uses the given map floor service$", () -> {
-			this.mapDomainFactory = new DefaultMapDomainFactory(this.mapFloorService);
+			this.mapDomainFactory = new DefaultMapDomainFactory(this.mapFloorService, this.mapTileService);
 		});
 		this.Given("^the real map floor service$", () -> {
 			this.mapFloorService = YAGW2APIArenanet.getInstance().getMapFloorService();
 		});
 		this.Given("^the real map continent service$", () -> {
 			this.mapContinentService = YAGW2APIArenanet.getInstance().getMapContinentService();
+		});
+		this.Given("^the real map tile service$", () -> {
+			this.mapTileService = YAGW2APIArenanet.getInstance().getMapTileService();
 		});
 	}
 
