@@ -76,7 +76,7 @@ final class DefaultMapFloorService implements MapFloorService {
 						final String response = builder.get(String.class);
 						LOGGER.trace("Retrieved response=" + response);
 						final MapFloorDTO result = DefaultMapFloorService.this.mapDTOFactory.newMapFloorOf(response);
-						LOGGER.debug("Built result=" + result);
+						LOGGER.trace("Built result=" + result);
 						return Optional.of(result);
 					} catch (ClientHandlerException | UniformInterfaceException e) {
 						LOGGER.error("Exception thrown while quering {}", resource, e);
