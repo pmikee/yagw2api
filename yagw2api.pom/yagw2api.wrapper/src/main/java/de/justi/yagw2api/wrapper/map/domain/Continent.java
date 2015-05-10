@@ -1,5 +1,7 @@
 package de.justi.yagw2api.wrapper.map.domain;
 
+import javax.annotation.Nullable;
+
 import de.justi.yagwapi.common.Tuple2;
 
 /*
@@ -27,13 +29,13 @@ public interface Continent {
 	static interface ContinentBuilder {
 		Continent build();
 
-		ContinentBuilder map(ContinentMap map);
+		ContinentBuilder map(@Nullable ContinentMap map);
 
-		ContinentBuilder name(String name);
+		ContinentBuilder name(@Nullable String name);
 
-		ContinentBuilder id(String id);
+		ContinentBuilder id(@Nullable String id);
 
-		ContinentBuilder dimension(Tuple2<Integer, Integer> dimension);
+		ContinentBuilder dimension(@Nullable Tuple2<Integer, Integer> dimension);
 	}
 
 	String getId();

@@ -29,4 +29,6 @@ public interface MapDomainFactory {
 	MapFloor.MapFloorBuilder newMapFloorBuilder();
 
 	MapFloorTiles.MapFloorTilesBuilder newMapFloorTilesBuilder();
+
+	MapTile.MapTileBuilder newMapTileBuilder();
 }

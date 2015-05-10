@@ -23,15 +23,17 @@ package de.justi.yagw2api.wrapper.map.domain;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Nullable;
+
 public interface ContinentMap {
 
 	public static interface ContinentMapBuilder {
 
 		ContinentMap build();
 
-		ContinentMapBuilder continentId(String continentId);
+		ContinentMapBuilder continentId(@Nullable String continentId);
 
-		ContinentMapBuilder floorIds(Set<Integer> floorIds);
+		ContinentMapBuilder floorIds(@Nullable Set<Integer> floorIds);
 
 	}
 

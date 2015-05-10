@@ -123,7 +123,7 @@ public class MapCucumberStepDefinitions implements En {
 			this.mapTileService = Mockito.mock(MapTileService.class);
 		});
 
-		this.Given("^a map domain service that uses the given map floor service$", () -> {
+		this.Given("^a map domain factory$", () -> {
 			this.mapDomainFactory = new DefaultMapDomainFactory(this.mapFloorService, this.mapTileService);
 		});
 		this.Given("^the real map floor service$", () -> {
@@ -153,7 +153,7 @@ public class MapCucumberStepDefinitions implements En {
 				return continent.getId().equals(continentId) && continent.getName().equals(name);
 			}), is(iterableWithSize(1)));
 		});
-		this.Then("^the continent with id=\"(.*?)\" continent has a floor with index '(\\d+)'$", (final String continentId, final Integer floorIndex) -> {
+		this.Then("^the continent with id=\"(.*?)\" has a floor with index '(\\d+)'$", (final String continentId, final Integer floorIndex) -> {
 			final List<Continent> continentsMatchingGivenId = FluentIterable.from(this.retrievedContinents).filter((continent) -> {
 				return continent.getId().equals(continentId);
 			}).toList();

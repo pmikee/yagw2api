@@ -22,10 +22,12 @@ package de.justi.yagw2api.wrapper.map.domain;
 
 import java.util.Optional;
 
+import javax.annotation.Nullable;
+
 public interface MapFloorTiles {
 
 	public static interface MapFloorTilesBuilder {
-		MapFloorTilesBuilder continentId(String continentId);
+		MapFloorTilesBuilder continentId(@Nullable String continentId);
 
 		MapFloorTilesBuilder floorIndex(int floorIndex);
 
