@@ -23,16 +23,21 @@ package de.justi.yagw2api.wrapper.map.domain.impl;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 import javax.annotation.Nullable;
 
 import com.google.common.base.MoreObjects;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.google.inject.Inject;
 
 import de.justi.yagw2api.wrapper.map.domain.MapDomainFactory;
 import de.justi.yagw2api.wrapper.map.domain.MapFloorTiles;
 import de.justi.yagw2api.wrapper.map.domain.MapTile;
 import de.justi.yagw2api.wrapper.map.domain.NoSuchMapTileException;
+import de.justi.yagwapi.common.Tuple2;
 import de.justi.yagwapi.common.Tuples;
 
 final class DefaultMapFloorTiles implements MapFloorTiles {
@@ -87,6 +92,25 @@ final class DefaultMapFloorTiles implements MapFloorTiles {
 	private final MapDomainFactory mapDomainFactory;
 	private final int floorIndex;
 	private final String continentId;
+	/**
+	 * <p>
+	 * Tuple2<Integer, Tuple2<Integer, Integer>>
+	 * </p>
+	 * <p>
+	 * Tuple2<{zoom},{position}>
+	 * </p>
+	 */
+	private final LoadingCache<Tuple2<Integer, Tuple2<Integer, Integer>>, MapTile> tileCache = CacheBuilder.newBuilder().build(
+			new CacheLoader<Tuple2<Integer, Tuple2<Integer, Integer>>, MapTile>() {
+				@Override
+				public MapTile load(final Tuple2<Integer, Tuple2<Integer, Integer>> key) throws Exception {
+					checkNotNull(key, "missing key");
+					checkNotNull(key.v1(), "missing zoom in %s", key);
+					checkNotNull(key.v2(), "missing position in %s", key);
+					return DefaultMapFloorTiles.this.mapDomainFactory.newMapTileBuilder().continentId(DefaultMapFloorTiles.this.continentId)
+							.floorIndex(DefaultMapFloorTiles.this.floorIndex).zoom(key.v1()).position(key.v2()).build();
+				}
+			});
 
 	// CONSTRUCTOR
 	private DefaultMapFloorTiles(final DefaultMapFloorTilesBuilder builder) {
@@ -108,7 +132,11 @@ final class DefaultMapFloorTiles implements MapFloorTiles {
 
 	@Override
 	public MapTile getTile(final int x, final int y, final int zoom) throws NoSuchMapTileException {
-		return this.mapDomainFactory.newMapTileBuilder().floorIndex(this.floorIndex).position(Tuples.of(x, y)).build();
+		try {
+			return this.tileCache.get(Tuples.of(zoom, Tuples.of(x, y)));
+		} catch (ExecutionException e) {
+			throw new NoSuchMapTileException();
+		}
 	}
 
 	@Override

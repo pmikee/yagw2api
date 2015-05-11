@@ -31,6 +31,10 @@ public interface MapTile {
 	public static interface MapTileBuilder {
 		MapTileBuilder position(@Nullable Tuple2<Integer, Integer> position);
 
+		MapTileBuilder continentId(@Nullable String continentId);
+
+		MapTileBuilder zoom(int zoom);
+
 		MapTileBuilder floorIndex(int floorIndex);
 
 		MapTile build();

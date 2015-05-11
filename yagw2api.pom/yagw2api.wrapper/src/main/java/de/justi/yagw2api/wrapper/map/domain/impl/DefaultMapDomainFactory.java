@@ -68,7 +68,7 @@ public final class DefaultMapDomainFactory implements MapDomainFactory {
 
 	@Override
 	public MapTileBuilder newMapTileBuilder() {
-		return DefaultMapTile.builder();
+		return DefaultMapTile.builder(this.mapTileService);
 	}
 
 }
