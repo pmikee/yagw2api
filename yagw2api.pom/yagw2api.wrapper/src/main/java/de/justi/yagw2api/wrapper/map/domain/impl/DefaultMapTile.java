@@ -2,17 +2,40 @@ package de.justi.yagw2api.wrapper.map.domain.impl;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.io.IOError;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 import javax.annotation.Nullable;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.MoreObjects;
 
 import de.justi.yagw2api.wrapper.map.domain.MapTile;
+import de.justi.yagwapi.common.Files;
 import de.justi.yagwapi.common.Tuple2;
 
 final class DefaultMapTile implements MapTile {
 	// STATIC
+	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultMapTile.class);
+	private static final String PLACEHOLDER_IMAGE_RESOURCE_PATH = "images/map/placeholder_256x256.gif";
+	private static final Path PLACEHOLDER_256X256;
+	static {
+		try {
+			PLACEHOLDER_256X256 = Files.getTempDir().resolve(DefaultMapTile.class.getSimpleName());
+			try (final InputStream source = DefaultMapTile.class.getClassLoader().getResourceAsStream(PLACEHOLDER_IMAGE_RESOURCE_PATH)) {
+				java.nio.file.Files.copy(source, PLACEHOLDER_256X256, StandardCopyOption.REPLACE_EXISTING);
+			}
+		} catch (IOException e) {
+			LOGGER.error("Failed to initialize DefaultMapTile class", e);
+			throw new IOError(e);
+		}
+	}
+
 	public static final MapTileBuilder builder() {
 		return new DefaultMapTileBuilder();
 	}
@@ -69,8 +92,7 @@ final class DefaultMapTile implements MapTile {
 	// METHODS
 	@Override
 	public Path getImagePath() {
-		// TODO Auto-generated method stub
-		return null;
+		return PLACEHOLDER_256X256;
 	}
 
 	@Override
