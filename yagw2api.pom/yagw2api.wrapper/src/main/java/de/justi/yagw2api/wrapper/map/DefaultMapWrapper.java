@@ -22,17 +22,17 @@ package de.justi.yagw2api.wrapper.map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Iterables;
+import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
+import com.google.common.collect.FluentIterable;
 import com.google.inject.Inject;
 
 import de.justi.yagw2api.arenanet.MapContinentService;
-import de.justi.yagw2api.arenanet.dto.map.MapContinentWithIdDTO;
 import de.justi.yagw2api.wrapper.map.domain.Continent;
 import de.justi.yagw2api.wrapper.map.domain.ContinentMap;
 import de.justi.yagw2api.wrapper.map.domain.MapDomainFactory;
 
-public final class DefaultMapWrapper implements MapWrapper {
+public final class DefaultMapWrapper implements MapWrapper, Supplier<Iterable<Continent>> {
 
 	// CONSTS
 
@@ -41,34 +41,38 @@ public final class DefaultMapWrapper implements MapWrapper {
 	// FIELDS
 	private final MapDomainFactory mapDomainFactory;
 	private final MapContinentService mapContinentService;
-	private final Function<MapContinentWithIdDTO, Continent> continentConverter;
+	private final Supplier<Iterable<Continent>> continents = Suppliers.memoize(this);
 
 	// CONSTRUCTOR
 	@Inject
 	public DefaultMapWrapper(final MapDomainFactory mapDomainFactory, final MapContinentService mapContinentService) {
 		this.mapContinentService = checkNotNull(mapContinentService, "missing mapContinentService");
 		this.mapDomainFactory = checkNotNull(mapDomainFactory, "missing mapDomainFactory");
-		this.continentConverter = input -> {
-			checkNotNull(input, "missing input");
-			//@formatter:off
-			final ContinentMap map = mapDomainFactory.newContinentMapBuilder().
-					continentId(input.getId()).
-					floorIds(input.getFloors()).
-					build();
-			return this.mapDomainFactory.newContinentBuilder().
-						id(input.getId()).
-						name(input.getName()).
-						dimension(input.getDimension()).
-						map(map).
-						build();
-			//@formatter:on
-		};
 	}
 
 	// METHODS
 
 	@Override
 	public Iterable<Continent> getContinents() {
-		return Iterables.transform(this.mapContinentService.retrieveAllContinents(), this.continentConverter);
+		return this.continents.get();
+	}
+
+	@Override
+	public synchronized Iterable<Continent> get() {
+		return FluentIterable.from(this.mapContinentService.retrieveAllContinents()).transform((c) -> {
+			checkNotNull(c, "missing input");
+			//@formatter:off
+			final ContinentMap map = this.mapDomainFactory.newContinentMapBuilder().
+					continentId(c.getId()).
+					floorIds(c.getFloors()).
+					build();
+			return this.mapDomainFactory.newContinentBuilder().
+						id(c.getId()).
+						name(c.getName()).
+						dimension(c.getDimension()).
+						map(map).
+						build();
+			//@formatter:on
+			}).toList();
 	}
 }

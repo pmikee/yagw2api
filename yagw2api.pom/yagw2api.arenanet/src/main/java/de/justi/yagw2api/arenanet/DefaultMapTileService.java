@@ -31,9 +31,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -48,6 +46,9 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Maps;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 final class DefaultMapTileService implements MapTileService {
@@ -132,7 +133,7 @@ final class DefaultMapTileService implements MapTileService {
 		}
 	}
 
-	private final ExecutorService executor = Executors.newCachedThreadPool(THREAD_FACTORY);
+	private final ListeningExecutorService listeningExecutorService = MoreExecutors.listeningDecorator(Executors.newCachedThreadPool(THREAD_FACTORY));
 	private final LoadingCache<MapTileSelector, Optional<Path>> mapTileCache = CacheBuilder.newBuilder().build(new CacheLoader<MapTileSelector, Optional<Path>>() {
 		@Override
 		public Optional<Path> load(final MapTileSelector key) throws Exception {
@@ -167,8 +168,8 @@ final class DefaultMapTileService implements MapTileService {
 	}
 
 	@Override
-	public Future<Optional<Path>> getMapTileAsync(final String continentId, final int floor, final int zoom, final int x, final int y) {
-		return this.executor.submit(() -> {
+	public ListenableFuture<Optional<Path>> getMapTileAsync(final String continentId, final int floor, final int zoom, final int x, final int y) {
+		return this.listeningExecutorService.submit(() -> {
 			final MapTileSelector selector = MapTileSelector.of(continentId, floor, zoom, x, y);
 			try {
 				return DefaultMapTileService.this.mapTileCache.get(selector);

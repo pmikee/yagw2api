@@ -30,5 +30,6 @@
 			<AppenderRef ref="Console" />
 		</Root>
 		<logger name="de.justi.yagw2api.wrapper.map.domain.impl.DefaultMapTile" level="TRACE" />
+		<logger name="de.justi.yagw2api.wrapper.map.domain.impl.DefaultMapFloorTiles" level="TRACE" />
 	</Loggers>
 </Configuration>

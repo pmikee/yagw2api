@@ -9,9 +9,9 @@ package de.justi.yagw2api.explorer.rcp.map;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -111,9 +111,9 @@ public class WorldMap extends ViewPart implements ZoomChangedCallback, FloorChan
 
 		this.spnFloor = new Spinner(cmpBasicControls, SWT.BORDER | SWT.READ_ONLY);
 		this.spnFloor.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
-		this.spnFloor.setMaximum(10);
-		this.spnFloor.setMinimum(-10);
-		this.spnFloor.setSelection(1);
+		this.spnFloor.setMaximum(100);
+		this.spnFloor.setMinimum(0);
+		this.spnFloor.setSelection(0);
 
 		CLabel lblContinent = new CLabel(cmpBasicControls, SWT.NONE);
 		lblContinent.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));

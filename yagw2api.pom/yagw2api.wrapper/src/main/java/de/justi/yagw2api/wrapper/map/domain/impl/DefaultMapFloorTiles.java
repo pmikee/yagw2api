@@ -27,6 +27,9 @@ import java.util.concurrent.ExecutionException;
 
 import javax.annotation.Nullable;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.base.MoreObjects;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -37,11 +40,12 @@ import de.justi.yagw2api.wrapper.map.domain.MapDomainFactory;
 import de.justi.yagw2api.wrapper.map.domain.MapFloorTiles;
 import de.justi.yagw2api.wrapper.map.domain.MapTile;
 import de.justi.yagw2api.wrapper.map.domain.NoSuchMapTileException;
-import de.justi.yagwapi.common.Tuple2;
+import de.justi.yagwapi.common.Tuple3;
 import de.justi.yagwapi.common.Tuples;
 
-final class DefaultMapFloorTiles implements MapFloorTiles {
+final class DefaultMapFloorTiles implements MapFloorTiles, MapTile.MapTileCallback {
 	// CONSTS
+	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultMapFloorTiles.class);
 
 	// STATIC
 	public static final MapFloorTilesBuilder builder(final MapDomainFactory mapDomainFactory) {
@@ -83,7 +87,7 @@ final class DefaultMapFloorTiles implements MapFloorTiles {
 
 		@Override
 		public String toString() {
-			return MoreObjects.toStringHelper(this).toString();
+			return MoreObjects.toStringHelper(this).add("continentId", this.continentId).add("floorIndex", this.floorIndex).toString();
 		}
 
 	}
@@ -100,15 +104,16 @@ final class DefaultMapFloorTiles implements MapFloorTiles {
 	 * Tuple2<{zoom},{position}>
 	 * </p>
 	 */
-	private final LoadingCache<Tuple2<Integer, Tuple2<Integer, Integer>>, MapTile> tileCache = CacheBuilder.newBuilder().build(
-			new CacheLoader<Tuple2<Integer, Tuple2<Integer, Integer>>, MapTile>() {
+	private final LoadingCache<Tuple3<Integer, Integer, Integer>, MapTile> tileCache = CacheBuilder.newBuilder().build(
+			new CacheLoader<Tuple3<Integer, Integer, Integer>, MapTile>() {
 				@Override
-				public MapTile load(final Tuple2<Integer, Tuple2<Integer, Integer>> key) throws Exception {
+				public MapTile load(final Tuple3<Integer, Integer, Integer> key) throws Exception {
 					checkNotNull(key, "missing key");
 					checkNotNull(key.v1(), "missing zoom in %s", key);
-					checkNotNull(key.v2(), "missing position in %s", key);
+					checkNotNull(key.v2(), "missing position x in %s", key);
+					checkNotNull(key.v3(), "missing position y in %s", key);
 					return DefaultMapFloorTiles.this.mapDomainFactory.newMapTileBuilder().continentId(DefaultMapFloorTiles.this.continentId)
-							.floorIndex(DefaultMapFloorTiles.this.floorIndex).zoom(key.v1()).position(key.v2()).build();
+							.floorIndex(DefaultMapFloorTiles.this.floorIndex).zoom(key.v1()).position(Tuples.of(key.v2(), key.v3())).callback(DefaultMapFloorTiles.this).build();
 				}
 			});
 
@@ -133,7 +138,7 @@ final class DefaultMapFloorTiles implements MapFloorTiles {
 	@Override
 	public MapTile getTile(final int x, final int y, final int zoom) throws NoSuchMapTileException {
 		try {
-			return this.tileCache.get(Tuples.of(zoom, Tuples.of(x, y)));
+			return this.tileCache.get(Tuples.of(zoom, x, y));
 		} catch (ExecutionException e) {
 			throw new NoSuchMapTileException();
 		}
@@ -142,6 +147,22 @@ final class DefaultMapFloorTiles implements MapFloorTiles {
 	@Override
 	public String toString() {
 		return MoreObjects.toStringHelper(this).add("continentId", this.continentId).add("floorIndex", this.floorIndex).toString();
+	}
+
+	@Override
+	public void onTileImageLoadingSucceeded(final MapTile tile) {
+		LOGGER.trace("onTileImageLoadingSucceeded: {}", tile);
+	}
+
+	@Override
+	public void onTileImageLoadingFailed(final MapTile tile, final Throwable t) {
+		LOGGER.trace("onTileImageLoadingFailed: {}", tile, t);
+	}
+
+	@Override
+	public void onNoTileImageAvailable(final MapTile tile) {
+		LOGGER.trace("onNoTileImageAvailable: {}", tile);
+
 	}
 
 }

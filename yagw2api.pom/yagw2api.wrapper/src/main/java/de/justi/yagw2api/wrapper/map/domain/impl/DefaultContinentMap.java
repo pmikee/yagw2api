@@ -121,7 +121,8 @@ final class DefaultContinentMap implements ContinentMap {
 		this.mapFloorService = checkNotNull(builder.mapFloorService, "missing mapFloorService in %s", builder);
 		this.mapDomainFactory = checkNotNull(builder.mapDomainFactory, "missing mapDomainFactory in %s", builder);
 		this.mapFloors = FluentIterable.from(checkNotNull(builder.floorIds, "missing floorIds"))
-				.<MapFloor> transform(floorId -> this.mapDomainFactory.newMapFloorBuilder().index(floorId).build()).toList();
+				.<MapFloor> transform(floorId -> this.mapDomainFactory.newMapFloorBuilder().index(floorId).build())
+				.toSortedList((a, b) -> Integer.compare(a.getIndex(), b.getIndex()));
 	}
 
 	// METHODS

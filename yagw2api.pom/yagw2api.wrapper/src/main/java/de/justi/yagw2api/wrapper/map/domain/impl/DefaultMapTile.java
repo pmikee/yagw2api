@@ -21,6 +21,7 @@ package de.justi.yagw2api.wrapper.map.domain.impl;
  */
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
 import java.io.IOError;
 import java.io.IOException;
@@ -28,9 +29,9 @@ import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.annotation.Nullable;
 
@@ -39,20 +40,25 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
 
 import de.justi.yagw2api.arenanet.MapTileService;
 import de.justi.yagw2api.wrapper.map.domain.MapTile;
 import de.justi.yagwapi.common.Files;
 import de.justi.yagwapi.common.Tuple2;
 
-final class DefaultMapTile implements MapTile {
+final class DefaultMapTile implements MapTile, FutureCallback<Optional<Path>> {
 	// STATIC
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultMapTile.class);
 	private static final String PLACEHOLDER_IMAGE_RESOURCE_PATH = "images/map/placeholder_256x256.gif";
 	private static final Path PLACEHOLDER_256X256;
 	static {
 		try {
-			PLACEHOLDER_256X256 = Files.getTempDir().resolve("yagw2api").resolve(DefaultMapTile.class.getSimpleName()).resolve("placeholder_256x256.gif");
+			final Path tempDir = Files.getTempDir().resolve("yagw2api").resolve(DefaultMapTile.class.getSimpleName());
+			java.nio.file.Files.createDirectories(tempDir);
+			PLACEHOLDER_256X256 = tempDir.resolve("placeholder_256x256.gif");
 			try (final InputStream source = DefaultMapTile.class.getClassLoader().getResourceAsStream(PLACEHOLDER_IMAGE_RESOURCE_PATH)) {
 				java.nio.file.Files.copy(source, PLACEHOLDER_256X256, StandardCopyOption.REPLACE_EXISTING);
 			}
@@ -79,6 +85,8 @@ final class DefaultMapTile implements MapTile {
 		private Integer zoom = null;
 		@Nullable
 		private String continentId = null;
+		@Nullable
+		private MapTileCallback callback = null;
 
 		// CONSTRUCTOR
 		private DefaultMapTileBuilder(final MapTileService mapTileService) {
@@ -111,6 +119,12 @@ final class DefaultMapTile implements MapTile {
 		}
 
 		@Override
+		public MapTileBuilder callback(@Nullable final MapTileCallback callback) {
+			this.callback = callback;
+			return this;
+		}
+
+		@Override
 		public MapTile build() {
 			return new DefaultMapTile(this);
 		}
@@ -118,7 +132,7 @@ final class DefaultMapTile implements MapTile {
 		@Override
 		public String toString() {
 			return MoreObjects.toStringHelper(this).add("position", this.position).add("floorIndex", this.floorIndex).add("zoom", this.zoom).add("continentId", this.continentId)
-					.toString();
+					.add("callback", this.callback).toString();
 		}
 	}
 
@@ -129,6 +143,9 @@ final class DefaultMapTile implements MapTile {
 	private final int floorIndex;
 	private final int zoom;
 	private final String continentId;
+	private final MapTileCallback callback;
+	private final AtomicBoolean loading = new AtomicBoolean(false);
+	private volatile Optional<Path> path = null;
 
 	// CONSTRUCTOR
 	private DefaultMapTile(final DefaultMapTileBuilder builder) {
@@ -140,32 +157,49 @@ final class DefaultMapTile implements MapTile {
 		this.floorIndex = checkNotNull(builder.floorIndex, "missing floorIndex in %s", builder);
 		this.zoom = checkNotNull(builder.zoom, "missing zoom in %s", builder);
 		this.continentId = checkNotNull(builder.continentId, "missing continentId in %s", builder);
+		this.callback = checkNotNull(builder.callback, "missing callback in %s", builder);
 	}
 
 	// METHODS
 	@Override
 	public Path getImagePath() {
-		final Future<Optional<Path>> tilePathFuture = this.mapTileService.getMapTileAsync(this.continentId, this.floorIndex, this.zoom, this.position.v1(), this.position.v2());
-		try {
-			final Optional<Path> tilePath = tilePathFuture.get(10, TimeUnit.MILLISECONDS);
-			if (tilePath.isPresent()) {
-				LOGGER.trace("Retrieved tilePath={} for {} from {}", tilePath, this, this.mapTileService);
-				return tilePath.get();
-			} else {
-				LOGGER.trace("Found not for {} using {}", this, this.mapTileService);
-				return PLACEHOLDER_256X256;
+		if (!this.loading.getAndSet(true)) {
+			final ListenableFuture<Optional<Path>> tilePathFuture = this.mapTileService.getMapTileAsync(this.continentId, this.floorIndex, this.zoom, this.position.v1(),
+					this.position.v2());
+			try {
+				this.path = tilePathFuture.get(10, TimeUnit.MILLISECONDS);
+			} catch (InterruptedException | ExecutionException | TimeoutException e) {
+				this.path = null;
+				Futures.addCallback(tilePathFuture, this);
 			}
-		} catch (InterruptedException | ExecutionException | TimeoutException e) {
-			LOGGER.trace("Timed out while retrieving tilePath for {} from {}", this, this.mapTileService);
-			return PLACEHOLDER_256X256;
 		}
+		return this.path != null ? this.path.or(PLACEHOLDER_256X256) : PLACEHOLDER_256X256;
+	}
 
+	@Override
+	public void onSuccess(final Optional<Path> result) {
+		checkNotNull(result, "missing result");
+		checkState(this.path == null, "path is already set: %s", this.path);
+		this.path = result;
+		if (this.path.isPresent()) {
+			this.callback.onTileImageLoadingSucceeded(this);
+		} else {
+			this.callback.onNoTileImageAvailable(this);
+		}
+	}
+
+	@Override
+	public void onFailure(final Throwable t) {
+		checkNotNull(t, "missing throwable");
+		checkState(this.path == null, "path is already set: %s", this.path);
+		this.path = Optional.absent();
+		this.callback.onTileImageLoadingFailed(this, t);
 	}
 
 	@Override
 	public String toString() {
 		return MoreObjects.toStringHelper(this).add("position", this.position).add("floorIndex", this.floorIndex).add("zoom", this.zoom).add("continentId", this.continentId)
-				.toString();
+				.add("callback", this.callback).toString();
 	}
 
 }

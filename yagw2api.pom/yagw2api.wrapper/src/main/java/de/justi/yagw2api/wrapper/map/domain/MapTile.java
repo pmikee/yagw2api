@@ -27,8 +27,17 @@ import de.justi.yagwapi.common.Tuple2;
  */
 
 public interface MapTile {
+	public static interface MapTileCallback {
+		void onTileImageLoadingFailed(MapTile tile, Throwable t);
+
+		void onTileImageLoadingSucceeded(MapTile tile);
+
+		void onNoTileImageAvailable(MapTile tile);
+	}
 
 	public static interface MapTileBuilder {
+		MapTileBuilder callback(MapTileCallback callback);
+
 		MapTileBuilder position(@Nullable Tuple2<Integer, Integer> position);
 
 		MapTileBuilder continentId(@Nullable String continentId);
