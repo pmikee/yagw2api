@@ -37,6 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Optional;
+import com.google.common.base.Throwables;
 import com.google.common.collect.FluentIterable;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
@@ -123,12 +124,12 @@ public final class MapWidget extends Composite implements PaintListener {
 						e.gc.setForeground(SWTResourceManager.getColor(255, 0, 0));
 						e.gc.drawText(x + "/" + y + ": " + tile.getImagePath().getFileName().toString(), x * SECTOR_SIZE, y * SECTOR_SIZE);
 						e.gc.drawRectangle(x * SECTOR_SIZE, y * SECTOR_SIZE, SECTOR_SIZE, SECTOR_SIZE);
-					} catch (NoSuchMapTileException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+					} catch (NoSuchMapTileException t) {
+						Throwables.propagate(t);
 					}
 				}
 			}
+			this.scrolling.setMinSize(this.hSectors * SECTOR_SIZE, this.vSectors * SECTOR_SIZE);
 		} else {
 			e.gc.drawText("Unknown continent with id=" + this.continentId, 0, 0);
 		}

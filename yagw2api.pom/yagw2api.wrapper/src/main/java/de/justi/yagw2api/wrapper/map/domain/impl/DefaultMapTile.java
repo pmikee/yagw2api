@@ -167,7 +167,7 @@ final class DefaultMapTile implements MapTile, FutureCallback<Optional<Path>> {
 			final ListenableFuture<Optional<Path>> tilePathFuture = this.mapTileService.getMapTileAsync(this.continentId, this.floorIndex, this.zoom, this.position.v1(),
 					this.position.v2());
 			try {
-				this.path = tilePathFuture.get(10, TimeUnit.MILLISECONDS);
+				this.path = tilePathFuture.get(0, TimeUnit.MILLISECONDS);
 			} catch (InterruptedException | ExecutionException | TimeoutException e) {
 				this.path = null;
 				Futures.addCallback(tilePathFuture, this);
