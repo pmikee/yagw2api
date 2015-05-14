@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
 import com.google.common.collect.FluentIterable;
+import com.google.common.eventbus.Subscribe;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
@@ -47,6 +48,9 @@ import de.justi.yagw2api.wrapper.map.domain.Continent;
 import de.justi.yagw2api.wrapper.map.domain.MapFloorTiles;
 import de.justi.yagw2api.wrapper.map.domain.MapTile;
 import de.justi.yagw2api.wrapper.map.domain.NoSuchMapTileException;
+import de.justi.yagw2api.wrapper.map.event.MapTileImageFailedToLoadEvent;
+import de.justi.yagw2api.wrapper.map.event.MapTileImageLoadedSuccessfullyEvent;
+import de.justi.yagw2api.wrapper.map.event.MapTileImageNotAvailableEvent;
 
 public final class MapWidget extends Composite implements PaintListener {
 	// CONSTS
@@ -84,6 +88,7 @@ public final class MapWidget extends Composite implements PaintListener {
 		this.scrolling.setContent(this.mapCanvas);
 
 		this.display = this.getShell().getDisplay();
+		this.mapWrapper.getChannel().register(this);
 	}
 
 	// METHODS
@@ -102,6 +107,21 @@ public final class MapWidget extends Composite implements PaintListener {
 		this.updateMap();
 	}
 
+	@Subscribe
+	public void onMapTileImageNotAvailableEvent(final MapTileImageNotAvailableEvent e) {
+		// this.updateMap();
+	}
+
+	@Subscribe
+	public void onMapTileImageFailedToLoadEvent(final MapTileImageFailedToLoadEvent e) {
+		// this.updateMap();
+	}
+
+	@Subscribe
+	public void onMapTileImageLoadedSuccessfully(final MapTileImageLoadedSuccessfullyEvent e) {
+		this.updateMap();
+	}
+
 	private synchronized void updateMap() {
 		this.display.syncExec(() -> {
 			this.mapCanvas.redraw();
@@ -113,7 +133,7 @@ public final class MapWidget extends Composite implements PaintListener {
 		final Optional<Continent> continent = FluentIterable.from(this.mapWrapper.getContinents()).filter((c) -> c.getId().equals(String.valueOf(this.continentId))).first();
 
 		if (continent.isPresent()) {
-			final MapFloorTiles tiles = continent.get().getMap().getFloorTiles(continent.get().getMap().getFloors().get(MapWidget.this.floor));
+			final MapFloorTiles tiles = continent.get().getMap().getFloorTiles(continent.get().getMap().getFloors().get(14));// MapWidget.this.floor));
 			for (int x = 0; x < MapWidget.this.hSectors; x++) {
 				for (int y = 0; y < MapWidget.this.vSectors; y++) {
 					MapTile tile;

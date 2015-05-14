@@ -40,12 +40,14 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
+import com.google.common.eventbus.EventBus;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import de.justi.yagw2api.arenanet.MapTileService;
 import de.justi.yagw2api.wrapper.map.domain.MapTile;
+import de.justi.yagw2api.wrapper.map.event.MapEventFactory;
 import de.justi.yagwapi.common.Files;
 import de.justi.yagwapi.common.Tuple2;
 
@@ -68,15 +70,18 @@ final class DefaultMapTile implements MapTile, FutureCallback<Optional<Path>> {
 		}
 	}
 
-	public static final MapTileBuilder builder(final MapTileService mapTileService) {
-		return new DefaultMapTileBuilder(mapTileService);
+	public static final MapTileBuilder builder(final EventBus eventbus, final MapTileService mapTileService, final MapEventFactory mapEventFactory) {
+		return new DefaultMapTileBuilder(checkNotNull(eventbus, "missing eventbus"), checkNotNull(mapTileService, "missing mapTileService"), checkNotNull(mapEventFactory,
+				"missing mapEventFactory"));
 	}
 
 	// EMBEDDED
 	private static final class DefaultMapTileBuilder implements MapTileBuilder {
 
 		// FIELDS
+		private final EventBus eventbus;
 		private final MapTileService mapTileService;
+		private final MapEventFactory mapEventFactory;
 		@Nullable
 		private Tuple2<Integer, Integer> position = null;
 		@Nullable
@@ -85,12 +90,12 @@ final class DefaultMapTile implements MapTile, FutureCallback<Optional<Path>> {
 		private Integer zoom = null;
 		@Nullable
 		private String continentId = null;
-		@Nullable
-		private MapTileCallback callback = null;
 
 		// CONSTRUCTOR
-		private DefaultMapTileBuilder(final MapTileService mapTileService) {
+		private DefaultMapTileBuilder(final EventBus eventbus, final MapTileService mapTileService, final MapEventFactory mapEventFactory) {
+			this.eventbus = checkNotNull(eventbus, "missing eventbus");
 			this.mapTileService = checkNotNull(mapTileService, "missing mapTileService");
+			this.mapEventFactory = checkNotNull(mapEventFactory, "missing mapEventFactory");
 		}
 
 		// METHODS
@@ -119,12 +124,6 @@ final class DefaultMapTile implements MapTile, FutureCallback<Optional<Path>> {
 		}
 
 		@Override
-		public MapTileBuilder callback(@Nullable final MapTileCallback callback) {
-			this.callback = callback;
-			return this;
-		}
-
-		@Override
 		public MapTile build() {
 			return new DefaultMapTile(this);
 		}
@@ -132,32 +131,34 @@ final class DefaultMapTile implements MapTile, FutureCallback<Optional<Path>> {
 		@Override
 		public String toString() {
 			return MoreObjects.toStringHelper(this).add("position", this.position).add("floorIndex", this.floorIndex).add("zoom", this.zoom).add("continentId", this.continentId)
-					.add("callback", this.callback).toString();
+					.toString();
 		}
 	}
 
 	// FIELDS
 
+	private final EventBus eventbus;
 	private final MapTileService mapTileService;
+	private final MapEventFactory mapEventFactory;
 	private final Tuple2<Integer, Integer> position;
 	private final int floorIndex;
 	private final int zoom;
 	private final String continentId;
-	private final MapTileCallback callback;
 	private final AtomicBoolean loading = new AtomicBoolean(false);
 	private volatile Optional<Path> path = null;
 
 	// CONSTRUCTOR
 	private DefaultMapTile(final DefaultMapTileBuilder builder) {
 		checkNotNull(builder, "missing builder");
+		this.eventbus = checkNotNull(builder.eventbus, "missing eventbus in %s", builder);
 		this.mapTileService = checkNotNull(builder.mapTileService, "missing mapTileService in %s", builder);
+		this.mapEventFactory = checkNotNull(builder.mapEventFactory, "missing mapEventFactory in %s", builder);
 		this.position = checkNotNull(builder.position, "missing position in %s", builder);
 		checkNotNull(this.position.v1(), "incomplete position=%s of %s", this.position, this);
 		checkNotNull(this.position.v2(), "incomplete position=%s of %s", this.position, this);
 		this.floorIndex = checkNotNull(builder.floorIndex, "missing floorIndex in %s", builder);
 		this.zoom = checkNotNull(builder.zoom, "missing zoom in %s", builder);
 		this.continentId = checkNotNull(builder.continentId, "missing continentId in %s", builder);
-		this.callback = checkNotNull(builder.callback, "missing callback in %s", builder);
 	}
 
 	// METHODS
@@ -182,9 +183,9 @@ final class DefaultMapTile implements MapTile, FutureCallback<Optional<Path>> {
 		checkState(this.path == null, "path is already set: %s", this.path);
 		this.path = result;
 		if (this.path.isPresent()) {
-			this.callback.onTileImageLoadingSucceeded(this);
+			this.eventbus.post(this.mapEventFactory.newMapTileImageLoadedSuccessfully(this));
 		} else {
-			this.callback.onNoTileImageAvailable(this);
+			this.eventbus.post(this.mapEventFactory.newMapTileImageNotAvailable(this));
 		}
 	}
 
@@ -193,13 +194,13 @@ final class DefaultMapTile implements MapTile, FutureCallback<Optional<Path>> {
 		checkNotNull(t, "missing throwable");
 		checkState(this.path == null, "path is already set: %s", this.path);
 		this.path = Optional.absent();
-		this.callback.onTileImageLoadingFailed(this, t);
+		this.eventbus.post(this.mapEventFactory.newMapTileImageFailedToLoad(this));
 	}
 
 	@Override
 	public String toString() {
 		return MoreObjects.toStringHelper(this).add("position", this.position).add("floorIndex", this.floorIndex).add("zoom", this.zoom).add("continentId", this.continentId)
-				.add("callback", this.callback).toString();
+				.toString();
 	}
 
 }

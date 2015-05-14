@@ -43,7 +43,7 @@ import de.justi.yagw2api.wrapper.map.domain.NoSuchMapTileException;
 import de.justi.yagwapi.common.Tuple3;
 import de.justi.yagwapi.common.Tuples;
 
-final class DefaultMapFloorTiles implements MapFloorTiles, MapTile.MapTileCallback {
+final class DefaultMapFloorTiles implements MapFloorTiles {
 	// CONSTS
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultMapFloorTiles.class);
 
@@ -113,7 +113,7 @@ final class DefaultMapFloorTiles implements MapFloorTiles, MapTile.MapTileCallba
 					checkNotNull(key.v2(), "missing position x in %s", key);
 					checkNotNull(key.v3(), "missing position y in %s", key);
 					return DefaultMapFloorTiles.this.mapDomainFactory.newMapTileBuilder().continentId(DefaultMapFloorTiles.this.continentId)
-							.floorIndex(DefaultMapFloorTiles.this.floorIndex).zoom(key.v1()).position(Tuples.of(key.v2(), key.v3())).callback(DefaultMapFloorTiles.this).build();
+							.floorIndex(DefaultMapFloorTiles.this.floorIndex).zoom(key.v1()).position(Tuples.of(key.v2(), key.v3())).build();
 				}
 			});
 
@@ -147,22 +147,6 @@ final class DefaultMapFloorTiles implements MapFloorTiles, MapTile.MapTileCallba
 	@Override
 	public String toString() {
 		return MoreObjects.toStringHelper(this).add("continentId", this.continentId).add("floorIndex", this.floorIndex).toString();
-	}
-
-	@Override
-	public void onTileImageLoadingSucceeded(final MapTile tile) {
-		LOGGER.trace("onTileImageLoadingSucceeded: {}", tile);
-	}
-
-	@Override
-	public void onTileImageLoadingFailed(final MapTile tile, final Throwable t) {
-		LOGGER.trace("onTileImageLoadingFailed: {}", tile, t);
-	}
-
-	@Override
-	public void onNoTileImageAvailable(final MapTile tile) {
-		LOGGER.trace("onNoTileImageAvailable: {}", tile);
-
 	}
 
 }

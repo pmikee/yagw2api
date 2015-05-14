@@ -43,6 +43,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.eventbus.EventBus;
 
 import cucumber.api.Scenario;
 import cucumber.api.java8.En;
@@ -57,6 +58,8 @@ import de.justi.yagw2api.wrapper.map.domain.Continent;
 import de.justi.yagw2api.wrapper.map.domain.MapDomainFactory;
 import de.justi.yagw2api.wrapper.map.domain.MapFloor;
 import de.justi.yagw2api.wrapper.map.domain.impl.DefaultMapDomainFactory;
+import de.justi.yagw2api.wrapper.map.event.MapEventFactory;
+import de.justi.yagw2api.wrapper.map.event.impl.DefaultMapEventFactory;
 import de.justi.yagwapi.common.Tuples;
 
 public class MapCucumberStepDefinitions implements En {
@@ -68,10 +71,12 @@ public class MapCucumberStepDefinitions implements En {
 	private static MapCucumberStepDefinitions lastInstance;
 
 	// FIELDS
+	private EventBus eventbus;
 	private MapTileService mapTileService;
 	private MapFloorService mapFloorService;
 	private MapDomainFactory mapDomainFactory;
 	private MapContinentService mapContinentService;
+	private MapEventFactory mapEventFactory;
 	private MapWrapper mapWrapper;
 	private Iterable<Continent> retrievedContinents;
 	private List<MapContinentWithIdDTO> givenMapContinents = Lists.newArrayList();
@@ -113,7 +118,7 @@ public class MapCucumberStepDefinitions implements En {
 			this.givenMapContinents.add(dto);
 		});
 		this.Given("^a continent wrapper under test$", () -> {
-			this.mapWrapper = new DefaultMapWrapper(this.mapDomainFactory, this.mapContinentService);
+			this.mapWrapper = new DefaultMapWrapper(this.eventbus, this.mapDomainFactory, this.mapContinentService);
 		});
 
 		this.Given("^a map floor service that returns empty floors$", () -> {
@@ -124,7 +129,7 @@ public class MapCucumberStepDefinitions implements En {
 		});
 
 		this.Given("^a map domain factory$", () -> {
-			this.mapDomainFactory = new DefaultMapDomainFactory(this.mapFloorService, this.mapTileService);
+			this.mapDomainFactory = new DefaultMapDomainFactory(this.eventbus, this.mapFloorService, this.mapTileService, this.mapEventFactory);
 		});
 		this.Given("^the real map floor service$", () -> {
 			this.mapFloorService = YAGW2APIArenanet.getInstance().getMapFloorService();
@@ -134,6 +139,12 @@ public class MapCucumberStepDefinitions implements En {
 		});
 		this.Given("^the real map tile service$", () -> {
 			this.mapTileService = YAGW2APIArenanet.getInstance().getMapTileService();
+		});
+		this.Given("^a synchronous eventbus$", () -> {
+			this.eventbus = new EventBus();
+		});
+		this.Given("^a map event factory$", () -> {
+			this.mapEventFactory = new DefaultMapEventFactory();
 		});
 	}
 

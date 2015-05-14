@@ -33,13 +33,13 @@ import de.justi.yagw2api.wrapper.wvw.domain.WVWScores;
 import de.justi.yagw2api.wrapper.wvw.event.WVWInitializedMatchEvent;
 import de.justi.yagw2api.wrapper.wvw.event.WVWMapScoresChangedEvent;
 import de.justi.yagw2api.wrapper.wvw.event.WVWMatchScoresChangedEvent;
-import de.justi.yagw2api.wrapper.wvw.event.WVWModelEventFactory;
+import de.justi.yagw2api.wrapper.wvw.event.WVWEventFactory;
 import de.justi.yagw2api.wrapper.wvw.event.WVWObjectiveCaptureEvent;
 import de.justi.yagw2api.wrapper.wvw.event.WVWObjectiveClaimedEvent;
 import de.justi.yagw2api.wrapper.wvw.event.WVWObjectiveEndOfBuffEvent;
 import de.justi.yagw2api.wrapper.wvw.event.WVWObjectiveUnclaimedEvent;
 
-public final class DefaultWVWModelEventFactory implements WVWModelEventFactory {
+public final class DefaultWVWEventFactory implements WVWEventFactory {
 
 	@Override
 	public WVWObjectiveCaptureEvent newObjectiveCapturedEvent(final WVWObjective source, final World newOwner, final Optional<World> previousOwner) {

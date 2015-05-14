@@ -1,7 +1,4 @@
-package de.justi.yagw2api.wrapper.map;
-
-import de.justi.yagw2api.wrapper.map.domain.Continent;
-import de.justi.yagwapi.common.HasChannel;
+package de.justi.yagw2api.wrapper.map.event;
 
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -12,9 +9,9 @@ import de.justi.yagwapi.common.HasChannel;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,7 +20,10 @@ import de.justi.yagwapi.common.HasChannel;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-public interface MapWrapper extends HasChannel {
+import de.justi.yagw2api.wrapper.map.domain.MapTile;
+import de.justi.yagwapi.common.Event;
 
-	Iterable<Continent> getContinents();
+public interface MapTileEvent extends Event {
+
+	MapTile getMapTile();
 }

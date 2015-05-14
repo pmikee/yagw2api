@@ -20,6 +20,7 @@ package de.justi.yagw2api.wrapper;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
+import com.google.common.eventbus.EventBus;
 import com.google.inject.AbstractModule;
 
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
@@ -31,20 +32,23 @@ import de.justi.yagw2api.wrapper.map.DefaultMapWrapper;
 import de.justi.yagw2api.wrapper.map.MapWrapper;
 import de.justi.yagw2api.wrapper.map.domain.MapDomainFactory;
 import de.justi.yagw2api.wrapper.map.domain.impl.DefaultMapDomainFactory;
+import de.justi.yagw2api.wrapper.map.event.MapEventFactory;
+import de.justi.yagw2api.wrapper.map.event.impl.DefaultMapEventFactory;
 import de.justi.yagw2api.wrapper.world.domain.WorldDomainFactory;
 import de.justi.yagw2api.wrapper.world.domain.impl.DefaultWorldDomainFactory;
 import de.justi.yagw2api.wrapper.wvw.DefaultWVWWrapper;
 import de.justi.yagw2api.wrapper.wvw.WVWWrapper;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWDomainFactory;
 import de.justi.yagw2api.wrapper.wvw.domain.impl.DefaultWVWDomainFactory;
-import de.justi.yagw2api.wrapper.wvw.event.WVWModelEventFactory;
-import de.justi.yagw2api.wrapper.wvw.event.impl.DefaultWVWModelEventFactory;
+import de.justi.yagw2api.wrapper.wvw.event.WVWEventFactory;
+import de.justi.yagw2api.wrapper.wvw.event.impl.DefaultWVWEventFactory;
 
 final public class WrapperModule extends AbstractModule {
 	@Override
 	protected void configure() {
 		this.configureArenanetModule();
 
+		this.configureEventbus();
 		this.configureLocale();
 		this.configureWorld();
 		this.configureGuild();
@@ -54,6 +58,10 @@ final public class WrapperModule extends AbstractModule {
 
 	private void configureArenanetModule() {
 		this.install(new de.justi.yagw2api.arenanet.ArenanetModule());
+	}
+
+	private void configureEventbus() {
+		this.bind(EventBus.class).toInstance(new EventBus("YAGW2API-WRAPPER"));
 	}
 
 	private void configureLocale() {
@@ -71,12 +79,13 @@ final public class WrapperModule extends AbstractModule {
 
 	private void configureMap() {
 		this.bind(MapDomainFactory.class).to(DefaultMapDomainFactory.class).asEagerSingleton();
+		this.bind(MapEventFactory.class).to(DefaultMapEventFactory.class).asEagerSingleton();
 		this.bind(MapWrapper.class).to(DefaultMapWrapper.class).asEagerSingleton();
 	}
 
 	private void configureWVW() {
 		this.bind(WVWDomainFactory.class).to(DefaultWVWDomainFactory.class).asEagerSingleton();
-		this.bind(WVWModelEventFactory.class).to(DefaultWVWModelEventFactory.class).asEagerSingleton();
+		this.bind(WVWEventFactory.class).to(DefaultWVWEventFactory.class).asEagerSingleton();
 		this.bind(WVWWrapper.class).to(DefaultWVWWrapper.class);
 	}
 }

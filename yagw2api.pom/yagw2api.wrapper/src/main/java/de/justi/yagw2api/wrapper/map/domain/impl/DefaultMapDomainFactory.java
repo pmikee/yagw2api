@@ -22,6 +22,7 @@ package de.justi.yagw2api.wrapper.map.domain.impl;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 
 import de.justi.yagw2api.arenanet.MapFloorService;
@@ -32,17 +33,22 @@ import de.justi.yagw2api.wrapper.map.domain.MapDomainFactory;
 import de.justi.yagw2api.wrapper.map.domain.MapFloor.MapFloorBuilder;
 import de.justi.yagw2api.wrapper.map.domain.MapFloorTiles.MapFloorTilesBuilder;
 import de.justi.yagw2api.wrapper.map.domain.MapTile.MapTileBuilder;
+import de.justi.yagw2api.wrapper.map.event.MapEventFactory;
 
 public final class DefaultMapDomainFactory implements MapDomainFactory {
 	// FIELDS
+	private final EventBus eventbus;
 	private final MapFloorService mapFloorService;
 	private final MapTileService mapTileService;
+	private final MapEventFactory mapEventFactory;
 
 	// CONSTRUCTOR
 	@Inject
-	public DefaultMapDomainFactory(final MapFloorService mapFloorService, final MapTileService mapTileService) {
+	public DefaultMapDomainFactory(final EventBus eventbus, final MapFloorService mapFloorService, final MapTileService mapTileService, final MapEventFactory mapEventFactory) {
+		this.eventbus = checkNotNull(eventbus, "missing eventbus");
 		this.mapFloorService = checkNotNull(mapFloorService, "missing mapFloorService");
 		this.mapTileService = checkNotNull(mapTileService, "missing mapTileService");
+		this.mapEventFactory = checkNotNull(mapEventFactory, "missing mapEventFactory");
 	}
 
 	// METHODS
@@ -68,7 +74,7 @@ public final class DefaultMapDomainFactory implements MapDomainFactory {
 
 	@Override
 	public MapTileBuilder newMapTileBuilder() {
-		return DefaultMapTile.builder(this.mapTileService);
+		return DefaultMapTile.builder(this.eventbus, this.mapTileService, this.mapEventFactory);
 	}
 
 }

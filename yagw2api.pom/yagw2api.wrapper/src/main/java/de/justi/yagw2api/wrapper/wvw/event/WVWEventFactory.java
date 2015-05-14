@@ -28,7 +28,7 @@ import de.justi.yagw2api.wrapper.wvw.domain.WVWMatch;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWObjective;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWScores;
 
-public interface WVWModelEventFactory {
+public interface WVWEventFactory {
 	WVWObjectiveUnclaimedEvent newObjectiveUnclaimedEvent(WVWObjective objective, Optional<Guild> previousClaimedByGuild);
 
 	WVWObjectiveClaimedEvent newObjectiveClaimedEvent(WVWObjective objective, Guild claimingGuild, Optional<Guild> previousClaimedByGuild);

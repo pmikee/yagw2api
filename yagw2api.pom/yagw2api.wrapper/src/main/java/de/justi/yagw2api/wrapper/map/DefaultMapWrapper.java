@@ -25,6 +25,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.FluentIterable;
+import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 
 import de.justi.yagw2api.arenanet.MapContinentService;
@@ -39,13 +40,15 @@ public final class DefaultMapWrapper implements MapWrapper, Supplier<Iterable<Co
 	// EMBEDDED
 
 	// FIELDS
+	private final EventBus eventBus;
 	private final MapDomainFactory mapDomainFactory;
 	private final MapContinentService mapContinentService;
 	private final Supplier<Iterable<Continent>> continents = Suppliers.memoize(this);
 
 	// CONSTRUCTOR
 	@Inject
-	public DefaultMapWrapper(final MapDomainFactory mapDomainFactory, final MapContinentService mapContinentService) {
+	public DefaultMapWrapper(final EventBus eventBus, final MapDomainFactory mapDomainFactory, final MapContinentService mapContinentService) {
+		this.eventBus = checkNotNull(eventBus, "missing eventBus");
 		this.mapContinentService = checkNotNull(mapContinentService, "missing mapContinentService");
 		this.mapDomainFactory = checkNotNull(mapDomainFactory, "missing mapDomainFactory");
 	}
@@ -74,5 +77,10 @@ public final class DefaultMapWrapper implements MapWrapper, Supplier<Iterable<Co
 						build();
 			//@formatter:on
 			}).toList();
+	}
+
+	@Override
+	public EventBus getChannel() {
+		return this.eventBus;
 	}
 }

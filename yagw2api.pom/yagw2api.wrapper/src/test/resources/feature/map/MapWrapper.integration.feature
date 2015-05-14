@@ -4,6 +4,8 @@ Feature: Map Wrapper
 		Given the real map continent service
 			And the real map floor service
 			And the real map tile service
+			And a synchronous eventbus
+			And a map event factory
 			And a map domain factory
 			And a continent wrapper under test
 		When the user tries to retrieve all continents

@@ -29,11 +29,11 @@ import org.slf4j.LoggerFactory;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWMatch;
 import de.justi.yagw2api.wrapper.wvw.event.WVWMatchScoresChangedEvent;
-import de.justi.yagw2api.wrapper.wvw.event.WVWModelEventFactory;
+import de.justi.yagw2api.wrapper.wvw.event.WVWEventFactory;
 
 final class DefaultWVWMatchScores extends AbstractWVWScores {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultWVWMatchScores.class);
-	private static final WVWModelEventFactory WVW_MODEL_EVENT_FACTORY = YAGW2APIWrapper.INSTANCE.getWVWDomainEventFactory();
+	private static final WVWEventFactory WVW_MODEL_EVENT_FACTORY = YAGW2APIWrapper.INSTANCE.getWVWDomainEventFactory();
 
 	private final WVWMatch match;
 

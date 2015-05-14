@@ -51,7 +51,7 @@ import de.justi.yagw2api.wrapper.wvw.domain.WVWLocationType;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWMap;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWObjective;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWObjectiveType;
-import de.justi.yagw2api.wrapper.wvw.event.WVWModelEventFactory;
+import de.justi.yagw2api.wrapper.wvw.event.WVWEventFactory;
 import de.justi.yagw2api.wrapper.wvw.event.WVWObjectiveCaptureEvent;
 import de.justi.yagw2api.wrapper.wvw.event.WVWObjectiveClaimedEvent;
 import de.justi.yagw2api.wrapper.wvw.event.WVWObjectiveUnclaimedEvent;
@@ -61,7 +61,7 @@ import de.justi.yagwapi.common.Unmodifiable;
 final class DefaultWVWObjective extends AbstractHasChannel implements WVWObjective {
 	// CONSTS
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultWVWObjective.class);
-	private static final WVWModelEventFactory WVW_MODEL_EVENTS_FACTORY = YAGW2APIWrapper.INSTANCE.getWVWDomainEventFactory();
+	private static final WVWEventFactory WVW_MODEL_EVENTS_FACTORY = YAGW2APIWrapper.INSTANCE.getWVWDomainEventFactory();
 
 	// EMBEDDED
 	final class UnmodifiableWVWObjective implements WVWObjective, Unmodifiable {

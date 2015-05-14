@@ -35,7 +35,7 @@ import de.justi.yagw2api.wrapper.map.MapWrapper;
 import de.justi.yagw2api.wrapper.map.domain.MapDomainFactory;
 import de.justi.yagw2api.wrapper.wvw.WVWWrapper;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWDomainFactory;
-import de.justi.yagw2api.wrapper.wvw.event.WVWModelEventFactory;
+import de.justi.yagw2api.wrapper.wvw.event.WVWEventFactory;
 
 public enum YAGW2APIWrapper {
 	INSTANCE;
@@ -44,7 +44,7 @@ public enum YAGW2APIWrapper {
 
 	private final ForkJoinPool forkJoinPool;
 	private final WVWDomainFactory wvwDomainFactory;
-	private final WVWModelEventFactory wvwDomainEventFactory;
+	private final WVWEventFactory wvwDomainEventFactory;
 	private final MapDomainFactory mapDomainFactory;
 	private final WVWWrapper wvwWrapper;
 	private final MapWrapper mapWrapper;
@@ -61,7 +61,7 @@ public enum YAGW2APIWrapper {
 				}, false);
 		this.wvwDomainFactory = checkNotNull(injector.getInstance(WVWDomainFactory.class), "failed to inject WVWDomainFactory via %s", injector);
 		this.mapDomainFactory = checkNotNull(injector.getInstance(MapDomainFactory.class), "failed to inject MapDomainFactory via %s", injector);
-		this.wvwDomainEventFactory = checkNotNull(injector.getInstance(WVWModelEventFactory.class), "failed to inject WVWModelEventFactory via %s", injector);
+		this.wvwDomainEventFactory = checkNotNull(injector.getInstance(WVWEventFactory.class), "failed to inject WVWModelEventFactory via %s", injector);
 		this.wvwWrapper = checkNotNull(injector.getInstance(WVWWrapper.class), "failed to inject WVWWrapper via %s", injector);
 		this.mapWrapper = checkNotNull(injector.getInstance(MapWrapper.class), "failed to inject MapWrapper via %s", injector);
 	}
@@ -78,7 +78,7 @@ public enum YAGW2APIWrapper {
 		return this.wvwDomainFactory;
 	}
 
-	public WVWModelEventFactory getWVWDomainEventFactory() {
+	public WVWEventFactory getWVWDomainEventFactory() {
 		return this.wvwDomainEventFactory;
 	}
 
