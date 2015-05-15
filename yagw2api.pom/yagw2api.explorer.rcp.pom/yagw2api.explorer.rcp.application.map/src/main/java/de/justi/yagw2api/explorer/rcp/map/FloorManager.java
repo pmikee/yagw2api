@@ -57,7 +57,7 @@ final class FloorManager extends AbstractValueManager {
 
 	@Override
 	protected int getDefaultValue() {
-		return 1;
+		return 0;
 	}
 
 }

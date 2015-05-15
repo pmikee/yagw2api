@@ -113,7 +113,7 @@ public class WorldMap extends ViewPart implements ZoomChangedCallback, FloorChan
 		this.spnFloor.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
 		this.spnFloor.setMaximum(100);
 		this.spnFloor.setMinimum(0);
-		this.spnFloor.setSelection(0);
+		this.spnFloor.setSelection(this.floorManager.getCurrentValue());
 
 		CLabel lblContinent = new CLabel(cmpBasicControls, SWT.NONE);
 		lblContinent.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
@@ -121,7 +121,7 @@ public class WorldMap extends ViewPart implements ZoomChangedCallback, FloorChan
 
 		this.cmbContinent = new Combo(cmpBasicControls, SWT.READ_ONLY);
 		this.cmbContinent.setItems(new String[] { "Tyria", "Mists" });
-		this.cmbContinent.select(0);
+		this.cmbContinent.select(this.continentManager.getCurrentValue() - 1);
 		this.cmbContinent.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
 		this.map = new MapWidget(parent);
 		GridLayout gridLayout = (GridLayout) this.map.getLayout();
@@ -168,13 +168,13 @@ public class WorldMap extends ViewPart implements ZoomChangedCallback, FloorChan
 		this.btnZoomOut.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				WorldMap.this.zoomManager.decrement();
+				WorldMap.this.zoomManager.decrementBy(25);
 			}
 		});
 		this.btnZoomIn.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				WorldMap.this.zoomManager.increment();
+				WorldMap.this.zoomManager.incrementBy(25);
 			}
 		});
 		this.zoomManager.reset();
@@ -204,7 +204,7 @@ public class WorldMap extends ViewPart implements ZoomChangedCallback, FloorChan
 		checkNotNull(this.map, "missing map");
 		checkNotNull(this.txtZoom, "missing txtZoom");
 		this.map.setZoomAndUpdate(newZoom);
-		this.txtZoom.setText(newZoom * 100 + "%");
+		this.txtZoom.setText(newZoom + "%");
 	}
 
 	@Override

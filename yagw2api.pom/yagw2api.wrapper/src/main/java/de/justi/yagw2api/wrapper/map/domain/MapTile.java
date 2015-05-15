@@ -41,6 +41,14 @@ public interface MapTile {
 		MapTile build();
 	}
 
+	Tuple2<Integer, Integer> getPosition();
+
+	int getFloorIndex();
+
+	int getZoom();
+
+	String getContinentId();
+
 	Path getImagePath();
 
 }

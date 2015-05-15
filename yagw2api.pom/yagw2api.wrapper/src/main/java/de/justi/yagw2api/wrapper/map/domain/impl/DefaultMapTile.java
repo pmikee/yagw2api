@@ -203,4 +203,24 @@ final class DefaultMapTile implements MapTile, FutureCallback<Optional<Path>> {
 				.toString();
 	}
 
+	@Override
+	public Tuple2<Integer, Integer> getPosition() {
+		return this.position;
+	}
+
+	@Override
+	public int getFloorIndex() {
+		return this.floorIndex;
+	}
+
+	@Override
+	public int getZoom() {
+		return this.zoom;
+	}
+
+	@Override
+	public String getContinentId() {
+		return this.continentId;
+	}
+
 }

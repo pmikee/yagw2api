@@ -9,9 +9,9 @@ package de.justi.yagw2api.explorer.rcp.map;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,6 +20,7 @@ package de.justi.yagw2api.explorer.rcp.map;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.slf4j.LoggerFactory;
@@ -48,18 +49,34 @@ abstract class AbstractValueManager {
 		return this.updateValue(this.currentValue - 1);
 	}
 
+	public final synchronized int decrementBy(final int delta) {
+		checkArgument(delta > 0, "invalid delta: %s", delta);
+		return this.updateValue(this.currentValue - delta);
+	}
+
+	public final synchronized int incrementBy(final int delta) {
+		checkArgument(delta > 0, "invalid delta: %s", delta);
+		return this.updateValue(this.currentValue + delta);
+	}
+
 	public final synchronized int increment() {
 		return this.updateValue(this.currentValue + 1);
 	}
 
 	private final boolean isOutOfLowerRange(final int value) {
-		return (this.validRange.hasLowerBound() && ((this.validRange.lowerBoundType().equals(BoundType.OPEN) && value < this.validRange.lowerEndpoint()) || (this.validRange
-				.lowerBoundType().equals(BoundType.CLOSED) && value <= this.validRange.lowerEndpoint())));
+		// @formatter:off
+		return  this.validRange.hasLowerBound() &&
+				(this.validRange.lowerBoundType().equals(BoundType.OPEN)   && value <=  this.validRange.lowerEndpoint()) ||
+				(this.validRange.lowerBoundType().equals(BoundType.CLOSED) && value < this.validRange.lowerEndpoint());
+		// @formatter:on
 	}
 
 	private final boolean isOutOfUpperRange(final int value) {
-		return (this.validRange.hasUpperBound() && ((this.validRange.upperBoundType().equals(BoundType.OPEN) && value < this.validRange.upperEndpoint()) || (this.validRange
-				.upperBoundType().equals(BoundType.CLOSED) && value <= this.validRange.upperEndpoint())));
+		// @formatter:off
+		return  this.validRange.hasUpperBound() &&
+				(this.validRange.upperBoundType().equals(BoundType.OPEN)   && value >=  this.validRange.upperEndpoint()) ||
+				(this.validRange.upperBoundType().equals(BoundType.CLOSED) && value > this.validRange.upperEndpoint());
+		// @formatter:on
 	}
 
 	public final synchronized int updateValue(final int newValue) {
@@ -67,9 +84,9 @@ abstract class AbstractValueManager {
 		if (this.validRange.contains(newValue)) {
 			this.currentValue = newValue;
 		} else if (this.isOutOfLowerRange(newValue)) {
-			this.currentValue = this.validRange.lowerEndpoint();
+			this.currentValue = this.validRange.lowerBoundType().equals(BoundType.CLOSED) ? this.validRange.lowerEndpoint() : this.validRange.lowerEndpoint() - 1;
 		} else if (this.isOutOfUpperRange(newValue)) {
-			this.currentValue = this.validRange.upperEndpoint();
+			this.currentValue = this.validRange.upperBoundType().equals(BoundType.CLOSED) ? this.validRange.upperEndpoint() : this.validRange.upperEndpoint() - 1;
 		} else {
 			// should never occur, because validZoomRange#contains should take everything that is in range
 			throw new IllegalStateException("Unexpected value=" + newValue + " where valid range is " + this.validRange + " for " + this);
@@ -85,6 +102,21 @@ abstract class AbstractValueManager {
 
 	protected ToStringHelper toStringHelper() {
 		return MoreObjects.toStringHelper(this).add("currentValue", this.currentValue).add("validRange", this.validRange);
+	}
+
+	/**
+	 * @return the currentValue
+	 */
+	public final int getCurrentValue() {
+		return this.currentValue;
+	}
+
+	/**
+	 * @param currentValue
+	 *            the currentValue to set
+	 */
+	public final void setCurrentValue(final int currentValue) {
+		this.currentValue = currentValue;
 	}
 
 	@Override

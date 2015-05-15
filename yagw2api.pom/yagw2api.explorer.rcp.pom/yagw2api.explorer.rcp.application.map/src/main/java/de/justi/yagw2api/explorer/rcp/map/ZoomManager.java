@@ -9,9 +9,9 @@ package de.justi.yagw2api.explorer.rcp.map;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,7 +39,7 @@ final class ZoomManager extends AbstractValueManager {
 	}
 
 	public ZoomManager(final ZoomManager.ZoomChangedCallback callback) {
-		super(Range.closed(1, 7));
+		super(Range.closed(100, 775));
 		this.callback = checkNotNull(callback, "missing callback");
 	}
 
@@ -55,6 +55,6 @@ final class ZoomManager extends AbstractValueManager {
 
 	@Override
 	protected int getDefaultValue() {
-		return 1;
+		return 100;
 	}
 }
