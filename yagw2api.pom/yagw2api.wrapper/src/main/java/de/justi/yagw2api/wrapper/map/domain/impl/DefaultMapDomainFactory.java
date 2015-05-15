@@ -69,12 +69,17 @@ public final class DefaultMapDomainFactory implements MapDomainFactory {
 
 	@Override
 	public MapFloorTilesBuilder newMapFloorTilesBuilder() {
-		return DefaultMapFloorTiles.builder(this);
+		return DefaultMapFloorTiles.builder(this.mapFloorService, this);
 	}
 
 	@Override
 	public MapTileBuilder newMapTileBuilder() {
 		return DefaultMapTile.builder(this.eventbus, this.mapTileService, this.mapEventFactory);
+	}
+
+	@Override
+	public MapTileBuilder newMapUnavailableTileBuilder() {
+		return DefaultUnavailableMapTile.builder();
 	}
 
 }

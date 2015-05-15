@@ -27,6 +27,8 @@ import static com.google.common.base.Preconditions.checkState;
 import java.util.Collections;
 import java.util.Map;
 
+import javax.annotation.Nullable;
+
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
@@ -46,6 +48,7 @@ final class DefaultMapFloorDTO implements MapFloorDTO {
 	private final int[] textureDimension;
 	@SerializedName("clamped_view")
 	@Since(1.0)
+	@Nullable
 	private final int[][] clampedView;
 
 	@SerializedName("regions")
@@ -65,18 +68,22 @@ final class DefaultMapFloorDTO implements MapFloorDTO {
 			.memoize(new Supplier<Optional<Tuple4<Integer, Integer, Integer, Integer>>>() {
 				@Override
 				public Optional<Tuple4<Integer, Integer, Integer, Integer>> get() {
-					checkNotNull(DefaultMapFloorDTO.this.clampedView, "missing clampedView in %s", DefaultMapFloorDTO.this);
-					checkState(DefaultMapFloorDTO.this.clampedView.length == 2, "invalid clamped view length: %s", DefaultMapFloorDTO.this.clampedView.length);
-					checkState(DefaultMapFloorDTO.this.clampedView[0].length == 2, "invalid clamped view length: %s", DefaultMapFloorDTO.this.clampedView[0].length);
-					checkState(DefaultMapFloorDTO.this.clampedView[1].length == 2, "invalid clamped view length: %s", DefaultMapFloorDTO.this.clampedView[1].length);
-					return Optional.of(Tuples.of(DefaultMapFloorDTO.this.clampedView[0][0], DefaultMapFloorDTO.this.clampedView[0][1], DefaultMapFloorDTO.this.clampedView[1][0],
-							DefaultMapFloorDTO.this.clampedView[1][1]));
+					if (DefaultMapFloorDTO.this.clampedView == null) {
+						return Optional.absent();
+					} else {
+						checkNotNull(DefaultMapFloorDTO.this.clampedView, "missing clampedView in %s", DefaultMapFloorDTO.this);
+						checkState(DefaultMapFloorDTO.this.clampedView.length == 2, "invalid clamped view length: %s", DefaultMapFloorDTO.this.clampedView.length);
+						checkState(DefaultMapFloorDTO.this.clampedView[0].length == 2, "invalid clamped view length: %s", DefaultMapFloorDTO.this.clampedView[0].length);
+						checkState(DefaultMapFloorDTO.this.clampedView[1].length == 2, "invalid clamped view length: %s", DefaultMapFloorDTO.this.clampedView[1].length);
+						return Optional.of(Tuples.of(DefaultMapFloorDTO.this.clampedView[0][0], DefaultMapFloorDTO.this.clampedView[0][1],
+								DefaultMapFloorDTO.this.clampedView[1][0], DefaultMapFloorDTO.this.clampedView[1][1]));
+					}
 				}
 			});
 
 	// CONSTRUCTOR
 	DefaultMapFloorDTO() {
-		this.clampedView = new int[2][2];
+		this.clampedView = null;
 		this.textureDimension = new int[2];
 	}
 

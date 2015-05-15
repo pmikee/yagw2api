@@ -64,7 +64,7 @@ import de.justi.yagwapi.common.Tuples;
 public final class MapWidget extends Composite implements PaintListener {
 	// CONSTS
 	private static final int SOURCE_TILE_SIZE = 256;
-	private static final int DEFAULT_TARGET_TILE_SIZE = 128;
+	private static final int DEFAULT_TARGET_TILE_SIZE = 64;
 	private static final Logger LOGGER = LoggerFactory.getLogger(MapWidget.class);
 	// FIELDS
 	private final MapWrapper mapWrapper = YAGW2APIWrapper.INSTANCE.getMapWrapper();
@@ -203,10 +203,11 @@ public final class MapWidget extends Composite implements PaintListener {
 		if (continent.isPresent()) {
 			LOGGER.trace("RepaintEvent: ({}/{}) - ({}/{})", e.x, e.y, e.width, e.height);
 			final MapFloorTiles tiles = continent.get().getMap().getFloorTiles(continent.get().getMap().getFloors().get(MapWidget.this.floor));
+			final Tuple2<Integer, Integer> mapFloorBounds = tiles.getTileIndexDimension(this.zoom);
 			final int minX = Math.max(0, (e.x / this.tileSize));
-			final int maxX = Math.max(minX, ((e.x + e.width) / this.tileSize)) + (((e.x + e.width) % this.tileSize > 0) ? 1 : 0);
+			final int maxX = Math.min(Math.max(minX, ((e.x + e.width) / this.tileSize)) + (((e.x + e.width) % this.tileSize > 0) ? 1 : 0), mapFloorBounds.v1());
 			final int minY = Math.max(0, (e.y / this.tileSize));
-			final int maxY = Math.max(minY, ((e.y + e.height) / this.tileSize)) + (((e.y + e.height) % this.tileSize > 0) ? 1 : 0);
+			final int maxY = Math.min(Math.max(minY, ((e.y + e.height) / this.tileSize)) + (((e.y + e.height) % this.tileSize > 0) ? 1 : 0), mapFloorBounds.v2());
 			if (!this.scrollingActive.get()) {
 				LOGGER.trace(" > draw tiles ({}/{})-({}/{})", minX, minY, maxX - 1, maxY - 1);
 				for (int x = minX; x < maxX; x++) {
@@ -215,9 +216,9 @@ public final class MapWidget extends Composite implements PaintListener {
 							MapTile tile = tiles.getTile(x, y, MapWidget.this.zoom);
 							final Image img = SWTResourceManager.getImage(tile.getImagePath().toString());
 							e.gc.drawImage(img, 0, 0, SOURCE_TILE_SIZE, SOURCE_TILE_SIZE, x * this.tileSize, y * this.tileSize, this.tileSize, this.tileSize);
-							e.gc.setForeground(SWTResourceManager.getColor(255, 0, 0));
-							e.gc.drawText(x + "/" + y, x * this.tileSize, y * this.tileSize);
-							e.gc.drawRectangle(x * this.tileSize, y * this.tileSize, this.tileSize, this.tileSize);
+							// e.gc.setForeground(SWTResourceManager.getColor(255, 0, 0));
+							// e.gc.drawText(x + "/" + y, x * this.tileSize, y * this.tileSize);
+							// e.gc.drawRectangle(x * this.tileSize, y * this.tileSize, this.tileSize, this.tileSize);
 						} catch (NoSuchMapTileException t) {
 							Throwables.propagate(t);
 						}

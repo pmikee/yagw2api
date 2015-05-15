@@ -1,5 +1,6 @@
 package de.justi.yagw2api.wrapper.map.domain;
 
+
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Wrapper
@@ -31,4 +32,6 @@ public interface MapDomainFactory {
 	MapFloorTiles.MapFloorTilesBuilder newMapFloorTilesBuilder();
 
 	MapTile.MapTileBuilder newMapTileBuilder();
+
+	MapTile.MapTileBuilder newMapUnavailableTileBuilder();
 }
