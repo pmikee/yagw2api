@@ -22,6 +22,11 @@ package de.justi.yagw2api.explorer.rcp.map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.io.IOError;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.eclipse.swt.SWT;
@@ -33,6 +38,7 @@ import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Canvas;
@@ -197,6 +203,20 @@ public final class MapWidget extends Composite implements PaintListener {
 		});
 	}
 
+	private final Image loadImage(final Path path) {
+		checkNotNull(path, "missing path");
+		try (final InputStream stream = Files.newInputStream(path)) {
+			final ImageData data = new ImageData(stream);
+			if (data.transparentPixel > 0) {
+				return new Image(this.display, data, data.getTransparencyMask());
+			} else {
+				return new Image(this.display, data);
+			}
+		} catch (IOException e) {
+			throw new IOError(e);
+		}
+	}
+
 	@Override
 	public void paintControl(final PaintEvent e) {
 		final Optional<Continent> continent = FluentIterable.from(this.mapWrapper.getContinents()).filter((c) -> c.getId().equals(String.valueOf(this.continentId))).first();
@@ -214,11 +234,15 @@ public final class MapWidget extends Composite implements PaintListener {
 					for (int y = minY; y < maxY; y++) {
 						try {
 							MapTile tile = tiles.getTile(x, y, MapWidget.this.zoom);
-							final Image img = SWTResourceManager.getImage(tile.getImagePath().toString());
-							e.gc.drawImage(img, 0, 0, SOURCE_TILE_SIZE, SOURCE_TILE_SIZE, x * this.tileSize, y * this.tileSize, this.tileSize, this.tileSize);
-							// e.gc.setForeground(SWTResourceManager.getColor(255, 0, 0));
-							// e.gc.drawText(x + "/" + y, x * this.tileSize, y * this.tileSize);
-							// e.gc.drawRectangle(x * this.tileSize, y * this.tileSize, this.tileSize, this.tileSize);
+							final Image img = this.loadImage(tile.getImagePath());
+							try {
+								e.gc.drawImage(img, 0, 0, SOURCE_TILE_SIZE, SOURCE_TILE_SIZE, x * this.tileSize, y * this.tileSize, this.tileSize, this.tileSize);
+								// e.gc.setForeground(SWTResourceManager.getColor(255, 0, 0));
+								// e.gc.drawText(x + "/" + y, x * this.tileSize, y * this.tileSize);
+								// e.gc.drawRectangle(x * this.tileSize, y * this.tileSize, this.tileSize, this.tileSize);
+							} finally {
+								img.dispose();
+							}
 						} catch (NoSuchMapTileException t) {
 							Throwables.propagate(t);
 						}
