@@ -29,10 +29,21 @@ import de.justi.yagw2api.wrapper.map.domain.MapDomainFactory;
 import de.justi.yagwapi.common.Tuples;
 
 public class DefaultMapFloorTilesTest {
+
+	@Test
+	public final void test() {
+		for (int i = 0; i < 10; i++) {
+			System.out.println(i + ": " + (1 << i));
+		}
+		System.out.println();
+		System.out.println((1 << 6) * 256);
+		System.out.println((1 << 7) * 256);
+	}
+
 	@Test
 	public final void testGetTileTextureSize() {
 
-		final DefaultMapFloorTiles underTest = (DefaultMapFloorTiles) DefaultMapFloorTiles.builder(mock(MapFloorService.class), mock(MapDomainFactory.class)).continentId("99")
+		final DefaultMapFloor underTest = (DefaultMapFloor) DefaultMapFloor.builder(mock(MapFloorService.class), mock(MapDomainFactory.class)).continentId("99")
 				.floorIndex(99).build();
 
 		System.out.println(32768 / 2); // 0

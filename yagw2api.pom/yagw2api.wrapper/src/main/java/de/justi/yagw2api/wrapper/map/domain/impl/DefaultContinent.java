@@ -20,21 +20,35 @@ package de.justi.yagw2api.wrapper.map.domain.impl;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.concurrent.ExecutionException;
 
 import javax.annotation.Nullable;
 
 import com.google.common.base.MoreObjects;
+import com.google.common.base.Optional;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.google.common.collect.Sets;
+import com.google.inject.Inject;
 
+import de.justi.yagw2api.arenanet.MapFloorService;
+import de.justi.yagw2api.arenanet.dto.map.MapFloorDTO;
 import de.justi.yagw2api.wrapper.map.domain.Continent;
-import de.justi.yagw2api.wrapper.map.domain.ContinentMap;
+import de.justi.yagw2api.wrapper.map.domain.MapDomainFactory;
+import de.justi.yagw2api.wrapper.map.domain.MapFloor;
 import de.justi.yagwapi.common.Tuple2;
 
 final class DefaultContinent implements Continent {
 
 	// STATIC
-	public static ContinentBuilder builder() {
-		return new DefaultContinentBuilder();
+	public static ContinentBuilder builder(final MapDomainFactory mapDomainFactory, final MapFloorService mapFloorService) {
+		return new DefaultContinentBuilder(checkNotNull(mapDomainFactory, "missing mapDomainFactory"), checkNotNull(mapFloorService, "missing mapFloorService"));
 	}
 
 	// EMBEDDED
@@ -48,10 +62,19 @@ final class DefaultContinent implements Continent {
 		@Nullable
 		private Tuple2<Integer, Integer> dimension = null;
 		@Nullable
-		private ContinentMap map = null;
+		private Integer minZoom = null;
+		@Nullable
+		private Integer maxZoom = null;
+
+		private final SortedSet<Integer> floorIds = Sets.newTreeSet();
+		private final MapFloorService mapFloorService;
+		private final MapDomainFactory mapDomainFactory;
 
 		// CONSTRUCTOR
-		private DefaultContinentBuilder() {
+		@Inject
+		public DefaultContinentBuilder(final MapDomainFactory mapDomainFactory, final MapFloorService mapFloorService) {
+			this.mapDomainFactory = checkNotNull(mapDomainFactory, "missing mapDomainFactory");
+			this.mapFloorService = checkNotNull(mapFloorService, "missing mapFloorService");
 		}
 
 		// METHODS
@@ -79,14 +102,30 @@ final class DefaultContinent implements Continent {
 		}
 
 		@Override
-		public DefaultContinentBuilder map(@Nullable final ContinentMap map) {
-			this.map = map;
+		public ContinentBuilder minZoom(final int zoom) {
+			this.minZoom = zoom;
+			return this;
+		}
+
+		@Override
+		public ContinentBuilder maxZoom(final int zoom) {
+			this.maxZoom = zoom;
+			return this;
+		}
+
+		@Override
+		public ContinentBuilder floorIds(final Set<Integer> floorIds) {
+			this.floorIds.clear();
+			if (floorIds != null) {
+				this.floorIds.addAll(floorIds);
+			}
 			return this;
 		}
 
 		@Override
 		public String toString() {
-			return MoreObjects.toStringHelper(this).add("id", this.id).add("name", this.name).add("dimension", this.dimension).add("map", this.map).toString();
+			return MoreObjects.toStringHelper(this).add("id", this.id).add("name", this.name).add("dimension", this.dimension).add("floorIds", this.floorIds)
+					.add("minZoom", this.minZoom).add("maxZoom", this.maxZoom).toString();
 		}
 
 	}
@@ -95,7 +134,26 @@ final class DefaultContinent implements Continent {
 	private final String id;
 	private final String name;
 	private final Tuple2<Integer, Integer> dimension;
-	private final ContinentMap map;
+	private final int minZoom;
+	private final int maxZoom;
+	private final SortedSet<Integer> floorIds;
+	private final LoadingCache<Integer, MapFloor> floorCache = CacheBuilder.newBuilder().build(new CacheLoader<Integer, MapFloor>() {
+
+		@Override
+		public MapFloor load(final Integer floorIndex) throws Exception {
+			checkNotNull(floorIndex, "missing floorIndex");
+			final Optional<MapFloorDTO> floorDTO = DefaultContinent.this.mapFloorService.retrieveMapFloor(DefaultContinent.this.id, floorIndex);
+			if (floorDTO.isPresent()) {
+				return DefaultContinent.this.mapDomainFactory.newMapFloorBuilder().continentId(DefaultContinent.this.id).floorIndex(floorIndex)
+						.minZoom(DefaultContinent.this.minZoom).maxZoom(DefaultContinent.this.maxZoom).build();
+			} else {
+				throw new Error("Missing map floor for floorIndex=" + floorIndex + " and continentId=" + DefaultContinent.this.id);
+			}
+		}
+
+	});
+	private final MapFloorService mapFloorService;
+	private final MapDomainFactory mapDomainFactory;
 
 	// CONSTRUCTOR
 	private DefaultContinent(final DefaultContinentBuilder builder) {
@@ -103,7 +161,12 @@ final class DefaultContinent implements Continent {
 		this.id = checkNotNull(builder.id, "missing id in %s", builder);
 		this.name = checkNotNull(builder.name, "missing name in %s", builder);
 		this.dimension = checkNotNull(builder.dimension, "missing dimension in %s", builder);
-		this.map = checkNotNull(builder.map, "missing map in %s", builder);
+		this.minZoom = checkNotNull(builder.minZoom, "missing minZoom in %s", builder);
+		this.maxZoom = checkNotNull(builder.maxZoom, "missing maxZoom in %s", builder);
+		this.floorIds = checkNotNull(builder.floorIds, "missing mapFloors in %s", builder);
+
+		this.mapDomainFactory = checkNotNull(builder.mapDomainFactory, "missing mapDomainFactory in %s", builder);
+		this.mapFloorService = checkNotNull(builder.mapFloorService, "missing mapFloorService in %s", builder);
 	}
 
 	// METHODS
@@ -124,12 +187,33 @@ final class DefaultContinent implements Continent {
 	}
 
 	@Override
-	public ContinentMap getMap() {
-		return this.map;
+	public MapFloor getFloor(final int floorIndex) {
+		checkArgument(this.floorIds.contains(floorIndex), "invalid floor index=%s for %s", floorIndex, this);
+		try {
+			return this.floorCache.get(floorIndex);
+		} catch (ExecutionException e) {
+			throw new Error(e);
+		}
+	}
+
+	@Override
+	public SortedSet<Integer> getFloorIds() {
+		return this.floorIds;
+	}
+
+	@Override
+	public int getMinZoom() {
+		return this.minZoom;
+	}
+
+	@Override
+	public int getMaxZoom() {
+		return this.maxZoom;
 	}
 
 	@Override
 	public String toString() {
-		return MoreObjects.toStringHelper(this).add("id", this.id).add("name", this.name).add("dimension", this.dimension).add("map", this.map).toString();
+		return MoreObjects.toStringHelper(this).add("id", this.id).add("name", this.name).add("dimension", this.dimension).add("minZoom", this.minZoom)
+				.add("maxZoom", this.maxZoom).add("floors", this.floorIds).toString();
 	}
 }

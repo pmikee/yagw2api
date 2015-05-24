@@ -58,7 +58,7 @@ import com.google.common.eventbus.Subscribe;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
 import de.justi.yagw2api.wrapper.map.MapWrapper;
 import de.justi.yagw2api.wrapper.map.domain.Continent;
-import de.justi.yagw2api.wrapper.map.domain.MapFloorTiles;
+import de.justi.yagw2api.wrapper.map.domain.MapFloor;
 import de.justi.yagw2api.wrapper.map.domain.MapTile;
 import de.justi.yagw2api.wrapper.map.domain.NoSuchMapTileException;
 import de.justi.yagw2api.wrapper.map.event.MapTileImageFailedToLoadEvent;
@@ -81,7 +81,7 @@ public final class MapWidget extends Composite implements PaintListener {
 	private final Canvas mapCanvas;
 
 	private int continentId = 1;
-	private int floor = 1;
+	private int floor = 0;
 	private int tileSize = DEFAULT_TARGET_TILE_SIZE;
 	private int zoom = 1;
 
@@ -156,8 +156,8 @@ public final class MapWidget extends Composite implements PaintListener {
 
 	public void setZoomAndUpdate(final int zoom) {
 		this.zoom = zoom / 100;
-		double tileSizeFactory = 1d + ((zoom % 100) / 100d);
-		this.tileSize = (int) (tileSizeFactory * DEFAULT_TARGET_TILE_SIZE);
+		double tileSizeFactor = 1d + ((zoom % 100) / 100d);
+		this.tileSize = (int) (tileSizeFactor * DEFAULT_TARGET_TILE_SIZE);
 		this.updateMap();
 	}
 
@@ -183,7 +183,7 @@ public final class MapWidget extends Composite implements PaintListener {
 
 	private void updateMapForTile(final MapTile tile) {
 		checkNotNull(tile, "missing tile");
-		LOGGER.trace("Update map for tile={}", tile);
+		LOGGER.info("Update map for tile={}", tile);
 		this.updateMapRect(Tuples.of(tile.getPosition().v1() * this.tileSize, tile.getPosition().v2() * this.tileSize), Tuples.of(this.tileSize, this.tileSize));
 	}
 
@@ -198,7 +198,7 @@ public final class MapWidget extends Composite implements PaintListener {
 		checkNotNull(position, "missing position");
 		checkNotNull(size, "missing size");
 		this.display.asyncExec(() -> {
-			LOGGER.info("Update map position={}, width={}, height={}", position, size.v1(), size.v2());
+			LOGGER.info("Update map position={}, width={}, height={} ", position, size.v1(), size.v2());
 			this.mapCanvas.redraw(position.v1(), position.v2(), size.v1(), size.v2(), false);
 		});
 	}
@@ -222,7 +222,7 @@ public final class MapWidget extends Composite implements PaintListener {
 		final Optional<Continent> continent = FluentIterable.from(this.mapWrapper.getContinents()).filter((c) -> c.getId().equals(String.valueOf(this.continentId))).first();
 		if (continent.isPresent()) {
 			LOGGER.trace("RepaintEvent: ({}/{}) - ({}/{})", e.x, e.y, e.width, e.height);
-			final MapFloorTiles tiles = continent.get().getMap().getFloorTiles(continent.get().getMap().getFloors().get(MapWidget.this.floor));
+			final MapFloor tiles = continent.get().getFloor(MapWidget.this.floor);
 			final Tuple2<Integer, Integer> mapFloorBounds = tiles.getTileIndexDimension(this.zoom);
 			final int minX = Math.max(0, (e.x / this.tileSize));
 			final int maxX = Math.min(Math.max(minX, ((e.x + e.width) / this.tileSize)) + (((e.x + e.width) % this.tileSize > 0) ? 1 : 0), mapFloorBounds.v1());
@@ -233,7 +233,7 @@ public final class MapWidget extends Composite implements PaintListener {
 				for (int x = minX; x < maxX; x++) {
 					for (int y = minY; y < maxY; y++) {
 						try {
-							MapTile tile = tiles.getTile(x, y, MapWidget.this.zoom);
+							final MapTile tile = tiles.getTile(x, y, MapWidget.this.zoom);
 							final Image img = this.loadImage(tile.getImagePath());
 							try {
 								e.gc.drawImage(img, 0, 0, SOURCE_TILE_SIZE, SOURCE_TILE_SIZE, x * this.tileSize, y * this.tileSize, this.tileSize, this.tileSize);

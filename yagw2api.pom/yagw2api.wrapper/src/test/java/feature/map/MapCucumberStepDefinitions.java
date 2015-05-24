@@ -26,7 +26,6 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.iterableWithSize;
 import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.doAnswer;
@@ -56,7 +55,6 @@ import de.justi.yagw2api.wrapper.map.DefaultMapWrapper;
 import de.justi.yagw2api.wrapper.map.MapWrapper;
 import de.justi.yagw2api.wrapper.map.domain.Continent;
 import de.justi.yagw2api.wrapper.map.domain.MapDomainFactory;
-import de.justi.yagw2api.wrapper.map.domain.MapFloor;
 import de.justi.yagw2api.wrapper.map.domain.impl.DefaultMapDomainFactory;
 import de.justi.yagw2api.wrapper.map.event.MapEventFactory;
 import de.justi.yagw2api.wrapper.map.event.impl.DefaultMapEventFactory;
@@ -170,12 +168,8 @@ public class MapCucumberStepDefinitions implements En {
 			}).toList();
 			assertThat(continentsMatchingGivenId, is(iterableWithSize(1)));
 			final Continent continent = continentsMatchingGivenId.get(0);
-			assertThat(continent.getMap(), is(notNullValue()));
-			assertThat(continent.getMap().getFloors().size(), is(greaterThan(0)));
-			final List<MapFloor> floorsMatchingFloorIndex = FluentIterable.from(continent.getMap().getFloors()).filter((final MapFloor floor) -> {
-				return floor.getIndex() == floorIndex;
-			}).toList();
-			assertThat(floorsMatchingFloorIndex, is(iterableWithSize(1)));
+			assertThat(continent.getFloorIds().size(), is(greaterThan(0)));
+			assertThat(continent.getFloorIds().contains(floorIndex), is(true));
 		});
 	}
 }

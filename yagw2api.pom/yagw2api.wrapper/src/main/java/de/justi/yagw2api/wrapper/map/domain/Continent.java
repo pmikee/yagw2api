@@ -1,5 +1,8 @@
 package de.justi.yagw2api.wrapper.map.domain;
 
+import java.util.Set;
+import java.util.SortedSet;
+
 import javax.annotation.Nullable;
 
 import de.justi.yagwapi.common.Tuple2;
@@ -29,14 +32,22 @@ public interface Continent {
 	static interface ContinentBuilder {
 		Continent build();
 
-		ContinentBuilder map(@Nullable ContinentMap map);
+		ContinentBuilder floorIds(final Set<Integer> floorIds);
 
 		ContinentBuilder name(@Nullable String name);
 
 		ContinentBuilder id(@Nullable String id);
 
 		ContinentBuilder dimension(@Nullable Tuple2<Integer, Integer> dimension);
+
+		ContinentBuilder minZoom(int zoom);
+
+		ContinentBuilder maxZoom(int zoom);
 	}
+
+	int getMinZoom();
+
+	int getMaxZoom();
 
 	String getId();
 
@@ -44,5 +55,7 @@ public interface Continent {
 
 	String getName();
 
-	ContinentMap getMap();
+	MapFloor getFloor(int floorIndex);
+
+	SortedSet<Integer> getFloorIds();
 }

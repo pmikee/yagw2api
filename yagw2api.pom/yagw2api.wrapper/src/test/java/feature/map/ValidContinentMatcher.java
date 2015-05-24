@@ -26,7 +26,6 @@ import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
 import de.justi.yagw2api.wrapper.map.domain.Continent;
-import de.justi.yagw2api.wrapper.map.domain.MapFloor;
 
 final class ValidContinentMatcher extends TypeSafeMatcher<Continent> {
 	// STATIC
@@ -61,15 +60,12 @@ final class ValidContinentMatcher extends TypeSafeMatcher<Continent> {
 		if (item.getName() == null) {
 			mismatchDescription.appendText("is missing name");
 		}
-		if (item.getMap() == null) {
-			mismatchDescription.appendText("is missing map");
-		}
-		if (item.getMap().getFloors() == null) {
+		if (item.getFloorIds() == null) {
 			mismatchDescription.appendText("is missing map floors");
 		} else {
-			for (MapFloor floor : item.getMap().getFloors()) {
-				if (item.getMap().getFloorTiles(floor) == null) {
-					mismatchDescription.appendText("is missing tiles for " + floor);
+			for (Integer floorIndex : item.getFloorIds()) {
+				if (item.getFloor(floorIndex) == null) {
+					mismatchDescription.appendText("is missing tiles for " + floorIndex);
 				}
 			}
 		}
@@ -87,14 +83,11 @@ final class ValidContinentMatcher extends TypeSafeMatcher<Continent> {
 		if (item.getName() == null) {
 			return false;
 		}
-		if (item.getMap() == null) {
+		if (item.getFloorIds() == null) {
 			return false;
 		}
-		if (item.getMap().getFloors() == null) {
-			return false;
-		}
-		for (MapFloor floor : item.getMap().getFloors()) {
-			if (item.getMap().getFloorTiles(floor) == null) {
+		for (Integer floor : item.getFloorIds()) {
+			if (item.getFloor(floor) == null) {
 				return false;
 			}
 		}

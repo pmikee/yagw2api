@@ -113,7 +113,6 @@ public class WorldMap extends ViewPart implements ZoomChangedCallback, FloorChan
 		this.spnFloor.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
 		this.spnFloor.setMaximum(100);
 		this.spnFloor.setMinimum(0);
-		this.spnFloor.setSelection(this.floorManager.getCurrentValue());
 
 		CLabel lblContinent = new CLabel(cmpBasicControls, SWT.NONE);
 		lblContinent.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));

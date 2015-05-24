@@ -28,10 +28,8 @@ import com.google.inject.Inject;
 import de.justi.yagw2api.arenanet.MapFloorService;
 import de.justi.yagw2api.arenanet.MapTileService;
 import de.justi.yagw2api.wrapper.map.domain.Continent.ContinentBuilder;
-import de.justi.yagw2api.wrapper.map.domain.ContinentMap.ContinentMapBuilder;
 import de.justi.yagw2api.wrapper.map.domain.MapDomainFactory;
-import de.justi.yagw2api.wrapper.map.domain.MapFloor.MapFloorBuilder;
-import de.justi.yagw2api.wrapper.map.domain.MapFloorTiles.MapFloorTilesBuilder;
+import de.justi.yagw2api.wrapper.map.domain.MapFloor.MapFloorTilesBuilder;
 import de.justi.yagw2api.wrapper.map.domain.MapTile.MapTileBuilder;
 import de.justi.yagw2api.wrapper.map.event.MapEventFactory;
 
@@ -54,22 +52,12 @@ public final class DefaultMapDomainFactory implements MapDomainFactory {
 	// METHODS
 	@Override
 	public ContinentBuilder newContinentBuilder() {
-		return DefaultContinent.builder();
+		return DefaultContinent.builder(this, this.mapFloorService);
 	}
 
 	@Override
-	public ContinentMapBuilder newContinentMapBuilder() {
-		return DefaultContinentMap.builder(this, this.mapFloorService);
-	}
-
-	@Override
-	public MapFloorBuilder newMapFloorBuilder() {
-		return DefaultMapFloor.builder();
-	}
-
-	@Override
-	public MapFloorTilesBuilder newMapFloorTilesBuilder() {
-		return DefaultMapFloorTiles.builder(this.mapFloorService, this);
+	public MapFloorTilesBuilder newMapFloorBuilder() {
+		return DefaultMapFloor.builder(this.mapFloorService, this);
 	}
 
 	@Override
