@@ -62,6 +62,8 @@ import de.justi.yagw2api.wrapper.map.domain.Continent;
 import de.justi.yagw2api.wrapper.map.domain.MapFloor;
 
 public class WorldMapViewPart extends ViewPart implements ISelectionListener {
+	private static final int ZOOM_DELTA = 10;
+
 	private static class FloorContentProvider implements IStructuredContentProvider {
 		// FIELDS
 
@@ -288,7 +290,7 @@ public class WorldMapViewPart extends ViewPart implements ISelectionListener {
 	private void setZoom(final int zoom) {
 		final Optional<Continent> continent = this.getSelectedContinent();
 		if (continent.isPresent()) {
-			final int newZoom = Math.max(Math.min(zoom, continent.get().getMaxZoom() * 100 + 75), continent.get().getMinZoom() * 100);
+			final int newZoom = Math.max(Math.min(zoom, (continent.get().getMaxZoom() * 100) + (100 - ZOOM_DELTA)), continent.get().getMinZoom() * 100);
 			LOGGER.info("Zooming from {} to {}", this.zoom, newZoom);
 			this.zoom = newZoom;
 			this.getViewSite().getShell().getDisplay().syncExec(() -> {
@@ -303,11 +305,11 @@ public class WorldMapViewPart extends ViewPart implements ISelectionListener {
 	}
 
 	private void zoomIn() {
-		this.setZoom(this.zoom + 25);
+		this.setZoom(this.zoom + ZOOM_DELTA);
 	}
 
 	private void zoomOut() {
-		this.setZoom(this.zoom - 25);
+		this.setZoom(this.zoom - ZOOM_DELTA);
 	}
 
 	private void selectFloor(final MapFloor floor) {

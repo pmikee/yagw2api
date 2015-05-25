@@ -201,13 +201,11 @@ public final class MapWidget extends Composite implements PaintListener {
 
 	public void setZoomAndUpdate(final int zoom) {
 		checkArgument(zoom >= 0, "invalid zoom: %s", zoom);
-		if (zoom / 100 != this.zoom) {
-			this.zoom = zoom / 100;
-			this.tileSize = (((100 + (zoom % 100)) * DEFAULT_TARGET_TILE_SIZE) / 100);
-			LOGGER.info("Updated tile size to {}", this.tileSize);
-			this.updateScrollingSize();
-			this.updateMap();
-		}
+		this.zoom = zoom / 100;
+		this.tileSize = (((100 + (zoom % 100)) * DEFAULT_TARGET_TILE_SIZE) / 100);
+		LOGGER.info("Updated tile size to {}", this.tileSize);
+		this.updateScrollingSize();
+		this.updateMap();
 	}
 
 	public void setContinentAndUpdate(final Continent continent) {
