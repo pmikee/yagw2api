@@ -20,13 +20,13 @@ package de.justi.yagw2api.explorer.rcp.map;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.io.IOError;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.eclipse.swt.SWT;
@@ -53,6 +53,10 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.google.common.cache.RemovalNotification;
 import com.google.common.eventbus.Subscribe;
 
 import de.justi.yagw2api.wrapper.map.MapWrapper;
@@ -60,9 +64,7 @@ import de.justi.yagw2api.wrapper.map.domain.Continent;
 import de.justi.yagw2api.wrapper.map.domain.MapFloor;
 import de.justi.yagw2api.wrapper.map.domain.MapTile;
 import de.justi.yagw2api.wrapper.map.domain.NoSuchMapTileException;
-import de.justi.yagw2api.wrapper.map.event.MapTileImageFailedToLoadEvent;
-import de.justi.yagw2api.wrapper.map.event.MapTileImageLoadedSuccessfullyEvent;
-import de.justi.yagw2api.wrapper.map.event.MapTileImageNotAvailableEvent;
+import de.justi.yagw2api.wrapper.map.event.MapTileEvent;
 import de.justi.yagwapi.common.Tuple2;
 import de.justi.yagwapi.common.Tuple4;
 import de.justi.yagwapi.common.Tuples;
@@ -88,7 +90,35 @@ public final class MapWidget extends Composite implements PaintListener {
 
 	private Optional<MapFloor> floor = Optional.absent();
 	private Optional<Continent> continent = Optional.absent();
+
 	private int zoom = 1;
+
+	private final LoadingCache<Path, ImageData> tileImageDataCache = CacheBuilder.newBuilder().maximumSize(1024).recordStats().build(new CacheLoader<Path, ImageData>() {
+		@Override
+		public ImageData load(final Path path) throws Exception {
+			checkNotNull(path, "missing path");
+			try (final InputStream stream = Files.newInputStream(path)) {
+				return new ImageData(stream);
+			}
+		}
+	});
+
+	private final LoadingCache<Path, Image> tileImageCache = CacheBuilder.newBuilder().maximumSize(256).recordStats()
+			.removalListener((final RemovalNotification<Path, Image> notification) -> {
+				notification.getValue().dispose();
+			}).build(new CacheLoader<Path, Image>() {
+
+				@Override
+				public Image load(final Path path) throws Exception {
+					checkNotNull(path, "missing path");
+					final ImageData data = MapWidget.this.tileImageDataCache.get(path);
+					if (data.transparentPixel > 0) {
+						return new Image(MapWidget.this.display, data, data.getTransparencyMask());
+					} else {
+						return new Image(MapWidget.this.display, data);
+					}
+				}
+			});
 
 	// CONSTRUCTOR
 	public MapWidget(final Composite parent, final MapWrapper wrapper) {
@@ -118,7 +148,7 @@ public final class MapWidget extends Composite implements PaintListener {
 					final double y = MapWidget.this.scrolling.getMinHeight() * scrolledY;
 					final int xIndex = (int) (x / MapWidget.this.tileSize);
 					final int yIndex = (int) (y / MapWidget.this.tileSize);
-					LOGGER.trace("scrolled=({}%/{}%) -> position=({}/{}) -> index=({}/{})", (scrolledX * 100), (scrolledY * 100), x, y, xIndex, yIndex);
+					LOGGER.info("scrolled=({}%/{}%) -> position=({}/{}) -> index=({}/{})", (scrolledX * 100), (scrolledY * 100), x, y, xIndex, yIndex);
 					if (xIndex != MapWidget.this.lastNotifiedScrolledX || yIndex != MapWidget.this.lastNotifiedScrolledY) {
 						MapWidget.this.lastNotifiedScrolledX = xIndex;
 						MapWidget.this.lastNotifiedScrolledY = yIndex;
@@ -154,7 +184,7 @@ public final class MapWidget extends Composite implements PaintListener {
 	private void updateScrollingSize() {
 		if (this.floor.isPresent()) {
 			final Tuple4<Integer, Integer, Integer, Integer> bounds = this.floor.get().getClampedTileIndexDimension(this.zoom);
-			final Point size = new Point((bounds.v3() - bounds.v1()) * this.tileSize, (bounds.v4() - bounds.v2()) * this.tileSize);
+			final Point size = new Point(bounds.v3() * this.tileSize, bounds.v4() * this.tileSize);
 			this.scrolling.setMinSize(size);
 			LOGGER.info("Updated scrolling size from {}/{} to {}/{}", this.scrolling.getMinWidth(), this.scrolling.getMinHeight(), size.x, size.y);
 		} else {
@@ -170,40 +200,33 @@ public final class MapWidget extends Composite implements PaintListener {
 	}
 
 	public void setZoomAndUpdate(final int zoom) {
-		this.zoom = zoom / 100;
-		double tileSizeFactor = 1d + ((zoom % 100) / 100d);
-		this.tileSize = (int) (tileSizeFactor * DEFAULT_TARGET_TILE_SIZE);
-		LOGGER.info("Updated tile size to {}", this.tileSize);
-		this.updateScrollingSize();
-		this.updateMap();
+		checkArgument(zoom >= 0, "invalid zoom: %s", zoom);
+		if (zoom / 100 != this.zoom) {
+			this.zoom = zoom / 100;
+			this.tileSize = (((100 + (zoom % 100)) * DEFAULT_TARGET_TILE_SIZE) / 100);
+			LOGGER.info("Updated tile size to {}", this.tileSize);
+			this.updateScrollingSize();
+			this.updateMap();
+		}
 	}
 
 	public void setContinentAndUpdate(final Continent continent) {
 		checkNotNull(continent, "missing continent");
 		this.continent = Optional.of(continent);
+		this.floor = Optional.absent();
 		this.updateScrollingSize();
 		this.updateMap();
 	}
 
 	@Subscribe
-	public void onMapTileImageNotAvailableEvent(final MapTileImageNotAvailableEvent e) {
-		this.updateMapForTile(e.getMapTile());
-	}
-
-	@Subscribe
-	public void onMapTileImageFailedToLoadEvent(final MapTileImageFailedToLoadEvent e) {
-		this.updateMapForTile(e.getMapTile());
-	}
-
-	@Subscribe
-	public void onMapTileImageLoadedSuccessfully(final MapTileImageLoadedSuccessfullyEvent e) {
+	public void onMapTileEvent(final MapTileEvent e) {
 		this.updateMapForTile(e.getMapTile());
 	}
 
 	private void updateMapForTile(final MapTile tile) {
 		checkNotNull(tile, "missing tile");
-		// LOGGER.info("Update map for tile={}", tile);
-		// this.updateMapRect(Tuples.of(tile.getPosition().v1() * this.tileSize, tile.getPosition().v2() * this.tileSize), Tuples.of(this.tileSize, this.tileSize));
+		LOGGER.info("Update map for tile={}", tile);
+		this.updateMapRect(Tuples.of(tile.getPosition().v1() * this.tileSize, tile.getPosition().v2() * this.tileSize), Tuples.of(this.tileSize, this.tileSize));
 	}
 
 	private void updateMap() {
@@ -213,94 +236,65 @@ public final class MapWidget extends Composite implements PaintListener {
 		});
 	}
 
-	private synchronized void updateMapRect(final Tuple2<Integer, Integer> position, final Tuple2<Integer, Integer> size) {
+	private void updateMapRect(final Tuple2<Integer, Integer> position, final Tuple2<Integer, Integer> size) {
 		checkNotNull(position, "missing position");
 		checkNotNull(size, "missing size");
 
-		// final int x = position.v1() - this.floor.get().getClampedTileIndexDimension(this.zoom).v1();
-		// final int y = position.v2() - this.floor.get().getClampedTileIndexDimension(this.zoom).v2();
-		// this.display.asyncExec(() -> {
-		// LOGGER.info("Update map position={}, width={}, height={} ", position, size.v1(), size.v2());
-		// this.mapCanvas.redraw(x, y, size.v1(), size.v2(), false);
-		// });
+		final int x = position.v1() - this.floor.get().getClampedTileIndexDimension(this.zoom).v1();
+		final int y = position.v2() - this.floor.get().getClampedTileIndexDimension(this.zoom).v2();
+		this.display.asyncExec(() -> {
+			LOGGER.trace("Update map position={}, width={}, height={} ", position, size.v1(), size.v2());
+			this.mapCanvas.redraw(x, y, size.v1(), size.v2(), false);
+		});
 	}
 
 	private final Image loadImage(final Path path) {
 		checkNotNull(path, "missing path");
-		try (final InputStream stream = Files.newInputStream(path)) {
-			final ImageData data = new ImageData(stream);
-			if (data.transparentPixel > 0) {
-				return new Image(this.display, data, data.getTransparencyMask());
-			} else {
-				return new Image(this.display, data);
-			}
-		} catch (IOException e) {
-			throw new IOError(e);
+		try {
+			return this.tileImageCache.get(path);
+		} catch (ExecutionException e) {
+			throw new Error(e);
 		}
-	}
-
-	private final int clamp2Min(final int toClamp, final int min) {
-		return Math.max(toClamp, min);
-	}
-
-	private final int clamp2Max(final int toClamp, final int max) {
-		return Math.min(toClamp, max);
 	}
 
 	@Override
 	public void paintControl(final PaintEvent e) {
-		if (this.floor.isPresent()) {
-			LOGGER.info("RepaintEvent: ({}/{}) - ({}/{})", e.x, e.y, e.width, e.height);
-			final Tuple4<Integer, Integer, Integer, Integer> clampedView = this.floor.get().getClampedTileIndexDimension(this.zoom);
-			final int minX = clampedView.v1();
-			final int minY = clampedView.v2();
-			final int maxX = clampedView.v3();
-			final int maxY = clampedView.v4();
+		if (this.continent.isPresent() && this.floor.isPresent()) {
 			if (!this.scrollingActive.get()) {
-				LOGGER.info(" > draw tiles ({}/{})-({}/{}) in bounds={}", minX, minY, maxX, maxY, clampedView);
+				LOGGER.trace("redraw pixels ({}/{}) - ({}/{})", e.x, e.y, e.width, e.height);
+				final Tuple4<Integer, Integer, Integer, Integer> clampedView = this.floor.get().getClampedTileIndexDimension(this.zoom);
+				final int minX = Math.max(clampedView.v1(), e.x / this.tileSize);
+				final int minY = Math.max(clampedView.v2(), e.y / this.tileSize);
+				final int maxX = Math.min(clampedView.v3(), (e.x + e.width + this.tileSize - 1) / this.tileSize);
+				final int maxY = Math.min(clampedView.v4(), (e.y + e.height + this.tileSize - 1) / this.tileSize);
+				LOGGER.trace("redraw tiles ({}/{}) - ({}/{})", minX, minY, maxX, maxY);
 				for (int x = minX; x < maxX; x++) {
 					for (int y = minY; y < maxY; y++) {
 						try {
 							final MapTile tile = this.floor.get().getTile(x, y, MapWidget.this.zoom);
 							final Image img = this.loadImage(tile.getImagePath());
-							try {
-								e.gc.drawImage(img, 0, 0, SOURCE_TILE_SIZE, SOURCE_TILE_SIZE, (x - clampedView.v1()) * this.tileSize, (y - clampedView.v2()) * this.tileSize,
-										this.tileSize, this.tileSize);
+							e.gc.drawImage(img, 0, 0, SOURCE_TILE_SIZE, SOURCE_TILE_SIZE, x * this.tileSize, y * this.tileSize, this.tileSize, this.tileSize);
+							if (LOGGER.isDebugEnabled()) {
 								e.gc.setForeground(SWTResourceManager.getColor(0, 255, 0));
-								e.gc.drawText(x + "/" + y, (x - clampedView.v1()) * this.tileSize, (y - clampedView.v2()) * this.tileSize);
-								e.gc.drawRectangle((x - clampedView.v1()) * this.tileSize, (y - clampedView.v2()) * this.tileSize, this.tileSize, this.tileSize);
-							} finally {
-								img.dispose();
+								e.gc.drawText(x + "/" + y, x * this.tileSize, y * this.tileSize);
 							}
 						} catch (NoSuchMapTileException t) {
 							Throwables.propagate(t);
 						}
 					}
 				}
-
-				//@formatter:off
-				e.gc.setForeground(SWTResourceManager.getColor(255, 0, 0));
-				e.gc.drawText("clamped", 32, 32);
-				e.gc.drawRectangle(
-						0,
-						0,
-						(this.floor.get().getClampedTileIndexDimension(this.zoom).v3() - this.floor.get().getClampedTileIndexDimension(this.zoom).v1()) * this.tileSize + 1,
-						(this.floor.get().getClampedTileIndexDimension(this.zoom).v4() - this.floor.get().getClampedTileIndexDimension(this.zoom).v2()) * this.tileSize + 1);
-
-				e.gc.setForeground(SWTResourceManager.getColor(255, 255, 0));
-				e.gc.drawText("drawn", 64, 64);
-				e.gc.drawRectangle(
-						0,
-						0,
-						(maxX - minX) * this.tileSize,
-						(maxY - minY) * this.tileSize);
-				//@formatter:on
+				if (LOGGER.isDebugEnabled()) {
+					LOGGER.debug("image data cache: {}", this.tileImageDataCache.stats());
+					LOGGER.debug("image cache: {}", this.tileImageCache.stats());
+				}
 			} else {
 				LOGGER.trace(" > skip drawing");
 			}
 		} else if (!this.continent.isPresent()) {
+			e.gc.fillRectangle(e.x, e.y, e.width, e.height);
 			e.gc.drawText("Unknown continent", 0, 0);
 		} else {
+			e.gc.fillRectangle(e.x, e.y, e.width, e.height);
 			e.gc.drawText("Unknown floor", 0, 0);
 		}
 	}

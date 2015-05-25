@@ -288,11 +288,11 @@ public class WorldMapViewPart extends ViewPart implements ISelectionListener {
 	private void setZoom(final int zoom) {
 		final Optional<Continent> continent = this.getSelectedContinent();
 		if (continent.isPresent()) {
-			final int newZoom = Math.max(Math.min(zoom, continent.get().getMaxZoom() * 100), continent.get().getMinZoom() * 100);
+			final int newZoom = Math.max(Math.min(zoom, continent.get().getMaxZoom() * 100 + 75), continent.get().getMinZoom() * 100);
 			LOGGER.info("Zooming from {} to {}", this.zoom, newZoom);
 			this.zoom = newZoom;
 			this.getViewSite().getShell().getDisplay().syncExec(() -> {
-				this.txtZoom.setText(zoom + "%");
+				this.txtZoom.setText(newZoom + "%");
 			});
 			this.map.setZoomAndUpdate(this.zoom);
 		} else {
