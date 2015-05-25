@@ -240,8 +240,8 @@ public final class MapWidget extends Composite implements PaintListener {
 		checkNotNull(position, "missing position");
 		checkNotNull(size, "missing size");
 
-		final int x = position.v1() - this.floor.get().getClampedTileIndexDimension(this.zoom).v1();
-		final int y = position.v2() - this.floor.get().getClampedTileIndexDimension(this.zoom).v2();
+		final int x = position.v1();
+		final int y = position.v2();
 		this.display.asyncExec(() -> {
 			LOGGER.trace("Update map position={}, width={}, height={} ", position, size.v1(), size.v2());
 			this.mapCanvas.redraw(x, y, size.v1(), size.v2(), false);
