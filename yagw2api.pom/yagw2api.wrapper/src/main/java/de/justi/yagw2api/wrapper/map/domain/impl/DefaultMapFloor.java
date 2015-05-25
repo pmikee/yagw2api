@@ -124,7 +124,7 @@ final class DefaultMapFloor implements MapFloor {
 	private final int floorIndex;
 	private final int minZoom;
 	private final int maxZoom;
-	private final Supplier<Tuple2<Integer, Integer>> floorTextureSize = Suppliers.memoize(new Supplier<Tuple2<Integer, Integer>>() {
+	private final Supplier<Tuple2<Integer, Integer>> textureSize = Suppliers.memoize(new Supplier<Tuple2<Integer, Integer>>() {
 		@Override
 		public Tuple2<Integer, Integer> get() {
 			final com.google.common.base.Optional<MapFloorDTO> optionalFloorDTO = DefaultMapFloor.this.mapFloorService.retrieveMapFloor(DefaultMapFloor.this.continentId,
@@ -133,6 +133,27 @@ final class DefaultMapFloor implements MapFloor {
 				return optionalFloorDTO.get().getTextureDimension();
 			} else {
 				return Tuples.of(0, 0);
+			}
+		}
+	});
+	private final Supplier<Tuple4<Integer, Integer, Integer, Integer>> clampedTextureSize = Suppliers.memoize(new Supplier<Tuple4<Integer, Integer, Integer, Integer>>() {
+		@Override
+		public Tuple4<Integer, Integer, Integer, Integer> get() {
+			final com.google.common.base.Optional<MapFloorDTO> optionalFloorDTO = DefaultMapFloor.this.mapFloorService.retrieveMapFloor(DefaultMapFloor.this.continentId,
+					DefaultMapFloor.this.floorIndex);
+			if (optionalFloorDTO.isPresent()) {
+				if (optionalFloorDTO.get().getClampedView().isPresent()) {
+					final Tuple4<Integer, Integer, Integer, Integer> clamped = optionalFloorDTO.get().getClampedView().get();
+					final int x1 = clamped.v1() / TILE_SIZE;
+					final int y1 = clamped.v2() / TILE_SIZE;
+					final int x2 = (clamped.v3() / TILE_SIZE) + ((clamped.v3() % TILE_SIZE == 0) ? 0 : 1);
+					final int y2 = (clamped.v4() / TILE_SIZE) + ((clamped.v4() % TILE_SIZE == 0) ? 0 : 1);
+					return Tuples.of(x1 * TILE_SIZE, y1 * TILE_SIZE, x2 * TILE_SIZE, y2 * TILE_SIZE);
+				} else {
+					return Tuples.merge(0, 0, optionalFloorDTO.get().getTextureDimension());
+				}
+			} else {
+				return Tuples.of(0, 0, 0, 0);
 			}
 		}
 	});
@@ -235,28 +256,14 @@ final class DefaultMapFloor implements MapFloor {
 	}
 
 	private final boolean isTileAvailable(final int x, final int y, final int zoom) {
-		final com.google.common.base.Optional<MapFloorDTO> optionalFloorDTO = this.mapFloorService.retrieveMapFloor(this.continentId, this.floorIndex);
-		if (optionalFloorDTO.isPresent()) {
-			final MapFloorDTO floorDTO = optionalFloorDTO.get();
-			final Tuple2<Integer, Integer> topLeft = this.tile2Texture(Tuples.of(x, y), zoom);
-			final Tuple4<Integer, Integer, Integer, Integer> tileRegion = Tuples.merge(topLeft, topLeft.v1() + this.getTileTextureSize(zoom),
-					topLeft.v2() + this.getTileTextureSize(zoom));
-			final Tuple4<Integer, Integer, Integer, Integer> availableRegion = floorDTO.getClampedView().or(new Supplier<Tuple4<Integer, Integer, Integer, Integer>>() {
-				@Override
-				public Tuple4<Integer, Integer, Integer, Integer> get() {
-					return Tuples.of(0, 0, floorDTO.getTextureDimension().v1(), floorDTO.getTextureDimension().v2());
-				}
-			});
-			if (this.overlaps(tileRegion, availableRegion)) {
-				return true;
-			} else {
-				// outside of texture dimension
-				LOGGER.trace("{}/{}|{} is NOT available (availableRegion: {}|) @ {}", x, y, topLeft, availableRegion, this.texture2Tile(availableRegion, zoom), this);
-				return false;
-			}
+		int x1Texture = this.tile2Texture(x, zoom);
+		int x2Texture = this.tile2Texture(x + 1, zoom);
+		int y1Texture = this.tile2Texture(y, zoom);
+		int y2Texture = this.tile2Texture(y + 1, zoom);
+		final Tuple4<Integer, Integer, Integer, Integer> tileRegion = Tuples.of(x1Texture, y1Texture, x2Texture, y2Texture);
+		if (this.overlaps(tileRegion, this.getClampedTextureDimension())) {
+			return true;
 		} else {
-			// floor does not exist
-			LOGGER.trace("{}/{} is NOT available (floor: {}) @ {}", x, y, this.floorIndex, this);
 			return false;
 		}
 	}
@@ -272,12 +279,12 @@ final class DefaultMapFloor implements MapFloor {
 
 	@Override
 	public Tuple2<Integer, Integer> getTextureDimension() {
-		return this.floorTextureSize.get();
+		return this.textureSize.get();
 	}
 
 	@Override
 	public Tuple2<Integer, Integer> getTileIndexDimension(final int zoom) {
-		return DefaultMapFloor.this.texture2Tile(DefaultMapFloor.this.getTextureDimension(), zoom);
+		return this.texture2Tile(this.getTextureDimension(), zoom);
 	}
 
 	@Override
@@ -287,8 +294,23 @@ final class DefaultMapFloor implements MapFloor {
 	}
 
 	@Override
+	public Tuple4<Integer, Integer, Integer, Integer> getClampedTextureDimension() {
+		return this.clampedTextureSize.get();
+	}
+
+	@Override
+	public Tuple4<Integer, Integer, Integer, Integer> getClampedTileIndexDimension(final int zoom) {
+		return this.texture2Tile(this.getClampedTextureDimension(), zoom);
+	}
+
+	@Override
+	public int getIndex() {
+		return this.floorIndex;
+	}
+
+	@Override
 	public String toString() {
 		return MoreObjects.toStringHelper(this).add("continentId", this.continentId).add("floorIndex", this.floorIndex).add("minZoom", this.minZoom).add("maxZoom", this.maxZoom)
-				.toString();
+				.add("texture", this.getTextureDimension()).add("clamped", this.getClampedTextureDimension()).toString();
 	}
 }

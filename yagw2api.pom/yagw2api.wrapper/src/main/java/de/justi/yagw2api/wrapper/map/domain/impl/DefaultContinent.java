@@ -30,15 +30,13 @@ import java.util.concurrent.ExecutionException;
 import javax.annotation.Nullable;
 
 import com.google.common.base.MoreObjects;
-import com.google.common.base.Optional;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
-import de.justi.yagw2api.arenanet.MapFloorService;
-import de.justi.yagw2api.arenanet.dto.map.MapFloorDTO;
 import de.justi.yagw2api.wrapper.map.domain.Continent;
 import de.justi.yagw2api.wrapper.map.domain.MapDomainFactory;
 import de.justi.yagw2api.wrapper.map.domain.MapFloor;
@@ -47,8 +45,8 @@ import de.justi.yagwapi.common.Tuple2;
 final class DefaultContinent implements Continent {
 
 	// STATIC
-	public static ContinentBuilder builder(final MapDomainFactory mapDomainFactory, final MapFloorService mapFloorService) {
-		return new DefaultContinentBuilder(checkNotNull(mapDomainFactory, "missing mapDomainFactory"), checkNotNull(mapFloorService, "missing mapFloorService"));
+	public static ContinentBuilder builder(final MapDomainFactory mapDomainFactory) {
+		return new DefaultContinentBuilder(checkNotNull(mapDomainFactory, "missing mapDomainFactory"));
 	}
 
 	// EMBEDDED
@@ -67,14 +65,12 @@ final class DefaultContinent implements Continent {
 		private Integer maxZoom = null;
 
 		private final SortedSet<Integer> floorIds = Sets.newTreeSet();
-		private final MapFloorService mapFloorService;
 		private final MapDomainFactory mapDomainFactory;
 
 		// CONSTRUCTOR
 		@Inject
-		public DefaultContinentBuilder(final MapDomainFactory mapDomainFactory, final MapFloorService mapFloorService) {
+		public DefaultContinentBuilder(final MapDomainFactory mapDomainFactory) {
 			this.mapDomainFactory = checkNotNull(mapDomainFactory, "missing mapDomainFactory");
-			this.mapFloorService = checkNotNull(mapFloorService, "missing mapFloorService");
 		}
 
 		// METHODS
@@ -136,23 +132,18 @@ final class DefaultContinent implements Continent {
 	private final Tuple2<Integer, Integer> dimension;
 	private final int minZoom;
 	private final int maxZoom;
+	private final Iterable<MapFloor> floors;
 	private final SortedSet<Integer> floorIds;
 	private final LoadingCache<Integer, MapFloor> floorCache = CacheBuilder.newBuilder().build(new CacheLoader<Integer, MapFloor>() {
 
 		@Override
 		public MapFloor load(final Integer floorIndex) throws Exception {
 			checkNotNull(floorIndex, "missing floorIndex");
-			final Optional<MapFloorDTO> floorDTO = DefaultContinent.this.mapFloorService.retrieveMapFloor(DefaultContinent.this.id, floorIndex);
-			if (floorDTO.isPresent()) {
-				return DefaultContinent.this.mapDomainFactory.newMapFloorBuilder().continentId(DefaultContinent.this.id).floorIndex(floorIndex)
-						.minZoom(DefaultContinent.this.minZoom).maxZoom(DefaultContinent.this.maxZoom).build();
-			} else {
-				throw new Error("Missing map floor for floorIndex=" + floorIndex + " and continentId=" + DefaultContinent.this.id);
-			}
+			return DefaultContinent.this.mapDomainFactory.newMapFloorBuilder().continentId(DefaultContinent.this.id).floorIndex(floorIndex).minZoom(DefaultContinent.this.minZoom)
+					.maxZoom(DefaultContinent.this.maxZoom).build();
 		}
 
 	});
-	private final MapFloorService mapFloorService;
 	private final MapDomainFactory mapDomainFactory;
 
 	// CONSTRUCTOR
@@ -166,7 +157,11 @@ final class DefaultContinent implements Continent {
 		this.floorIds = checkNotNull(builder.floorIds, "missing mapFloors in %s", builder);
 
 		this.mapDomainFactory = checkNotNull(builder.mapDomainFactory, "missing mapDomainFactory in %s", builder);
-		this.mapFloorService = checkNotNull(builder.mapFloorService, "missing mapFloorService in %s", builder);
+
+		this.floors = FluentIterable.from(this.getFloorIds()).transform((floorIndex) -> {
+			checkNotNull(floorIndex, "missing floorIndex");
+			return DefaultContinent.this.getFloor(floorIndex);
+		});
 	}
 
 	// METHODS
@@ -197,6 +192,11 @@ final class DefaultContinent implements Continent {
 	}
 
 	@Override
+	public Iterable<MapFloor> getFloors() {
+		return this.floors;
+	}
+
+	@Override
 	public SortedSet<Integer> getFloorIds() {
 		return this.floorIds;
 	}
@@ -214,6 +214,7 @@ final class DefaultContinent implements Continent {
 	@Override
 	public String toString() {
 		return MoreObjects.toStringHelper(this).add("id", this.id).add("name", this.name).add("dimension", this.dimension).add("minZoom", this.minZoom)
-				.add("maxZoom", this.maxZoom).add("floors", this.floorIds).toString();
+				.add("maxZoom", this.maxZoom).add("floorIds", this.floorIds).toString();
 	}
+
 }

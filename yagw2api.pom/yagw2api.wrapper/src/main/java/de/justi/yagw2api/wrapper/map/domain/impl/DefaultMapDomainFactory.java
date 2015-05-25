@@ -52,7 +52,7 @@ public final class DefaultMapDomainFactory implements MapDomainFactory {
 	// METHODS
 	@Override
 	public ContinentBuilder newContinentBuilder() {
-		return DefaultContinent.builder(this, this.mapFloorService);
+		return DefaultContinent.builder(this);
 	}
 
 	@Override

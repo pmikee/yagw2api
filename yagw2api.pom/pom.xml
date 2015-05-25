@@ -29,19 +29,20 @@
 		<!-- DEPENDENCIES -->
 		<jsr305.version>3.0.0</jsr305.version>
 		<jna-platform.version>4.1.0</jna-platform.version>
-		<eclipselink.version>2.5.2</eclipselink.version>
+		<eclipselink.version>2.6.0</eclipselink.version>
 		<slf4j.version>1.7.12</slf4j.version>
-		<jersey.version>1.18.3</jersey.version>
+		<jersey.version>1.19</jersey.version>
 		<guava.version>18.0</guava.version>
 		<gson.version>2.3.1</gson.version>
-		<guice.version>3.0</guice.version>
+		<guice.version>4.0</guice.version>
 		<junit.version>4.12</junit.version>
-		<log4j.version>2.1</log4j.version>
+		<log4j.version>2.3</log4j.version>
 		<cucumber.version>1.2.2</cucumber.version>
-		<mockito.version>1.10.19</mockito.version>
+		<mockito.version>2.0.2-beta</mockito.version>
 		<hamcrest.version>1.3</hamcrest.version>
-		<springframework.version>4.1.5.RELEASE</springframework.version>
-		<springboot.version>1.2.2.RELEASE</springboot.version>
+		<springframework.version>4.1.6.RELEASE</springframework.version>
+		<springboot.version>1.2.3.RELEASE</springboot.version>
+		<commons-codec.version>1.10</commons-codec.version>
 
 		<!-- PLUGINS -->
 		<license-maven-plugin.version>1.8</license-maven-plugin.version>
@@ -251,6 +252,11 @@
 			<artifactId>log4j-core</artifactId>
 			<scope>provided</scope>
 			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>${commons-codec.version}</version>
 		</dependency>
 
 		<!-- TEST -->

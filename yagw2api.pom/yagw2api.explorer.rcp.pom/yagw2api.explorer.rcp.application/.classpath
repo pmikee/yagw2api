@@ -12,7 +12,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/compile/com.google.code.findbugs.jsr305.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/com.google.code.gson.gson.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/com.google.guava.guava.jar" sourcepath="lib-source/compile/com.google.guava.guava-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/com.google.inject.guice.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/compile/com.google.inject.guice.jar" sourcepath="lib-source/compile/com.google.inject.guice-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/com.sun.jersey.jersey-client.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/com.sun.jersey.jersey-core.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/commons-codec.commons-codec.jar"/>

@@ -25,6 +25,7 @@ import java.util.Optional;
 import javax.annotation.Nullable;
 
 import de.justi.yagwapi.common.Tuple2;
+import de.justi.yagwapi.common.Tuple4;
 
 public interface MapFloor {
 
@@ -40,6 +41,8 @@ public interface MapFloor {
 		MapFloor build();
 	}
 
+	int getIndex();
+
 	Optional<MapTile> getTileUnchecked(int x, int y, int zoom);
 
 	MapTile getTile(int x, int y, int zoom) throws NoSuchMapTileException;
@@ -49,4 +52,8 @@ public interface MapFloor {
 	Tuple2<Integer, Integer> getTextureDimension();
 
 	Tuple2<Integer, Integer> getTileIndexDimension(final int zoom);
+
+	Tuple4<Integer, Integer, Integer, Integer> getClampedTextureDimension();
+
+	Tuple4<Integer, Integer, Integer, Integer> getClampedTileIndexDimension(final int zoom);
 }

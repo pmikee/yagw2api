@@ -31,7 +31,7 @@
          point="org.eclipse.ui.views">
       <view
             allowMultiple="false"
-            class="de.justi.yagw2api.explorer.rcp.map.WorldMap"
+            class="de.justi.yagw2api.explorer.rcp.map.WorldMapViewPart"
             icon="etc/images/100MapExplored_32x32.png"
             id="yagw2api.explorer.rcp.map.worldmap"
             name="World Map">
