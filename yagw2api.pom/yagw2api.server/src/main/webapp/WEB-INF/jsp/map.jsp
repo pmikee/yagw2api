@@ -3,6 +3,6 @@
 <head>
 </head>
 <body>
-           ${mapImage}
+           <img src="tile/1/0/0/0/0" />
 </body>
 </html>
