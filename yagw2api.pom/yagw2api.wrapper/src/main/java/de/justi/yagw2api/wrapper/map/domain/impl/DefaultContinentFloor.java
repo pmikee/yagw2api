@@ -41,8 +41,8 @@ import com.google.inject.Inject;
 
 import de.justi.yagw2api.arenanet.MapFloorService;
 import de.justi.yagw2api.arenanet.dto.map.MapFloorDTO;
+import de.justi.yagw2api.wrapper.map.domain.ContinentFloor;
 import de.justi.yagw2api.wrapper.map.domain.MapDomainFactory;
-import de.justi.yagw2api.wrapper.map.domain.MapFloor;
 import de.justi.yagw2api.wrapper.map.domain.MapTile;
 import de.justi.yagw2api.wrapper.map.domain.NoSuchMapTileException;
 import de.justi.yagwapi.common.Tuple2;
@@ -50,18 +50,19 @@ import de.justi.yagwapi.common.Tuple3;
 import de.justi.yagwapi.common.Tuple4;
 import de.justi.yagwapi.common.Tuples;
 
-final class DefaultMapFloor implements MapFloor {
+final class DefaultContinentFloor implements ContinentFloor {
 	// CONSTS
 	private static final int TILE_SIZE = 256;
-	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultMapFloor.class);
+	@SuppressWarnings("unused")
+	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultContinentFloor.class);
 
 	// STATIC
-	public static final MapFloorTilesBuilder builder(final MapFloorService mapFloorService, final MapDomainFactory mapDomainFactory) {
-		return new DefaultMapFloorTilesBuilder(checkNotNull(mapFloorService, "missing mapFloorService"), checkNotNull(mapDomainFactory, "missing mapDomainFactory"));
+	public static final ContinentFloorBuilder builder(final MapFloorService mapFloorService, final MapDomainFactory mapDomainFactory) {
+		return new DefaultContinentFloorBuilder(checkNotNull(mapFloorService, "missing mapFloorService"), checkNotNull(mapDomainFactory, "missing mapDomainFactory"));
 	}
 
 	// EMBEDDED
-	private static final class DefaultMapFloorTilesBuilder implements MapFloorTilesBuilder {
+	private static final class DefaultContinentFloorBuilder implements ContinentFloorBuilder {
 		// FIELDS
 		private final MapFloorService mapFloorService;
 		private final MapDomainFactory mapDomainFactory;
@@ -76,39 +77,39 @@ final class DefaultMapFloor implements MapFloor {
 
 		// CONSTRUCTOR
 		@Inject
-		private DefaultMapFloorTilesBuilder(final MapFloorService mapFloorService, final MapDomainFactory mapDomainFactory) {
+		private DefaultContinentFloorBuilder(final MapFloorService mapFloorService, final MapDomainFactory mapDomainFactory) {
 			this.mapFloorService = checkNotNull(mapFloorService, "missing mapFloorService");
 			this.mapDomainFactory = checkNotNull(mapDomainFactory, "missing mapDomainFactory");
 		}
 
 		// METHODS
 		@Override
-		public MapFloorTilesBuilder continentId(final String continentId) {
+		public ContinentFloorBuilder continentId(final String continentId) {
 			this.continentId = continentId;
 			return this;
 		}
 
 		@Override
-		public MapFloorTilesBuilder floorIndex(final int floorIndex) {
+		public ContinentFloorBuilder floorIndex(final int floorIndex) {
 			this.floorIndex = floorIndex;
 			return this;
 		}
 
 		@Override
-		public MapFloorTilesBuilder minZoom(final int minZoom) {
+		public ContinentFloorBuilder minZoom(final int minZoom) {
 			this.minZoom = minZoom;
 			return this;
 		}
 
 		@Override
-		public MapFloorTilesBuilder maxZoom(final int maxZoom) {
+		public ContinentFloorBuilder maxZoom(final int maxZoom) {
 			this.maxZoom = maxZoom;
 			return this;
 		}
 
 		@Override
-		public MapFloor build() {
-			return new DefaultMapFloor(this);
+		public ContinentFloor build() {
+			return new DefaultContinentFloor(this);
 		}
 
 		@Override
@@ -127,8 +128,8 @@ final class DefaultMapFloor implements MapFloor {
 	private final Supplier<Tuple2<Integer, Integer>> textureSize = Suppliers.memoize(new Supplier<Tuple2<Integer, Integer>>() {
 		@Override
 		public Tuple2<Integer, Integer> get() {
-			final com.google.common.base.Optional<MapFloorDTO> optionalFloorDTO = DefaultMapFloor.this.mapFloorService.retrieveMapFloor(DefaultMapFloor.this.continentId,
-					DefaultMapFloor.this.floorIndex);
+			final com.google.common.base.Optional<MapFloorDTO> optionalFloorDTO = DefaultContinentFloor.this.mapFloorService.retrieveMapFloor(
+					DefaultContinentFloor.this.continentId, DefaultContinentFloor.this.floorIndex);
 			if (optionalFloorDTO.isPresent()) {
 				return optionalFloorDTO.get().getTextureDimension();
 			} else {
@@ -139,8 +140,8 @@ final class DefaultMapFloor implements MapFloor {
 	private final Supplier<Tuple4<Integer, Integer, Integer, Integer>> clampedTextureSize = Suppliers.memoize(new Supplier<Tuple4<Integer, Integer, Integer, Integer>>() {
 		@Override
 		public Tuple4<Integer, Integer, Integer, Integer> get() {
-			final com.google.common.base.Optional<MapFloorDTO> optionalFloorDTO = DefaultMapFloor.this.mapFloorService.retrieveMapFloor(DefaultMapFloor.this.continentId,
-					DefaultMapFloor.this.floorIndex);
+			final com.google.common.base.Optional<MapFloorDTO> optionalFloorDTO = DefaultContinentFloor.this.mapFloorService.retrieveMapFloor(
+					DefaultContinentFloor.this.continentId, DefaultContinentFloor.this.floorIndex);
 			if (optionalFloorDTO.isPresent()) {
 				if (optionalFloorDTO.get().getClampedView().isPresent()) {
 					final Tuple4<Integer, Integer, Integer, Integer> clamped = optionalFloorDTO.get().getClampedView().get();
@@ -174,18 +175,18 @@ final class DefaultMapFloor implements MapFloor {
 					checkNotNull(key.v1(), "missing zoom in %s", key);
 					checkNotNull(key.v2(), "missing position x in %s", key);
 					checkNotNull(key.v3(), "missing position y in %s", key);
-					if (DefaultMapFloor.this.isTileAvailable(key.v2(), key.v3(), key.v1())) {
-						return DefaultMapFloor.this.mapDomainFactory.newMapTileBuilder().continentId(DefaultMapFloor.this.continentId).floorIndex(DefaultMapFloor.this.floorIndex)
-								.zoom(key.v1()).position(Tuples.of(key.v2(), key.v3())).build();
+					if (DefaultContinentFloor.this.isTileAvailable(key.v2(), key.v3(), key.v1())) {
+						return DefaultContinentFloor.this.mapDomainFactory.newMapTileBuilder().continentId(DefaultContinentFloor.this.continentId)
+								.floorIndex(DefaultContinentFloor.this.floorIndex).zoom(key.v1()).position(Tuples.of(key.v2(), key.v3())).build();
 					} else {
-						return DefaultMapFloor.this.mapDomainFactory.newMapUnavailableTileBuilder().continentId(DefaultMapFloor.this.continentId)
-								.floorIndex(DefaultMapFloor.this.floorIndex).zoom(key.v1()).position(Tuples.of(key.v2(), key.v3())).build();
+						return DefaultContinentFloor.this.mapDomainFactory.newMapUnavailableTileBuilder().continentId(DefaultContinentFloor.this.continentId)
+								.floorIndex(DefaultContinentFloor.this.floorIndex).zoom(key.v1()).position(Tuples.of(key.v2(), key.v3())).build();
 					}
 				}
 			});
 
 	// CONSTRUCTOR
-	private DefaultMapFloor(final DefaultMapFloorTilesBuilder builder) {
+	private DefaultContinentFloor(final DefaultContinentFloorBuilder builder) {
 		checkNotNull(builder, "missing builder");
 		this.mapFloorService = checkNotNull(builder.mapFloorService, "missing mapFloorService in %s", builder);
 		this.mapDomainFactory = checkNotNull(builder.mapDomainFactory, "missing mapDomainFactory in %s", builder);

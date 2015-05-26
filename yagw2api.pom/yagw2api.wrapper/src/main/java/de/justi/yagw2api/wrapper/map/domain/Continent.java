@@ -55,9 +55,9 @@ public interface Continent {
 
 	String getName();
 
-	MapFloor getFloor(int floorIndex);
+	ContinentFloor getFloor(int floorIndex);
 
-	Iterable<MapFloor> getFloors();
+	Iterable<ContinentFloor> getFloors();
 
 	SortedSet<Integer> getFloorIds();
 }

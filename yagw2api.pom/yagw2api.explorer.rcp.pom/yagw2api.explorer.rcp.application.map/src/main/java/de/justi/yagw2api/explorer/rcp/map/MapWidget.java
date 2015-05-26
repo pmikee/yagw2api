@@ -61,7 +61,7 @@ import com.google.common.eventbus.Subscribe;
 
 import de.justi.yagw2api.wrapper.map.MapWrapper;
 import de.justi.yagw2api.wrapper.map.domain.Continent;
-import de.justi.yagw2api.wrapper.map.domain.MapFloor;
+import de.justi.yagw2api.wrapper.map.domain.ContinentFloor;
 import de.justi.yagw2api.wrapper.map.domain.MapTile;
 import de.justi.yagw2api.wrapper.map.domain.NoSuchMapTileException;
 import de.justi.yagw2api.wrapper.map.event.MapTileEvent;
@@ -88,7 +88,7 @@ public final class MapWidget extends Composite implements PaintListener {
 	private int lastNotifiedScrolledX = 0;
 	private int lastNotifiedScrolledY = 0;
 
-	private Optional<MapFloor> floor = Optional.absent();
+	private Optional<ContinentFloor> floor = Optional.absent();
 	private Optional<Continent> continent = Optional.absent();
 
 	private int zoom = 1;
@@ -192,7 +192,7 @@ public final class MapWidget extends Composite implements PaintListener {
 		}
 	}
 
-	public void setFloorAndUpdate(final MapFloor floor) {
+	public void setFloorAndUpdate(final ContinentFloor floor) {
 		checkNotNull(floor, "missing floor");
 		this.floor = Optional.of(floor);
 		this.updateScrollingSize();

@@ -39,7 +39,7 @@ import com.google.inject.Inject;
 
 import de.justi.yagw2api.wrapper.map.domain.Continent;
 import de.justi.yagw2api.wrapper.map.domain.MapDomainFactory;
-import de.justi.yagw2api.wrapper.map.domain.MapFloor;
+import de.justi.yagw2api.wrapper.map.domain.ContinentFloor;
 import de.justi.yagwapi.common.Tuple2;
 
 final class DefaultContinent implements Continent {
@@ -132,12 +132,12 @@ final class DefaultContinent implements Continent {
 	private final Tuple2<Integer, Integer> dimension;
 	private final int minZoom;
 	private final int maxZoom;
-	private final Iterable<MapFloor> floors;
+	private final Iterable<ContinentFloor> floors;
 	private final SortedSet<Integer> floorIds;
-	private final LoadingCache<Integer, MapFloor> floorCache = CacheBuilder.newBuilder().build(new CacheLoader<Integer, MapFloor>() {
+	private final LoadingCache<Integer, ContinentFloor> floorCache = CacheBuilder.newBuilder().build(new CacheLoader<Integer, ContinentFloor>() {
 
 		@Override
-		public MapFloor load(final Integer floorIndex) throws Exception {
+		public ContinentFloor load(final Integer floorIndex) throws Exception {
 			checkNotNull(floorIndex, "missing floorIndex");
 			return DefaultContinent.this.mapDomainFactory.newMapFloorBuilder().continentId(DefaultContinent.this.id).floorIndex(floorIndex).minZoom(DefaultContinent.this.minZoom)
 					.maxZoom(DefaultContinent.this.maxZoom).build();
@@ -182,7 +182,7 @@ final class DefaultContinent implements Continent {
 	}
 
 	@Override
-	public MapFloor getFloor(final int floorIndex) {
+	public ContinentFloor getFloor(final int floorIndex) {
 		checkArgument(this.floorIds.contains(floorIndex), "invalid floor index=%s for %s", floorIndex, this);
 		try {
 			return this.floorCache.get(floorIndex);
@@ -192,7 +192,7 @@ final class DefaultContinent implements Continent {
 	}
 
 	@Override
-	public Iterable<MapFloor> getFloors() {
+	public Iterable<ContinentFloor> getFloors() {
 		return this.floors;
 	}
 

@@ -27,18 +27,18 @@ import javax.annotation.Nullable;
 import de.justi.yagwapi.common.Tuple2;
 import de.justi.yagwapi.common.Tuple4;
 
-public interface MapFloor {
+public interface ContinentFloor {
 
-	public static interface MapFloorTilesBuilder {
-		MapFloorTilesBuilder continentId(@Nullable String continentId);
+	public static interface ContinentFloorBuilder {
+		ContinentFloorBuilder continentId(@Nullable String continentId);
 
-		MapFloorTilesBuilder floorIndex(int floorIndex);
+		ContinentFloorBuilder floorIndex(int floorIndex);
 
-		MapFloorTilesBuilder minZoom(int minZoom);
+		ContinentFloorBuilder minZoom(int minZoom);
 
-		MapFloorTilesBuilder maxZoom(int maxZoom);
+		ContinentFloorBuilder maxZoom(int maxZoom);
 
-		MapFloor build();
+		ContinentFloor build();
 	}
 
 	int getIndex();

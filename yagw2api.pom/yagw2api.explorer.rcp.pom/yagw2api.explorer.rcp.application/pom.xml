@@ -56,10 +56,6 @@
 		<!-- MODULES -->
 		<dependency>
 			<groupId>de.justi</groupId>
-			<artifactId>yagw2api.analyzer</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>de.justi</groupId>
 			<artifactId>yagw2api.anchorman</artifactId>
 		</dependency>
 		<dependency>
@@ -88,6 +84,10 @@
 		</dependency>
 
 		<!-- UTILS -->
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-slf4j-impl</artifactId>

@@ -59,7 +59,7 @@ import de.justi.yagw2api.explorer.rcp.swt.TypeSafeViewerLabelProvider;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
 import de.justi.yagw2api.wrapper.map.MapWrapper;
 import de.justi.yagw2api.wrapper.map.domain.Continent;
-import de.justi.yagw2api.wrapper.map.domain.MapFloor;
+import de.justi.yagw2api.wrapper.map.domain.ContinentFloor;
 
 public class WorldMapViewPart extends ViewPart implements ISelectionListener {
 	private static final int ZOOM_DELTA = 10;
@@ -73,11 +73,11 @@ public class WorldMapViewPart extends ViewPart implements ISelectionListener {
 
 		// METHODS
 		@Override
-		public MapFloor[] getElements(final Object inputElement) {
+		public ContinentFloor[] getElements(final Object inputElement) {
 			checkNotNull(inputElement, "missing inputElement");
 			checkArgument(inputElement instanceof Continent, "invalid inputElement: %s", inputElement);
 			final Continent continent = (Continent) inputElement;
-			return Iterables.toArray(continent.getFloors(), MapFloor.class);
+			return Iterables.toArray(continent.getFloors(), ContinentFloor.class);
 		}
 
 		@Override
@@ -196,9 +196,9 @@ public class WorldMapViewPart extends ViewPart implements ISelectionListener {
 		cmbFloor.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		this.cmbFloorViewer.setContentProvider(this.floorContentProvider);
 		this.cmbFloorViewer.addSelectionChangedListener(this.selectionProvider);
-		this.cmbFloorViewer.setLabelProvider(new TypeSafeViewerLabelProvider<MapFloor>(MapFloor.class) {
+		this.cmbFloorViewer.setLabelProvider(new TypeSafeViewerLabelProvider<ContinentFloor>(ContinentFloor.class) {
 			@Override
-			protected String getTypeSafeText(final MapFloor element) {
+			protected String getTypeSafeText(final ContinentFloor element) {
 				return String.valueOf(element.getIndex());
 			}
 		});
@@ -265,10 +265,10 @@ public class WorldMapViewPart extends ViewPart implements ISelectionListener {
 		// Set the focus
 	}
 
-	private Optional<MapFloor> getSelectedFloor() {
+	private Optional<ContinentFloor> getSelectedFloor() {
 		final IStructuredSelection structuredSelection = (IStructuredSelection) this.cmbFloorViewer.getSelection();
 		if (!structuredSelection.isEmpty()) {
-			return Optional.of((MapFloor) structuredSelection.getFirstElement());
+			return Optional.of((ContinentFloor) structuredSelection.getFirstElement());
 		} else {
 			return Optional.absent();
 		}
@@ -312,7 +312,7 @@ public class WorldMapViewPart extends ViewPart implements ISelectionListener {
 		this.setZoom(this.zoom - ZOOM_DELTA);
 	}
 
-	private void selectFloor(final MapFloor floor) {
+	private void selectFloor(final ContinentFloor floor) {
 		checkNotNull(floor, "missing floor");
 		LOGGER.info("Select floor: {}", floor);
 		this.map.setFloorAndUpdate(floor);
@@ -334,8 +334,8 @@ public class WorldMapViewPart extends ViewPart implements ISelectionListener {
 		if (!structuredSelection.isEmpty()) {
 			if (structuredSelection.getFirstElement() instanceof Continent) {
 				this.selectContinent((Continent) structuredSelection.getFirstElement());
-			} else if (structuredSelection.getFirstElement() instanceof MapFloor) {
-				this.selectFloor((MapFloor) structuredSelection.getFirstElement());
+			} else if (structuredSelection.getFirstElement() instanceof ContinentFloor) {
+				this.selectFloor((ContinentFloor) structuredSelection.getFirstElement());
 			}
 		}
 	}

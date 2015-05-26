@@ -43,7 +43,7 @@ public class DefaultMapFloorTilesTest {
 	@Test
 	public final void testGetTileTextureSize() {
 
-		final DefaultMapFloor underTest = (DefaultMapFloor) DefaultMapFloor.builder(mock(MapFloorService.class), mock(MapDomainFactory.class)).continentId("99")
+		final DefaultContinentFloor underTest = (DefaultContinentFloor) DefaultContinentFloor.builder(mock(MapFloorService.class), mock(MapDomainFactory.class)).continentId("99")
 				.floorIndex(99).build();
 
 		System.out.println(32768 / 2); // 0
