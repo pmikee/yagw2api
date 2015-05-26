@@ -9,9 +9,9 @@ package de.justi.yagw2api.locationprovider;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -64,7 +64,7 @@ public final class LocationProviderApplication implements IMumbleLinkListener, R
 	private static final String REST_URI_PARAMETER_WORLDID = "worldId";
 	private static final String REST_URI_PARAMETER_MAPID = "mapId";
 	private static final String REST_URI_PARAMETER_COMMANDER = "commander";
-	private static final String REST_URI_TEMPLATE = "http://{" + REST_URI_PARAMETER_HOST + "}:${" + REST_URI_PARAMETER_PORT + "}/character/{" + REST_URI_PARAMETER_NAME + "}?x={"
+	private static final String REST_URI_TEMPLATE = "http://{" + REST_URI_PARAMETER_HOST + "}:{" + REST_URI_PARAMETER_PORT + "}/character/{" + REST_URI_PARAMETER_NAME + "}?x={"
 			+ REST_URI_PARAMETER_XPOSITION + "}&y={" + REST_URI_PARAMETER_YPOSITION + "}&z={" + REST_URI_PARAMETER_ZPOSITION + "}&worldId={" + REST_URI_PARAMETER_WORLDID
 			+ "}&mapId={" + REST_URI_PARAMETER_MAPID + "}&commander={" + REST_URI_PARAMETER_COMMANDER + "}";
 
