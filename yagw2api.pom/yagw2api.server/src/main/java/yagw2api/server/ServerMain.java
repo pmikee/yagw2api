@@ -31,6 +31,4 @@ public class ServerMain {
 		SpringApplication.run(ServerMain.class);
 	}
 
-	// METHODS
-
 }
