@@ -28,6 +28,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.regex.Pattern;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -51,17 +52,21 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
+import com.google.common.base.Splitter;
 import com.google.common.base.Throwables;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.cache.RemovalNotification;
+import com.google.common.collect.Maps;
 import com.google.common.eventbus.Subscribe;
 
 import de.justi.yagw2api.wrapper.map.MapWrapper;
 import de.justi.yagw2api.wrapper.map.domain.Continent;
 import de.justi.yagw2api.wrapper.map.domain.ContinentFloor;
+import de.justi.yagw2api.wrapper.map.domain.Map;
 import de.justi.yagw2api.wrapper.map.domain.MapTile;
 import de.justi.yagw2api.wrapper.map.domain.NoSuchMapTileException;
 import de.justi.yagw2api.wrapper.map.event.MapTileEvent;
@@ -279,6 +284,26 @@ public final class MapWidget extends Composite implements PaintListener {
 						} catch (NoSuchMapTileException t) {
 							Throwables.propagate(t);
 						}
+					}
+				}
+				e.gc.setForeground(SWTResourceManager.getColor(255, 0, 0));
+				final double tileTextureSize = this.continent.get().getTileTextureSize(this.zoom);
+				e.gc.setFont(SWTResourceManager.getFont("Helvetica", 5 + ((this.zoom - 1) * 2), SWT.BOLD, false, false));
+				final java.util.Map<Tuple4<Integer, Integer, Integer, Integer>, Boolean> drawn = Maps.newHashMap();
+				for (Map map : this.floor.get().getMaps()) {
+					//@formatter:off
+					final Tuple4<Integer, Integer, Integer, Integer> key = Tuples.of(
+							(int) ((map.getBoundsOnContinent().v1() / tileTextureSize) * this.tileSize),
+							(int) ((map.getBoundsOnContinent().v2() / tileTextureSize) * this.tileSize),
+							(int) ((map.getBoundsOnContinent().v3() / tileTextureSize) * this.tileSize),
+							(int) ((map.getBoundsOnContinent().v4() / tileTextureSize) * this.tileSize));
+					//@formatter:on
+					if (!drawn.containsKey(key)) {
+						drawn.put(key, true);
+						e.gc.drawRectangle(key.v1(), key.v2(), key.v3() - key.v1(), key.v4() - key.v2());
+						final String label = Joiner.on("\n ").join(Splitter.on(Pattern.compile("[-_ ]")).split(map.getName()));
+						final Point labelSize = e.gc.textExtent(label, SWT.DRAW_DELIMITER);
+						e.gc.drawText(label, (key.v1() + key.v3() - labelSize.x) / 2, (key.v2() + key.v4() - labelSize.y) / 2, SWT.DRAW_DELIMITER | SWT.DRAW_TRANSPARENT);
 					}
 				}
 				if (LOGGER.isDebugEnabled()) {

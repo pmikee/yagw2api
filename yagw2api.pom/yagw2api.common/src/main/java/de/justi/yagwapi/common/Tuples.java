@@ -25,9 +25,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import javax.annotation.Nullable;
 
 public final class Tuples {
-	private Tuples() {
-		throw new AssertionError("no instance");
-	}
+	// STATIC METHODS
 
 	public static <V1, V2, V3, V4> Tuple4<V1, V2, V3, V4> merge(final Tuple2<V1, V2> part1, final Tuple2<V3, V4> part2) {
 		checkNotNull(part1, "missing part1");
@@ -60,5 +58,36 @@ public final class Tuples {
 	public static <V1, V2, V3, V4, V5> Tuple5<V1, V2, V3, V4, V5> of(@Nullable final V1 v1, @Nullable final V2 v2, @Nullable final V3 v3, @Nullable final V4 v4,
 			@Nullable final V5 v5) {
 		return new Tuple5<V1, V2, V3, V4, V5>(v1, v2, v3, v4, v5);
+	}
+
+	/**
+	 * Two rectangles do not overlap if one of the following conditions is true:
+	 * <ol>
+	 * <li>One rectangle is above top edge of other rectangle.</li>
+	 * <li>One rectangle is on left side of left edge of other rectangle.</li>
+	 * </ol>
+	 *
+	 * @param left
+	 * @param right
+	 * @return
+	 */
+	public static boolean overlaps(final Tuple4<Integer, Integer, Integer, Integer> left, final Tuple4<Integer, Integer, Integer, Integer> right) {
+
+		// If one rectangle is on left side of other
+		if (left.v1() > right.v3() || right.v1() > left.v3()) {
+			return false;
+		}
+
+		// If one rectangle is above other
+		if (left.v2() > right.v4() || right.v2() > left.v4()) {
+			return false;
+		}
+
+		return true;
+	}
+
+	// CONSTRUCTORS
+	private Tuples() {
+		throw new AssertionError("no instance");
 	}
 }

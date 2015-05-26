@@ -9,9 +9,9 @@ package de.justi.yagw2api.arenanet.dto.map;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,18 +20,26 @@ package de.justi.yagw2api.arenanet.dto.map;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-import java.util.Collection;
+import de.justi.yagwapi.common.Tuple4;
 
-public interface MapsMapDTO extends MapDTO {
+public interface MapDTO {
+	String getName();
 
-	Collection<Integer> getFloors();
+	int getMinLevel();
 
-	String getRegionId();
+	int getMaxLevel();
 
-	String getRegionName();
+	int getDefaultFloor();
 
-	String getContinentId();
+	/**
+	 * @return the dimensions of the map, given as the coordinates of the lower-left (SW) and upper-right (NE) corners.
+	 */
+	Tuple4<Integer, Integer, Integer, Integer> getBounds();
 
-	String getContinentName();
+	/**
+	 *
+	 * @return The dimensions of the map within the continent coordinate system, given as the coordinates of the upper-left (NW) and lower-right (SE) corners.
+	 */
+	Tuple4<Integer, Integer, Integer, Integer> getBoundsOnContinent();
 
 }

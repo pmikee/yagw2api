@@ -7,19 +7,19 @@
 	<classpathentry exported="true" kind="lib" path="lib/compile/com.fasterxml.jackson.core.jackson-databind.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/com.google.code.findbugs.jsr305.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/com.google.code.gson.gson.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/com.google.guava.guava.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/compile/com.google.guava.guava.jar" sourcepath="lib-source/compile/com.google.guava.guava-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/com.google.inject.guice.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/com.sun.jersey.jersey-client.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/com.sun.jersey.jersey-core.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/commons-codec.commons-codec.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/de.justi.yagw2api.analyzer.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/de.justi.yagw2api.anchorman.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/de.justi.yagw2api.arenanet.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/compile/de.justi.yagw2api.arenanet.jar" sourcepath="/yagw2api.arenanet"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/de.justi.yagw2api.common.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/de.justi.yagw2api.locationprovider.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/de.justi.yagw2api.mumblelink.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/de.justi.yagw2api.server.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/de.justi.yagw2api.wrapper.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/compile/de.justi.yagw2api.wrapper.jar" sourcepath="/yagw2api.wrapper"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/javax.inject.javax.inject.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/javax.validation.validation-api.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/net.java.dev.jna.jna-platform.jar"/>

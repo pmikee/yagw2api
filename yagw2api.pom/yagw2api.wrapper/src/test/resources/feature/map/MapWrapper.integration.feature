@@ -4,6 +4,7 @@ Feature: Map Wrapper
 		Given the real map continent service
 			And the real map floor service
 			And the real map tile service
+			And the real map service
 			And a synchronous eventbus
 			And a map event factory
 			And a map domain factory

@@ -32,6 +32,9 @@ public interface Continent {
 	static interface ContinentBuilder {
 		Continent build();
 
+		ContinentBuilder mapIds(final Set<String> mapIds);
+
+		// TODO change floor ids from int to string
 		ContinentBuilder floorIds(final Set<Integer> floorIds);
 
 		ContinentBuilder name(@Nullable String name);
@@ -55,9 +58,19 @@ public interface Continent {
 
 	String getName();
 
+	// TODO change floor ids from int to string
 	ContinentFloor getFloor(int floorIndex);
 
 	Iterable<ContinentFloor> getFloors();
 
+	// TODO change floor ids from int to string
 	SortedSet<Integer> getFloorIds();
+
+	SortedSet<String> getMapIds();
+
+	Map getMap(String mapId);
+
+	Iterable<Map> getMaps();
+
+	int getTileTextureSize(int zoom);
 }

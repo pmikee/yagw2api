@@ -9,9 +9,9 @@ package de.justi.yagw2api.arenanet;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -94,6 +94,11 @@ final class DefaultMapService implements MapService {
 			LOGGER.error("Failed to retrieve {} from cache.", MapsDTO.class, e);
 			throw new IllegalStateException("Failed to retrieve " + MapsDTO.class.getSimpleName() + " from cache.", e);
 		}
+	}
+
+	@Override
+	public Optional<MapsDTO> retrieveAllMaps() {
+		return this.retrieveAllMaps(YAGW2APIArenanet.INSTANCE.getCurrentLocale());
 	}
 
 }

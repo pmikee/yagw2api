@@ -1,8 +1,8 @@
-package de.justi.yagw2api.arenanet.dto.map;
+package de.justi.yagw2api.wrapper.map.domain;
 
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * YAGW2API-Arenanet
+ * YAGW2API-Wrapper
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
  * _____________________________________________________________
@@ -20,18 +20,30 @@ package de.justi.yagw2api.arenanet.dto.map;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-import java.util.Collection;
+import javax.annotation.Nullable;
 
-public interface MapsMapDTO extends MapDTO {
+import de.justi.yagwapi.common.Tuple4;
 
-	Collection<Integer> getFloors();
+public interface Map {
 
-	String getRegionId();
+	public static interface MapBuilder {
 
-	String getRegionName();
+		MapBuilder id(@Nullable String id);
 
-	String getContinentId();
+		MapBuilder name(@Nullable String name);
 
-	String getContinentName();
+		MapBuilder defaultFloorIndex(int floorIndex);
 
+		MapBuilder boundsOnContinent(@Nullable Tuple4<Integer, Integer, Integer, Integer> locationOnContinent);
+
+		Map build();
+	}
+
+	int getDefaultFloorIndex();
+
+	String getId();
+
+	String getName();
+
+	Tuple4<Integer, Integer, Integer, Integer> getBoundsOnContinent();
 }

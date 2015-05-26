@@ -9,9 +9,9 @@ package de.justi.yagw2api.arenanet.dto.map;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -41,13 +41,13 @@ final class DefaultMapsMapDTO implements MapsMapDTO {
 	private final String name = null;
 	@SerializedName("min_level")
 	@Since(1.0)
-	private final String minLevel = null;
+	private final Integer minLevel = null;
 	@SerializedName("max_level")
 	@Since(1.0)
-	private final String maxLevel = null;
+	private final Integer maxLevel = null;
 	@SerializedName("default_floor")
 	@Since(1.0)
-	private final String defaultFloor = null;
+	private final Integer defaultFloor = null;
 	@SerializedName("floors")
 	@Since(1.0)
 	private final Collection<Integer> floors = ImmutableList.of();
@@ -80,7 +80,7 @@ final class DefaultMapsMapDTO implements MapsMapDTO {
 		checkState(this.boundsOnContinent.length == 2, "invalid boundsOnContinent length: %s", this.boundsOnContinent.length);
 		checkState(this.boundsOnContinent[0].length == 2, "invalid boundsOnContinent length: %s", this.boundsOnContinent[0].length);
 		checkState(this.boundsOnContinent[1].length == 2, "invalid boundsOnContinent length: %s", this.boundsOnContinent[1].length);
-		return Tuples.of(this.boundsOnContinent[0][0], this.bounds[0][1], this.boundsOnContinent[1][0], this.boundsOnContinent[1][1]);
+		return Tuples.of(this.boundsOnContinent[0][0], this.boundsOnContinent[0][1], this.boundsOnContinent[1][0], this.boundsOnContinent[1][1]);
 	});
 
 	@Override
@@ -89,17 +89,17 @@ final class DefaultMapsMapDTO implements MapsMapDTO {
 	}
 
 	@Override
-	public String getMinLevel() {
+	public int getMinLevel() {
 		return this.minLevel;
 	}
 
 	@Override
-	public String getMaxLevel() {
+	public int getMaxLevel() {
 		return this.maxLevel;
 	}
 
 	@Override
-	public String getDefaultFloor() {
+	public int getDefaultFloor() {
 		return this.defaultFloor;
 	}
 
@@ -165,62 +165,85 @@ final class DefaultMapsMapDTO implements MapsMapDTO {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (!(obj instanceof DefaultMapsMapDTO))
+		}
+		if (!(obj instanceof DefaultMapsMapDTO)) {
 			return false;
+		}
 		DefaultMapsMapDTO other = (DefaultMapsMapDTO) obj;
-		if (!Arrays.deepEquals(this.bounds, other.bounds))
+		if (!Arrays.deepEquals(this.bounds, other.bounds)) {
 			return false;
-		if (!Arrays.deepEquals(this.boundsOnContinent, other.boundsOnContinent))
+		}
+		if (!Arrays.deepEquals(this.boundsOnContinent, other.boundsOnContinent)) {
 			return false;
+		}
 		if (this.continentId == null) {
-			if (other.continentId != null)
+			if (other.continentId != null) {
 				return false;
-		} else if (!this.continentId.equals(other.continentId))
+			}
+		} else if (!this.continentId.equals(other.continentId)) {
 			return false;
+		}
 		if (this.continentName == null) {
-			if (other.continentName != null)
+			if (other.continentName != null) {
 				return false;
-		} else if (!this.continentName.equals(other.continentName))
+			}
+		} else if (!this.continentName.equals(other.continentName)) {
 			return false;
+		}
 		if (this.defaultFloor == null) {
-			if (other.defaultFloor != null)
+			if (other.defaultFloor != null) {
 				return false;
-		} else if (!this.defaultFloor.equals(other.defaultFloor))
+			}
+		} else if (!this.defaultFloor.equals(other.defaultFloor)) {
 			return false;
+		}
 		if (this.floors == null) {
-			if (other.floors != null)
+			if (other.floors != null) {
 				return false;
-		} else if (!this.floors.equals(other.floors))
+			}
+		} else if (!this.floors.equals(other.floors)) {
 			return false;
+		}
 		if (this.maxLevel == null) {
-			if (other.maxLevel != null)
+			if (other.maxLevel != null) {
 				return false;
-		} else if (!this.maxLevel.equals(other.maxLevel))
+			}
+		} else if (!this.maxLevel.equals(other.maxLevel)) {
 			return false;
+		}
 		if (this.minLevel == null) {
-			if (other.minLevel != null)
+			if (other.minLevel != null) {
 				return false;
-		} else if (!this.minLevel.equals(other.minLevel))
+			}
+		} else if (!this.minLevel.equals(other.minLevel)) {
 			return false;
+		}
 		if (this.name == null) {
-			if (other.name != null)
+			if (other.name != null) {
 				return false;
-		} else if (!this.name.equals(other.name))
+			}
+		} else if (!this.name.equals(other.name)) {
 			return false;
+		}
 		if (this.regionId == null) {
-			if (other.regionId != null)
+			if (other.regionId != null) {
 				return false;
-		} else if (!this.regionId.equals(other.regionId))
+			}
+		} else if (!this.regionId.equals(other.regionId)) {
 			return false;
+		}
 		if (this.regionName == null) {
-			if (other.regionName != null)
+			if (other.regionName != null) {
 				return false;
-		} else if (!this.regionName.equals(other.regionName))
+			}
+		} else if (!this.regionName.equals(other.regionName)) {
 			return false;
+		}
 		return true;
 	}
 

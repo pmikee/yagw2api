@@ -20,17 +20,25 @@ package de.justi.yagw2api.wrapper.map.domain;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-import java.util.Optional;
+import java.util.NavigableSet;
 
 import javax.annotation.Nullable;
 
+import com.google.common.base.Function;
+import com.google.common.base.Supplier;
+
+import de.justi.yagw2api.arenanet.dto.map.MapDTO;
 import de.justi.yagwapi.common.Tuple2;
 import de.justi.yagwapi.common.Tuple4;
 
 public interface ContinentFloor {
 
 	public static interface ContinentFloorBuilder {
+		ContinentFloorBuilder mapDTOLoader(Function<String, MapDTO> mapDTOLoader);
+
 		ContinentFloorBuilder continentId(@Nullable String continentId);
+
+		ContinentFloorBuilder mapIds(final Supplier<NavigableSet<String>> mapIds);
 
 		ContinentFloorBuilder floorIndex(int floorIndex);
 
@@ -43,15 +51,15 @@ public interface ContinentFloor {
 
 	int getIndex();
 
-	Optional<MapTile> getTileUnchecked(int x, int y, int zoom);
+	NavigableSet<String> getMapIds();
+
+	Map getMap(String mapId);
+
+	Iterable<Map> getMaps();
 
 	MapTile getTile(int x, int y, int zoom) throws NoSuchMapTileException;
 
-	int getTileTextureSize(int zoom);
-
 	Tuple2<Integer, Integer> getTextureDimension();
-
-	Tuple2<Integer, Integer> getTileIndexDimension(final int zoom);
 
 	Tuple4<Integer, Integer, Integer, Integer> getClampedTextureDimension();
 

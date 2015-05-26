@@ -56,7 +56,7 @@ public final class MapFloorServiceIT extends AbstractYAGW2APITest {
 				{ "1", 1, Locale.FRENCH },
 				{ "1", 2, Locale.ENGLISH },
 				{ "2", 3, Locale.GERMAN },
-				{ "2", 2, Locale.FRENCH }
+				{ "2", 1, Locale.FRENCH }
 		});
 		//@formatter:on
 	}
