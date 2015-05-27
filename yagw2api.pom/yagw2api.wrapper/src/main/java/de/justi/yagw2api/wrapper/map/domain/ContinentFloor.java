@@ -25,6 +25,7 @@ import java.util.NavigableSet;
 import javax.annotation.Nullable;
 
 import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
 
 import de.justi.yagw2api.arenanet.dto.map.MapDTO;
@@ -34,7 +35,7 @@ import de.justi.yagwapi.common.Tuple4;
 public interface ContinentFloor {
 
 	public static interface ContinentFloorBuilder {
-		ContinentFloorBuilder mapDTOLoader(Function<String, MapDTO> mapDTOLoader);
+		ContinentFloorBuilder mapDTOLoader(Function<String, Optional<? extends MapDTO>> mapDTOLoader);
 
 		ContinentFloorBuilder continentId(@Nullable String continentId);
 
@@ -53,7 +54,13 @@ public interface ContinentFloor {
 
 	NavigableSet<String> getMapIds();
 
-	Map getMap(String mapId);
+	Optional<Map> getMap(String mapId);
+
+	/**
+	 *
+	 * @return an {@link Iterable} of the most significant maps of this floor. A map is most significant if it's the first map (ordered by id) for it's bounds.
+	 */
+	Iterable<Map> getMostSignificantMaps();
 
 	Iterable<Map> getMaps();
 

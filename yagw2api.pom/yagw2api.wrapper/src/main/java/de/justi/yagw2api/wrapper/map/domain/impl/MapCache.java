@@ -26,6 +26,7 @@ import java.util.concurrent.ExecutionException;
 
 import com.google.common.base.Function;
 import com.google.common.base.MoreObjects;
+import com.google.common.base.Optional;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -40,28 +41,33 @@ final class MapCache {
 
 	// FIELDS
 	private final MapDomainFactory mapDomainFactory;
-	private final Function<String, MapDTO> dtoLoadingFunction;
-	private final LoadingCache<String, Map> mapCache = CacheBuilder.newBuilder().recordStats().build(new CacheLoader<String, Map>() {
+	private final Function<String, Optional<? extends MapDTO>> dtoLoadingFunction;
+	private final LoadingCache<String, Optional<Map>> mapCache = CacheBuilder.newBuilder().recordStats().build(new CacheLoader<String, Optional<Map>>() {
 
 		@Override
-		public Map load(final String mapId) throws Exception {
+		public Optional<Map> load(final String mapId) throws Exception {
 			checkNotNull(mapId, "missing mapId");
-			final MapDTO mapDTO = MapCache.this.dtoLoadingFunction.apply(mapId);
-			return MapCache.this.mapDomainFactory.newMapBuilder().id(mapId).name(mapDTO.getName()).defaultFloorIndex(mapDTO.getDefaultFloor())
-					.boundsOnContinent(mapDTO.getBoundsOnContinent()).build();
+			final Optional<? extends MapDTO> mapDTO = MapCache.this.dtoLoadingFunction.apply(mapId);
+			if (mapDTO.isPresent()) {
+				return Optional.of(MapCache.this.mapDomainFactory.newMapBuilder().id(mapId).name(mapDTO.get().getName()).defaultFloorIndex(mapDTO.get().getDefaultFloor())
+						.boundsOnContinent(mapDTO.get().getBoundsOnContinent()).build());
+			} else {
+				return Optional.absent();
+			}
 		}
 	});
 
 	// CONSTRUCTOR
-	public MapCache(final Function<String, MapDTO> dtoLoadingFunction, final MapDomainFactory mapDomainFactory) {
+	public MapCache(final Function<String, Optional<? extends MapDTO>> dtoLoadingFunction, final MapDomainFactory mapDomainFactory) {
 		this.mapDomainFactory = checkNotNull(mapDomainFactory, "missing mapDomainFactory");
 		this.dtoLoadingFunction = checkNotNull(dtoLoadingFunction, "missing dtoLoadingFunction");
 	}
 
 	// METHODS
-	public Map get(final String id) {
+	public Optional<Map> get(final String mapId) {
+		checkNotNull(mapId, "missing mapId");
 		try {
-			return this.mapCache.get(id);
+			return this.mapCache.get(mapId);
 		} catch (ExecutionException e) {
 			throw new Error(e);
 		}

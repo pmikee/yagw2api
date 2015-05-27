@@ -154,7 +154,7 @@ final class DefaultContinent implements Continent {
 		}
 	}
 
-	private static final class MapDTOLoaderAndMapIdSupplier implements Function<String, MapDTO>, Supplier<NavigableSet<String>> {
+	private static final class MapDTOLoaderAndMapIdSupplier implements Function<String, Optional<? extends MapDTO>>, Supplier<NavigableSet<String>> {
 		// FIELDS
 		private final String continentId;
 		private final int floorIndex;
@@ -199,10 +199,14 @@ final class DefaultContinent implements Continent {
 		}
 
 		@Override
-		public MapDTO apply(final String input) {
+		public Optional<MapDTO> apply(final String input) {
 			checkNotNull(input, "missing input");
 			this.initializeIfRequired();
-			return this.mapDTOsById.get(input);
+			if (this.mapDTOsById.containsKey(input)) {
+				return Optional.of(this.mapDTOsById.get(input));
+			} else {
+				return Optional.absent();
+			}
 		}
 
 	}
@@ -215,18 +219,22 @@ final class DefaultContinent implements Continent {
 	private final int maxZoom;
 	private final Iterable<ContinentFloor> floors;
 	private final Iterable<Map> maps;
-	private final SortedSet<Integer> floorIds;
+	private final SortedSet<Integer> floorIndices;
 	private final SortedSet<String> mapIds;
 
-	private final LoadingCache<Integer, ContinentFloor> floorCache = CacheBuilder.newBuilder().build(new CacheLoader<Integer, ContinentFloor>() {
+	private final LoadingCache<Integer, Optional<ContinentFloor>> floorCache = CacheBuilder.newBuilder().build(new CacheLoader<Integer, Optional<ContinentFloor>>() {
 		@Override
-		public ContinentFloor load(final Integer floorIndex) throws Exception {
+		public Optional<ContinentFloor> load(final Integer floorIndex) throws Exception {
 			checkNotNull(floorIndex, "missing floorIndex");
-			checkArgument(DefaultContinent.this.floorIds.contains(floorIndex), "unknown floorIndex: %s", floorIndex);
-			final MapDTOLoaderAndMapIdSupplier loader = new MapDTOLoaderAndMapIdSupplier(DefaultContinent.this.id, floorIndex, DefaultContinent.this.mapFloorService);
+			checkArgument(DefaultContinent.this.floorIndices.contains(floorIndex), "unknown floorIndex: %s", floorIndex);
+			if (DefaultContinent.this.floorIndices.contains(floorIndex)) {
+				final MapDTOLoaderAndMapIdSupplier loader = new MapDTOLoaderAndMapIdSupplier(DefaultContinent.this.id, floorIndex, DefaultContinent.this.mapFloorService);
 
-			return DefaultContinent.this.mapDomainFactory.newContinentFloorBuilder().continentId(DefaultContinent.this.id).floorIndex(floorIndex)
-					.minZoom(DefaultContinent.this.minZoom).maxZoom(DefaultContinent.this.maxZoom).mapIds(loader).mapDTOLoader(loader).build();
+				return Optional.of(DefaultContinent.this.mapDomainFactory.newContinentFloorBuilder().continentId(DefaultContinent.this.id).floorIndex(floorIndex)
+						.minZoom(DefaultContinent.this.minZoom).maxZoom(DefaultContinent.this.maxZoom).mapIds(loader).mapDTOLoader(loader).build());
+			} else {
+				return Optional.absent();
+			}
 		}
 
 	});
@@ -247,18 +255,18 @@ final class DefaultContinent implements Continent {
 		this.dimension = checkNotNull(builder.dimension, "missing dimension in %s", builder);
 		this.minZoom = checkNotNull(builder.minZoom, "missing minZoom in %s", builder);
 		this.maxZoom = checkNotNull(builder.maxZoom, "missing maxZoom in %s", builder);
-		this.floorIds = ImmutableSortedSet.copyOf(checkNotNull(builder.floorIds, "missing floorIds in %s", builder));
+		this.floorIndices = ImmutableSortedSet.copyOf(checkNotNull(builder.floorIds, "missing floorIds in %s", builder));
 		this.mapIds = ImmutableSortedSet.copyOf(checkNotNull(builder.mapIds, "missing mapIds in %s", builder));
 
-		this.mapCache = new MapCache((mapId) -> this.mapService.retrieveAllMaps().get().getMaps().get(mapId), this.mapDomainFactory);
+		this.mapCache = new MapCache((mapId) -> this.mapService.retrieveAllMaps().get().getMap(mapId), this.mapDomainFactory);
 
-		this.floors = FluentIterable.from(this.floorIds).transform((floorIndex) -> {
+		this.floors = FluentIterable.from(this.floorIndices).transform((floorIndex) -> {
 			checkNotNull(floorIndex, "missing floorIndex");
-			return DefaultContinent.this.getFloor(floorIndex);
+			return DefaultContinent.this.getFloor(floorIndex).get();
 		});
 		this.maps = FluentIterable.from(this.mapIds).transform((mapIndex) -> {
 			checkNotNull(mapIndex, "missing mapIndex");
-			return DefaultContinent.this.getMap(mapIndex);
+			return DefaultContinent.this.getMap(mapIndex).get();
 		});
 	}
 
@@ -280,8 +288,7 @@ final class DefaultContinent implements Continent {
 	}
 
 	@Override
-	public ContinentFloor getFloor(final int floorIndex) {
-		checkArgument(this.floorIds.contains(floorIndex), "invalid floor index=%s for %s", floorIndex, this);
+	public Optional<ContinentFloor> getFloor(final int floorIndex) {
 		try {
 			return this.floorCache.get(floorIndex);
 		} catch (ExecutionException e) {
@@ -296,7 +303,7 @@ final class DefaultContinent implements Continent {
 
 	@Override
 	public SortedSet<Integer> getFloorIds() {
-		return this.floorIds;
+		return this.floorIndices;
 	}
 
 	@Override
@@ -310,18 +317,7 @@ final class DefaultContinent implements Continent {
 	}
 
 	@Override
-	public String toString() {
-		return MoreObjects.toStringHelper(this).add("id", this.id).add("name", this.name).add("dimension", this.dimension).add("minZoom", this.minZoom)
-				.add("maxZoom", this.maxZoom).add("floorIds", this.floorIds).add("mapIds", this.mapIds).toString();
-	}
-
-	@Override
-	public SortedSet<String> getMapIds() {
-		return this.mapIds;
-	}
-
-	@Override
-	public Map getMap(final String mapId) {
+	public Optional<Map> getMap(final String mapId) {
 		checkArgument(this.mapIds.contains(mapId), "invalid mapId=%s for %s", mapId, this);
 		return this.mapCache.get(mapId);
 	}
@@ -337,4 +333,9 @@ final class DefaultContinent implements Continent {
 		return MapUtils.getTileTextureSize(zoom, this.minZoom, this.maxZoom);
 	}
 
+	@Override
+	public String toString() {
+		return MoreObjects.toStringHelper(this).add("id", this.id).add("name", this.name).add("dimension", this.dimension).add("minZoom", this.minZoom)
+				.add("maxZoom", this.maxZoom).add("floorIds", this.floorIndices).add("mapIds", this.mapIds).toString();
+	}
 }

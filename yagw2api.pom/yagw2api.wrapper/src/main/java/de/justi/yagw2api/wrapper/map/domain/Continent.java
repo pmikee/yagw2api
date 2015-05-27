@@ -5,6 +5,8 @@ import java.util.SortedSet;
 
 import javax.annotation.Nullable;
 
+import com.google.common.base.Optional;
+
 import de.justi.yagwapi.common.Tuple2;
 
 /*
@@ -59,16 +61,14 @@ public interface Continent {
 	String getName();
 
 	// TODO change floor ids from int to string
-	ContinentFloor getFloor(int floorIndex);
+	Optional<ContinentFloor> getFloor(int floorIndex);
 
 	Iterable<ContinentFloor> getFloors();
 
 	// TODO change floor ids from int to string
 	SortedSet<Integer> getFloorIds();
 
-	SortedSet<String> getMapIds();
-
-	Map getMap(String mapId);
+	Optional<Map> getMap(String mapId);
 
 	Iterable<Map> getMaps();
 

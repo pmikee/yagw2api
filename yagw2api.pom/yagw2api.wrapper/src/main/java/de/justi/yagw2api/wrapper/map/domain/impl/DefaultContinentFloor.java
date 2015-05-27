@@ -23,7 +23,9 @@ package de.justi.yagw2api.wrapper.map.domain.impl;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static de.justi.yagw2api.wrapper.map.domain.impl.MapConstants.TILE_SIZE;
 
+import java.util.Iterator;
 import java.util.NavigableSet;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ExecutionException;
 
 import javax.annotation.Nullable;
@@ -33,12 +35,14 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Function;
 import com.google.common.base.MoreObjects;
+import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.FluentIterable;
+import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
 import de.justi.yagw2api.arenanet.MapFloorService;
@@ -75,7 +79,7 @@ final class DefaultContinentFloor implements ContinentFloor {
 		@Nullable
 		private Supplier<NavigableSet<String>> mapIdSupplier = null;
 		@Nullable
-		private Function<String, MapDTO> mapDTOLoader = null;
+		private Function<String, Optional<? extends MapDTO>> mapDTOLoader = null;
 		@Nullable
 		private Integer floorIndex = null;
 		@Nullable
@@ -124,7 +128,7 @@ final class DefaultContinentFloor implements ContinentFloor {
 		}
 
 		@Override
-		public ContinentFloorBuilder mapDTOLoader(final Function<String, MapDTO> mapDTOLoader) {
+		public ContinentFloorBuilder mapDTOLoader(final Function<String, Optional<? extends MapDTO>> mapDTOLoader) {
 			this.mapDTOLoader = mapDTOLoader;
 			return this;
 		}
@@ -143,7 +147,7 @@ final class DefaultContinentFloor implements ContinentFloor {
 
 	// FIELDS
 	private final MapFloorService mapFloorService;
-	private final Function<String, MapDTO> mapDTOLoader;
+	private final Function<String, Optional<? extends MapDTO>> mapDTOLoader;
 	private final MapDomainFactory mapDomainFactory;
 	private final Supplier<NavigableSet<String>> mapIdSupplier;
 	private final MapCache mapCache;
@@ -152,9 +156,72 @@ final class DefaultContinentFloor implements ContinentFloor {
 		public Iterable<Map> get() {
 			return FluentIterable.from(DefaultContinentFloor.this.mapIdSupplier.get()).transform((mapIndex) -> {
 				checkNotNull(mapIndex, "missing mapIndex");
-				return DefaultContinentFloor.this.getMap(mapIndex);
+				return DefaultContinentFloor.this.getMap(mapIndex).get();
 			});
 		}
+	});
+	// FIXME extract class for mostSignificantMaps
+	private final Supplier<Iterable<Map>> mostSignificantMaps = Suppliers.memoize(new Supplier<Iterable<Map>>() {
+		@Override
+		public Iterable<Map> get() {
+			return new Iterable<Map>() {
+				@Override
+				public Iterator<Map> iterator() {
+					return new Iterator<Map>() {
+						private final Iterator<Map> decorated = DefaultContinentFloor.this.maps.get().iterator();
+						private Optional<Map> next = Optional.absent();
+						private final java.util.Map<Tuple4<Integer, Integer, Integer, Integer>, Boolean> blockedBounds = Maps.newHashMap();
+
+						@Override
+						public boolean hasNext() {
+							return this.peekNext().isPresent();
+						}
+
+						private Optional<Map> peekNext() {
+							if (!this.next.isPresent()) {
+								this.next = this.searchForNextInDecorated();
+							}
+							return this.next;
+						}
+
+						private Optional<Map> pullNext() {
+							final Optional<Map> next = this.peekNext();
+							this.next = Optional.absent();
+							return next;
+						}
+
+						private Optional<Map> searchForNextInDecorated() {
+							@Nullable
+							Map potentialNext = this.decorated.hasNext() ? this.decorated.next() : null;
+							while (potentialNext != null) {
+								if (this.blockedBounds.containsKey(potentialNext.getBoundsOnContinent())) {
+									if (this.decorated.hasNext()) {
+										potentialNext = this.decorated.next();
+									} else {
+										return Optional.absent();
+									}
+								} else {
+									this.blockedBounds.put(potentialNext.getBoundsOnContinent(), true);
+									return Optional.of(potentialNext);
+								}
+							}
+							return Optional.absent();
+						}
+
+						@Override
+						public Map next() {
+							final Optional<Map> next = this.pullNext();
+							if (next.isPresent()) {
+								return next.get();
+							} else {
+								throw new NoSuchElementException();
+							}
+						}
+					};
+				}
+			};
+		}
+
 	});
 	private final int floorIndex;
 	private final int minZoom;
@@ -292,13 +359,18 @@ final class DefaultContinentFloor implements ContinentFloor {
 	}
 
 	@Override
-	public Map getMap(final String mapId) {
+	public Optional<Map> getMap(final String mapId) {
 		return this.mapCache.get(mapId);
 	}
 
 	@Override
 	public Iterable<Map> getMaps() {
 		return this.maps.get();
+	}
+
+	@Override
+	public Iterable<Map> getMostSignificantMaps() {
+		return this.mostSignificantMaps.get();
 	}
 
 	@Override
