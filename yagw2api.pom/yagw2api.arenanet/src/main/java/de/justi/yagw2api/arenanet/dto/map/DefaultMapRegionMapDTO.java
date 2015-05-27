@@ -32,8 +32,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 
-import de.justi.yagwapi.common.Tuple4;
-import de.justi.yagwapi.common.Tuples;
+import de.justi.yagwapi.common.tuple.Tuple4;
+import de.justi.yagwapi.common.tuple.Tuples;
 
 final class DefaultMapRegionMapDTO implements MapRegionMapDTO {
 	// FIELDS

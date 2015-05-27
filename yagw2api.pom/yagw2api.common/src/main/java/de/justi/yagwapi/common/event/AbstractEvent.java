@@ -1,8 +1,8 @@
-package de.justi.yagw2api.wrapper.wvw.domain;
+package de.justi.yagwapi.common.event;
 
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * YAGW2API-Wrapper
+ * YAGW2API-Commons
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
  * _____________________________________________________________
@@ -20,20 +20,29 @@ package de.justi.yagw2api.wrapper.wvw.domain;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-import java.util.concurrent.TimeUnit;
+import java.time.LocalDateTime;
 
-public interface WVWObjectiveType {
-	String getLabel();
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 
-	long getBuffDuration(TimeUnit timeUnit);
+public abstract class AbstractEvent implements Event {
+	private final LocalDateTime timestamp;
 
-	int getPoints();
+	public AbstractEvent() {
+		this.timestamp = LocalDateTime.now();
+	}
 
-	boolean isCamp();
+	@Override
+	public final LocalDateTime getTimestamp() {
+		return this.timestamp;
+	}
 
-	boolean isTower();
+	protected ToStringHelper toStringHelper() {
+		return MoreObjects.toStringHelper(this).add("timestamp", this.timestamp);
+	}
 
-	boolean isKeep();
-
-	boolean isCastle();
+	@Override
+	public final String toString() {
+		return this.toStringHelper().toString();
+	}
 }

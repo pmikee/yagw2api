@@ -69,9 +69,9 @@ import de.justi.yagw2api.wrapper.map.domain.Map;
 import de.justi.yagw2api.wrapper.map.domain.MapTile;
 import de.justi.yagw2api.wrapper.map.domain.NoSuchMapTileException;
 import de.justi.yagw2api.wrapper.map.event.MapTileEvent;
-import de.justi.yagwapi.common.Tuple2;
-import de.justi.yagwapi.common.Tuple4;
-import de.justi.yagwapi.common.Tuples;
+import de.justi.yagwapi.common.tuple.Tuple2;
+import de.justi.yagwapi.common.tuple.Tuple4;
+import de.justi.yagwapi.common.tuple.Tuples;
 
 public final class MapWidget extends Composite implements PaintListener {
 	// CONSTS

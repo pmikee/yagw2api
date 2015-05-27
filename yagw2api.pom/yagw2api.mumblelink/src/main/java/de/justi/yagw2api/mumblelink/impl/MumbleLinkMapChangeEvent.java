@@ -26,7 +26,7 @@ import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Optional;
 
 import de.justi.yagw2api.mumblelink.IMumbleLinkMapChangeEvent;
-import de.justi.yagwapi.common.AbstractEvent;
+import de.justi.yagwapi.common.event.AbstractEvent;
 
 final class MumbleLinkMapChangeEvent extends AbstractEvent implements IMumbleLinkMapChangeEvent {
 	private final Optional<Integer> oldMapId;

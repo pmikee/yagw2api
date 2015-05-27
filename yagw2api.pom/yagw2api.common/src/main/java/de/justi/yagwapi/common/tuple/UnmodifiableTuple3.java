@@ -1,4 +1,4 @@
-package de.justi.yagwapi.common;
+package de.justi.yagwapi.common.tuple;
 
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -31,31 +31,25 @@ import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableList;
 
-public final class Tuple5<V1, V2, V3, V4, V5> implements Tuple<V1, V5> {
+final class UnmodifiableTuple3<V1, V2, V3> implements Tuple3<V1, V2, V3> {
 	@Nullable
 	private final V1 value1;
 	@Nullable
 	private final V2 value2;
 	@Nullable
 	private final V3 value3;
-	@Nullable
-	private final V4 value4;
-	@Nullable
-	private final V5 value5;
 
 	private transient final Supplier<List<Object>> valueListSupplier = Suppliers.memoize(new Supplier<List<Object>>() {
 		@Override
 		public List<Object> get() {
-			return ImmutableList.copyOf(Tuple5.this.asArray());
+			return ImmutableList.copyOf(UnmodifiableTuple3.this.asArray());
 		}
 	});
 
-	Tuple5(@Nullable final V1 value1, @Nullable final V2 value2, @Nullable final V3 value3, @Nullable final V4 value4, @Nullable final V5 value5) {
+	UnmodifiableTuple3(@Nullable final V1 value1, @Nullable final V2 value2, @Nullable final V3 value3) {
 		this.value1 = value1;
 		this.value2 = value2;
 		this.value3 = value3;
-		this.value4 = value4;
-		this.value5 = value5;
 	}
 
 	@Override
@@ -65,12 +59,12 @@ public final class Tuple5<V1, V2, V3, V4, V5> implements Tuple<V1, V5> {
 
 	@Override
 	public final Object[] asArray() {
-		return new Object[] { this.value1, this.value2, this.value3, this.value4, this.value5 };
+		return new Object[] { this.value1, this.value2, this.value3 };
 	}
 
 	@Override
 	public final int dimension() {
-		return 5;
+		return 3;
 	}
 
 	@Override
@@ -79,78 +73,61 @@ public final class Tuple5<V1, V2, V3, V4, V5> implements Tuple<V1, V5> {
 	}
 
 	@Override
-	public final Optional<V5> last() {
-		return Optional.fromNullable(this.value5);
+	public final Optional<V3> last() {
+		return Optional.fromNullable(this.value3);
 	}
 
+	@Override
 	@Nullable
 	public final V1 v1() {
 		return this.value1;
 	}
 
+	@Override
 	@Nullable
 	public final V2 v2() {
 		return this.value2;
 	}
 
+	@Override
 	@Nullable
 	public final V3 v3() {
 		return this.value3;
 	}
 
-	@Nullable
-	public final V4 v4() {
-		return this.value4;
-	}
-
-	@Nullable
-	public final V5 v5() {
-		return this.value5;
-	}
-
+	@Override
 	public final Optional<V1> getValue1() {
 		return Optional.fromNullable(this.value1);
 	}
 
+	@Override
 	public final Optional<V2> getValue2() {
 		return Optional.fromNullable(this.value2);
 	}
 
+	@Override
 	public final Optional<V3> getValue3() {
 		return Optional.fromNullable(this.value3);
 	}
 
-	public final Optional<V4> getValue4() {
-		return Optional.fromNullable(this.value4);
+	@Override
+	public final UnmodifiableTuple3<V1, V2, V3> setValue1(final V1 value) {
+		return new UnmodifiableTuple3<V1, V2, V3>(value, this.value2, this.value3);
 	}
 
-	public final Optional<V5> getValue5() {
-		return Optional.fromNullable(this.value5);
+	@Override
+	public final UnmodifiableTuple3<V1, V2, V3> setValue2(final V2 value) {
+		return new UnmodifiableTuple3<V1, V2, V3>(this.value1, value, this.value3);
 	}
 
-	public final Tuple5<V1, V2, V3, V4, V5> setValue1(final V1 value) {
-		return new Tuple5<V1, V2, V3, V4, V5>(value, this.value2, this.value3, this.value4, this.value5);
-	}
-
-	public final Tuple5<V1, V2, V3, V4, V5> setValue2(final V2 value) {
-		return new Tuple5<V1, V2, V3, V4, V5>(this.value1, value, this.value3, this.value4, this.value5);
-	}
-
-	public final Tuple5<V1, V2, V3, V4, V5> setValue3(final V3 value) {
-		return new Tuple5<V1, V2, V3, V4, V5>(this.value1, this.value2, value, this.value4, this.value5);
-	}
-
-	public final Tuple5<V1, V2, V3, V4, V5> setValue4(final V4 value) {
-		return new Tuple5<V1, V2, V3, V4, V5>(this.value1, this.value2, this.value3, value, this.value5);
-	}
-
-	public final Tuple5<V1, V2, V3, V4, V5> setValue5(final V5 value) {
-		return new Tuple5<V1, V2, V3, V4, V5>(this.value1, this.value2, this.value3, this.value4, value);
+	@Override
+	public final UnmodifiableTuple3<V1, V2, V3> setValue3(final V3 value) {
+		return new UnmodifiableTuple3<V1, V2, V3>(this.value1, this.value2, value);
 	}
 
 	@Override
 	public String toString() {
-		return MoreObjects.toStringHelper("").addValue(this.value1).addValue(this.value2).addValue(this.value3).addValue(this.value4).addValue(this.value5).toString();
+		return MoreObjects.toStringHelper("").addValue(this.value1).addValue(this.value2).addValue(this.value3).toString();
 	}
 
 	@Override
@@ -158,11 +135,6 @@ public final class Tuple5<V1, V2, V3, V4, V5> implements Tuple<V1, V5> {
 		return this.asList().iterator();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -170,16 +142,9 @@ public final class Tuple5<V1, V2, V3, V4, V5> implements Tuple<V1, V5> {
 		result = prime * result + ((this.value1 == null) ? 0 : this.value1.hashCode());
 		result = prime * result + ((this.value2 == null) ? 0 : this.value2.hashCode());
 		result = prime * result + ((this.value3 == null) ? 0 : this.value3.hashCode());
-		result = prime * result + ((this.value4 == null) ? 0 : this.value4.hashCode());
-		result = prime * result + ((this.value5 == null) ? 0 : this.value5.hashCode());
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(final Object obj) {
 		if (this == obj) {
@@ -188,10 +153,10 @@ public final class Tuple5<V1, V2, V3, V4, V5> implements Tuple<V1, V5> {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof Tuple5)) {
+		if (!(obj instanceof UnmodifiableTuple3)) {
 			return false;
 		}
-		Tuple5 other = (Tuple5) obj;
+		UnmodifiableTuple3 other = (UnmodifiableTuple3) obj;
 		if (this.value1 == null) {
 			if (other.value1 != null) {
 				return false;
@@ -211,20 +176,6 @@ public final class Tuple5<V1, V2, V3, V4, V5> implements Tuple<V1, V5> {
 				return false;
 			}
 		} else if (!this.value3.equals(other.value3)) {
-			return false;
-		}
-		if (this.value4 == null) {
-			if (other.value4 != null) {
-				return false;
-			}
-		} else if (!this.value4.equals(other.value4)) {
-			return false;
-		}
-		if (this.value5 == null) {
-			if (other.value5 != null) {
-				return false;
-			}
-		} else if (!this.value5.equals(other.value5)) {
 			return false;
 		}
 		return true;

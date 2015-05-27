@@ -1,4 +1,4 @@
-package de.justi.yagwapi.common;
+package de.justi.yagwapi.common.event;
 
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -20,10 +20,8 @@ package de.justi.yagwapi.common;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-/**
- * can be used to mark a certain class as immutable
- */
-@javax.annotation.concurrent.Immutable
-public interface Immutable extends Unmodifiable {
+import com.google.common.eventbus.EventBus;
 
+public interface HasChannel {
+	EventBus getChannel();
 }

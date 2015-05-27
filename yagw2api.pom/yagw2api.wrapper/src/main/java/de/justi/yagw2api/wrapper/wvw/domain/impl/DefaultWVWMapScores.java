@@ -28,8 +28,8 @@ import org.slf4j.LoggerFactory;
 
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWMap;
-import de.justi.yagw2api.wrapper.wvw.event.WVWMapScoresChangedEvent;
 import de.justi.yagw2api.wrapper.wvw.event.WVWEventFactory;
+import de.justi.yagw2api.wrapper.wvw.event.WVWMapScoresChangedEvent;
 
 final class DefaultWVWMapScores extends AbstractWVWScores {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultWVWMapScores.class);

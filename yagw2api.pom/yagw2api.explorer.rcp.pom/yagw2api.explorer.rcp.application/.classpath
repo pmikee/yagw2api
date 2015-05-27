@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="src" path="src/main/java/"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/aopalliance.aopalliance.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/com.fasterxml.classmate.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/com.fasterxml.jackson.core.jackson-annotations.jar"/>
@@ -15,7 +18,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/compile/de.justi.yagw2api.analyzer.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/de.justi.yagw2api.anchorman.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/de.justi.yagw2api.arenanet.jar" sourcepath="/yagw2api.arenanet"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/de.justi.yagw2api.common.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/compile/de.justi.yagw2api.common.jar" sourcepath="/yagw2api.common"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/de.justi.yagw2api.locationprovider.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/de.justi.yagw2api.mumblelink.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/de.justi.yagw2api.server.jar"/>
@@ -59,8 +62,5 @@
 	<classpathentry exported="true" kind="lib" path="lib/compile/org.springframework.spring-web.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/org.springframework.spring-webmvc.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/org.yaml.snakeyaml.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
-	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="src" path="src/main/java/"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

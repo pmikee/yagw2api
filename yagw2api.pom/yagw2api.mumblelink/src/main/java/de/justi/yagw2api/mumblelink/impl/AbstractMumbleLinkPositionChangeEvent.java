@@ -29,7 +29,7 @@ import com.google.common.base.Optional;
 
 import de.justi.yagw2api.mumblelink.IMumbleLinkPosition;
 import de.justi.yagw2api.mumblelink.IMumbleLinkPositionChangeEvent;
-import de.justi.yagwapi.common.AbstractEvent;
+import de.justi.yagwapi.common.event.AbstractEvent;
 
 abstract class AbstractMumbleLinkPositionChangeEvent extends AbstractEvent implements IMumbleLinkPositionChangeEvent {
 

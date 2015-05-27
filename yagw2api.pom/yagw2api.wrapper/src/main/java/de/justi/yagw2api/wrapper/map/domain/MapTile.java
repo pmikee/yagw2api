@@ -4,7 +4,7 @@ import java.nio.file.Path;
 
 import javax.annotation.Nullable;
 
-import de.justi.yagwapi.common.Tuple2;
+import de.justi.yagwapi.common.tuple.Tuple2;
 
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

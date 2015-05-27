@@ -1,4 +1,4 @@
-package de.justi.yagwapi.common;
+package de.justi.yagwapi.common.tuple;
 
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -20,22 +20,19 @@ package de.justi.yagwapi.common;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-import java.util.List;
-
-import javax.annotation.concurrent.Immutable;
-
 import com.google.common.base.Optional;
 
-@Immutable
-public interface Tuple<VF, VL> extends Iterable<Object> {
+public interface Tuple2<V1, V2> extends Tuple<V1, V2> {
 
-	Optional<VF> first();
+	V1 v1();
 
-	Optional<VL> last();
+	V2 v2();
 
-	List<Object> asList();
+	Optional<V1> getValue1();
 
-	Object[] asArray();
+	Tuple2<V1, V2> setValue1(final V1 value);
 
-	int dimension();
+	Optional<V2> getValue2();
+
+	Tuple2<V1, V2> setValue2(final V2 value);
 }

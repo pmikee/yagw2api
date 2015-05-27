@@ -62,7 +62,7 @@ import de.justi.yagw2api.wrapper.map.domain.MapDomainFactory;
 import de.justi.yagw2api.wrapper.map.domain.impl.DefaultMapDomainFactory;
 import de.justi.yagw2api.wrapper.map.event.MapEventFactory;
 import de.justi.yagw2api.wrapper.map.event.impl.DefaultMapEventFactory;
-import de.justi.yagwapi.common.Tuples;
+import de.justi.yagwapi.common.tuple.Tuples;
 
 public class MapCucumberStepDefinitions implements En {
 

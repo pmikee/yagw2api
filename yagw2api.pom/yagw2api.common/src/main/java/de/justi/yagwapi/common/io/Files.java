@@ -1,4 +1,4 @@
-package de.justi.yagwapi.common;
+package de.justi.yagwapi.common.io;
 
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -20,8 +20,24 @@ package de.justi.yagwapi.common;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-import com.google.common.eventbus.EventBus;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-public interface HasChannel {
-	EventBus getChannel();
+import com.google.common.base.Suppliers;
+
+public final class Files {
+	private Files() {
+		throw new AssertionError("no instance");
+	}
+
+	private static final com.google.common.base.Supplier<Path> tempDirSupplier = Suppliers.memoize(new com.google.common.base.Supplier<Path>() {
+		@Override
+		public Path get() {
+			return Paths.get(System.getProperty("java.io.tmpdir"));
+		}
+	});
+
+	public static Path getTempDir() {
+		return tempDirSupplier.get();
+	}
 }

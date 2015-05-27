@@ -1,4 +1,4 @@
-package de.justi.yagwapi.common;
+package de.justi.yagwapi.common.tuple;
 
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -9,9 +9,9 @@ package de.justi.yagwapi.common;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,25 +31,28 @@ import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableList;
 
-public final class Tuple3<V1, V2, V3> implements Tuple<V1, V3> {
+final class UnmodifiableTuple4<V1, V2, V3, V4> implements Tuple4<V1, V2, V3, V4> {
 	@Nullable
 	private final V1 value1;
 	@Nullable
 	private final V2 value2;
 	@Nullable
 	private final V3 value3;
+	@Nullable
+	private final V4 value4;
 
 	private transient final Supplier<List<Object>> valueListSupplier = Suppliers.memoize(new Supplier<List<Object>>() {
 		@Override
 		public List<Object> get() {
-			return ImmutableList.copyOf(Tuple3.this.asArray());
+			return ImmutableList.copyOf(UnmodifiableTuple4.this.asArray());
 		}
 	});
 
-	Tuple3(@Nullable final V1 value1, @Nullable final V2 value2, @Nullable final V3 value3) {
+	UnmodifiableTuple4(@Nullable final V1 value1, @Nullable final V2 value2, @Nullable final V3 value3, @Nullable final V4 value4) {
 		this.value1 = value1;
 		this.value2 = value2;
 		this.value3 = value3;
+		this.value4 = value4;
 	}
 
 	@Override
@@ -59,12 +62,12 @@ public final class Tuple3<V1, V2, V3> implements Tuple<V1, V3> {
 
 	@Override
 	public final Object[] asArray() {
-		return new Object[] { this.value1, this.value2, this.value3 };
+		return new Object[] { this.value1, this.value2, this.value3, this.value4 };
 	}
 
 	@Override
 	public final int dimension() {
-		return 3;
+		return 4;
 	}
 
 	@Override
@@ -73,52 +76,77 @@ public final class Tuple3<V1, V2, V3> implements Tuple<V1, V3> {
 	}
 
 	@Override
-	public final Optional<V3> last() {
-		return Optional.fromNullable(this.value3);
+	public final Optional<V4> last() {
+		return Optional.fromNullable(this.value4);
 	}
 
+	@Override
 	@Nullable
 	public final V1 v1() {
 		return this.value1;
 	}
 
+	@Override
 	@Nullable
 	public final V2 v2() {
 		return this.value2;
 	}
 
+	@Override
 	@Nullable
 	public final V3 v3() {
 		return this.value3;
 	}
 
+	@Override
+	@Nullable
+	public final V4 v4() {
+		return this.value4;
+	}
+
+	@Override
 	public final Optional<V1> getValue1() {
 		return Optional.fromNullable(this.value1);
 	}
 
+	@Override
 	public final Optional<V2> getValue2() {
 		return Optional.fromNullable(this.value2);
 	}
 
+	@Override
 	public final Optional<V3> getValue3() {
 		return Optional.fromNullable(this.value3);
 	}
 
-	public final Tuple3<V1, V2, V3> setValue1(final V1 value) {
-		return new Tuple3<V1, V2, V3>(value, this.value2, this.value3);
+	@Override
+	public final Optional<V4> getValue4() {
+		return Optional.fromNullable(this.value4);
 	}
 
-	public final Tuple3<V1, V2, V3> setValue2(final V2 value) {
-		return new Tuple3<V1, V2, V3>(this.value1, value, this.value3);
+	@Override
+	public final UnmodifiableTuple4<V1, V2, V3, V4> setValue1(final V1 value) {
+		return new UnmodifiableTuple4<V1, V2, V3, V4>(value, this.value2, this.value3, this.value4);
 	}
 
-	public final Tuple3<V1, V2, V3> setValue3(final V3 value) {
-		return new Tuple3<V1, V2, V3>(this.value1, this.value2, value);
+	@Override
+	public final UnmodifiableTuple4<V1, V2, V3, V4> setValue2(final V2 value) {
+		return new UnmodifiableTuple4<V1, V2, V3, V4>(this.value1, value, this.value3, this.value4);
+	}
+
+	@Override
+	public final UnmodifiableTuple4<V1, V2, V3, V4> setValue3(final V3 value) {
+		return new UnmodifiableTuple4<V1, V2, V3, V4>(this.value1, this.value2, value, this.value4);
+	}
+
+	@Override
+	public final UnmodifiableTuple4<V1, V2, V3, V4> setValue4(final V4 value) {
+		return new UnmodifiableTuple4<V1, V2, V3, V4>(this.value1, this.value2, this.value3, value);
 	}
 
 	@Override
 	public String toString() {
-		return MoreObjects.toStringHelper("").addValue(this.value1).addValue(this.value2).addValue(this.value3).toString();
+		return MoreObjects.toStringHelper("").addValue(this.value1).addValue(this.value2).addValue(this.value3).addValue(this.value4).toString();
 	}
 
 	@Override
@@ -133,33 +161,50 @@ public final class Tuple3<V1, V2, V3> implements Tuple<V1, V3> {
 		result = prime * result + ((this.value1 == null) ? 0 : this.value1.hashCode());
 		result = prime * result + ((this.value2 == null) ? 0 : this.value2.hashCode());
 		result = prime * result + ((this.value3 == null) ? 0 : this.value3.hashCode());
+		result = prime * result + ((this.value4 == null) ? 0 : this.value4.hashCode());
 		return result;
 	}
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (!(obj instanceof Tuple3))
+		}
+		if (!(obj instanceof UnmodifiableTuple4)) {
 			return false;
-		Tuple3 other = (Tuple3) obj;
+		}
+		UnmodifiableTuple4 other = (UnmodifiableTuple4) obj;
 		if (this.value1 == null) {
-			if (other.value1 != null)
+			if (other.value1 != null) {
 				return false;
-		} else if (!this.value1.equals(other.value1))
+			}
+		} else if (!this.value1.equals(other.value1)) {
 			return false;
+		}
 		if (this.value2 == null) {
-			if (other.value2 != null)
+			if (other.value2 != null) {
 				return false;
-		} else if (!this.value2.equals(other.value2))
+			}
+		} else if (!this.value2.equals(other.value2)) {
 			return false;
+		}
 		if (this.value3 == null) {
-			if (other.value3 != null)
+			if (other.value3 != null) {
 				return false;
-		} else if (!this.value3.equals(other.value3))
+			}
+		} else if (!this.value3.equals(other.value3)) {
 			return false;
+		}
+		if (this.value4 == null) {
+			if (other.value4 != null) {
+				return false;
+			}
+		} else if (!this.value4.equals(other.value4)) {
+			return false;
+		}
 		return true;
 	}
 }

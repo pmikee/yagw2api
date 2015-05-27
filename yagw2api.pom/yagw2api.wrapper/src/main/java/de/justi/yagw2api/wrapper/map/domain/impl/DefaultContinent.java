@@ -54,7 +54,7 @@ import de.justi.yagw2api.wrapper.map.domain.Continent;
 import de.justi.yagw2api.wrapper.map.domain.ContinentFloor;
 import de.justi.yagw2api.wrapper.map.domain.Map;
 import de.justi.yagw2api.wrapper.map.domain.MapDomainFactory;
-import de.justi.yagwapi.common.Tuple2;
+import de.justi.yagwapi.common.tuple.Tuple2;
 
 final class DefaultContinent implements Continent {
 

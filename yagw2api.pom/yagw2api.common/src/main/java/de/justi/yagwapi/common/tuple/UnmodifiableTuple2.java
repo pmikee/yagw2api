@@ -1,4 +1,4 @@
-package de.justi.yagwapi.common;
+package de.justi.yagwapi.common.tuple;
 
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -9,9 +9,9 @@ package de.justi.yagwapi.common;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,7 +31,7 @@ import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableList;
 
-public final class Tuple2<V1, V2> implements Tuple<V1, V2> {
+final class UnmodifiableTuple2<V1, V2> implements Tuple2<V1, V2> {
 	@Nullable
 	private final V1 value1;
 	@Nullable
@@ -40,11 +40,11 @@ public final class Tuple2<V1, V2> implements Tuple<V1, V2> {
 	private transient final Supplier<List<Object>> valueListSupplier = Suppliers.memoize(new Supplier<List<Object>>() {
 		@Override
 		public List<Object> get() {
-			return ImmutableList.copyOf(Tuple2.this.asArray());
+			return ImmutableList.copyOf(UnmodifiableTuple2.this.asArray());
 		}
 	});
 
-	Tuple2(@Nullable final V1 value1, @Nullable final V2 value2) {
+	UnmodifiableTuple2(@Nullable final V1 value1, @Nullable final V2 value2) {
 		this.value1 = value1;
 		this.value2 = value2;
 	}
@@ -74,30 +74,36 @@ public final class Tuple2<V1, V2> implements Tuple<V1, V2> {
 		return Optional.fromNullable(this.value2);
 	}
 
+	@Override
 	@Nullable
 	public final V1 v1() {
 		return this.value1;
 	}
 
+	@Override
 	@Nullable
 	public final V2 v2() {
 		return this.value2;
 	}
 
+	@Override
 	public final Optional<V1> getValue1() {
 		return Optional.fromNullable(this.value1);
 	}
 
-	public final Tuple2<V1, V2> setValue1(final V1 value) {
-		return new Tuple2<V1, V2>(value, this.value2);
+	@Override
+	public final UnmodifiableTuple2<V1, V2> setValue1(final V1 value) {
+		return new UnmodifiableTuple2<V1, V2>(value, this.value2);
 	}
 
+	@Override
 	public final Optional<V2> getValue2() {
 		return Optional.fromNullable(this.value2);
 	}
 
-	public final Tuple2<V1, V2> setValue2(final V2 value) {
-		return new Tuple2<V1, V2>(this.value1, value);
+	@Override
+	public final UnmodifiableTuple2<V1, V2> setValue2(final V2 value) {
+		return new UnmodifiableTuple2<V1, V2>(this.value1, value);
 	}
 
 	@Override
@@ -121,23 +127,30 @@ public final class Tuple2<V1, V2> implements Tuple<V1, V2> {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (!(obj instanceof Tuple2))
+		}
+		if (!(obj instanceof UnmodifiableTuple2)) {
 			return false;
-		Tuple2 other = (Tuple2) obj;
+		}
+		UnmodifiableTuple2 other = (UnmodifiableTuple2) obj;
 		if (this.value1 == null) {
-			if (other.value1 != null)
+			if (other.value1 != null) {
 				return false;
-		} else if (!this.value1.equals(other.value1))
+			}
+		} else if (!this.value1.equals(other.value1)) {
 			return false;
+		}
 		if (this.value2 == null) {
-			if (other.value2 != null)
+			if (other.value2 != null) {
 				return false;
-		} else if (!this.value2.equals(other.value2))
+			}
+		} else if (!this.value2.equals(other.value2)) {
 			return false;
+		}
 		return true;
 	}
 }

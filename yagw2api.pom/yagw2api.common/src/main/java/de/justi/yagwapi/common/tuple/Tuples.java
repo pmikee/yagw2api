@@ -1,4 +1,4 @@
-package de.justi.yagwapi.common;
+package de.justi.yagwapi.common.tuple;
 
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 public final class Tuples {
 	// STATIC METHODS
 
-	public static <V1, V2, V3, V4> Tuple4<V1, V2, V3, V4> merge(final Tuple2<V1, V2> part1, final Tuple2<V3, V4> part2) {
+	public static <V1, V2, V3, V4> Tuple4<V1, V2, V3, V4> merge(final UnmodifiableTuple2<V1, V2> part1, final Tuple2<V3, V4> part2) {
 		checkNotNull(part1, "missing part1");
 		checkNotNull(part2, "missing part2");
 		return Tuples.of(part1.v1(), part1.v2(), part2.v1(), part2.v2());
@@ -44,20 +44,20 @@ public final class Tuples {
 	}
 
 	public static <V1, V2> Tuple2<V1, V2> of(@Nullable final V1 v1, @Nullable final V2 v2) {
-		return new Tuple2<V1, V2>(v1, v2);
+		return new UnmodifiableTuple2<V1, V2>(v1, v2);
 	}
 
 	public static <V1, V2, V3> Tuple3<V1, V2, V3> of(@Nullable final V1 v1, @Nullable final V2 v2, @Nullable final V3 v3) {
-		return new Tuple3<V1, V2, V3>(v1, v2, v3);
+		return new UnmodifiableTuple3<V1, V2, V3>(v1, v2, v3);
 	}
 
 	public static <V1, V2, V3, V4> Tuple4<V1, V2, V3, V4> of(@Nullable final V1 v1, @Nullable final V2 v2, @Nullable final V3 v3, @Nullable final V4 v4) {
-		return new Tuple4<V1, V2, V3, V4>(v1, v2, v3, v4);
+		return new UnmodifiableTuple4<V1, V2, V3, V4>(v1, v2, v3, v4);
 	}
 
 	public static <V1, V2, V3, V4, V5> Tuple5<V1, V2, V3, V4, V5> of(@Nullable final V1 v1, @Nullable final V2 v2, @Nullable final V3 v3, @Nullable final V4 v4,
 			@Nullable final V5 v5) {
-		return new Tuple5<V1, V2, V3, V4, V5>(v1, v2, v3, v4, v5);
+		return new UnmodifiableTuple5<V1, V2, V3, V4, V5>(v1, v2, v3, v4, v5);
 	}
 
 	/**

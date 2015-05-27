@@ -1,4 +1,4 @@
-package de.justi.yagwapi.common;
+package de.justi.yagwapi.common.event;
 
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -22,27 +22,6 @@ package de.justi.yagwapi.common;
 
 import java.time.LocalDateTime;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
-
-public abstract class AbstractEvent implements Event {
-	private final LocalDateTime timestamp;
-
-	public AbstractEvent() {
-		this.timestamp = LocalDateTime.now();
-	}
-
-	@Override
-	public final LocalDateTime getTimestamp() {
-		return this.timestamp;
-	}
-
-	protected ToStringHelper toStringHelper() {
-		return MoreObjects.toStringHelper(this).add("timestamp", this.timestamp);
-	}
-
-	@Override
-	public final String toString() {
-		return this.toStringHelper().toString();
-	}
+public interface Event {
+	LocalDateTime getTimestamp();
 }

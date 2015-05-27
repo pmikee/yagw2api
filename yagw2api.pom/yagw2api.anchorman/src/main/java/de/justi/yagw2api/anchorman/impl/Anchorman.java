@@ -57,7 +57,7 @@ import de.justi.yagw2api.wrapper.wvw.event.WVWObjectiveCaptureEvent;
 import de.justi.yagw2api.wrapper.wvw.event.WVWObjectiveClaimedEvent;
 import de.justi.yagw2api.wrapper.wvw.event.WVWObjectiveEndOfBuffEvent;
 import de.justi.yagw2api.wrapper.wvw.event.WVWObjectiveUnclaimedEvent;
-import de.justi.yagwapi.common.TTSUtils;
+import de.justi.yagwapi.common.io.TTSUtils;
 
 class Anchorman implements IAnchorman, IMumbleLinkListener, WVWMatchListener, WVWMapListener {
 	private static final String BUNDLE_KEY_COMPLETED_MATCH_INITIALIZATION = "completed_match_initialization";

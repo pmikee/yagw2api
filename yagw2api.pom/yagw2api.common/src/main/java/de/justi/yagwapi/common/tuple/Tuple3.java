@@ -1,8 +1,8 @@
-package de.justi.yagw2api.wrapper.map.event.impl;
+package de.justi.yagwapi.common.tuple;
 
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * YAGW2API-Wrapper
+ * YAGW2API-Commons
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
  * _____________________________________________________________
@@ -20,32 +20,25 @@ package de.justi.yagw2api.wrapper.map.event.impl;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.base.Optional;
 
-import com.google.common.base.MoreObjects.ToStringHelper;
+public interface Tuple3<V1, V2, V3> extends Tuple<V1, V3> {
 
-import de.justi.yagw2api.wrapper.map.domain.MapTile;
-import de.justi.yagw2api.wrapper.map.event.MapTileEvent;
-import de.justi.yagwapi.common.event.AbstractEvent;
+	V1 v1();
 
-abstract class AbstractMapTileEvent extends AbstractEvent implements MapTileEvent {
-	private final MapTile mapTile;
+	V2 v2();
 
-	protected AbstractMapTileEvent(final MapTile mapTile) {
-		this.mapTile = checkNotNull(mapTile, "missing mapTile");
-	}
+	V3 v3();
 
-	/**
-	 * @return the mapTile
-	 */
-	@Override
-	public final MapTile getMapTile() {
-		return this.mapTile;
-	}
+	Optional<V1> getValue1();
 
-	@Override
-	protected ToStringHelper toStringHelper() {
-		return super.toStringHelper().add("mapTile", this.mapTile);
-	}
+	Tuple3<V1, V2, V3> setValue1(final V1 value);
 
+	Optional<V2> getValue2();
+
+	Tuple3<V1, V2, V3> setValue2(final V2 value);
+
+	Optional<V3> getValue3();
+
+	Tuple3<V1, V2, V3> setValue3(final V3 value);
 }

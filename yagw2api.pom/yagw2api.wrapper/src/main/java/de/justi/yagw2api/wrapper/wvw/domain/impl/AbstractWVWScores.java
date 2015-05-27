@@ -9,9 +9,9 @@ package de.justi.yagw2api.wrapper.wvw.domain.impl;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,18 +29,16 @@ import com.google.common.base.MoreObjects;
 import com.google.common.eventbus.EventBus;
 
 import de.justi.yagw2api.wrapper.wvw.domain.WVWScores;
-import de.justi.yagwapi.common.AbstractHasChannel;
-import de.justi.yagwapi.common.Unmodifiable;
+import de.justi.yagwapi.common.event.AbstractHasChannel;
 
 abstract class AbstractWVWScores extends AbstractHasChannel implements WVWScores {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractWVWScores.class);
 
-	final class UnmodifiableWVWScores implements WVWScores, Unmodifiable {
+	final class UnmodifiableWVWScores implements WVWScores {
 		@Override
 		public EventBus getChannel() {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + Unmodifiable.class.getSimpleName()
-					+ " and therefore can not be modified.");
+			throw new UnsupportedOperationException("unmodifiable");
 		}
 
 		@Override
@@ -60,8 +58,7 @@ abstract class AbstractWVWScores extends AbstractHasChannel implements WVWScores
 
 		@Override
 		public void update(final int redScore, final int greenScore, final int blueScore) {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + Unmodifiable.class.getSimpleName()
-					+ " and therefore can not be modified.");
+			throw new UnsupportedOperationException("unmodifiable");
 		}
 
 		@Override

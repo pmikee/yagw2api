@@ -21,7 +21,7 @@ package de.justi.yagw2api.wrapper.wvw.event;
  */
 
 import de.justi.yagw2api.wrapper.wvw.domain.WVWScores;
-import de.justi.yagwapi.common.Event;
+import de.justi.yagwapi.common.event.Event;
 
 public interface WVWScoresChangedEvent extends Event {
 	WVWScores getScores();

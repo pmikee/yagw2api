@@ -20,7 +20,7 @@ package de.justi.yagw2api.wrapper.wvw.domain;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-import de.justi.yagwapi.common.HasChannel;
+import de.justi.yagwapi.common.event.HasChannel;
 
 public interface WVWScores extends HasChannel {
 	int getRedScore();

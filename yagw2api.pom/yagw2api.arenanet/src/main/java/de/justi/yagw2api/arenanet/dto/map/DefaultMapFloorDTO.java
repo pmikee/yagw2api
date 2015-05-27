@@ -37,9 +37,9 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 
-import de.justi.yagwapi.common.Tuple2;
-import de.justi.yagwapi.common.Tuple4;
-import de.justi.yagwapi.common.Tuples;
+import de.justi.yagwapi.common.tuple.Tuple2;
+import de.justi.yagwapi.common.tuple.Tuple4;
+import de.justi.yagwapi.common.tuple.Tuples;
 
 final class DefaultMapFloorDTO implements MapFloorDTO {
 	// FIELDS

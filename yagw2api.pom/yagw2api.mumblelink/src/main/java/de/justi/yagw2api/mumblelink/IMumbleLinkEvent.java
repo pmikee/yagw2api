@@ -20,7 +20,7 @@ package de.justi.yagw2api.mumblelink;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-import de.justi.yagwapi.common.Event;
+import de.justi.yagwapi.common.event.Event;
 
 public interface IMumbleLinkEvent extends Event {
 

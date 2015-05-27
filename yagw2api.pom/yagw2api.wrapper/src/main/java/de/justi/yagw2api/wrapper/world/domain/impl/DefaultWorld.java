@@ -34,7 +34,6 @@ import com.google.common.base.Optional;
 import de.justi.yagw2api.arenanet.dto.world.WorldNameDTO;
 import de.justi.yagw2api.wrapper.world.domain.World;
 import de.justi.yagw2api.wrapper.world.domain.WorldLocationType;
-import de.justi.yagwapi.common.Unmodifiable;
 
 public final class DefaultWorld implements World {
 	// STATIC
@@ -101,7 +100,7 @@ public final class DefaultWorld implements World {
 		}
 	}
 
-	class UnmodifiableWorld implements Unmodifiable, World {
+	class UnmodifiableWorld implements World {
 
 		@Override
 		public int getId() {
@@ -115,8 +114,7 @@ public final class DefaultWorld implements World {
 
 		@Override
 		public void setName(final String name) {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + Unmodifiable.class.getSimpleName()
-					+ " and therefore can not be modified.");
+			throw new UnsupportedOperationException("unmodifiable");
 		}
 
 		@Override

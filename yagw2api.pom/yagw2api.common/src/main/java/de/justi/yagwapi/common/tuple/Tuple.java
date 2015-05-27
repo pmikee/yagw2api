@@ -1,8 +1,8 @@
-package de.justi.yagw2api.wrapper.map.event.impl;
+package de.justi.yagwapi.common.tuple;
 
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * YAGW2API-Wrapper
+ * YAGW2API-Commons
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
  * _____________________________________________________________
@@ -20,32 +20,22 @@ package de.justi.yagw2api.wrapper.map.event.impl;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import java.util.List;
 
-import com.google.common.base.MoreObjects.ToStringHelper;
+import javax.annotation.concurrent.Immutable;
 
-import de.justi.yagw2api.wrapper.map.domain.MapTile;
-import de.justi.yagw2api.wrapper.map.event.MapTileEvent;
-import de.justi.yagwapi.common.event.AbstractEvent;
+import com.google.common.base.Optional;
 
-abstract class AbstractMapTileEvent extends AbstractEvent implements MapTileEvent {
-	private final MapTile mapTile;
+@Immutable
+public interface Tuple<VF, VL> extends Iterable<Object> {
 
-	protected AbstractMapTileEvent(final MapTile mapTile) {
-		this.mapTile = checkNotNull(mapTile, "missing mapTile");
-	}
+	Optional<VF> first();
 
-	/**
-	 * @return the mapTile
-	 */
-	@Override
-	public final MapTile getMapTile() {
-		return this.mapTile;
-	}
+	Optional<VL> last();
 
-	@Override
-	protected ToStringHelper toStringHelper() {
-		return super.toStringHelper().add("mapTile", this.mapTile);
-	}
+	List<Object> asList();
 
+	Object[] asArray();
+
+	int dimension();
 }
