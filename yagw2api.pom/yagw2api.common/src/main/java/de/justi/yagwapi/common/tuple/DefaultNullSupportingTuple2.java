@@ -22,13 +22,8 @@ package de.justi.yagwapi.common.tuple;
 
 import javax.annotation.Nullable;
 
-public interface Tuple3<V1, V2, V3> extends Tuple {
-	@Nullable
-	V1 v1();
-
-	@Nullable
-	V2 v2();
-
-	@Nullable
-	V3 v3();
+final class DefaultNullSupportingTuple2<V1, V2> extends AbstractTuple2<V1, V2> implements Tuple2<V1, V2> {
+	DefaultNullSupportingTuple2(@Nullable final V1 value1, @Nullable final V2 value2) {
+		super(value1, value2);
+	}
 }

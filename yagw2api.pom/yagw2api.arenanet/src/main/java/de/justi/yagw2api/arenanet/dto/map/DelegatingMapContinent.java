@@ -27,7 +27,7 @@ import java.util.Set;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.MoreObjects.ToStringHelper;
 
-import de.justi.yagwapi.common.tuple.Tuple2;
+import de.justi.yagwapi.common.tuple.NumberTuple2;
 
 class DelegatingMapContinent implements MapContinentDTO {
 	// FIELDS
@@ -62,7 +62,7 @@ class DelegatingMapContinent implements MapContinentDTO {
 	 * @see de.justi.yagw2api.arenanet.dto.map.MapContinentDTO#getDimension()
 	 */
 	@Override
-	public Tuple2<Integer, Integer> getDimension() {
+	public NumberTuple2<Integer, Integer> getDimension() {
 		return this.delegate.getDimension();
 	}
 

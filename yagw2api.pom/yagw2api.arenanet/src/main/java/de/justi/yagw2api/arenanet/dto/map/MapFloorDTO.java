@@ -24,16 +24,16 @@ import java.util.Map;
 
 import com.google.common.base.Optional;
 
-import de.justi.yagwapi.common.tuple.Tuple2;
-import de.justi.yagwapi.common.tuple.Tuple4;
+import de.justi.yagwapi.common.tuple.NumberTuple2;
+import de.justi.yagwapi.common.tuple.NumberTuple4;
 
 public interface MapFloorDTO {
-	Tuple2<Integer, Integer> getTextureDimension();
+	NumberTuple2<Integer, Integer> getTextureDimension();
 
 	/**
 	 * @return If present, it represents a rectangle of downloadable textures. Every tile coordinate outside this rectangle is not available on the tile server.
 	 */
-	Optional<Tuple4<Integer, Integer, Integer, Integer>> getClampedView();
+	Optional<NumberTuple4<Integer, Integer, Integer, Integer>> getClampedView();
 
 	Map<String, MapRegionDTO> getRegions();
 }

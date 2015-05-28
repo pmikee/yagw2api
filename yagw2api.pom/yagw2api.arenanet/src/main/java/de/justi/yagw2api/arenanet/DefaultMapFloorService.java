@@ -68,8 +68,8 @@ final class DefaultMapFloorService implements MapFloorService {
 			.expireAfterWrite(CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build(new CacheLoader<Tuple3<Locale, String, Integer>, Optional<MapFloorDTO>>() {
 				@Override
 				public Optional<MapFloorDTO> load(final Tuple3<Locale, String, Integer> key) throws Exception {
-					final WebResource resource = ArenanetUtils.REST_CLIENT.resource(MAP_FLOOR_URL.toExternalForm()).queryParam("continent_id ", key.getValue2().get().toString())
-							.queryParam("floor", key.getValue3().get().toString()).queryParam("lang", key.getValue1().get().toLanguageTag());
+					final WebResource resource = ArenanetUtils.REST_CLIENT.resource(MAP_FLOOR_URL.toExternalForm()).queryParam("continent_id ", key.v2().toString())
+							.queryParam("floor", key.v3().toString()).queryParam("lang", key.v1().toLanguageTag());
 					try {
 						resource.addFilter(new RetryClientFilter(ArenanetUtils.REST_RETRY_COUNT));
 						final WebResource.Builder builder = resource.accept(MediaType.APPLICATION_JSON_TYPE);

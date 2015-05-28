@@ -38,7 +38,7 @@ import com.google.common.base.MoreObjects.ToStringHelper;
 
 import de.justi.yagw2api.wrapper.map.domain.MapTile;
 import de.justi.yagwapi.common.io.Files;
-import de.justi.yagwapi.common.tuple.Tuple2;
+import de.justi.yagwapi.common.tuple.NumberTuple2;
 
 class DefaultUnavailableMapTile implements MapTile {
 
@@ -69,7 +69,7 @@ class DefaultUnavailableMapTile implements MapTile {
 
 		// FIELDS
 		@Nullable
-		private Tuple2<Integer, Integer> position = null;
+		private NumberTuple2<Integer, Integer> position = null;
 		@Nullable
 		private Integer floorIndex = null;
 		@Nullable
@@ -88,7 +88,7 @@ class DefaultUnavailableMapTile implements MapTile {
 		public abstract MapTile build();
 
 		@Override
-		public final B position(@Nullable final Tuple2<Integer, Integer> position) {
+		public final B position(@Nullable final NumberTuple2<Integer, Integer> position) {
 			this.position = position;
 			return this.self();
 		}
@@ -114,7 +114,7 @@ class DefaultUnavailableMapTile implements MapTile {
 		/**
 		 * @return the position
 		 */
-		protected final Tuple2<Integer, Integer> getPosition() {
+		protected final NumberTuple2<Integer, Integer> getPosition() {
 			return this.position;
 		}
 
@@ -164,7 +164,7 @@ class DefaultUnavailableMapTile implements MapTile {
 	}
 
 	// FIELDS
-	private final Tuple2<Integer, Integer> position;
+	private final NumberTuple2<Integer, Integer> position;
 	private final int floorIndex;
 	private final int zoom;
 	private final String continentId;
@@ -182,7 +182,7 @@ class DefaultUnavailableMapTile implements MapTile {
 
 	// METHODS
 	@Override
-	public final Tuple2<Integer, Integer> getPosition() {
+	public final NumberTuple2<Integer, Integer> getPosition() {
 		return this.position;
 	}
 
