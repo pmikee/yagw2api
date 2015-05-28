@@ -22,12 +22,12 @@ package de.justi.yagw2api.arenanet.dto.map;
 
 import java.util.Map;
 
-import de.justi.yagwapi.common.tuple.NumberTuple2;
+import de.justi.yagwapi.common.tuple.UniformNumberTuple2;
 
 public interface MapRegionDTO {
 	String getName();
 
-	NumberTuple2<Integer, Integer> getLabelCoordinates();
+	UniformNumberTuple2<Integer> getLabelCoordinates();
 
 	Map<String, MapRegionMapDTO> getMaps();
 }

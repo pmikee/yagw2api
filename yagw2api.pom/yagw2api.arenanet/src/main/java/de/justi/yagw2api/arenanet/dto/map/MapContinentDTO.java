@@ -22,12 +22,12 @@ package de.justi.yagw2api.arenanet.dto.map;
 
 import java.util.Set;
 
-import de.justi.yagwapi.common.tuple.NumberTuple2;
+import de.justi.yagwapi.common.tuple.UniformNumberTuple2;
 
 public interface MapContinentDTO {
 	String getName();
 
-	NumberTuple2<Integer, Integer> getDimension();
+	UniformNumberTuple2<Integer> getDimension();
 
 	int getMinZoom();
 

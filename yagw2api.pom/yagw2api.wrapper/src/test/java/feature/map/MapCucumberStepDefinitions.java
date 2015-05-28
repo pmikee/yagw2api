@@ -117,7 +117,7 @@ public class MapCucumberStepDefinitions implements En {
 			doReturn(id).when(dto).getId();
 			doReturn(name).when(dto).getName();
 			doReturn(ImmutableSet.of()).when(dto).getFloors();
-			doReturn(Tuples.of(0, 0)).when(dto).getDimension();
+			doReturn(Tuples.uniformOf(0, 0)).when(dto).getDimension();
 			this.givenMapContinents.add(dto);
 		});
 		this.Given("^a continent wrapper under test$", () -> {

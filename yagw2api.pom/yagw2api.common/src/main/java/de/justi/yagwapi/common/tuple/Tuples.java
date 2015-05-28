@@ -27,46 +27,6 @@ import javax.annotation.Nullable;
 public final class Tuples {
 	// STATIC METHODS
 
-	// > MERGE
-	public static <V1, V2, V3, V4> Tuple4<V1, V2, V3, V4> merge(final Tuple2<V1, V2> part1, final Tuple2<V3, V4> part2) {
-		checkNotNull(part1, "missing part1");
-		checkNotNull(part2, "missing part2");
-		return Tuples.of(part1.v1(), part1.v2(), part2.v1(), part2.v2());
-	}
-
-	public static <V1 extends Number, V2 extends Number, V3 extends Number, V4 extends Number> NumberTuple4<V1, V2, V3, V4> merge(final NumberTuple2<V1, V2> part1,
-			final NumberTuple2<V3, V4> part2) {
-		checkNotNull(part1, "missing part1");
-		checkNotNull(part2, "missing part2");
-		return Tuples.of(part1.v1(), part1.v2(), part2.v1(), part2.v2());
-	}
-
-	public static <V1, V2, V3, V4> Tuple4<V1, V2, V3, V4> merge(@Nullable final V1 v1, @Nullable final V2 v2, final Tuple2<V3, V4> part2) {
-		checkNotNull(part2, "missing part2");
-		return Tuples.of(v1, v2, part2.v1(), part2.v2());
-	}
-
-	public static <V1 extends Number, V2 extends Number, V3 extends Number, V4 extends Number> NumberTuple4<V1, V2, V3, V4> merge(@Nullable final V1 v1, @Nullable final V2 v2,
-			final Tuple2<V3, V4> part2) {
-		checkNotNull(v1, "missing v1");
-		checkNotNull(v2, "missing v2");
-		checkNotNull(part2, "missing part2");
-		return Tuples.of(v1, v2, part2.v1(), part2.v2());
-	}
-
-	public static <V1, V2, V3, V4> Tuple4<V1, V2, V3, V4> merge(final Tuple2<V1, V2> part1, @Nullable final V3 v3, @Nullable final V4 v4) {
-		checkNotNull(part1, "missing part1");
-		return Tuples.of(part1.v1(), part1.v2(), v3, v4);
-	}
-
-	public static <V1 extends Number, V2 extends Number, V3 extends Number, V4 extends Number> NumberTuple4<V1, V2, V3, V4> merge(final Tuple2<V1, V2> part1, final V3 v3,
-			final V4 v4) {
-		checkNotNull(part1, "missing part1");
-		checkNotNull(v3, "missing v3");
-		checkNotNull(v4, "missing v4");
-		return Tuples.of(part1.v1(), part1.v2(), v3, v4);
-	}
-
 	// > NUMBER TUPLES
 	public static <V1 extends Number, V2 extends Number> NumberTuple2<V1, V2> of(final V1 v1, final V2 v2) {
 		return new DefaultNumberTuple2<V1, V2>(checkNotNull(v1, "missing v1"), checkNotNull(v2, "missing v2"));

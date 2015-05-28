@@ -7,7 +7,7 @@ import javax.annotation.Nullable;
 
 import com.google.common.base.Optional;
 
-import de.justi.yagwapi.common.tuple.NumberTuple2;
+import de.justi.yagwapi.common.tuple.UniformNumberTuple2;
 
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -43,7 +43,7 @@ public interface Continent {
 
 		ContinentBuilder id(@Nullable String id);
 
-		ContinentBuilder dimension(@Nullable NumberTuple2<Integer, Integer> dimension);
+		ContinentBuilder dimension(@Nullable UniformNumberTuple2<Integer> dimension);
 
 		ContinentBuilder minZoom(int zoom);
 
@@ -56,7 +56,7 @@ public interface Continent {
 
 	String getId();
 
-	NumberTuple2<Integer, Integer> getDimension();
+	UniformNumberTuple2<Integer> getDimension();
 
 	String getName();
 

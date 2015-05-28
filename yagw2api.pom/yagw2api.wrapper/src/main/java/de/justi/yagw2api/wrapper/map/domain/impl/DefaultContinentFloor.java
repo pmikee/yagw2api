@@ -54,11 +54,12 @@ import de.justi.yagw2api.wrapper.map.domain.Map;
 import de.justi.yagw2api.wrapper.map.domain.MapDomainFactory;
 import de.justi.yagw2api.wrapper.map.domain.MapTile;
 import de.justi.yagw2api.wrapper.map.domain.NoSuchMapTileException;
-import de.justi.yagwapi.common.tuple.NumberTuple2;
 import de.justi.yagwapi.common.tuple.NumberTuple4;
 import de.justi.yagwapi.common.tuple.Tuple3;
 import de.justi.yagwapi.common.tuple.Tuple4;
 import de.justi.yagwapi.common.tuple.Tuples;
+import de.justi.yagwapi.common.tuple.UniformNumberTuple2;
+import de.justi.yagwapi.common.tuple.UniformNumberTuple4;
 
 final class DefaultContinentFloor implements ContinentFloor {
 	// CONSTS
@@ -227,40 +228,39 @@ final class DefaultContinentFloor implements ContinentFloor {
 	private final int floorIndex;
 	private final int minZoom;
 	private final int maxZoom;
-	private final Supplier<NumberTuple2<Integer, Integer>> textureSize = Suppliers.memoize(new Supplier<NumberTuple2<Integer, Integer>>() {
+	private final Supplier<UniformNumberTuple2<Integer>> textureSize = Suppliers.memoize(new Supplier<UniformNumberTuple2<Integer>>() {
 		@Override
-		public NumberTuple2<Integer, Integer> get() {
+		public UniformNumberTuple2<Integer> get() {
 			final com.google.common.base.Optional<MapFloorDTO> optionalFloorDTO = DefaultContinentFloor.this.mapFloorService.retrieveMapFloor(
 					DefaultContinentFloor.this.continentId, DefaultContinentFloor.this.floorIndex);
 			if (optionalFloorDTO.isPresent()) {
 				return optionalFloorDTO.get().getTextureDimension();
 			} else {
-				return Tuples.of(0, 0);
+				return Tuples.uniformOf(0, 0);
 			}
 		}
 	});
-	private final Supplier<NumberTuple4<Integer, Integer, Integer, Integer>> clampedTextureSize = Suppliers
-			.memoize(new Supplier<NumberTuple4<Integer, Integer, Integer, Integer>>() {
-				@Override
-				public NumberTuple4<Integer, Integer, Integer, Integer> get() {
-					final com.google.common.base.Optional<MapFloorDTO> optionalFloorDTO = DefaultContinentFloor.this.mapFloorService.retrieveMapFloor(
-							DefaultContinentFloor.this.continentId, DefaultContinentFloor.this.floorIndex);
-					if (optionalFloorDTO.isPresent()) {
-						if (optionalFloorDTO.get().getClampedView().isPresent()) {
-							final NumberTuple4<Integer, Integer, Integer, Integer> clamped = optionalFloorDTO.get().getClampedView().get();
-							final int x1 = clamped.v1() / TILE_SIZE;
-							final int y1 = clamped.v2() / TILE_SIZE;
-							final int x2 = (clamped.v3() / TILE_SIZE) + ((clamped.v3() % TILE_SIZE == 0) ? 0 : 1);
-							final int y2 = (clamped.v4() / TILE_SIZE) + ((clamped.v4() % TILE_SIZE == 0) ? 0 : 1);
-							return Tuples.of(x1 * TILE_SIZE, y1 * TILE_SIZE, x2 * TILE_SIZE, y2 * TILE_SIZE);
-						} else {
-							return Tuples.merge(0, 0, optionalFloorDTO.get().getTextureDimension());
-						}
-					} else {
-						return Tuples.of(0, 0, 0, 0);
-					}
+	private final Supplier<UniformNumberTuple4<Integer>> clampedTextureSize = Suppliers.memoize(new Supplier<UniformNumberTuple4<Integer>>() {
+		@Override
+		public UniformNumberTuple4<Integer> get() {
+			final com.google.common.base.Optional<MapFloorDTO> optionalFloorDTO = DefaultContinentFloor.this.mapFloorService.retrieveMapFloor(
+					DefaultContinentFloor.this.continentId, DefaultContinentFloor.this.floorIndex);
+			if (optionalFloorDTO.isPresent()) {
+				if (optionalFloorDTO.get().getClampedView().isPresent()) {
+					final NumberTuple4<Integer, Integer, Integer, Integer> clamped = optionalFloorDTO.get().getClampedView().get();
+					final int x1 = clamped.v1() / TILE_SIZE;
+					final int y1 = clamped.v2() / TILE_SIZE;
+					final int x2 = (clamped.v3() / TILE_SIZE) + ((clamped.v3() % TILE_SIZE == 0) ? 0 : 1);
+					final int y2 = (clamped.v4() / TILE_SIZE) + ((clamped.v4() % TILE_SIZE == 0) ? 0 : 1);
+					return Tuples.uniformOf(x1 * TILE_SIZE, y1 * TILE_SIZE, x2 * TILE_SIZE, y2 * TILE_SIZE);
+				} else {
+					return Tuples.uniformOf(0, 0, optionalFloorDTO.get().getTextureDimension().v1(), optionalFloorDTO.get().getTextureDimension().v2());
 				}
-			});
+			} else {
+				return Tuples.uniformOf(0, 0, 0, 0);
+			}
+		}
+	});
 	private final String continentId;
 	/**
 	 * <p>
@@ -280,10 +280,10 @@ final class DefaultContinentFloor implements ContinentFloor {
 					checkNotNull(key.v3(), "missing position y in %s", key);
 					if (DefaultContinentFloor.this.isTileAvailable(key.v2(), key.v3(), key.v1())) {
 						return DefaultContinentFloor.this.mapDomainFactory.newMapTileBuilder().continentId(DefaultContinentFloor.this.continentId)
-								.floorIndex(DefaultContinentFloor.this.floorIndex).zoom(key.v1()).position(Tuples.of(key.v2(), key.v3())).build();
+								.floorIndex(DefaultContinentFloor.this.floorIndex).zoom(key.v1()).position(Tuples.uniformOf(key.v2(), key.v3())).build();
 					} else {
 						return DefaultContinentFloor.this.mapDomainFactory.newMapUnavailableTileBuilder().continentId(DefaultContinentFloor.this.continentId)
-								.floorIndex(DefaultContinentFloor.this.floorIndex).zoom(key.v1()).position(Tuples.of(key.v2(), key.v3())).build();
+								.floorIndex(DefaultContinentFloor.this.floorIndex).zoom(key.v1()).position(Tuples.uniformOf(key.v2(), key.v3())).build();
 					}
 				}
 			});
@@ -312,10 +312,10 @@ final class DefaultContinentFloor implements ContinentFloor {
 		return texture / MapUtils.getTileTextureSize(zoom, this.minZoom, this.maxZoom);
 	}
 
-	private NumberTuple4<Integer, Integer, Integer, Integer> texture2Tile(final Tuple4<Integer, Integer, Integer, Integer> texture, final int zoom) {
+	private UniformNumberTuple4<Integer> texture2Tile(final UniformNumberTuple4<Integer> texture, final int zoom) {
 		checkNotNull(texture, "missing texture");
-		return Tuples
-				.of(this.texture2Tile(texture.v1(), zoom), this.texture2Tile(texture.v2(), zoom), this.texture2Tile(texture.v3(), zoom), this.texture2Tile(texture.v4(), zoom));
+		return Tuples.uniformOf(this.texture2Tile(texture.v1(), zoom), this.texture2Tile(texture.v2(), zoom), this.texture2Tile(texture.v3(), zoom),
+				this.texture2Tile(texture.v4(), zoom));
 	}
 
 	private final boolean isTileAvailable(final int x, final int y, final int zoom) {
@@ -341,17 +341,17 @@ final class DefaultContinentFloor implements ContinentFloor {
 	}
 
 	@Override
-	public NumberTuple2<Integer, Integer> getTextureDimension() {
+	public UniformNumberTuple2<Integer> getTextureDimension() {
 		return this.textureSize.get();
 	}
 
 	@Override
-	public NumberTuple4<Integer, Integer, Integer, Integer> getClampedTextureDimension() {
+	public UniformNumberTuple4<Integer> getClampedTextureDimension() {
 		return this.clampedTextureSize.get();
 	}
 
 	@Override
-	public NumberTuple4<Integer, Integer, Integer, Integer> getClampedTileIndexDimension(final int zoom) {
+	public UniformNumberTuple4<Integer> getClampedTileIndexDimension(final int zoom) {
 		return this.texture2Tile(this.getClampedTextureDimension(), zoom);
 	}
 

@@ -28,21 +28,21 @@ import com.google.common.base.Suppliers;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 
-import de.justi.yagwapi.common.tuple.NumberTuple2;
 import de.justi.yagwapi.common.tuple.Tuples;
+import de.justi.yagwapi.common.tuple.UniformNumberTuple2;
 
 final class DefaultMapSkillChallangeDTO implements MapSkillChallangeDTO {
 	@SerializedName("coord")
 	@Since(1.0)
 	private final Double[] coordinates = new Double[2];
 
-	private final transient Supplier<NumberTuple2<Double, Double>> coordinatesTupleSupplier = Suppliers.memoize(() -> {
+	private final transient Supplier<UniformNumberTuple2<Double>> coordinatesTupleSupplier = Suppliers.memoize(() -> {
 		checkState(this.coordinates.length == 2, "invalid coordinates length: %s", this.coordinates.length);
-		return Tuples.of(this.coordinates[0], this.coordinates[1]);
+		return Tuples.uniformOf(this.coordinates[0], this.coordinates[1]);
 	});
 
 	@Override
-	public NumberTuple2<Double, Double> getCoordinates() {
+	public UniformNumberTuple2<Double> getCoordinates() {
 		return this.coordinatesTupleSupplier.get();
 	}
 

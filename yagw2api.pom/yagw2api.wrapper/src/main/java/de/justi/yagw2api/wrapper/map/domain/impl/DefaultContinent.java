@@ -54,7 +54,7 @@ import de.justi.yagw2api.wrapper.map.domain.Continent;
 import de.justi.yagw2api.wrapper.map.domain.ContinentFloor;
 import de.justi.yagw2api.wrapper.map.domain.Map;
 import de.justi.yagw2api.wrapper.map.domain.MapDomainFactory;
-import de.justi.yagwapi.common.tuple.NumberTuple2;
+import de.justi.yagwapi.common.tuple.UniformNumberTuple2;
 
 final class DefaultContinent implements Continent {
 
@@ -73,7 +73,7 @@ final class DefaultContinent implements Continent {
 		@Nullable
 		private String name = null;
 		@Nullable
-		private NumberTuple2<Integer, Integer> dimension = null;
+		private UniformNumberTuple2<Integer> dimension = null;
 		@Nullable
 		private Integer minZoom = null;
 		@Nullable
@@ -112,7 +112,7 @@ final class DefaultContinent implements Continent {
 		}
 
 		@Override
-		public DefaultContinentBuilder dimension(@Nullable final NumberTuple2<Integer, Integer> dimension) {
+		public DefaultContinentBuilder dimension(@Nullable final UniformNumberTuple2<Integer> dimension) {
 			this.dimension = dimension;
 			return this;
 		}
@@ -214,7 +214,7 @@ final class DefaultContinent implements Continent {
 	// FIELDS
 	private final String id;
 	private final String name;
-	private final NumberTuple2<Integer, Integer> dimension;
+	private final UniformNumberTuple2<Integer> dimension;
 	private final int minZoom;
 	private final int maxZoom;
 	private final Iterable<ContinentFloor> floors;
@@ -283,7 +283,7 @@ final class DefaultContinent implements Continent {
 	}
 
 	@Override
-	public NumberTuple2<Integer, Integer> getDimension() {
+	public UniformNumberTuple2<Integer> getDimension() {
 		return this.dimension;
 	}
 
