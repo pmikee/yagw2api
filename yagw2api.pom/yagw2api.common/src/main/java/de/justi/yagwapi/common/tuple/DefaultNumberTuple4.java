@@ -9,9 +9,9 @@ package de.justi.yagwapi.common.tuple;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,7 +25,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 final class DefaultNumberTuple4<V1 extends Number, V2 extends Number, V3 extends Number, V4 extends Number> extends AbstractTuple4<V1, V2, V3, V4> implements
 		NumberTuple4<V1, V2, V3, V4> {
 
-	protected DefaultNumberTuple4(final V1 value1, final V2 value2, final V3 value3, final V4 value4) {
+	DefaultNumberTuple4(final V1 value1, final V2 value2, final V3 value3, final V4 value4) {
 		super(checkNotNull(value1, "missing value1"), checkNotNull(value2, "missing value2"), checkNotNull(value3, "missing value3"), checkNotNull(value4, "missing value4"));
 	}
 

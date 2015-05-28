@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 
 final class DefaultNullSupportingTuple5<V1, V2, V3, V4, V5> extends AbstractTuple5<V1, V2, V3, V4, V5> implements Tuple5<V1, V2, V3, V4, V5> {
 
-	protected DefaultNullSupportingTuple5(@Nullable final V1 value1, @Nullable final V2 value2, @Nullable final V3 value3, @Nullable final V4 value4, @Nullable final V5 value5) {
+	DefaultNullSupportingTuple5(@Nullable final V1 value1, @Nullable final V2 value2, @Nullable final V3 value3, @Nullable final V4 value4, @Nullable final V5 value5) {
 		super(value1, value2, value3, value4, value5);
 	}
 

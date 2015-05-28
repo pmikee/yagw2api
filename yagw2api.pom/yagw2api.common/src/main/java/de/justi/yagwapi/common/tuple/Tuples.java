@@ -87,6 +87,25 @@ public final class Tuples {
 				"missing v4"), checkNotNull(v5, "missing v5"));
 	}
 
+	// > NUMBER > UNIFORM TUPLES
+
+	public static <V extends Number> UniformNumberTuple2<V> uniformOf(final V v1, final V v2) {
+		return new DefaultUniformNumberTuple2<V>(checkNotNull(v1, "missing v1"), checkNotNull(v2, "missing v2"));
+	}
+
+	public static <V extends Number> UniformNumberTuple3<V> uniformOf(final V v1, final V v2, final V v3) {
+		return new DefaultUniformNumberTuple3<V>(checkNotNull(v1, "missing v1"), checkNotNull(v2, "missing v2"), checkNotNull(v3, "missing v3"));
+	}
+
+	public static <V extends Number> UniformNumberTuple4<V> uniformOf(final V v1, final V v2, final V v3, final V v4) {
+		return new DefaultUniformNumberTuple4<V>(checkNotNull(v1, "missing v1"), checkNotNull(v2, "missing v2"), checkNotNull(v3, "missing v3"), checkNotNull(v4, "missing v4"));
+	}
+
+	public static <V extends Number> UniformNumberTuple5<V> uniformOf(final V v1, final V v2, final V v3, final V v4, final V v5) {
+		return new DefaultUniformNumberTuple5<V>(checkNotNull(v1, "missing v1"), checkNotNull(v2, "missing v2"), checkNotNull(v3, "missing v3"), checkNotNull(v4, "missing v4"),
+				checkNotNull(v5, "missing v5"));
+	}
+
 	// > NULLSUPPORTING TUPLES
 
 	public static <V1, V2> Tuple2<V1, V2> of(@Nullable final V1 v1, @Nullable final V2 v2) {
@@ -104,6 +123,24 @@ public final class Tuples {
 	public static <V1, V2, V3, V4, V5> Tuple5<V1, V2, V3, V4, V5> of(@Nullable final V1 v1, @Nullable final V2 v2, @Nullable final V3 v3, @Nullable final V4 v4,
 			@Nullable final V5 v5) {
 		return new DefaultNullSupportingTuple5<V1, V2, V3, V4, V5>(v1, v2, v3, v4, v5);
+	}
+
+	// > NULLSUPPORTING > UNIFORM TUPLES
+
+	public static <V> UniformTuple2<V> uniformOf(@Nullable final V v1, @Nullable final V v2) {
+		return new DefaultUniformNullSupportingTuple2<V>(v1, v2);
+	}
+
+	public static <V> UniformTuple3<V> uniformOf(@Nullable final V v1, @Nullable final V v2, @Nullable final V v3) {
+		return new DefaultUniformNullSupportingTuple3<V>(v1, v2, v3);
+	}
+
+	public static <V> UniformTuple4<V> uniformOf(@Nullable final V v1, @Nullable final V v2, @Nullable final V v3, @Nullable final V v4) {
+		return new DefaultUniformNullSupportingTuple4<V>(v1, v2, v3, v4);
+	}
+
+	public static <V> UniformTuple5<V> uniformOf(@Nullable final V v1, @Nullable final V v2, @Nullable final V v3, @Nullable final V v4, @Nullable final V v5) {
+		return new DefaultUniformNullSupportingTuple5<V>(v1, v2, v3, v4, v5);
 	}
 
 	// > UTILITIES
