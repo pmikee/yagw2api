@@ -19,9 +19,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/compile/de.justi.yagw2api.anchorman.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/de.justi.yagw2api.arenanet.jar" sourcepath="/yagw2api.arenanet"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/de.justi.yagw2api.common.jar" sourcepath="/yagw2api.common"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/de.justi.yagw2api.locationprovider.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/de.justi.yagw2api.mumblelink.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/de.justi.yagw2api.server.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/de.justi.yagw2api.wrapper.jar" sourcepath="/yagw2api.wrapper"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/javax.inject.javax.inject.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/javax.validation.validation-api.jar"/>

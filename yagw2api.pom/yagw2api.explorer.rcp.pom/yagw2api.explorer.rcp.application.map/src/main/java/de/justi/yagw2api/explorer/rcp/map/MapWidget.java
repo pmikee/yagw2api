@@ -72,6 +72,7 @@ import de.justi.yagw2api.wrapper.map.event.MapTileEvent;
 import de.justi.yagwapi.common.tuple.Tuple2;
 import de.justi.yagwapi.common.tuple.Tuple4;
 import de.justi.yagwapi.common.tuple.Tuples;
+import de.justi.yagwapi.common.tuple.UniformNumberTuple2;
 
 public final class MapWidget extends Composite implements PaintListener {
 	// CONSTS
@@ -88,7 +89,7 @@ public final class MapWidget extends Composite implements PaintListener {
 
 	private int tileSize = DEFAULT_TARGET_TILE_SIZE;
 
-	private Tuple2<Integer, Integer> scrollableAreaSize = Tuples.of(0, 0);
+	private UniformNumberTuple2<Integer> scrollableAreaSize = Tuples.uniformOf(0, 0);
 	private int lastNotifiedScrolledX = 0;
 	private int lastNotifiedScrolledY = 0;
 
@@ -170,7 +171,7 @@ public final class MapWidget extends Composite implements PaintListener {
 			@Override
 			public void controlResized(final ControlEvent e) {
 				final Control control = (Control) e.getSource();
-				MapWidget.this.scrollableAreaSize = Tuples.of(control.getSize().x, control.getSize().y);
+				MapWidget.this.scrollableAreaSize = Tuples.uniformOf(control.getSize().x, control.getSize().y);
 				LOGGER.trace("Resized {} to {}", control, MapWidget.this.scrollableAreaSize);
 			}
 		});
