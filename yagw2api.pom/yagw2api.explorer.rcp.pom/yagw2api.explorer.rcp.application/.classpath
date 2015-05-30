@@ -16,7 +16,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/compile/com.sun.jersey.jersey-core.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/commons-codec.commons-codec.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/de.justi.yagw2api.analyzer.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/de.justi.yagw2api.anchorman.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/de.justi.yagw2api.arenanet.jar" sourcepath="/yagw2api.arenanet"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/de.justi.yagw2api.common.jar" sourcepath="/yagw2api.common"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/de.justi.yagw2api.mumblelink.jar"/>
