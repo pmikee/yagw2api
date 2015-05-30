@@ -29,7 +29,7 @@ import javafx.application.Platform;
 
 import com.sun.javafx.tk.Toolkit;
 
-import de.justi.yagwapi.common.io.TTSUtils;
+import de.justi.yagw2api.anchorman.TTSUtils;
 
 public class TTSUtilsTest {
 

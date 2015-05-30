@@ -56,16 +56,67 @@
 		<maven-shade-plugin.version>2.3</maven-shade-plugin.version>
 	</properties>
 
+
+	<profiles>
+		<profile>
+			<id>include-tts</id>
+			<activation>
+				<property>
+					<name>include-tts</name>
+					<value>true</value>
+				</property>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<modules>
+				<module>yagw2api.anchorman</module>
+			</modules>
+		</profile>
+		<profile>
+			<id>include-rcp</id>
+			<activation>
+				<property>
+					<name>include-rcp</name>
+					<value>true</value>
+				</property>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<modules>
+				<module>yagw2api.explorer.rcp.pom</module>
+			</modules>
+		</profile>
+		<profile>
+			<id>include-server</id>
+			<activation>
+				<property>
+					<name>include-server</name>
+					<value>true</value>
+				</property>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<modules>
+				<module>yagw2api.server</module>
+			</modules>
+		</profile>
+		<profile>
+			<id>include-client</id>
+			<activation>
+				<property>
+					<name>include-client</name>
+					<value>true</value>
+				</property>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<modules>
+				<module>yagw2api.locationprovider</module>
+			</modules>
+		</profile>
+	</profiles>
 	<modules>
 		<module>yagw2api.test</module>
 		<module>yagw2api.common</module>
 		<module>yagw2api.arenanet</module>
 		<module>yagw2api.mumblelink</module>
 		<module>yagw2api.wrapper</module>
-		<module>yagw2api.anchorman</module>
-		<module>yagw2api.server</module>
-		<module>yagw2api.locationprovider</module>
-		<module>yagw2api.explorer.rcp.pom</module>
 	</modules>
 
 
