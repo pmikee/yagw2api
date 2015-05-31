@@ -21,12 +21,8 @@ package de.justi.yagw2api.wrapper.map;
  */
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
 
 import java.util.List;
-import java.util.Set;
-
-import javax.annotation.Nullable;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
@@ -37,7 +33,6 @@ import com.google.inject.Inject;
 import de.justi.yagw2api.arenanet.MapContinentService;
 import de.justi.yagw2api.arenanet.MapService;
 import de.justi.yagw2api.arenanet.dto.map.MapContinentWithIdDTO;
-import de.justi.yagw2api.arenanet.dto.map.MapsDTO;
 import de.justi.yagw2api.wrapper.map.domain.Continent;
 import de.justi.yagw2api.wrapper.map.domain.MapDomainFactory;
 
@@ -53,27 +48,8 @@ public final class DefaultMapWrapper implements MapWrapper {
 	private final MapContinentService mapContinentService;
 	private final MapService mapService;
 	private final List<Continent> continents;
-	private final Function<MapContinentWithIdDTO, Continent> continentDTOConverter = new Function<MapContinentWithIdDTO, Continent>() {
-		@Override
-		public Continent apply(@Nullable final MapContinentWithIdDTO c) {
-			checkNotNull(c, "missing input");
-			final Optional<MapsDTO> maps = DefaultMapWrapper.this.mapService.retrieveAllMaps();
-			checkState(maps.isPresent(), "failed to retrieve maps");
-			final Set<String> mapIds = FluentIterable.from(DefaultMapWrapper.this.mapService.retrieveAllMaps().get().getMaps().entrySet())
-					.filter((mapEntry) -> mapEntry.getValue().getContinentId().equals(c.getId())).transform((mapEntry) -> mapEntry.getKey()).toSet();
-			//@formatter:off
-			return DefaultMapWrapper.this.mapDomainFactory.newContinentBuilder().
-						id(c.getId()).
-						name(c.getName()).
-						mapIds(mapIds).
-						floorIds(c.getFloors()).
-						dimension(c.getDimension()).
-						minZoom(c.getMinZoom()).
-						maxZoom(c.getMaxZoom()).
-					build();
-			//@formatter:on
-		}
-	};
+	private final FluentIterable<Continent> fluentContinents;
+	private final Function<MapContinentWithIdDTO, Continent> continentDTOConverter;
 
 	// CONSTRUCTOR
 	@Inject
@@ -82,7 +58,9 @@ public final class DefaultMapWrapper implements MapWrapper {
 		this.mapContinentService = checkNotNull(mapContinentService, "missing mapContinentService");
 		this.mapDomainFactory = checkNotNull(mapDomainFactory, "missing mapDomainFactory");
 		this.mapService = checkNotNull(mapService, "missing mapService");
+		this.continentDTOConverter = new MapContinentWithIdDTO2ContinentFunction(this.mapService, this.mapDomainFactory);
 		this.continents = FluentIterable.from(this.mapContinentService.retrieveAllContinents()).transform(this.continentDTOConverter).toList();
+		this.fluentContinents = FluentIterable.from(this.continents);
 	}
 
 	// METHODS
@@ -95,5 +73,11 @@ public final class DefaultMapWrapper implements MapWrapper {
 	@Override
 	public EventBus getChannel() {
 		return this.eventBus;
+	}
+
+	@Override
+	public Optional<Continent> findContinentById(final String id) {
+		checkNotNull(id, "missing id");
+		return this.fluentContinents.firstMatch(MapPredicates.continentIdEquals(id));
 	}
 }

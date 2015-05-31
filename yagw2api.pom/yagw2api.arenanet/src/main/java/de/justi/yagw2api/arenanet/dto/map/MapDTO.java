@@ -20,7 +20,7 @@ package de.justi.yagw2api.arenanet.dto.map;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-import de.justi.yagwapi.common.tuple.Tuple4;
+import de.justi.yagwapi.common.tuple.UniformNumberTuple4;
 
 public interface MapDTO {
 	String getName();
@@ -34,12 +34,12 @@ public interface MapDTO {
 	/**
 	 * @return the dimensions of the map, given as the coordinates of the lower-left (SW) and upper-right (NE) corners.
 	 */
-	Tuple4<Integer, Integer, Integer, Integer> getBounds();
+	UniformNumberTuple4<Integer> getBounds();
 
 	/**
 	 *
 	 * @return The dimensions of the map within the continent coordinate system, given as the coordinates of the upper-left (NW) and lower-right (SE) corners.
 	 */
-	Tuple4<Integer, Integer, Integer, Integer> getBoundsOnContinent();
+	UniformNumberTuple4<Integer> getBoundsOnContinent();
 
 }

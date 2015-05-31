@@ -22,7 +22,7 @@ package de.justi.yagw2api.wrapper.map.domain;
 
 import javax.annotation.Nullable;
 
-import de.justi.yagwapi.common.tuple.Tuple4;
+import de.justi.yagwapi.common.tuple.UniformNumberTuple4;
 
 public interface Map {
 
@@ -34,7 +34,7 @@ public interface Map {
 
 		MapBuilder defaultFloorIndex(int floorIndex);
 
-		MapBuilder boundsOnContinent(@Nullable Tuple4<Integer, Integer, Integer, Integer> locationOnContinent);
+		MapBuilder boundsOnContinent(@Nullable UniformNumberTuple4<Integer> locationOnContinent);
 
 		Map build();
 	}
@@ -45,5 +45,5 @@ public interface Map {
 
 	String getName();
 
-	Tuple4<Integer, Integer, Integer, Integer> getBoundsOnContinent();
+	UniformNumberTuple4<Integer> getBoundsOnContinent();
 }

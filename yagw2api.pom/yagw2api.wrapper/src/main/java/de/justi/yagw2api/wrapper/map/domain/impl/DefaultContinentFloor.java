@@ -25,7 +25,6 @@ import static de.justi.yagw2api.wrapper.map.domain.impl.MapConstants.TILE_SIZE;
 
 import java.util.Iterator;
 import java.util.NavigableSet;
-import java.util.NoSuchElementException;
 import java.util.concurrent.ExecutionException;
 
 import javax.annotation.Nullable;
@@ -42,7 +41,6 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.FluentIterable;
-import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
 import de.justi.yagw2api.arenanet.MapFloorService;
@@ -55,10 +53,9 @@ import de.justi.yagw2api.wrapper.map.domain.MapDomainFactory;
 import de.justi.yagw2api.wrapper.map.domain.MapTile;
 import de.justi.yagw2api.wrapper.map.domain.NoSuchMapTileException;
 import de.justi.yagwapi.common.tuple.NumberTuple4;
-import de.justi.yagwapi.common.tuple.Tuple3;
-import de.justi.yagwapi.common.tuple.Tuple4;
 import de.justi.yagwapi.common.tuple.Tuples;
 import de.justi.yagwapi.common.tuple.UniformNumberTuple2;
+import de.justi.yagwapi.common.tuple.UniformNumberTuple3;
 import de.justi.yagwapi.common.tuple.UniformNumberTuple4;
 
 final class DefaultContinentFloor implements ContinentFloor {
@@ -162,64 +159,13 @@ final class DefaultContinentFloor implements ContinentFloor {
 			});
 		}
 	});
-	// FIXME extract class for mostSignificantMaps
 	private final Supplier<Iterable<Map>> mostSignificantMaps = Suppliers.memoize(new Supplier<Iterable<Map>>() {
 		@Override
 		public Iterable<Map> get() {
 			return new Iterable<Map>() {
 				@Override
 				public Iterator<Map> iterator() {
-					return new Iterator<Map>() {
-						private final Iterator<Map> decorated = DefaultContinentFloor.this.maps.get().iterator();
-						private Optional<Map> next = Optional.absent();
-						private final java.util.Map<Tuple4<Integer, Integer, Integer, Integer>, Boolean> blockedBounds = Maps.newHashMap();
-
-						@Override
-						public boolean hasNext() {
-							return this.peekNext().isPresent();
-						}
-
-						private Optional<Map> peekNext() {
-							if (!this.next.isPresent()) {
-								this.next = this.searchForNextInDecorated();
-							}
-							return this.next;
-						}
-
-						private Optional<Map> pullNext() {
-							final Optional<Map> next = this.peekNext();
-							this.next = Optional.absent();
-							return next;
-						}
-
-						private Optional<Map> searchForNextInDecorated() {
-							@Nullable
-							Map potentialNext = this.decorated.hasNext() ? this.decorated.next() : null;
-							while (potentialNext != null) {
-								if (this.blockedBounds.containsKey(potentialNext.getBoundsOnContinent())) {
-									if (this.decorated.hasNext()) {
-										potentialNext = this.decorated.next();
-									} else {
-										return Optional.absent();
-									}
-								} else {
-									this.blockedBounds.put(potentialNext.getBoundsOnContinent(), true);
-									return Optional.of(potentialNext);
-								}
-							}
-							return Optional.absent();
-						}
-
-						@Override
-						public Map next() {
-							final Optional<Map> next = this.pullNext();
-							if (next.isPresent()) {
-								return next.get();
-							} else {
-								throw new NoSuchElementException();
-							}
-						}
-					};
+					return new MostSignificantMapsIterator(DefaultContinentFloor.this.maps.get().iterator());
 				}
 			};
 		}
@@ -270,23 +216,22 @@ final class DefaultContinentFloor implements ContinentFloor {
 	 * Tuple2<{zoom},{position}>
 	 * </p>
 	 */
-	private final LoadingCache<Tuple3<Integer, Integer, Integer>, MapTile> tileCache = CacheBuilder.newBuilder().build(
-			new CacheLoader<Tuple3<Integer, Integer, Integer>, MapTile>() {
-				@Override
-				public MapTile load(final Tuple3<Integer, Integer, Integer> key) throws Exception {
-					checkNotNull(key, "missing key");
-					checkNotNull(key.v1(), "missing zoom in %s", key);
-					checkNotNull(key.v2(), "missing position x in %s", key);
-					checkNotNull(key.v3(), "missing position y in %s", key);
-					if (DefaultContinentFloor.this.isTileAvailable(key.v2(), key.v3(), key.v1())) {
-						return DefaultContinentFloor.this.mapDomainFactory.newMapTileBuilder().continentId(DefaultContinentFloor.this.continentId)
-								.floorIndex(DefaultContinentFloor.this.floorIndex).zoom(key.v1()).position(Tuples.uniformOf(key.v2(), key.v3())).build();
-					} else {
-						return DefaultContinentFloor.this.mapDomainFactory.newMapUnavailableTileBuilder().continentId(DefaultContinentFloor.this.continentId)
-								.floorIndex(DefaultContinentFloor.this.floorIndex).zoom(key.v1()).position(Tuples.uniformOf(key.v2(), key.v3())).build();
-					}
-				}
-			});
+	private final LoadingCache<UniformNumberTuple3<Integer>, MapTile> tileCache = CacheBuilder.newBuilder().build(new CacheLoader<UniformNumberTuple3<Integer>, MapTile>() {
+		@Override
+		public MapTile load(final UniformNumberTuple3<Integer> key) throws Exception {
+			checkNotNull(key, "missing key");
+			checkNotNull(key.v1(), "missing zoom in %s", key);
+			checkNotNull(key.v2(), "missing position x in %s", key);
+			checkNotNull(key.v3(), "missing position y in %s", key);
+			if (DefaultContinentFloor.this.isTileAvailable(key.v2(), key.v3(), key.v1())) {
+				return DefaultContinentFloor.this.mapDomainFactory.newMapTileBuilder().continentId(DefaultContinentFloor.this.continentId)
+						.floorIndex(DefaultContinentFloor.this.floorIndex).zoom(key.v1()).position(Tuples.uniformOf(key.v2(), key.v3())).build();
+			} else {
+				return DefaultContinentFloor.this.mapDomainFactory.newMapUnavailableTileBuilder().continentId(DefaultContinentFloor.this.continentId)
+						.floorIndex(DefaultContinentFloor.this.floorIndex).zoom(key.v1()).position(Tuples.uniformOf(key.v2(), key.v3())).build();
+			}
+		}
+	});
 
 	// CONSTRUCTOR
 	private DefaultContinentFloor(final DefaultContinentFloorBuilder builder) {
@@ -334,7 +279,7 @@ final class DefaultContinentFloor implements ContinentFloor {
 	@Override
 	public MapTile getTile(final int x, final int y, final int zoom) throws NoSuchMapTileException {
 		try {
-			return this.tileCache.get(Tuples.of(zoom, x, y));
+			return this.tileCache.get(Tuples.uniformOf(zoom, x, y));
 		} catch (ExecutionException e) {
 			throw new NoSuchMapTileException();
 		}

@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 import com.google.common.base.MoreObjects;
 
 import de.justi.yagw2api.wrapper.map.domain.Map;
-import de.justi.yagwapi.common.tuple.Tuple4;
+import de.justi.yagwapi.common.tuple.UniformNumberTuple4;
 
 final class DefaultMap implements Map {
 	// STATICS
@@ -45,7 +45,7 @@ final class DefaultMap implements Map {
 		@Nullable
 		private Integer defaultFloorIndex = null;
 		@Nullable
-		private Tuple4<Integer, Integer, Integer, Integer> locationOnContinent = null;
+		private UniformNumberTuple4<Integer> locationOnContinent = null;
 
 		// METHODS
 		@Override
@@ -61,7 +61,7 @@ final class DefaultMap implements Map {
 		}
 
 		@Override
-		public MapBuilder boundsOnContinent(@Nullable final Tuple4<Integer, Integer, Integer, Integer> locationOnContinent) {
+		public MapBuilder boundsOnContinent(@Nullable final UniformNumberTuple4<Integer> locationOnContinent) {
 			this.locationOnContinent = locationOnContinent;
 			return this;
 		}
@@ -89,7 +89,7 @@ final class DefaultMap implements Map {
 	private final String id;
 	private final String name;
 	private final int defaultFloorIndex;
-	private final Tuple4<Integer, Integer, Integer, Integer> locationOnContinent;
+	private final UniformNumberTuple4<Integer> locationOnContinent;
 
 	// CONSTRUCTOR
 	private DefaultMap(final DefaultMapBuilder builder) {
@@ -112,7 +112,7 @@ final class DefaultMap implements Map {
 	}
 
 	@Override
-	public Tuple4<Integer, Integer, Integer, Integer> getBoundsOnContinent() {
+	public UniformNumberTuple4<Integer> getBoundsOnContinent() {
 		return this.locationOnContinent;
 	}
 
