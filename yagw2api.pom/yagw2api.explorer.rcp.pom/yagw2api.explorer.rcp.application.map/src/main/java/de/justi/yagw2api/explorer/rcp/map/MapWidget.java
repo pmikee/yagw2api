@@ -73,6 +73,7 @@ import de.justi.yagwapi.common.tuple.Tuple2;
 import de.justi.yagwapi.common.tuple.Tuple4;
 import de.justi.yagwapi.common.tuple.Tuples;
 import de.justi.yagwapi.common.tuple.UniformNumberTuple2;
+import de.justi.yagwapi.common.tuple.UniformNumberTuple4;
 
 public final class MapWidget extends Composite implements PaintListener {
 	// CONSTS
@@ -265,7 +266,7 @@ public final class MapWidget extends Composite implements PaintListener {
 		if (this.continent.isPresent() && this.floor.isPresent()) {
 			if (!this.scrollingActive.get()) {
 				LOGGER.trace("redraw pixels ({}/{}) - ({}/{})", e.x, e.y, e.width, e.height);
-				final Tuple4<Integer, Integer, Integer, Integer> clampedView = this.floor.get().getClampedTileIndexDimension(this.zoom);
+				final UniformNumberTuple4<Integer> clampedView = this.floor.get().getClampedTileIndexDimension(this.zoom);
 				final int minX = Math.max(clampedView.v1(), e.x / this.tileSize);
 				final int minY = Math.max(clampedView.v2(), e.y / this.tileSize);
 				final int maxX = Math.min(clampedView.v3(), (e.x + e.width + this.tileSize - 1) / this.tileSize);
@@ -289,11 +290,13 @@ public final class MapWidget extends Composite implements PaintListener {
 				e.gc.setForeground(SWTResourceManager.getColor(255, 0, 0));
 				final double tileTextureSize = this.continent.get().getTileTextureSize(this.zoom);
 				e.gc.setFont(SWTResourceManager.getFont("Helvetica", 5 + ((this.zoom - 1) * 2), SWT.BOLD, false, false));
+				final double boundsScaleFactor = this.tileSize / tileTextureSize;
 				for (Map map : this.floor.get().getMostSignificantMaps()) {
-					final int x1 = (int) Math.round((map.getBoundsOnContinent().v1() / tileTextureSize) * this.tileSize);
-					final int y1 = (int) Math.round((map.getBoundsOnContinent().v2() / tileTextureSize) * this.tileSize);
-					final int x2 = (int) Math.round((map.getBoundsOnContinent().v3() / tileTextureSize) * this.tileSize);
-					final int y2 = (int) Math.round((map.getBoundsOnContinent().v4() / tileTextureSize) * this.tileSize);
+					final UniformNumberTuple4<Double> bound2draw = Tuples.multiply(map.getBoundsOnContinent(), boundsScaleFactor);
+					final int x1 = (int) Math.round(bound2draw.v1());
+					final int y1 = (int) Math.round(bound2draw.v2());
+					final int x2 = (int) Math.round(bound2draw.v3());
+					final int y2 = (int) Math.round(bound2draw.v4());
 					e.gc.drawRectangle(x1, y1, x2 - x1, y2 - y1);
 					final String label = Joiner.on("\n ").join(Splitter.on(Pattern.compile("[-_ ]")).split(map.getName()));
 					final Point labelSize = e.gc.textExtent(label, SWT.DRAW_DELIMITER);

@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="lib/compile/javax.ws.rs.jsr311-api.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src/main/java/"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/aopalliance.aopalliance.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/com.fasterxml.classmate.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/com.fasterxml.jackson.core.jackson-annotations.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/com.fasterxml.jackson.core.jackson-core.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/com.fasterxml.jackson.core.jackson-databind.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/com.google.code.findbugs.jsr305.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/com.google.code.gson.gson.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/com.google.guava.guava.jar" sourcepath="lib-source/compile/com.google.guava.guava-sources.jar"/>
@@ -20,44 +17,16 @@
 	<classpathentry exported="true" kind="lib" path="lib/compile/de.justi.yagw2api.common.jar" sourcepath="/yagw2api.common"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/de.justi.yagw2api.mumblelink.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/de.justi.yagw2api.wrapper.jar" sourcepath="/yagw2api.wrapper"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/javax.inject.javax.inject.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/javax.validation.validation-api.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/net.java.dev.jna.jna-platform.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/net.java.dev.jna.jna.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/org.apache.derby.derby.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/org.apache.derby.derbynet.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/org.apache.logging.log4j.log4j-api.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/org.apache.logging.log4j.log4j-core.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/org.apache.logging.log4j.log4j-slf4j-impl.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/org.apache.tomcat.embed.tomcat-embed-core.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/org.apache.tomcat.embed.tomcat-embed-el.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/org.apache.tomcat.embed.tomcat-embed-logging-juli.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/org.apache.tomcat.embed.tomcat-embed-websocket.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/org.eclipse.persistence.javax.persistence.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/org.eclipse.persistence.org.eclipse.persistence.antlr.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/org.eclipse.persistence.org.eclipse.persistence.asm.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/org.eclipse.persistence.org.eclipse.persistence.core.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/org.eclipse.persistence.org.eclipse.persistence.jpa.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/org.eclipse.persistence.org.eclipse.persistence.jpa.jpql.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/org.hibernate.hibernate-validator.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/org.jboss.logging.jboss-logging.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/org.slf4j.jcl-over-slf4j.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/org.slf4j.jul-to-slf4j.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/org.slf4j.log4j-over-slf4j.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/compile/org.slf4j.slf4j-api.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/org.springframework.boot.spring-boot-autoconfigure.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/org.springframework.boot.spring-boot-starter-logging.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/org.springframework.boot.spring-boot-starter-tomcat.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/org.springframework.boot.spring-boot-starter-web.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/org.springframework.boot.spring-boot-starter.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/org.springframework.boot.spring-boot.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/org.springframework.spring-aop.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/org.springframework.spring-beans.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/org.springframework.spring-context.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/org.springframework.spring-core.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/org.springframework.spring-expression.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/org.springframework.spring-web.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/org.springframework.spring-webmvc.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/compile/org.yaml.snakeyaml.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

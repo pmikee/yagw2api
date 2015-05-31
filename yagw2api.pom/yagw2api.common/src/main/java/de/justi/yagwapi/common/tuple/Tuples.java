@@ -20,6 +20,7 @@ package de.justi.yagwapi.common.tuple;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import javax.annotation.Nullable;
@@ -129,6 +130,55 @@ public final class Tuples {
 		}
 
 		return true;
+	}
+
+	// > UNITILITIES > MATH > MULTIPLY
+	public static UniformNumberTuple4<Integer> multiply(final NumberTuple4<?, ?, ?, ?> left, final int right) {
+		return Tuples.uniformOf(left.v1().intValue() * right, left.v2().intValue() * right, left.v3().intValue() * right, left.v4().intValue() * right);
+	}
+
+	public static UniformNumberTuple4<Double> multiply(final NumberTuple4<?, ?, ?, ?> left, final double right) {
+		return Tuples.uniformOf(left.v1().doubleValue() * right, left.v2().doubleValue() * right, left.v3().doubleValue() * right, left.v4().doubleValue() * right);
+	}
+
+	public static UniformNumberTuple4<Float> multiply(final NumberTuple4<?, ?, ?, ?> left, final float right) {
+		return Tuples.uniformOf(left.v1().floatValue() * right, left.v2().floatValue() * right, left.v3().floatValue() * right, left.v4().floatValue() * right);
+	}
+
+	public static UniformNumberTuple4<Long> multiply(final NumberTuple4<?, ?, ?, ?> left, final long right) {
+		return Tuples.uniformOf(left.v1().longValue() * right, left.v2().longValue() * right, left.v3().longValue() * right, left.v4().longValue() * right);
+	}
+
+	// > UTILITIES > GEOMETRY
+
+	public static UniformNumberTuple4<Integer> rectangleFromTopLeftAndBottomRight(final UniformNumberTuple2<Integer> topLeft, final UniformNumberTuple2<Integer> bottomRight) {
+		checkNotNull(topLeft, "missing topLeft");
+		checkNotNull(bottomRight, "missing bottomRight");
+		return rectangleFromTopLeftAndBottomRight(topLeft.v1(), topLeft.v2(), bottomRight.v1(), bottomRight.v2());
+	}
+
+	public static UniformNumberTuple4<Integer> rectangleFromTopLeftAndBottomRight(final int x1, final int y1, final int x2, final int y2) {
+		checkArgument(x2 >= x1, "invalid x2: %s", x2);
+		checkArgument(y2 >= y1, "invalid y2: %s", y2);
+		checkArgument(x2 > x1 || y2 > y1, "invalid bottom right: %s/%s", x2, y2);
+		return Tuples.uniformOf(x1, y1, x2, y2);
+	}
+
+	public static UniformNumberTuple4<Integer> rectangleFromTopLeftAndSize(final UniformNumberTuple2<Integer> topLeft, final UniformNumberTuple2<Integer> size) {
+		checkNotNull(topLeft, "missing topLeft");
+		checkNotNull(topLeft, "missing size");
+		return rectangleFromTopLeftAndSize(topLeft.v1(), topLeft.v2(), size.v1(), size.v2());
+	}
+
+	public static UniformNumberTuple4<Integer> rectangleFromTopLeftAndSize(final UniformNumberTuple2<Integer> topLeft, final int width, final int height) {
+		checkNotNull(topLeft, "missing topLeft");
+		return rectangleFromTopLeftAndSize(topLeft.v1(), topLeft.v2(), width, height);
+	}
+
+	public static UniformNumberTuple4<Integer> rectangleFromTopLeftAndSize(final int x1, final int y1, final int width, final int height) {
+		checkArgument(width >= 0, "invalid width: %s", width);
+		checkArgument(width >= 0, "invalid height: %s", height);
+		return Tuples.uniformOf(x1, y1, x1 + width, y1 + height);
 	}
 
 	// CONSTRUCTORS

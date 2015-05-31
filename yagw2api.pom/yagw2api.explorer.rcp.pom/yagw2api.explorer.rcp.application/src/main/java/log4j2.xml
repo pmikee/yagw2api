@@ -31,5 +31,6 @@
 		</Root>
 		<logger name="de.justi.yagw2api.wrapper.map.domain.impl.DefaultMapTile" level="TRACE" />
 		<logger name="de.justi.yagw2api.wrapper.map.domain.impl.DefaultMapFloorTiles" level="TRACE" />
+		<logger name="com.google.inject" level="TRACE" />
 	</Loggers>
 </Configuration>
