@@ -3,13 +3,11 @@
 <head>
 	<title>MapOverview</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	
-   <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
-   <link rel="stylesheet" type="text/css" href="../css/mainStyle.css" media="all" />
+	<link rel="stylesheet" type="text/css" href="../css/mainStyle.css" media="all" />
+	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true"></script>
 </head>
 <body>
-	<div id="map"></div>
-    <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
+	<div id="map-canvas"></div>
 	<script type="text/javascript" src="../js/mainJS.js"></script>
 </body>
 </html>
