@@ -98,12 +98,18 @@ final class DefaultMapTile extends DefaultUnavailableMapTile implements MapTile,
 		return this.mapTileService.getMapTileAsync(this.getContinentId(), this.getFloorIndex(), this.getZoom(), this.getPosition().v1(), this.getPosition().v2());
 	}
 
-	private void loadImageIfNotDoneYet() {
+	private void loadImageIfNotDoneYet(final boolean lockUntilLoaded) {
 		if (!this.loading.getAndSet(true)) {
 			this.loaded.set(false);
 			final ListenableFuture<Optional<Path>> tilePathFuture = this.requestImagePath();
 			try {
-				this.path = tilePathFuture.get(0, TimeUnit.MILLISECONDS);
+				final Optional<Path> loaded;
+				if (lockUntilLoaded) {
+					loaded = tilePathFuture.get();
+				} else {
+					loaded = tilePathFuture.get(0, TimeUnit.MILLISECONDS);
+				}
+				this.onSuccess(loaded);
 			} catch (InterruptedException | ExecutionException | TimeoutException e) {
 				this.path = null;
 				Futures.addCallback(tilePathFuture, this);
@@ -113,8 +119,14 @@ final class DefaultMapTile extends DefaultUnavailableMapTile implements MapTile,
 
 	@Override
 	public Path getImagePath() {
-		this.loadImageIfNotDoneYet();
+		return this.getImagePath(false);
+	}
+
+	@Override
+	public Path getImagePath(final boolean blockUntilLoaded) {
+		this.loadImageIfNotDoneYet(blockUntilLoaded);
 		return this.loaded.get() ? this.path.or(PLACEHOLDER_256X256) : PLACEHOLDER_256X256;
+
 	}
 
 	@Override

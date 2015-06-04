@@ -128,4 +128,9 @@ class DefaultUnavailableMapTile implements MapTile {
 		return PLACEHOLDER_256X256;
 	}
 
+	@Override
+	public Path getImagePath(final boolean blockUntilLoaded) {
+		return this.getImagePath();
+	}
+
 }

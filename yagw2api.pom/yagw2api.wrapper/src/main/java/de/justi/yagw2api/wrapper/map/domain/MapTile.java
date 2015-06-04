@@ -1,5 +1,6 @@
 package de.justi.yagw2api.wrapper.map.domain;
 
+import java.nio.file.FileSystem;
 import java.nio.file.Path;
 
 import javax.annotation.Nullable;
@@ -49,6 +50,24 @@ public interface MapTile {
 
 	String getContinentId();
 
+	/**
+	 * Starts downloading the tile image from the gw2 servers if not done yet.<br />
+	 * <strong>Does not block.</strong><br />
+	 *
+	 * @see MapTile#getImagePath(boolean) MapTile.getImagePath(true) for a blocking version
+	 *
+	 * @return a placeholder image while downloading, the tile image path cached in the local {@link FileSystem} otherwise
+	 */
 	Path getImagePath();
 
+	/**
+	 *
+	 * Starts downloading the tile image from the gw2 servers if not done yet.<br />
+	 * <strong>May block or not, depending on {@code blockUntilLoaded} parameter.</strong><br />
+	 *
+	 * @param blockUntilLoaded
+	 *            control whether this method should block until the tile image has been loaded
+	 * @return a placeholder image while downloading, the tile image path cached in the local {@link FileSystem} otherwise
+	 */
+	Path getImagePath(boolean blockUntilLoaded);
 }
