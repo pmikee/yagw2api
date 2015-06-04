@@ -23,9 +23,8 @@ package de.justi.yagw2api.wrapper.guild.domain.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.justi.yagw2api.wrapper.guild.domain.Guild;
-import de.justi.yagw2api.wrapper.guild.domain.GuildDomainFactory;
 import de.justi.yagw2api.wrapper.guild.domain.Guild.GuildBuilder;
+import de.justi.yagw2api.wrapper.guild.domain.GuildDomainFactory;
 
 public final class DefaultGuildDomainFactory implements GuildDomainFactory {
 	// CONSTS

@@ -81,6 +81,7 @@ final class DefaultMapTile extends DefaultUnavailableMapTile implements MapTile,
 	private final MapTileService mapTileService;
 	private final MapEventFactory mapEventFactory;
 	private final AtomicBoolean loading = new AtomicBoolean(false);
+	private final AtomicBoolean loaded = new AtomicBoolean(false);
 	private volatile Optional<Path> path = null;
 
 	// CONSTRUCTOR
@@ -92,11 +93,15 @@ final class DefaultMapTile extends DefaultUnavailableMapTile implements MapTile,
 	}
 
 	// METHODS
-	@Override
-	public Path getImagePath() {
+
+	private ListenableFuture<Optional<Path>> requestImagePath() {
+		return this.mapTileService.getMapTileAsync(this.getContinentId(), this.getFloorIndex(), this.getZoom(), this.getPosition().v1(), this.getPosition().v2());
+	}
+
+	private void loadImageIfNotDoneYet() {
 		if (!this.loading.getAndSet(true)) {
-			final ListenableFuture<Optional<Path>> tilePathFuture = this.mapTileService.getMapTileAsync(this.getContinentId(), this.getFloorIndex(), this.getZoom(), this
-					.getPosition().v1(), this.getPosition().v2());
+			this.loaded.set(false);
+			final ListenableFuture<Optional<Path>> tilePathFuture = this.requestImagePath();
 			try {
 				this.path = tilePathFuture.get(0, TimeUnit.MILLISECONDS);
 			} catch (InterruptedException | ExecutionException | TimeoutException e) {
@@ -104,13 +109,19 @@ final class DefaultMapTile extends DefaultUnavailableMapTile implements MapTile,
 				Futures.addCallback(tilePathFuture, this);
 			}
 		}
-		return this.path != null ? this.path.or(PLACEHOLDER_256X256) : PLACEHOLDER_256X256;
+	}
+
+	@Override
+	public Path getImagePath() {
+		this.loadImageIfNotDoneYet();
+		return this.loaded.get() ? this.path.or(PLACEHOLDER_256X256) : PLACEHOLDER_256X256;
 	}
 
 	@Override
 	public void onSuccess(final Optional<Path> result) {
 		checkNotNull(result, "missing result");
 		checkState(this.path == null, "path is already set: %s", this.path);
+		this.loaded.set(true);
 		this.path = result;
 		if (this.path.isPresent()) {
 			this.eventbus.post(this.mapEventFactory.newMapTileImageLoadedSuccessfully(this));
@@ -123,6 +134,7 @@ final class DefaultMapTile extends DefaultUnavailableMapTile implements MapTile,
 	public void onFailure(final Throwable t) {
 		checkNotNull(t, "missing throwable");
 		checkState(this.path == null, "path is already set: %s", this.path);
+		this.loaded.set(true);
 		this.path = Optional.absent();
 		this.eventbus.post(this.mapEventFactory.newMapTileImageFailedToLoad(this));
 	}

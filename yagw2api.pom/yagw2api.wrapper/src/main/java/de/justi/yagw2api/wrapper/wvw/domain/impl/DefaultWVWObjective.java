@@ -55,8 +55,7 @@ import de.justi.yagw2api.wrapper.wvw.event.WVWEventFactory;
 import de.justi.yagw2api.wrapper.wvw.event.WVWObjectiveCaptureEvent;
 import de.justi.yagw2api.wrapper.wvw.event.WVWObjectiveClaimedEvent;
 import de.justi.yagw2api.wrapper.wvw.event.WVWObjectiveUnclaimedEvent;
-import de.justi.yagwapi.common.AbstractHasChannel;
-import de.justi.yagwapi.common.Unmodifiable;
+import de.justi.yagwapi.common.event.AbstractHasChannel;
 
 final class DefaultWVWObjective extends AbstractHasChannel implements WVWObjective {
 	// CONSTS
@@ -64,7 +63,7 @@ final class DefaultWVWObjective extends AbstractHasChannel implements WVWObjecti
 	private static final WVWEventFactory WVW_MODEL_EVENTS_FACTORY = YAGW2APIWrapper.INSTANCE.getWVWDomainEventFactory();
 
 	// EMBEDDED
-	final class UnmodifiableWVWObjective implements WVWObjective, Unmodifiable {
+	final class UnmodifiableWVWObjective implements WVWObjective {
 		// CONSTS
 		// EMBEDDED
 		// FIELDS
@@ -82,8 +81,7 @@ final class DefaultWVWObjective extends AbstractHasChannel implements WVWObjecti
 
 		@Override
 		public EventBus getChannel() {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + Unmodifiable.class.getSimpleName()
-					+ " and therefore can not be modified.");
+			throw new UnsupportedOperationException("unmodifiable");
 		}
 
 		@Override
@@ -104,8 +102,7 @@ final class DefaultWVWObjective extends AbstractHasChannel implements WVWObjecti
 
 		@Override
 		public void capture(final World capturingWorld) {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + Unmodifiable.class.getSimpleName()
-					+ " and therefore can not be modified.");
+			throw new UnsupportedOperationException("unmodifiable");
 		}
 
 		@Override
@@ -121,8 +118,7 @@ final class DefaultWVWObjective extends AbstractHasChannel implements WVWObjecti
 
 		@Override
 		public void connectWithMap(final WVWMap map) {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + Unmodifiable.class.getSimpleName()
-					+ " and therefore can not be modified.");
+			throw new UnsupportedOperationException("unmodifiable");
 		}
 
 		@Override
@@ -132,14 +128,12 @@ final class DefaultWVWObjective extends AbstractHasChannel implements WVWObjecti
 
 		@Override
 		public void updateOnSynchronization() {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + Unmodifiable.class.getSimpleName()
-					+ " and therefore can not be modified.");
+			throw new UnsupportedOperationException("unmodifiable");
 		}
 
 		@Override
 		public void initializeOwner(final World owningWorld) {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + Unmodifiable.class.getSimpleName()
-					+ " and therefore can not be modified.");
+			throw new UnsupportedOperationException("unmodifiable");
 		}
 
 		@Override
@@ -164,14 +158,12 @@ final class DefaultWVWObjective extends AbstractHasChannel implements WVWObjecti
 
 		@Override
 		public void claim(final Guild guild) {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + Unmodifiable.class.getSimpleName()
-					+ " and therefore can not be modified.");
+			throw new UnsupportedOperationException("unmodifiable");
 		}
 
 		@Override
 		public void initializeClaimedByGuild(final Guild guild) {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + Unmodifiable.class.getSimpleName()
-					+ " and therefore can not be modified.");
+			throw new UnsupportedOperationException("unmodifiable");
 		}
 	}
 

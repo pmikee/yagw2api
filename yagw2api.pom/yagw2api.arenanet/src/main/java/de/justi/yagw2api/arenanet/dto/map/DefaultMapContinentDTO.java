@@ -9,9 +9,9 @@ package de.justi.yagw2api.arenanet.dto.map;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,8 +32,8 @@ import com.google.common.collect.ImmutableSet;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 
-import de.justi.yagwapi.common.Tuple2;
-import de.justi.yagwapi.common.Tuples;
+import de.justi.yagwapi.common.tuple.Tuples;
+import de.justi.yagwapi.common.tuple.UniformNumberTuple2;
 
 final class DefaultMapContinentDTO implements MapContinentDTO {
 
@@ -54,9 +54,9 @@ final class DefaultMapContinentDTO implements MapContinentDTO {
 	@SerializedName("continent_dims")
 	@Since(1.0)
 	private final Integer[] dimension = new Integer[2];
-	private final transient Supplier<Tuple2<Integer, Integer>> dimensionTupleSupplier = Suppliers.memoize(() -> {
+	private final transient Supplier<UniformNumberTuple2<Integer>> dimensionTupleSupplier = Suppliers.memoize(() -> {
 		checkState(this.dimension.length == 2, "invalid texture dimension length: %s", this.dimension.length);
-		return Tuples.of(this.dimension[0], this.dimension[1]);
+		return Tuples.uniformOf(this.dimension[0], this.dimension[1]);
 	});
 
 	// METHODS
@@ -72,7 +72,7 @@ final class DefaultMapContinentDTO implements MapContinentDTO {
 	}
 
 	@Override
-	public Tuple2<Integer, Integer> getDimension() {
+	public UniformNumberTuple2<Integer> getDimension() {
 		return this.dimensionTupleSupplier.get();
 	}
 

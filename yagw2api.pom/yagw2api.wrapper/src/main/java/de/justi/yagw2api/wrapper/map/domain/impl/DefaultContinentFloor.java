@@ -20,10 +20,11 @@ package de.justi.yagw2api.wrapper.map.domain.impl;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static de.justi.yagw2api.wrapper.map.domain.impl.MapConstants.TILE_SIZE;
 
-import java.util.Optional;
+import java.util.Iterator;
+import java.util.NavigableSet;
 import java.util.concurrent.ExecutionException;
 
 import javax.annotation.Nullable;
@@ -31,34 +32,41 @@ import javax.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Function;
 import com.google.common.base.MoreObjects;
+import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.FluentIterable;
 import com.google.inject.Inject;
 
 import de.justi.yagw2api.arenanet.MapFloorService;
+import de.justi.yagw2api.arenanet.MapService;
+import de.justi.yagw2api.arenanet.dto.map.MapDTO;
 import de.justi.yagw2api.arenanet.dto.map.MapFloorDTO;
 import de.justi.yagw2api.wrapper.map.domain.ContinentFloor;
+import de.justi.yagw2api.wrapper.map.domain.Map;
 import de.justi.yagw2api.wrapper.map.domain.MapDomainFactory;
 import de.justi.yagw2api.wrapper.map.domain.MapTile;
 import de.justi.yagw2api.wrapper.map.domain.NoSuchMapTileException;
-import de.justi.yagwapi.common.Tuple2;
-import de.justi.yagwapi.common.Tuple3;
-import de.justi.yagwapi.common.Tuple4;
-import de.justi.yagwapi.common.Tuples;
+import de.justi.yagwapi.common.tuple.NumberTuple4;
+import de.justi.yagwapi.common.tuple.Tuples;
+import de.justi.yagwapi.common.tuple.UniformNumberTuple2;
+import de.justi.yagwapi.common.tuple.UniformNumberTuple3;
+import de.justi.yagwapi.common.tuple.UniformNumberTuple4;
 
 final class DefaultContinentFloor implements ContinentFloor {
 	// CONSTS
-	private static final int TILE_SIZE = 256;
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultContinentFloor.class);
 
 	// STATIC
-	public static final ContinentFloorBuilder builder(final MapFloorService mapFloorService, final MapDomainFactory mapDomainFactory) {
-		return new DefaultContinentFloorBuilder(checkNotNull(mapFloorService, "missing mapFloorService"), checkNotNull(mapDomainFactory, "missing mapDomainFactory"));
+	public static final ContinentFloorBuilder builder(final MapFloorService mapFloorService, final MapService mapService, final MapDomainFactory mapDomainFactory) {
+		return new DefaultContinentFloorBuilder(checkNotNull(mapFloorService, "missing mapFloorService"), checkNotNull(mapService, "missing mapService"), checkNotNull(
+				mapDomainFactory, "missing mapDomainFactory"));
 	}
 
 	// EMBEDDED
@@ -66,6 +74,11 @@ final class DefaultContinentFloor implements ContinentFloor {
 		// FIELDS
 		private final MapFloorService mapFloorService;
 		private final MapDomainFactory mapDomainFactory;
+
+		@Nullable
+		private Supplier<NavigableSet<String>> mapIdSupplier = null;
+		@Nullable
+		private Function<String, Optional<? extends MapDTO>> mapDTOLoader = null;
 		@Nullable
 		private Integer floorIndex = null;
 		@Nullable
@@ -77,7 +90,7 @@ final class DefaultContinentFloor implements ContinentFloor {
 
 		// CONSTRUCTOR
 		@Inject
-		private DefaultContinentFloorBuilder(final MapFloorService mapFloorService, final MapDomainFactory mapDomainFactory) {
+		private DefaultContinentFloorBuilder(final MapFloorService mapFloorService, final MapService mapService, final MapDomainFactory mapDomainFactory) {
 			this.mapFloorService = checkNotNull(mapFloorService, "missing mapFloorService");
 			this.mapDomainFactory = checkNotNull(mapDomainFactory, "missing mapDomainFactory");
 		}
@@ -108,6 +121,18 @@ final class DefaultContinentFloor implements ContinentFloor {
 		}
 
 		@Override
+		public ContinentFloorBuilder mapIds(final Supplier<NavigableSet<String>> mapIdSupplier) {
+			this.mapIdSupplier = mapIdSupplier;
+			return this;
+		}
+
+		@Override
+		public ContinentFloorBuilder mapDTOLoader(final Function<String, Optional<? extends MapDTO>> mapDTOLoader) {
+			this.mapDTOLoader = mapDTOLoader;
+			return this;
+		}
+
+		@Override
 		public ContinentFloor build() {
 			return new DefaultContinentFloor(this);
 		}
@@ -121,40 +146,64 @@ final class DefaultContinentFloor implements ContinentFloor {
 
 	// FIELDS
 	private final MapFloorService mapFloorService;
+	private final Function<String, Optional<? extends MapDTO>> mapDTOLoader;
 	private final MapDomainFactory mapDomainFactory;
+	private final Supplier<NavigableSet<String>> mapIdSupplier;
+	private final MapCache mapCache;
+	private final Supplier<Iterable<Map>> maps = Suppliers.memoize(new Supplier<Iterable<Map>>() {
+		@Override
+		public Iterable<Map> get() {
+			return FluentIterable.from(DefaultContinentFloor.this.mapIdSupplier.get()).transform((mapIndex) -> {
+				checkNotNull(mapIndex, "missing mapIndex");
+				return DefaultContinentFloor.this.getMap(mapIndex).get();
+			});
+		}
+	});
+	private final Supplier<Iterable<Map>> mostSignificantMaps = Suppliers.memoize(new Supplier<Iterable<Map>>() {
+		@Override
+		public Iterable<Map> get() {
+			return new Iterable<Map>() {
+				@Override
+				public Iterator<Map> iterator() {
+					return new MostSignificantMapsIterator(DefaultContinentFloor.this.maps.get().iterator());
+				}
+			};
+		}
+
+	});
 	private final int floorIndex;
 	private final int minZoom;
 	private final int maxZoom;
-	private final Supplier<Tuple2<Integer, Integer>> textureSize = Suppliers.memoize(new Supplier<Tuple2<Integer, Integer>>() {
+	private final Supplier<UniformNumberTuple2<Integer>> textureSize = Suppliers.memoize(new Supplier<UniformNumberTuple2<Integer>>() {
 		@Override
-		public Tuple2<Integer, Integer> get() {
+		public UniformNumberTuple2<Integer> get() {
 			final com.google.common.base.Optional<MapFloorDTO> optionalFloorDTO = DefaultContinentFloor.this.mapFloorService.retrieveMapFloor(
 					DefaultContinentFloor.this.continentId, DefaultContinentFloor.this.floorIndex);
 			if (optionalFloorDTO.isPresent()) {
 				return optionalFloorDTO.get().getTextureDimension();
 			} else {
-				return Tuples.of(0, 0);
+				return Tuples.uniformOf(0, 0);
 			}
 		}
 	});
-	private final Supplier<Tuple4<Integer, Integer, Integer, Integer>> clampedTextureSize = Suppliers.memoize(new Supplier<Tuple4<Integer, Integer, Integer, Integer>>() {
+	private final Supplier<UniformNumberTuple4<Integer>> clampedTextureSize = Suppliers.memoize(new Supplier<UniformNumberTuple4<Integer>>() {
 		@Override
-		public Tuple4<Integer, Integer, Integer, Integer> get() {
+		public UniformNumberTuple4<Integer> get() {
 			final com.google.common.base.Optional<MapFloorDTO> optionalFloorDTO = DefaultContinentFloor.this.mapFloorService.retrieveMapFloor(
 					DefaultContinentFloor.this.continentId, DefaultContinentFloor.this.floorIndex);
 			if (optionalFloorDTO.isPresent()) {
 				if (optionalFloorDTO.get().getClampedView().isPresent()) {
-					final Tuple4<Integer, Integer, Integer, Integer> clamped = optionalFloorDTO.get().getClampedView().get();
+					final NumberTuple4<Integer, Integer, Integer, Integer> clamped = optionalFloorDTO.get().getClampedView().get();
 					final int x1 = clamped.v1() / TILE_SIZE;
 					final int y1 = clamped.v2() / TILE_SIZE;
 					final int x2 = (clamped.v3() / TILE_SIZE) + ((clamped.v3() % TILE_SIZE == 0) ? 0 : 1);
 					final int y2 = (clamped.v4() / TILE_SIZE) + ((clamped.v4() % TILE_SIZE == 0) ? 0 : 1);
-					return Tuples.of(x1 * TILE_SIZE, y1 * TILE_SIZE, x2 * TILE_SIZE, y2 * TILE_SIZE);
+					return Tuples.uniformOf(x1 * TILE_SIZE, y1 * TILE_SIZE, x2 * TILE_SIZE, y2 * TILE_SIZE);
 				} else {
-					return Tuples.merge(0, 0, optionalFloorDTO.get().getTextureDimension());
+					return Tuples.uniformOf(0, 0, optionalFloorDTO.get().getTextureDimension().v1(), optionalFloorDTO.get().getTextureDimension().v2());
 				}
 			} else {
-				return Tuples.of(0, 0, 0, 0);
+				return Tuples.uniformOf(0, 0, 0, 0);
 			}
 		}
 	});
@@ -167,93 +216,51 @@ final class DefaultContinentFloor implements ContinentFloor {
 	 * Tuple2<{zoom},{position}>
 	 * </p>
 	 */
-	private final LoadingCache<Tuple3<Integer, Integer, Integer>, MapTile> tileCache = CacheBuilder.newBuilder().build(
-			new CacheLoader<Tuple3<Integer, Integer, Integer>, MapTile>() {
-				@Override
-				public MapTile load(final Tuple3<Integer, Integer, Integer> key) throws Exception {
-					checkNotNull(key, "missing key");
-					checkNotNull(key.v1(), "missing zoom in %s", key);
-					checkNotNull(key.v2(), "missing position x in %s", key);
-					checkNotNull(key.v3(), "missing position y in %s", key);
-					if (DefaultContinentFloor.this.isTileAvailable(key.v2(), key.v3(), key.v1())) {
-						return DefaultContinentFloor.this.mapDomainFactory.newMapTileBuilder().continentId(DefaultContinentFloor.this.continentId)
-								.floorIndex(DefaultContinentFloor.this.floorIndex).zoom(key.v1()).position(Tuples.of(key.v2(), key.v3())).build();
-					} else {
-						return DefaultContinentFloor.this.mapDomainFactory.newMapUnavailableTileBuilder().continentId(DefaultContinentFloor.this.continentId)
-								.floorIndex(DefaultContinentFloor.this.floorIndex).zoom(key.v1()).position(Tuples.of(key.v2(), key.v3())).build();
-					}
-				}
-			});
+	private final LoadingCache<UniformNumberTuple3<Integer>, MapTile> tileCache = CacheBuilder.newBuilder().build(new CacheLoader<UniformNumberTuple3<Integer>, MapTile>() {
+		@Override
+		public MapTile load(final UniformNumberTuple3<Integer> key) throws Exception {
+			checkNotNull(key, "missing key");
+			checkNotNull(key.v1(), "missing zoom in %s", key);
+			checkNotNull(key.v2(), "missing position x in %s", key);
+			checkNotNull(key.v3(), "missing position y in %s", key);
+			if (DefaultContinentFloor.this.isTileAvailable(key.v2(), key.v3(), key.v1())) {
+				return DefaultContinentFloor.this.mapDomainFactory.newMapTileBuilder().continentId(DefaultContinentFloor.this.continentId)
+						.floorIndex(DefaultContinentFloor.this.floorIndex).zoom(key.v1()).position(Tuples.uniformOf(key.v2(), key.v3())).build();
+			} else {
+				return DefaultContinentFloor.this.mapDomainFactory.newMapUnavailableTileBuilder().continentId(DefaultContinentFloor.this.continentId)
+						.floorIndex(DefaultContinentFloor.this.floorIndex).zoom(key.v1()).position(Tuples.uniformOf(key.v2(), key.v3())).build();
+			}
+		}
+	});
 
 	// CONSTRUCTOR
 	private DefaultContinentFloor(final DefaultContinentFloorBuilder builder) {
 		checkNotNull(builder, "missing builder");
 		this.mapFloorService = checkNotNull(builder.mapFloorService, "missing mapFloorService in %s", builder);
 		this.mapDomainFactory = checkNotNull(builder.mapDomainFactory, "missing mapDomainFactory in %s", builder);
+		this.mapDTOLoader = checkNotNull(builder.mapDTOLoader, "missing mapDTOLoader in %s", builder);
 		this.floorIndex = checkNotNull(builder.floorIndex, "missing floorIndex in %s", builder);
 		this.continentId = checkNotNull(builder.continentId, "missing continentId in %s", builder);
 		this.minZoom = checkNotNull(builder.minZoom, "missing minZoom in %s", builder);
 		this.maxZoom = checkNotNull(builder.maxZoom, "missing maxZoom in %s", builder);
+		this.mapIdSupplier = Suppliers.memoize(checkNotNull(builder.mapIdSupplier, "missing mapIdSupplier in %s", builder));
+		this.mapCache = new MapCache(this.mapDTOLoader, this.mapDomainFactory);
 	}
 
 	// METHODS
-	@Override
-	public Optional<MapTile> getTileUnchecked(final int x, final int y, final int zoom) {
-		try {
-			return Optional.of(this.getTile(x, y, zoom));
-		} catch (NoSuchMapTileException e) {
-			return Optional.empty();
-		}
+
+	private int tile2Texture(final int tile, final int zoom) {
+		return MapUtils.getTileTextureSize(zoom, this.minZoom, this.maxZoom) * tile;
 	}
 
-	final int tile2Texture(final int tile, final int zoom) {
-		return this.getTileTextureSize(zoom) * tile;
+	private int texture2Tile(final int texture, final int zoom) {
+		return texture / MapUtils.getTileTextureSize(zoom, this.minZoom, this.maxZoom);
 	}
 
-	final Tuple2<Integer, Integer> tile2Texture(final Tuple2<Integer, Integer> tile, final int zoom) {
-		checkNotNull(tile, "missing tile");
-		return Tuples.of(this.tile2Texture(tile.v1(), zoom), this.tile2Texture(tile.v2(), zoom));
-	}
-
-	final int texture2Tile(final int texture, final int zoom) {
-		return texture / this.getTileTextureSize(zoom);
-	}
-
-	final Tuple2<Integer, Integer> texture2Tile(final Tuple2<Integer, Integer> texture, final int zoom) {
+	private UniformNumberTuple4<Integer> texture2Tile(final UniformNumberTuple4<Integer> texture, final int zoom) {
 		checkNotNull(texture, "missing texture");
-		return Tuples.of(this.texture2Tile(texture.v1(), zoom), this.texture2Tile(texture.v2(), zoom));
-	}
-
-	final Tuple4<Integer, Integer, Integer, Integer> texture2Tile(final Tuple4<Integer, Integer, Integer, Integer> texture, final int zoom) {
-		checkNotNull(texture, "missing texture");
-		return Tuples
-				.of(this.texture2Tile(texture.v1(), zoom), this.texture2Tile(texture.v2(), zoom), this.texture2Tile(texture.v3(), zoom), this.texture2Tile(texture.v4(), zoom));
-	}
-
-	/**
-	 * Two rectangles do not overlap if one of the following conditions is true:
-	 * <ol>
-	 * <li>One rectangle is above top edge of other rectangle.</li>
-	 * <li>One rectangle is on left side of left edge of other rectangle.</li>
-	 * </ol>
-	 *
-	 * @param left
-	 * @param right
-	 * @return
-	 */
-	final boolean overlaps(final Tuple4<Integer, Integer, Integer, Integer> left, final Tuple4<Integer, Integer, Integer, Integer> right) {
-
-		// If one rectangle is on left side of other
-		if (left.v1() > right.v3() || right.v1() > left.v3()) {
-			return false;
-		}
-
-		// If one rectangle is above other
-		if (left.v2() > right.v4() || right.v2() > left.v4()) {
-			return false;
-		}
-
-		return true;
+		return Tuples.uniformOf(this.texture2Tile(texture.v1(), zoom), this.texture2Tile(texture.v2(), zoom), this.texture2Tile(texture.v3(), zoom),
+				this.texture2Tile(texture.v4(), zoom));
 	}
 
 	private final boolean isTileAvailable(final int x, final int y, final int zoom) {
@@ -261,8 +268,8 @@ final class DefaultContinentFloor implements ContinentFloor {
 		int x2Texture = this.tile2Texture(x + 1, zoom);
 		int y1Texture = this.tile2Texture(y, zoom);
 		int y2Texture = this.tile2Texture(y + 1, zoom);
-		final Tuple4<Integer, Integer, Integer, Integer> tileRegion = Tuples.of(x1Texture, y1Texture, x2Texture, y2Texture);
-		if (this.overlaps(tileRegion, this.getClampedTextureDimension())) {
+		final NumberTuple4<Integer, Integer, Integer, Integer> tileRegion = Tuples.of(x1Texture, y1Texture, x2Texture, y2Texture);
+		if (Tuples.overlaps(tileRegion, this.getClampedTextureDimension())) {
 			return true;
 		} else {
 			return false;
@@ -272,36 +279,45 @@ final class DefaultContinentFloor implements ContinentFloor {
 	@Override
 	public MapTile getTile(final int x, final int y, final int zoom) throws NoSuchMapTileException {
 		try {
-			return this.tileCache.get(Tuples.of(zoom, x, y));
+			return this.tileCache.get(Tuples.uniformOf(zoom, x, y));
 		} catch (ExecutionException e) {
 			throw new NoSuchMapTileException();
 		}
 	}
 
 	@Override
-	public Tuple2<Integer, Integer> getTextureDimension() {
+	public UniformNumberTuple2<Integer> getTextureDimension() {
 		return this.textureSize.get();
 	}
 
 	@Override
-	public Tuple2<Integer, Integer> getTileIndexDimension(final int zoom) {
-		return this.texture2Tile(this.getTextureDimension(), zoom);
-	}
-
-	@Override
-	public int getTileTextureSize(final int zoom) {
-		checkArgument(zoom >= this.minZoom && zoom <= this.maxZoom, "invalid zoom=%s for %s", zoom, this);
-		return TILE_SIZE * (int) Math.pow(2, this.maxZoom - zoom);
-	}
-
-	@Override
-	public Tuple4<Integer, Integer, Integer, Integer> getClampedTextureDimension() {
+	public UniformNumberTuple4<Integer> getClampedTextureDimension() {
 		return this.clampedTextureSize.get();
 	}
 
 	@Override
-	public Tuple4<Integer, Integer, Integer, Integer> getClampedTileIndexDimension(final int zoom) {
+	public UniformNumberTuple4<Integer> getClampedTileIndexDimension(final int zoom) {
 		return this.texture2Tile(this.getClampedTextureDimension(), zoom);
+	}
+
+	@Override
+	public NavigableSet<String> getMapIds() {
+		return this.mapIdSupplier.get();
+	}
+
+	@Override
+	public Optional<Map> getMap(final String mapId) {
+		return this.mapCache.get(mapId);
+	}
+
+	@Override
+	public Iterable<Map> getMaps() {
+		return this.maps.get();
+	}
+
+	@Override
+	public Iterable<Map> getMostSignificantMaps() {
+		return this.mostSignificantMaps.get();
 	}
 
 	@Override

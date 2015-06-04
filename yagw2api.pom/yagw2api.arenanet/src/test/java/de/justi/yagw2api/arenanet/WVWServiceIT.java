@@ -31,15 +31,14 @@ import org.junit.Test;
 
 import com.google.common.base.Optional;
 
-import de.justi.yagw2api.arenanet.DefaultWVWService;
 import de.justi.yagw2api.arenanet.dto.DTOConstants;
+import de.justi.yagw2api.arenanet.dto.wvw.DefaultWVWDTOFactory;
 import de.justi.yagw2api.arenanet.dto.wvw.WVWMapDTO;
 import de.justi.yagw2api.arenanet.dto.wvw.WVWMatchDTO;
 import de.justi.yagw2api.arenanet.dto.wvw.WVWMatchDetailsDTO;
 import de.justi.yagw2api.arenanet.dto.wvw.WVWMatchesDTO;
 import de.justi.yagw2api.arenanet.dto.wvw.WVWObjectiveDTO;
 import de.justi.yagw2api.arenanet.dto.wvw.WVWObjectiveNameDTO;
-import de.justi.yagw2api.arenanet.dto.wvw.DefaultWVWDTOFactory;
 import de.justi.yagw2api.test.AbstractYAGW2APITest;
 
 public final class WVWServiceIT extends AbstractYAGW2APITest {

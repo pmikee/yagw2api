@@ -34,7 +34,7 @@ import java.util.TimeZone;
 
 import com.sun.jersey.api.client.Client;
 
-import de.justi.yagwapi.common.JerseyClientHelper;
+import de.justi.yagwapi.common.rest.JerseyClientHelper;
 
 public final class ArenanetUtils {
 	public static final int REST_RETRY_COUNT = 10;

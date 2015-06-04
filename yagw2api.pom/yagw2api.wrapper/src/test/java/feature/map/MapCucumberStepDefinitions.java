@@ -32,11 +32,13 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -48,9 +50,11 @@ import cucumber.api.Scenario;
 import cucumber.api.java8.En;
 import de.justi.yagw2api.arenanet.MapContinentService;
 import de.justi.yagw2api.arenanet.MapFloorService;
+import de.justi.yagw2api.arenanet.MapService;
 import de.justi.yagw2api.arenanet.MapTileService;
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
 import de.justi.yagw2api.arenanet.dto.map.MapContinentWithIdDTO;
+import de.justi.yagw2api.arenanet.dto.map.MapsDTO;
 import de.justi.yagw2api.wrapper.map.DefaultMapWrapper;
 import de.justi.yagw2api.wrapper.map.MapWrapper;
 import de.justi.yagw2api.wrapper.map.domain.Continent;
@@ -58,7 +62,7 @@ import de.justi.yagw2api.wrapper.map.domain.MapDomainFactory;
 import de.justi.yagw2api.wrapper.map.domain.impl.DefaultMapDomainFactory;
 import de.justi.yagw2api.wrapper.map.event.MapEventFactory;
 import de.justi.yagw2api.wrapper.map.event.impl.DefaultMapEventFactory;
-import de.justi.yagwapi.common.Tuples;
+import de.justi.yagwapi.common.tuple.Tuples;
 
 public class MapCucumberStepDefinitions implements En {
 
@@ -74,6 +78,7 @@ public class MapCucumberStepDefinitions implements En {
 	private MapFloorService mapFloorService;
 	private MapDomainFactory mapDomainFactory;
 	private MapContinentService mapContinentService;
+	private MapService mapService;
 	private MapEventFactory mapEventFactory;
 	private MapWrapper mapWrapper;
 	private Iterable<Continent> retrievedContinents;
@@ -112,11 +117,11 @@ public class MapCucumberStepDefinitions implements En {
 			doReturn(id).when(dto).getId();
 			doReturn(name).when(dto).getName();
 			doReturn(ImmutableSet.of()).when(dto).getFloors();
-			doReturn(Tuples.of(0, 0)).when(dto).getDimension();
+			doReturn(Tuples.uniformOf(0, 0)).when(dto).getDimension();
 			this.givenMapContinents.add(dto);
 		});
 		this.Given("^a continent wrapper under test$", () -> {
-			this.mapWrapper = new DefaultMapWrapper(this.eventbus, this.mapDomainFactory, this.mapContinentService);
+			this.mapWrapper = new DefaultMapWrapper(this.eventbus, this.mapDomainFactory, this.mapContinentService, this.mapService);
 		});
 
 		this.Given("^a map floor service that returns empty floors$", () -> {
@@ -125,9 +130,15 @@ public class MapCucumberStepDefinitions implements En {
 		this.Given("^a map tile service that returns empty map tiles$", () -> {
 			this.mapTileService = Mockito.mock(MapTileService.class);
 		});
+		this.Given("^a map service that returns no maps$", () -> {
+			this.mapService = Mockito.mock(MapService.class);
+			final MapsDTO emptyMaps = Mockito.mock(MapsDTO.class);
+			doReturn(Optional.of(emptyMaps)).when(this.mapService).retrieveAllMaps();
+			doReturn(Optional.of(emptyMaps)).when(this.mapService).retrieveAllMaps(Mockito.any(Locale.class));
+		});
 
 		this.Given("^a map domain factory$", () -> {
-			this.mapDomainFactory = new DefaultMapDomainFactory(this.eventbus, this.mapFloorService, this.mapTileService, this.mapEventFactory);
+			this.mapDomainFactory = new DefaultMapDomainFactory(this.eventbus, this.mapFloorService, this.mapTileService, this.mapEventFactory, this.mapService);
 		});
 		this.Given("^the real map floor service$", () -> {
 			this.mapFloorService = YAGW2APIArenanet.getInstance().getMapFloorService();
@@ -137,6 +148,9 @@ public class MapCucumberStepDefinitions implements En {
 		});
 		this.Given("^the real map tile service$", () -> {
 			this.mapTileService = YAGW2APIArenanet.getInstance().getMapTileService();
+		});
+		this.Given("^the real map service$", () -> {
+			this.mapService = YAGW2APIArenanet.getInstance().getMapService();
 		});
 		this.Given("^a synchronous eventbus$", () -> {
 			this.eventbus = new EventBus();

@@ -5,7 +5,9 @@ import java.util.SortedSet;
 
 import javax.annotation.Nullable;
 
-import de.justi.yagwapi.common.Tuple2;
+import com.google.common.base.Optional;
+
+import de.justi.yagwapi.common.tuple.UniformNumberTuple2;
 
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -32,13 +34,16 @@ public interface Continent {
 	static interface ContinentBuilder {
 		Continent build();
 
+		ContinentBuilder mapIds(final Set<String> mapIds);
+
+		// TODO change floor ids from int to string
 		ContinentBuilder floorIds(final Set<Integer> floorIds);
 
 		ContinentBuilder name(@Nullable String name);
 
 		ContinentBuilder id(@Nullable String id);
 
-		ContinentBuilder dimension(@Nullable Tuple2<Integer, Integer> dimension);
+		ContinentBuilder dimension(@Nullable UniformNumberTuple2<Integer> dimension);
 
 		ContinentBuilder minZoom(int zoom);
 
@@ -51,13 +56,21 @@ public interface Continent {
 
 	String getId();
 
-	Tuple2<Integer, Integer> getDimension();
+	UniformNumberTuple2<Integer> getDimension();
 
 	String getName();
 
-	ContinentFloor getFloor(int floorIndex);
+	// TODO change floor ids from int to string
+	Optional<ContinentFloor> getFloor(int floorIndex);
 
 	Iterable<ContinentFloor> getFloors();
 
+	// TODO change floor ids from int to string
 	SortedSet<Integer> getFloorIds();
+
+	Optional<Map> getMap(String mapId);
+
+	Iterable<Map> getMaps();
+
+	int getTileTextureSize(int zoom);
 }

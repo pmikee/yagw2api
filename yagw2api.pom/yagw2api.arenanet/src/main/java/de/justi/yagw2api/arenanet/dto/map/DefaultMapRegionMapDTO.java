@@ -9,9 +9,9 @@ package de.justi.yagw2api.arenanet.dto.map;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,8 +32,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 
-import de.justi.yagwapi.common.Tuple4;
-import de.justi.yagwapi.common.Tuples;
+import de.justi.yagwapi.common.tuple.Tuples;
+import de.justi.yagwapi.common.tuple.UniformNumberTuple4;
 
 final class DefaultMapRegionMapDTO implements MapRegionMapDTO {
 	// FIELDS
@@ -68,17 +68,17 @@ final class DefaultMapRegionMapDTO implements MapRegionMapDTO {
 	@Since(1.0)
 	private final List<DefaultMapTaskDTO> tasks = ImmutableList.of();
 
-	private final transient Supplier<Tuple4<Integer, Integer, Integer, Integer>> boundsTupleSupplier = Suppliers.memoize(() -> {
+	private final transient Supplier<UniformNumberTuple4<Integer>> boundsTupleSupplier = Suppliers.memoize(() -> {
 		checkState(this.bounds.length == 2, "invalid bounds length: %s", this.bounds.length);
 		checkState(this.bounds[0].length == 2, "invalid bounds length: %s", this.bounds[0].length);
 		checkState(this.bounds[1].length == 2, "invalid bounds length: %s", this.bounds[1].length);
-		return Tuples.of(this.bounds[0][0], this.bounds[0][1], this.bounds[1][0], this.bounds[1][1]);
+		return Tuples.uniformOf(this.bounds[0][0], this.bounds[0][1], this.bounds[1][0], this.bounds[1][1]);
 	});
-	private final transient Supplier<Tuple4<Integer, Integer, Integer, Integer>> boundsOnContinentTupleSupplier = Suppliers.memoize(() -> {
+	private final transient Supplier<UniformNumberTuple4<Integer>> boundsOnContinentTupleSupplier = Suppliers.memoize(() -> {
 		checkState(this.boundsOnContinent.length == 2, "invalid boundsOnContinent length: %s", this.boundsOnContinent.length);
 		checkState(this.boundsOnContinent[0].length == 2, "invalid boundsOnContinent length: %s", this.boundsOnContinent[0].length);
 		checkState(this.boundsOnContinent[1].length == 2, "invalid boundsOnContinent length: %s", this.boundsOnContinent[1].length);
-		return Tuples.of(this.boundsOnContinent[0][0], this.bounds[0][1], this.boundsOnContinent[1][0], this.boundsOnContinent[1][1]);
+		return Tuples.uniformOf(this.boundsOnContinent[0][0], this.boundsOnContinent[0][1], this.boundsOnContinent[1][0], this.boundsOnContinent[1][1]);
 	});
 
 	// CONSTRUCTOR
@@ -105,12 +105,12 @@ final class DefaultMapRegionMapDTO implements MapRegionMapDTO {
 	}
 
 	@Override
-	public Tuple4<Integer, Integer, Integer, Integer> getBounds() {
+	public UniformNumberTuple4<Integer> getBounds() {
 		return this.boundsTupleSupplier.get();
 	}
 
 	@Override
-	public Tuple4<Integer, Integer, Integer, Integer> getBoundsOnContinent() {
+	public UniformNumberTuple4<Integer> getBoundsOnContinent() {
 		return this.boundsOnContinentTupleSupplier.get();
 	}
 

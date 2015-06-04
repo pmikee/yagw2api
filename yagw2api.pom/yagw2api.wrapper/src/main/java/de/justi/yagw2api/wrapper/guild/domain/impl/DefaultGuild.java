@@ -9,9 +9,9 @@ package de.justi.yagw2api.wrapper.guild.domain.impl;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,10 +27,8 @@ import javax.annotation.Nullable;
 import com.google.common.base.MoreObjects;
 
 import de.justi.yagw2api.wrapper.guild.domain.Guild;
-import de.justi.yagw2api.wrapper.guild.domain.Guild.GuildBuilder;
-import de.justi.yagwapi.common.Unmodifiable;
 
-public final class DefaultGuild implements Guild, Unmodifiable {
+public final class DefaultGuild implements Guild {
 	// STATIC
 	public static final GuildBuilder builder() {
 		return new DefaultGuildBuilder();
@@ -128,28 +126,37 @@ public final class DefaultGuild implements Guild, Unmodifiable {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (!(obj instanceof DefaultGuild))
+		}
+		if (!(obj instanceof DefaultGuild)) {
 			return false;
+		}
 		DefaultGuild other = (DefaultGuild) obj;
 		if (this.id == null) {
-			if (other.id != null)
+			if (other.id != null) {
 				return false;
-		} else if (!this.id.equals(other.id))
+			}
+		} else if (!this.id.equals(other.id)) {
 			return false;
+		}
 		if (this.name == null) {
-			if (other.name != null)
+			if (other.name != null) {
 				return false;
-		} else if (!this.name.equals(other.name))
+			}
+		} else if (!this.name.equals(other.name)) {
 			return false;
+		}
 		if (this.tag == null) {
-			if (other.tag != null)
+			if (other.tag != null) {
 				return false;
-		} else if (!this.tag.equals(other.tag))
+			}
+		} else if (!this.tag.equals(other.tag)) {
 			return false;
+		}
 		return true;
 	}
 }

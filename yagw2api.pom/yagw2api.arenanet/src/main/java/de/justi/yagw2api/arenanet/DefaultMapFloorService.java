@@ -44,9 +44,9 @@ import com.sun.jersey.api.client.WebResource;
 
 import de.justi.yagw2api.arenanet.dto.map.MapDTOFactory;
 import de.justi.yagw2api.arenanet.dto.map.MapFloorDTO;
-import de.justi.yagwapi.common.RetryClientFilter;
-import de.justi.yagwapi.common.Tuple3;
-import de.justi.yagwapi.common.Tuples;
+import de.justi.yagwapi.common.rest.RetryClientFilter;
+import de.justi.yagwapi.common.tuple.Tuple3;
+import de.justi.yagwapi.common.tuple.Tuples;
 
 final class DefaultMapFloorService implements MapFloorService {
 	// CONSTS
@@ -68,8 +68,8 @@ final class DefaultMapFloorService implements MapFloorService {
 			.expireAfterWrite(CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build(new CacheLoader<Tuple3<Locale, String, Integer>, Optional<MapFloorDTO>>() {
 				@Override
 				public Optional<MapFloorDTO> load(final Tuple3<Locale, String, Integer> key) throws Exception {
-					final WebResource resource = ArenanetUtils.REST_CLIENT.resource(MAP_FLOOR_URL.toExternalForm()).queryParam("continent_id ", key.getValue2().get().toString())
-							.queryParam("floor", key.getValue3().get().toString()).queryParam("lang", key.getValue1().get().toLanguageTag());
+					final WebResource resource = ArenanetUtils.REST_CLIENT.resource(MAP_FLOOR_URL.toExternalForm()).queryParam("continent_id ", key.v2().toString())
+							.queryParam("floor", key.v3().toString()).queryParam("lang", key.v1().toLanguageTag());
 					try {
 						resource.addFilter(new RetryClientFilter(ArenanetUtils.REST_RETRY_COUNT));
 						final WebResource.Builder builder = resource.accept(MediaType.APPLICATION_JSON_TYPE);

@@ -60,15 +60,14 @@ import de.justi.yagw2api.wrapper.wvw.domain.WVWMap;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWMatch;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWObjective;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWScores;
-import de.justi.yagwapi.common.AbstractHasChannel;
-import de.justi.yagwapi.common.Event;
-import de.justi.yagwapi.common.Unmodifiable;
+import de.justi.yagwapi.common.event.AbstractHasChannel;
+import de.justi.yagwapi.common.event.Event;
 
 final class DefaultWVWMatch extends AbstractHasChannel implements WVWMatch {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultWVWMatch.class);
 	private static final WVWDomainFactory WVW_MODEL_FACTORY = YAGW2APIWrapper.INSTANCE.getWVWDomainFactory();
 
-	final class UnmodifiableWVWMatch implements WVWMatch, Unmodifiable {
+	final class UnmodifiableWVWMatch implements WVWMatch {
 
 		@Override
 		public Set<World> searchWorldsByNamePattern(final Pattern searchPattern) {
@@ -146,8 +145,7 @@ final class DefaultWVWMatch extends AbstractHasChannel implements WVWMatch {
 
 		@Override
 		public EventBus getChannel() {
-			throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is instance of " + Unmodifiable.class.getSimpleName()
-					+ " and therefore can not be modified.");
+			throw new UnsupportedOperationException("unmodifiable");
 		}
 
 		@Override

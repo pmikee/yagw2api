@@ -9,9 +9,9 @@ package de.justi.yagw2api.arenanet;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -43,7 +43,7 @@ import com.sun.jersey.api.client.WebResource;
 
 import de.justi.yagw2api.arenanet.dto.map.MapDTOFactory;
 import de.justi.yagw2api.arenanet.dto.map.MapsDTO;
-import de.justi.yagwapi.common.RetryClientFilter;
+import de.justi.yagwapi.common.rest.RetryClientFilter;
 
 final class DefaultMapService implements MapService {
 	// CONSTS
@@ -94,6 +94,11 @@ final class DefaultMapService implements MapService {
 			LOGGER.error("Failed to retrieve {} from cache.", MapsDTO.class, e);
 			throw new IllegalStateException("Failed to retrieve " + MapsDTO.class.getSimpleName() + " from cache.", e);
 		}
+	}
+
+	@Override
+	public Optional<MapsDTO> retrieveAllMaps() {
+		return this.retrieveAllMaps(YAGW2APIArenanet.INSTANCE.getCurrentLocale());
 	}
 
 }

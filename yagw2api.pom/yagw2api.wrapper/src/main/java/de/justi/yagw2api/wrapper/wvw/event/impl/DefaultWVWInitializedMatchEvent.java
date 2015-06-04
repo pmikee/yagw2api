@@ -23,7 +23,7 @@ package de.justi.yagw2api.wrapper.wvw.event.impl;
 import static com.google.common.base.Preconditions.checkNotNull;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWMatch;
 import de.justi.yagw2api.wrapper.wvw.event.WVWInitializedMatchEvent;
-import de.justi.yagwapi.common.AbstractEvent;
+import de.justi.yagwapi.common.event.AbstractEvent;
 
 final class DefaultWVWInitializedMatchEvent extends AbstractEvent implements WVWInitializedMatchEvent {
 	private final WVWMatch match;

@@ -24,7 +24,7 @@ import static com.google.common.base.Preconditions.checkState;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWMap;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWObjective;
 import de.justi.yagw2api.wrapper.wvw.event.WVWObjectiveEvent;
-import de.justi.yagwapi.common.AbstractEvent;
+import de.justi.yagwapi.common.event.AbstractEvent;
 
 abstract class AbstractWVWObjectiveEvent extends AbstractEvent implements WVWObjectiveEvent {
 	private final WVWObjective source;

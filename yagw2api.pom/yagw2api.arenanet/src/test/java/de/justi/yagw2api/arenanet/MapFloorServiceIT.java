@@ -56,7 +56,7 @@ public final class MapFloorServiceIT extends AbstractYAGW2APITest {
 				{ "1", 1, Locale.FRENCH },
 				{ "1", 2, Locale.ENGLISH },
 				{ "2", 3, Locale.GERMAN },
-				{ "2", 2, Locale.FRENCH }
+				{ "2", 1, Locale.FRENCH }
 		});
 		//@formatter:on
 	}
@@ -83,8 +83,8 @@ public final class MapFloorServiceIT extends AbstractYAGW2APITest {
 		final Optional<MapFloorDTO> floor = service.retrieveMapFloor(this.continentId, this.floor, this.locale);
 
 		assertThat(floor.isPresent(), is(true));
-		assertThat(floor.get().getTextureDimension().getValue1().get(), is(greaterThan(0)));
-		assertThat(floor.get().getTextureDimension().getValue2().get(), is(greaterThan(0)));
+		assertThat(floor.get().getTextureDimension().v1(), is(greaterThan(0)));
+		assertThat(floor.get().getTextureDimension().v2(), is(greaterThan(0)));
 		assertThat(floor.get().getRegions().size(), is(greaterThan(0)));
 	}
 }

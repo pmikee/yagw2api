@@ -2,8 +2,10 @@ package de.justi.yagw2api.wrapper.map;
 
 import java.util.List;
 
+import com.google.common.base.Optional;
+
 import de.justi.yagw2api.wrapper.map.domain.Continent;
-import de.justi.yagwapi.common.HasChannel;
+import de.justi.yagwapi.common.event.HasChannel;
 
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -26,6 +28,8 @@ import de.justi.yagwapi.common.HasChannel;
  */
 
 public interface MapWrapper extends HasChannel {
+
+	Optional<Continent> findContinentById(String id);
 
 	List<Continent> getContinents();
 }

@@ -26,7 +26,7 @@ import com.google.common.base.MoreObjects.ToStringHelper;
 
 import de.justi.yagw2api.wrapper.map.domain.MapTile;
 import de.justi.yagw2api.wrapper.map.event.MapTileEvent;
-import de.justi.yagwapi.common.AbstractEvent;
+import de.justi.yagwapi.common.event.AbstractEvent;
 
 abstract class AbstractMapTileEvent extends AbstractEvent implements MapTileEvent {
 	private final MapTile mapTile;

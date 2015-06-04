@@ -47,8 +47,8 @@ import de.justi.yagw2api.wrapper.guild.GuildWrapper;
 import de.justi.yagw2api.wrapper.world.domain.World;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWMatch;
 import de.justi.yagw2api.wrapper.wvw.event.WVWInitializedMatchEvent;
-import de.justi.yagwapi.common.Event;
-import de.justi.yagwapi.common.HasChannel;
+import de.justi.yagwapi.common.event.Event;
+import de.justi.yagwapi.common.event.HasChannel;
 
 final class WVWSynchronizer extends AbstractScheduledService implements HasChannel {
 	// CONSTS

@@ -28,6 +28,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.regex.Pattern;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -51,7 +52,9 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
+import com.google.common.base.Splitter;
 import com.google.common.base.Throwables;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -62,12 +65,15 @@ import com.google.common.eventbus.Subscribe;
 import de.justi.yagw2api.wrapper.map.MapWrapper;
 import de.justi.yagw2api.wrapper.map.domain.Continent;
 import de.justi.yagw2api.wrapper.map.domain.ContinentFloor;
+import de.justi.yagw2api.wrapper.map.domain.Map;
 import de.justi.yagw2api.wrapper.map.domain.MapTile;
 import de.justi.yagw2api.wrapper.map.domain.NoSuchMapTileException;
 import de.justi.yagw2api.wrapper.map.event.MapTileEvent;
-import de.justi.yagwapi.common.Tuple2;
-import de.justi.yagwapi.common.Tuple4;
-import de.justi.yagwapi.common.Tuples;
+import de.justi.yagwapi.common.tuple.Tuple2;
+import de.justi.yagwapi.common.tuple.Tuple4;
+import de.justi.yagwapi.common.tuple.Tuples;
+import de.justi.yagwapi.common.tuple.UniformNumberTuple2;
+import de.justi.yagwapi.common.tuple.UniformNumberTuple4;
 
 public final class MapWidget extends Composite implements PaintListener {
 	// CONSTS
@@ -84,7 +90,7 @@ public final class MapWidget extends Composite implements PaintListener {
 
 	private int tileSize = DEFAULT_TARGET_TILE_SIZE;
 
-	private Tuple2<Integer, Integer> scrollableAreaSize = Tuples.of(0, 0);
+	private UniformNumberTuple2<Integer> scrollableAreaSize = Tuples.uniformOf(0, 0);
 	private int lastNotifiedScrolledX = 0;
 	private int lastNotifiedScrolledY = 0;
 
@@ -166,7 +172,7 @@ public final class MapWidget extends Composite implements PaintListener {
 			@Override
 			public void controlResized(final ControlEvent e) {
 				final Control control = (Control) e.getSource();
-				MapWidget.this.scrollableAreaSize = Tuples.of(control.getSize().x, control.getSize().y);
+				MapWidget.this.scrollableAreaSize = Tuples.uniformOf(control.getSize().x, control.getSize().y);
 				LOGGER.trace("Resized {} to {}", control, MapWidget.this.scrollableAreaSize);
 			}
 		});
@@ -260,7 +266,7 @@ public final class MapWidget extends Composite implements PaintListener {
 		if (this.continent.isPresent() && this.floor.isPresent()) {
 			if (!this.scrollingActive.get()) {
 				LOGGER.trace("redraw pixels ({}/{}) - ({}/{})", e.x, e.y, e.width, e.height);
-				final Tuple4<Integer, Integer, Integer, Integer> clampedView = this.floor.get().getClampedTileIndexDimension(this.zoom);
+				final UniformNumberTuple4<Integer> clampedView = this.floor.get().getClampedTileIndexDimension(this.zoom);
 				final int minX = Math.max(clampedView.v1(), e.x / this.tileSize);
 				final int minY = Math.max(clampedView.v2(), e.y / this.tileSize);
 				final int maxX = Math.min(clampedView.v3(), (e.x + e.width + this.tileSize - 1) / this.tileSize);
@@ -281,9 +287,20 @@ public final class MapWidget extends Composite implements PaintListener {
 						}
 					}
 				}
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("image data cache: {}", this.tileImageDataCache.stats());
-					LOGGER.debug("image cache: {}", this.tileImageCache.stats());
+				e.gc.setForeground(SWTResourceManager.getColor(255, 0, 0));
+				final double tileTextureSize = this.continent.get().getTileTextureSize(this.zoom);
+				e.gc.setFont(SWTResourceManager.getFont("Helvetica", 5 + ((this.zoom - 1) * 2), SWT.BOLD, false, false));
+				final double boundsScaleFactor = this.tileSize / tileTextureSize;
+				for (Map map : this.floor.get().getMostSignificantMaps()) {
+					final UniformNumberTuple4<Double> bound2draw = Tuples.multiply(map.getBoundsOnContinent(), boundsScaleFactor);
+					final int x1 = (int) Math.round(bound2draw.v1());
+					final int y1 = (int) Math.round(bound2draw.v2());
+					final int x2 = (int) Math.round(bound2draw.v3());
+					final int y2 = (int) Math.round(bound2draw.v4());
+					e.gc.drawRectangle(x1, y1, x2 - x1, y2 - y1);
+					final String label = Joiner.on("\n ").join(Splitter.on(Pattern.compile("[-_ ]")).split(map.getName()));
+					final Point labelSize = e.gc.textExtent(label, SWT.DRAW_DELIMITER);
+					e.gc.drawText(label, (x1 + x2 - labelSize.x) / 2, (y1 + y2 - labelSize.y) / 2, SWT.DRAW_DELIMITER | SWT.DRAW_TRANSPARENT);
 				}
 			} else {
 				LOGGER.trace(" > skip drawing");

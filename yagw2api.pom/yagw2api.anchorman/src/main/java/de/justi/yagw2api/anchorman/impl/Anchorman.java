@@ -33,6 +33,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 
 import de.justi.yagw2api.anchorman.IAnchorman;
+import de.justi.yagw2api.anchorman.TTSUtils;
 import de.justi.yagw2api.arenanet.Arenanet;
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
 import de.justi.yagw2api.mumblelink.IMumbleLink;
@@ -57,7 +58,6 @@ import de.justi.yagw2api.wrapper.wvw.event.WVWObjectiveCaptureEvent;
 import de.justi.yagw2api.wrapper.wvw.event.WVWObjectiveClaimedEvent;
 import de.justi.yagw2api.wrapper.wvw.event.WVWObjectiveEndOfBuffEvent;
 import de.justi.yagw2api.wrapper.wvw.event.WVWObjectiveUnclaimedEvent;
-import de.justi.yagwapi.common.TTSUtils;
 
 class Anchorman implements IAnchorman, IMumbleLinkListener, WVWMatchListener, WVWMapListener {
 	private static final String BUNDLE_KEY_COMPLETED_MATCH_INITIALIZATION = "completed_match_initialization";

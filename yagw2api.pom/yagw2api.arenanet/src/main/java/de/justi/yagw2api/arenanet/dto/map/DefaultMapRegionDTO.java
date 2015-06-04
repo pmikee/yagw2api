@@ -9,9 +9,9 @@ package de.justi.yagw2api.arenanet.dto.map;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,8 +32,8 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 
-import de.justi.yagwapi.common.Tuple2;
-import de.justi.yagwapi.common.Tuples;
+import de.justi.yagwapi.common.tuple.Tuples;
+import de.justi.yagwapi.common.tuple.UniformNumberTuple2;
 
 final class DefaultMapRegionDTO implements MapRegionDTO {
 	// FIELDS
@@ -47,9 +47,9 @@ final class DefaultMapRegionDTO implements MapRegionDTO {
 	@Since(1.0)
 	private final Map<String, DefaultMapRegionMapDTO> maps = ImmutableMap.of();
 
-	private final transient Supplier<Tuple2<Integer, Integer>> labelCoordinatesTupleSupplier = Suppliers.memoize(() -> {
+	private final transient Supplier<UniformNumberTuple2<Integer>> labelCoordinatesTupleSupplier = Suppliers.memoize(() -> {
 		checkState(this.labelCoordinates.length == 2, "invalid texture dimension length: %s", this.labelCoordinates.length);
-		return Tuples.of(this.labelCoordinates[0], this.labelCoordinates[1]);
+		return Tuples.uniformOf(this.labelCoordinates[0], this.labelCoordinates[1]);
 	});
 
 	// METHODS
@@ -60,7 +60,7 @@ final class DefaultMapRegionDTO implements MapRegionDTO {
 	}
 
 	@Override
-	public Tuple2<Integer, Integer> getLabelCoordinates() {
+	public UniformNumberTuple2<Integer> getLabelCoordinates() {
 		return this.labelCoordinatesTupleSupplier.get();
 	}
 

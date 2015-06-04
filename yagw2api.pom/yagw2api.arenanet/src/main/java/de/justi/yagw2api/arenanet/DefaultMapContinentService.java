@@ -47,7 +47,7 @@ import de.justi.yagw2api.arenanet.dto.map.MapContinentDTO;
 import de.justi.yagw2api.arenanet.dto.map.MapContinentWithIdDTO;
 import de.justi.yagw2api.arenanet.dto.map.MapContinentsDTO;
 import de.justi.yagw2api.arenanet.dto.map.MapDTOFactory;
-import de.justi.yagwapi.common.RetryClientFilter;
+import de.justi.yagwapi.common.rest.RetryClientFilter;
 
 final class DefaultMapContinentService implements MapContinentService {
 

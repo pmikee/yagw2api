@@ -56,10 +56,6 @@
 		<!-- MODULES -->
 		<dependency>
 			<groupId>de.justi</groupId>
-			<artifactId>yagw2api.anchorman</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>de.justi</groupId>
 			<artifactId>yagw2api.arenanet</artifactId>
 		</dependency>
 		<dependency>

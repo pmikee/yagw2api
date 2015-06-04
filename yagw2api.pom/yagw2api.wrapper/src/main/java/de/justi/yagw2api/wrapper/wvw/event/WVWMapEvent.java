@@ -20,7 +20,7 @@ import de.justi.yagw2api.wrapper.wvw.domain.WVWMap;
  * limitations under the License.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
-import de.justi.yagwapi.common.Event;
+import de.justi.yagwapi.common.event.Event;
 
 public interface WVWMapEvent extends Event {
 	WVWMap getMap();

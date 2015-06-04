@@ -9,9 +9,9 @@ package de.justi.yagw2api.wrapper.map.domain.impl;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,8 +28,6 @@ import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
-import javax.annotation.Nullable;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,8 +35,8 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.MoreObjects.ToStringHelper;
 
 import de.justi.yagw2api.wrapper.map.domain.MapTile;
-import de.justi.yagwapi.common.Files;
-import de.justi.yagwapi.common.Tuple2;
+import de.justi.yagwapi.common.io.Files;
+import de.justi.yagwapi.common.tuple.UniformNumberTuple2;
 
 class DefaultUnavailableMapTile implements MapTile {
 
@@ -64,91 +62,6 @@ class DefaultUnavailableMapTile implements MapTile {
 		return new DefaultUnavailableMapTileBuilder();
 	}
 
-	// EMBEDDED
-	protected abstract static class AbstractMapTileBuilder<B extends AbstractMapTileBuilder<B>> implements MapTileBuilder {
-
-		// FIELDS
-		@Nullable
-		private Tuple2<Integer, Integer> position = null;
-		@Nullable
-		private Integer floorIndex = null;
-		@Nullable
-		private Integer zoom = null;
-		@Nullable
-		private String continentId = null;
-
-		// CONSTRUCTOR
-		protected AbstractMapTileBuilder() {
-		}
-
-		// METHODS
-		protected abstract B self();
-
-		@Override
-		public abstract MapTile build();
-
-		@Override
-		public final B position(@Nullable final Tuple2<Integer, Integer> position) {
-			this.position = position;
-			return this.self();
-		}
-
-		@Override
-		public final B floorIndex(final int floorIndex) {
-			this.floorIndex = floorIndex;
-			return this.self();
-		}
-
-		@Override
-		public final B continentId(@Nullable final String continentId) {
-			this.continentId = continentId;
-			return this.self();
-		}
-
-		@Override
-		public final B zoom(final int zoom) {
-			this.zoom = zoom;
-			return this.self();
-		}
-
-		/**
-		 * @return the position
-		 */
-		protected final Tuple2<Integer, Integer> getPosition() {
-			return this.position;
-		}
-
-		/**
-		 * @return the floorIndex
-		 */
-		protected final Integer getFloorIndex() {
-			return this.floorIndex;
-		}
-
-		/**
-		 * @return the zoom
-		 */
-		protected final Integer getZoom() {
-			return this.zoom;
-		}
-
-		/**
-		 * @return the continentId
-		 */
-		protected final String getContinentId() {
-			return this.continentId;
-		}
-
-		protected ToStringHelper toStringHelper() {
-			return MoreObjects.toStringHelper(this).add("position", this.position).add("floorIndex", this.floorIndex).add("zoom", this.zoom).add("continentId", this.continentId);
-		}
-
-		@Override
-		public final String toString() {
-			return this.toStringHelper().toString();
-		}
-	}
-
 	private static final class DefaultUnavailableMapTileBuilder extends AbstractMapTileBuilder<DefaultUnavailableMapTileBuilder> {
 
 		@Override
@@ -164,7 +77,7 @@ class DefaultUnavailableMapTile implements MapTile {
 	}
 
 	// FIELDS
-	private final Tuple2<Integer, Integer> position;
+	private final UniformNumberTuple2<Integer> position;
 	private final int floorIndex;
 	private final int zoom;
 	private final String continentId;
@@ -182,7 +95,7 @@ class DefaultUnavailableMapTile implements MapTile {
 
 	// METHODS
 	@Override
-	public final Tuple2<Integer, Integer> getPosition() {
+	public final UniformNumberTuple2<Integer> getPosition() {
 		return this.position;
 	}
 

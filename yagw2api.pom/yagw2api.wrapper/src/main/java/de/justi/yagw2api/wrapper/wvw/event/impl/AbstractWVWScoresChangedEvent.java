@@ -24,7 +24,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWScores;
 import de.justi.yagw2api.wrapper.wvw.event.WVWScoresChangedEvent;
-import de.justi.yagwapi.common.AbstractEvent;
+import de.justi.yagwapi.common.event.AbstractEvent;
 
 abstract class AbstractWVWScoresChangedEvent extends AbstractEvent implements WVWScoresChangedEvent {
 	private final WVWScores scores;

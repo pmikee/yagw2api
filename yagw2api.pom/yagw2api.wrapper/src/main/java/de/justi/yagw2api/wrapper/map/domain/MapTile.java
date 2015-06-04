@@ -4,7 +4,7 @@ import java.nio.file.Path;
 
 import javax.annotation.Nullable;
 
-import de.justi.yagwapi.common.Tuple2;
+import de.justi.yagwapi.common.tuple.UniformNumberTuple2;
 
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -30,7 +30,7 @@ public interface MapTile {
 
 	public static interface MapTileBuilder {
 
-		MapTileBuilder position(@Nullable Tuple2<Integer, Integer> position);
+		MapTileBuilder position(@Nullable UniformNumberTuple2<Integer> position);
 
 		MapTileBuilder continentId(@Nullable String continentId);
 
@@ -41,7 +41,7 @@ public interface MapTile {
 		MapTile build();
 	}
 
-	Tuple2<Integer, Integer> getPosition();
+	UniformNumberTuple2<Integer> getPosition();
 
 	int getFloorIndex();
 

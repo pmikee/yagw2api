@@ -20,17 +20,26 @@ package de.justi.yagw2api.wrapper.map.domain;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-import java.util.Optional;
+import java.util.NavigableSet;
 
 import javax.annotation.Nullable;
 
-import de.justi.yagwapi.common.Tuple2;
-import de.justi.yagwapi.common.Tuple4;
+import com.google.common.base.Function;
+import com.google.common.base.Optional;
+import com.google.common.base.Supplier;
+
+import de.justi.yagw2api.arenanet.dto.map.MapDTO;
+import de.justi.yagwapi.common.tuple.UniformNumberTuple2;
+import de.justi.yagwapi.common.tuple.UniformNumberTuple4;
 
 public interface ContinentFloor {
 
 	public static interface ContinentFloorBuilder {
+		ContinentFloorBuilder mapDTOLoader(Function<String, Optional<? extends MapDTO>> mapDTOLoader);
+
 		ContinentFloorBuilder continentId(@Nullable String continentId);
+
+		ContinentFloorBuilder mapIds(final Supplier<NavigableSet<String>> mapIds);
 
 		ContinentFloorBuilder floorIndex(int floorIndex);
 
@@ -43,17 +52,23 @@ public interface ContinentFloor {
 
 	int getIndex();
 
-	Optional<MapTile> getTileUnchecked(int x, int y, int zoom);
+	NavigableSet<String> getMapIds();
+
+	Optional<Map> getMap(String mapId);
+
+	/**
+	 *
+	 * @return an {@link Iterable} of the most significant maps of this floor. A map is most significant if it's the first map (ordered by id) for it's bounds.
+	 */
+	Iterable<Map> getMostSignificantMaps();
+
+	Iterable<Map> getMaps();
 
 	MapTile getTile(int x, int y, int zoom) throws NoSuchMapTileException;
 
-	int getTileTextureSize(int zoom);
+	UniformNumberTuple2<Integer> getTextureDimension();
 
-	Tuple2<Integer, Integer> getTextureDimension();
+	UniformNumberTuple4<Integer> getClampedTextureDimension();
 
-	Tuple2<Integer, Integer> getTileIndexDimension(final int zoom);
-
-	Tuple4<Integer, Integer, Integer, Integer> getClampedTextureDimension();
-
-	Tuple4<Integer, Integer, Integer, Integer> getClampedTileIndexDimension(final int zoom);
+	UniformNumberTuple4<Integer> getClampedTileIndexDimension(final int zoom);
 }
