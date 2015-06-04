@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -60,8 +59,9 @@ public class MapController {
 	public void getTile(final HttpServletResponse response, @PathVariable("continentId") final String continentId, @PathVariable("floorId") final int floorId, @PathVariable("zoom") final int zoom,
 			@PathVariable("x") final int x, @PathVariable("y") final int y) throws IOException, URISyntaxException {
 		final Optional<Path> optionalPath = YAGW2APIArenanet.INSTANCE.getMapTileService().getMapTile(continentId, floorId, zoom, x, y);
-		response.setContentType(MediaType.IMAGE_JPEG_VALUE);
-		final Path path = optionalPath.or(Paths.get(ClassLoader.getSystemResource("images/defaultMap.jpg").toURI()));
-		Files.copy(path, response.getOutputStream());
+		if (optionalPath.isPresent()) {
+			response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+			Files.copy(optionalPath.get(), response.getOutputStream());
+		}
 	}
 }
