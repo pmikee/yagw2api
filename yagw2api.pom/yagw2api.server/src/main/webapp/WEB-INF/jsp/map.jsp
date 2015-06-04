@@ -1,12 +1,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-	
-	<!-- <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script> -->
+   <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
+   <link rel="stylesheet" type="text/css" href="../css/mainStyle.css" media="all" />
 </head>
 <body>
-	<div id="guildWarsMap">
-           <img src="tile/1/0/0/0/0" />
-    </div>
+	<div id="map"></div>
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
+	<script type="text/javascript" src="../js/mainJS.js"></script>
 </body>
 </html>
