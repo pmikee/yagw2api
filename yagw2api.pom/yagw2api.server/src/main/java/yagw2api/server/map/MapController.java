@@ -1,8 +1,10 @@
 package yagw2api.server.map;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.google.common.base.Optional;
 
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
 
@@ -45,7 +49,7 @@ public class MapController {
 	@RequestMapping(value = "/", method = { RequestMethod.GET })
 	public ModelAndView get() {
 		LOGGER.info("Enter method get");
-		ModelAndView mav = new ModelAndView("map");
+		final ModelAndView mav = new ModelAndView("map");
 		// mav.addObject("mapImage", this.getTile("1", 0, 0, 0, 0));
 		LOGGER.info("ModelAndView {}", mav);
 		return mav;
@@ -54,11 +58,10 @@ public class MapController {
 
 	@RequestMapping(value = "/tile/{continentId}/{floorId}/{zoom}/{x}/{y}", method = { RequestMethod.GET })
 	public void getTile(final HttpServletResponse response, @PathVariable("continentId") final String continentId, @PathVariable("floorId") final int floorId, @PathVariable("zoom") final int zoom,
-			@PathVariable("x") final int x, @PathVariable("y") final int y) throws IOException {
-
-		Path path = YAGW2APIArenanet.INSTANCE.getMapTileService().getMapTile(continentId, floorId, zoom, x, y).get();
+			@PathVariable("x") final int x, @PathVariable("y") final int y) throws IOException, URISyntaxException {
+		final Optional<Path> optionalPath = YAGW2APIArenanet.INSTANCE.getMapTileService().getMapTile(continentId, floorId, zoom, x, y);
 		response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+		final Path path = optionalPath.or(Paths.get(ClassLoader.getSystemResource("images/defaultMap.jpg").toURI()));
 		Files.copy(path, response.getOutputStream());
-
 	}
 }
