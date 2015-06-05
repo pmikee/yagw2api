@@ -56,13 +56,11 @@ var addLabels = function(map){
 				for (m in mapInfoObj) {
 					var myTitle = document.createElement('span');
 					myTitle.style.color = 'white';
-					myTitle.innerHTML = 'Hello World';
-					
-				    var points = [new google.maps.LatLng(10.281819, 10.287132),
-				                  new google.maps.LatLng(12.281839, 12.287152)];
-					var textBounds = new google.maps.LatLngBounds(points[0], points[1]);
-					var x = new google.maps.GroundOverlay(myTitle, textBounds);
-				    x.setMap(map);
+					myTitle.innerHTML = mapInfoObj[m].name;
+					var myTextDiv = document.createElement('div');
+					myTextDiv.appendChild(myTitle);
+
+					map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(myTextDiv);
 				}
 
 			});
