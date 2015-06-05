@@ -16,9 +16,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.google.common.base.Optional;
-
-import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
+import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
+import de.justi.yagw2api.wrapper.map.domain.Continent;
+import de.justi.yagw2api.wrapper.map.domain.ContinentFloor;
+import de.justi.yagw2api.wrapper.map.domain.NoSuchMapTileException;
 
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -56,12 +57,15 @@ public class MapController {
 	}
 
 	@RequestMapping(value = "/tile/{continentId}/{floorId}/{zoom}/{x}/{y}", method = { RequestMethod.GET })
-	public void getTile(final HttpServletResponse response, @PathVariable("continentId") final String continentId, @PathVariable("floorId") final int floorId, @PathVariable("zoom") final int zoom,
-			@PathVariable("x") final int x, @PathVariable("y") final int y) throws IOException, URISyntaxException {
-		final Optional<Path> optionalPath = YAGW2APIArenanet.INSTANCE.getMapTileService().getMapTile(continentId, floorId, zoom, x, y);
-		if (optionalPath.isPresent()) {
-			response.setContentType(MediaType.IMAGE_JPEG_VALUE);
-			Files.copy(optionalPath.get(), response.getOutputStream());
-		}
+	public void getTile(final HttpServletResponse response, @PathVariable("continentId") final String continentId, @PathVariable("floorId") final int floorId,
+			@PathVariable("zoom") final int zoom, @PathVariable("x") final int x, @PathVariable("y") final int y) throws IOException, URISyntaxException, NoSuchMapTileException {
+
+		final Continent continent = YAGW2APIWrapper.INSTANCE.getMapWrapper().findContinentById(continentId).get();
+		final ContinentFloor floor = continent.getFloor(floorId).get();
+
+		// blockUntilLoaded=true is required, because otherwise an placeholder image will be returned for tiles that have not been loaded yet and become cached by the js part
+		final Path path = floor.getTile(x, y, zoom).getImagePath(true);
+		response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+		Files.copy(path, response.getOutputStream());
 	}
 }
