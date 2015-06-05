@@ -22,7 +22,7 @@ package de.justi.yagw2api.arenanet.dto.map;
 
 import java.util.Set;
 
-import de.justi.yagwapi.common.tuple.UniformNumberTuple2;
+import de.justi.yagw2api.common.tuple.UniformNumberTuple2;
 
 public interface MapContinentDTO {
 	String getName();

@@ -20,7 +20,7 @@ package de.justi.yagw2api.arenanet.dto.map;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-import de.justi.yagwapi.common.tuple.UniformNumberTuple4;
+import de.justi.yagw2api.common.tuple.UniformNumberTuple4;
 
 public interface MapDTO {
 	String getName();

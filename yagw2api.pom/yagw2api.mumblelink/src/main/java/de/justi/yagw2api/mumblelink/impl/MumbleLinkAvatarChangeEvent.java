@@ -27,9 +27,9 @@ import javax.annotation.Nullable;
 import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Optional;
 
+import de.justi.yagw2api.common.event.AbstractEvent;
 import de.justi.yagw2api.mumblelink.IMumbleLinkAvatar;
 import de.justi.yagw2api.mumblelink.IMumbleLinkAvatarChangeEvent;
-import de.justi.yagwapi.common.event.AbstractEvent;
 
 final class MumbleLinkAvatarChangeEvent extends AbstractEvent implements IMumbleLinkAvatarChangeEvent {
 	private final Optional<IMumbleLinkAvatar> oldAvatar;

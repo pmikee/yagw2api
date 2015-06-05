@@ -5,7 +5,7 @@ import java.nio.file.Path;
 
 import javax.annotation.Nullable;
 
-import de.justi.yagwapi.common.tuple.UniformNumberTuple2;
+import de.justi.yagw2api.common.tuple.UniformNumberTuple2;
 
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

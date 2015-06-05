@@ -43,7 +43,7 @@ import com.sun.jersey.api.client.WebResource;
 
 import de.justi.yagw2api.arenanet.dto.map.MapDTOFactory;
 import de.justi.yagw2api.arenanet.dto.map.MapsDTO;
-import de.justi.yagwapi.common.rest.RetryClientFilter;
+import de.justi.yagw2api.common.rest.RetryClientFilter;
 
 final class DefaultMapService implements MapService {
 	// CONSTS

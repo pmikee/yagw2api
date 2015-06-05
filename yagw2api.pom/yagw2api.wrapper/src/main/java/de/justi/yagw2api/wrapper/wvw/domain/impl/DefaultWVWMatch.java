@@ -52,6 +52,8 @@ import de.justi.yagw2api.arenanet.dto.wvw.WVWMapDTO;
 import de.justi.yagw2api.arenanet.dto.wvw.WVWMatchDTO;
 import de.justi.yagw2api.arenanet.dto.wvw.WVWMatchDetailsDTO;
 import de.justi.yagw2api.arenanet.dto.wvw.WVWObjectiveDTO;
+import de.justi.yagw2api.common.event.AbstractHasChannel;
+import de.justi.yagw2api.common.event.Event;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
 import de.justi.yagw2api.wrapper.world.domain.World;
 import de.justi.yagw2api.wrapper.world.domain.WorldDomainFactory;
@@ -60,8 +62,6 @@ import de.justi.yagw2api.wrapper.wvw.domain.WVWMap;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWMatch;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWObjective;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWScores;
-import de.justi.yagwapi.common.event.AbstractHasChannel;
-import de.justi.yagwapi.common.event.Event;
 
 final class DefaultWVWMatch extends AbstractHasChannel implements WVWMatch {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultWVWMatch.class);

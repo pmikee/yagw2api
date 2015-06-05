@@ -32,8 +32,8 @@ import com.google.common.collect.ImmutableSet;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 
-import de.justi.yagwapi.common.tuple.Tuples;
-import de.justi.yagwapi.common.tuple.UniformNumberTuple2;
+import de.justi.yagw2api.common.tuple.Tuples;
+import de.justi.yagw2api.common.tuple.UniformNumberTuple2;
 
 final class DefaultMapContinentDTO implements MapContinentDTO {
 

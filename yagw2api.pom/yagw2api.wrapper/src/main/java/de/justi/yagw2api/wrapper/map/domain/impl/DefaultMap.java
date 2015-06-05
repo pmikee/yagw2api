@@ -26,8 +26,8 @@ import javax.annotation.Nullable;
 
 import com.google.common.base.MoreObjects;
 
+import de.justi.yagw2api.common.tuple.UniformNumberTuple4;
 import de.justi.yagw2api.wrapper.map.domain.Map;
-import de.justi.yagwapi.common.tuple.UniformNumberTuple4;
 
 final class DefaultMap implements Map {
 	// STATICS

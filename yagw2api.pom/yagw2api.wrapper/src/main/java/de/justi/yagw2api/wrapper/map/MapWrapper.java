@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.google.common.base.Optional;
 
+import de.justi.yagw2api.common.event.HasChannel;
 import de.justi.yagw2api.wrapper.map.domain.Continent;
-import de.justi.yagwapi.common.event.HasChannel;
 
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

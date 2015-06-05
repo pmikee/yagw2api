@@ -25,9 +25,9 @@ import javax.annotation.Nullable;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.MoreObjects.ToStringHelper;
 
+import de.justi.yagw2api.common.tuple.UniformNumberTuple2;
 import de.justi.yagw2api.wrapper.map.domain.MapTile;
 import de.justi.yagw2api.wrapper.map.domain.MapTile.MapTileBuilder;
-import de.justi.yagwapi.common.tuple.UniformNumberTuple2;
 
 // EMBEDDED
 abstract class AbstractMapTileBuilder<B extends AbstractMapTileBuilder<B>> implements MapTileBuilder {

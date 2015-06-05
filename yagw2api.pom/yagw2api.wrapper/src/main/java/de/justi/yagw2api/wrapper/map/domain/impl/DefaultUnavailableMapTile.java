@@ -34,9 +34,9 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.MoreObjects.ToStringHelper;
 
+import de.justi.yagw2api.common.io.Files;
+import de.justi.yagw2api.common.tuple.UniformNumberTuple2;
 import de.justi.yagw2api.wrapper.map.domain.MapTile;
-import de.justi.yagwapi.common.io.Files;
-import de.justi.yagwapi.common.tuple.UniformNumberTuple2;
 
 class DefaultUnavailableMapTile implements MapTile {
 

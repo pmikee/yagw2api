@@ -26,7 +26,7 @@ import java.util.Set;
 import com.google.common.base.Optional;
 
 import de.justi.yagw2api.arenanet.dto.wvw.WVWMapDTO;
-import de.justi.yagwapi.common.event.HasChannel;
+import de.justi.yagw2api.common.event.HasChannel;
 
 public interface WVWMap extends HasChannel {
 	static interface WVWMapBuilder {

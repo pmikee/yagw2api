@@ -10,11 +10,6 @@
 	<name>YAGW2API-Server</name>
 
 	<dependencies>
-		<!-- UTILS -->
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-		</dependency>
 
 		<!-- UTILS > SPRING -->
 		<dependency>

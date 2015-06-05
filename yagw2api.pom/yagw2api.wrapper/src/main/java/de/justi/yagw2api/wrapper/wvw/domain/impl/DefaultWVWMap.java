@@ -48,6 +48,8 @@ import com.google.common.eventbus.Subscribe;
 
 import de.justi.yagw2api.arenanet.dto.wvw.WVWMapDTO;
 import de.justi.yagw2api.arenanet.dto.wvw.WVWObjectiveDTO;
+import de.justi.yagw2api.common.event.AbstractHasChannel;
+import de.justi.yagw2api.common.event.HasChannel;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
 import de.justi.yagw2api.wrapper.world.domain.World;
 import de.justi.yagw2api.wrapper.wvw.domain.HasWVWLocation;
@@ -60,8 +62,6 @@ import de.justi.yagw2api.wrapper.wvw.domain.WVWObjective;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWScores;
 import de.justi.yagw2api.wrapper.wvw.event.WVWMapScoresChangedEvent;
 import de.justi.yagw2api.wrapper.wvw.event.WVWObjectiveEvent;
-import de.justi.yagwapi.common.event.AbstractHasChannel;
-import de.justi.yagwapi.common.event.HasChannel;
 
 final class DefaultWVWMap extends AbstractHasChannel implements WVWMap {
 

@@ -28,8 +28,8 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.MoreObjects;
 import com.google.common.eventbus.EventBus;
 
+import de.justi.yagw2api.common.event.AbstractHasChannel;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWScores;
-import de.justi.yagwapi.common.event.AbstractHasChannel;
 
 abstract class AbstractWVWScores extends AbstractHasChannel implements WVWScores {
 

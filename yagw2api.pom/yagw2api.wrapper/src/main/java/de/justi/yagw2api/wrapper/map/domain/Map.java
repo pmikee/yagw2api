@@ -22,7 +22,7 @@ package de.justi.yagw2api.wrapper.map.domain;
 
 import javax.annotation.Nullable;
 
-import de.justi.yagwapi.common.tuple.UniformNumberTuple4;
+import de.justi.yagw2api.common.tuple.UniformNumberTuple4;
 
 public interface Map {
 

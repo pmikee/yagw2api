@@ -32,8 +32,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 
-import de.justi.yagwapi.common.tuple.Tuples;
-import de.justi.yagwapi.common.tuple.UniformNumberTuple4;
+import de.justi.yagw2api.common.tuple.Tuples;
+import de.justi.yagw2api.common.tuple.UniformNumberTuple4;
 
 final class DefaultMapsMapDTO implements MapsMapDTO {
 	@SerializedName("map_name")

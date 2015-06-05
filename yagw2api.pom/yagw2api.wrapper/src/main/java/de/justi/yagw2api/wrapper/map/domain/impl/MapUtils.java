@@ -23,9 +23,9 @@ package de.justi.yagw2api.wrapper.map.domain.impl;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static de.justi.yagw2api.wrapper.map.domain.impl.MapConstants.TILE_SIZE;
-import de.justi.yagwapi.common.tuple.Tuples;
-import de.justi.yagwapi.common.tuple.UniformNumberTuple2;
-import de.justi.yagwapi.common.tuple.UniformNumberTuple4;
+import de.justi.yagw2api.common.tuple.Tuples;
+import de.justi.yagw2api.common.tuple.UniformNumberTuple2;
+import de.justi.yagw2api.common.tuple.UniformNumberTuple4;
 
 final class MapUtils {
 	// CONSTS

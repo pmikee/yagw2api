@@ -21,10 +21,10 @@ package de.justi.yagw2api.wrapper.wvw.event.impl;
  */
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
+import de.justi.yagw2api.common.event.AbstractEvent;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWMap;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWObjective;
 import de.justi.yagw2api.wrapper.wvw.event.WVWObjectiveEvent;
-import de.justi.yagwapi.common.event.AbstractEvent;
 
 abstract class AbstractWVWObjectiveEvent extends AbstractEvent implements WVWObjectiveEvent {
 	private final WVWObjective source;

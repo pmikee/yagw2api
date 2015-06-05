@@ -22,22 +22,27 @@ package yagw2api.server;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import de.justi.yagw2api.common.json.TupleTypeAdapter;
+import de.justi.yagw2api.common.tuple.Tuple;
 
 @SpringBootApplication
 public class ServerMain {
 
 	@Bean
 	public Gson gson() {
-		return new GsonBuilder().setPrettyPrinting().create();
+		return new GsonBuilder().registerTypeHierarchyAdapter(Tuple.class, new TupleTypeAdapter()).setPrettyPrinting().create();
 	}
 
 	// STATICS
 	public static final void main(final String[] args) {
-		SpringApplication.run(ServerMain.class);
+		@SuppressWarnings("unused")
+		final ConfigurableApplicationContext ctx = SpringApplication.run(ServerMain.class);
 	}
 
 }

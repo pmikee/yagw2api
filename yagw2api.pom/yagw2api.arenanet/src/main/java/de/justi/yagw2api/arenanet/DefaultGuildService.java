@@ -62,7 +62,7 @@ import com.sun.jersey.api.client.WebResource;
 
 import de.justi.yagw2api.arenanet.dto.guild.GuildDTOFactory;
 import de.justi.yagw2api.arenanet.dto.guild.GuildDetailsDTO;
-import de.justi.yagwapi.common.rest.RetryClientFilter;
+import de.justi.yagw2api.common.rest.RetryClientFilter;
 
 final class DefaultGuildService implements GuildService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultGuildService.class);

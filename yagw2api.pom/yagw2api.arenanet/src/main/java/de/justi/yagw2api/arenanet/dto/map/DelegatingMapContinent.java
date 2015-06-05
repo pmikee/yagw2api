@@ -27,7 +27,7 @@ import java.util.Set;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.MoreObjects.ToStringHelper;
 
-import de.justi.yagwapi.common.tuple.UniformNumberTuple2;
+import de.justi.yagw2api.common.tuple.UniformNumberTuple2;
 
 class DelegatingMapContinent implements MapContinentDTO {
 	// FIELDS

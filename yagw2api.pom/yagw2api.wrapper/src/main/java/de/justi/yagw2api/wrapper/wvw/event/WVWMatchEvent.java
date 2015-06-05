@@ -20,8 +20,8 @@ package de.justi.yagw2api.wrapper.wvw.event;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
+import de.justi.yagw2api.common.event.Event;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWMatch;
-import de.justi.yagwapi.common.event.Event;
 
 public interface WVWMatchEvent extends Event {
 	WVWMatch getMatch();

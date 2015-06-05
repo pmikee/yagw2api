@@ -29,8 +29,8 @@ import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
 
 import de.justi.yagw2api.arenanet.dto.map.MapDTO;
-import de.justi.yagwapi.common.tuple.UniformNumberTuple2;
-import de.justi.yagwapi.common.tuple.UniformNumberTuple4;
+import de.justi.yagw2api.common.tuple.UniformNumberTuple2;
+import de.justi.yagw2api.common.tuple.UniformNumberTuple4;
 
 public interface ContinentFloor {
 

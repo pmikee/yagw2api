@@ -20,8 +20,8 @@ package de.justi.yagw2api.wrapper.map.event;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
+import de.justi.yagw2api.common.event.Event;
 import de.justi.yagw2api.wrapper.map.domain.MapTile;
-import de.justi.yagwapi.common.event.Event;
 
 public interface MapTileEvent extends Event {
 

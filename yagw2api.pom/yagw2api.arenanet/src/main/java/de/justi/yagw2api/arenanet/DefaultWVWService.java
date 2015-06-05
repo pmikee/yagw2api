@@ -55,7 +55,7 @@ import de.justi.yagw2api.arenanet.dto.wvw.WVWMatchDTO;
 import de.justi.yagw2api.arenanet.dto.wvw.WVWMatchDetailsDTO;
 import de.justi.yagw2api.arenanet.dto.wvw.WVWMatchesDTO;
 import de.justi.yagw2api.arenanet.dto.wvw.WVWObjectiveNameDTO;
-import de.justi.yagwapi.common.rest.RetryClientFilter;
+import de.justi.yagw2api.common.rest.RetryClientFilter;
 
 final class DefaultWVWService implements WVWService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultWVWService.class);

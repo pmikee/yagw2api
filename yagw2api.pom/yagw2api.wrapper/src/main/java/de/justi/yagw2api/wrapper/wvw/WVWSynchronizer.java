@@ -42,13 +42,13 @@ import com.sun.jersey.client.impl.CopyOnWriteHashMap;
 import de.justi.yagw2api.arenanet.WVWService;
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
 import de.justi.yagw2api.arenanet.dto.wvw.WVWMatchesDTO;
+import de.justi.yagw2api.common.event.Event;
+import de.justi.yagw2api.common.event.HasChannel;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
 import de.justi.yagw2api.wrapper.guild.GuildWrapper;
 import de.justi.yagw2api.wrapper.world.domain.World;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWMatch;
 import de.justi.yagw2api.wrapper.wvw.event.WVWInitializedMatchEvent;
-import de.justi.yagwapi.common.event.Event;
-import de.justi.yagwapi.common.event.HasChannel;
 
 final class WVWSynchronizer extends AbstractScheduledService implements HasChannel {
 	// CONSTS

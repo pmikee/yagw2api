@@ -64,7 +64,7 @@ import com.google.common.math.DoubleMath;
 import com.google.common.util.concurrent.AbstractScheduledService;
 import com.google.common.util.concurrent.Service;
 
-import de.justi.yagwapi.common.io.Files;
+import de.justi.yagw2api.common.io.Files;
 
 @SuppressWarnings("restriction")
 public final class TTSUtils {

@@ -27,8 +27,8 @@ import java.util.regex.Pattern;
 import com.google.common.base.Optional;
 
 import de.justi.yagw2api.arenanet.dto.wvw.WVWMatchDTO;
+import de.justi.yagw2api.common.event.HasChannel;
 import de.justi.yagw2api.wrapper.world.domain.World;
-import de.justi.yagwapi.common.event.HasChannel;
 
 public interface WVWMatch extends HasChannel {
 	interface WVWMatchBuilder {

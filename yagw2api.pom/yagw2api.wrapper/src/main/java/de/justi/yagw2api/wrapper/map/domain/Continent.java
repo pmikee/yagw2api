@@ -7,7 +7,7 @@ import javax.annotation.Nullable;
 
 import com.google.common.base.Optional;
 
-import de.justi.yagwapi.common.tuple.UniformNumberTuple2;
+import de.justi.yagw2api.common.tuple.UniformNumberTuple2;
 
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

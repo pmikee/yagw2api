@@ -42,6 +42,7 @@ import com.google.inject.Inject;
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
 import de.justi.yagw2api.arenanet.dto.guild.GuildDetailsDTO;
 import de.justi.yagw2api.arenanet.dto.wvw.WVWObjectiveDTO;
+import de.justi.yagw2api.common.event.AbstractHasChannel;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
 import de.justi.yagw2api.wrapper.guild.GuildWrapper;
 import de.justi.yagw2api.wrapper.guild.domain.Guild;
@@ -55,7 +56,6 @@ import de.justi.yagw2api.wrapper.wvw.event.WVWEventFactory;
 import de.justi.yagw2api.wrapper.wvw.event.WVWObjectiveCaptureEvent;
 import de.justi.yagw2api.wrapper.wvw.event.WVWObjectiveClaimedEvent;
 import de.justi.yagw2api.wrapper.wvw.event.WVWObjectiveUnclaimedEvent;
-import de.justi.yagwapi.common.event.AbstractHasChannel;
 
 final class DefaultWVWObjective extends AbstractHasChannel implements WVWObjective {
 	// CONSTS

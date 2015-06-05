@@ -24,8 +24,8 @@ import java.util.Map;
 
 import com.google.common.base.Optional;
 
-import de.justi.yagwapi.common.tuple.UniformNumberTuple2;
-import de.justi.yagwapi.common.tuple.UniformNumberTuple4;
+import de.justi.yagw2api.common.tuple.UniformNumberTuple2;
+import de.justi.yagw2api.common.tuple.UniformNumberTuple4;
 
 public interface MapFloorDTO {
 	UniformNumberTuple2<Integer> getTextureDimension();

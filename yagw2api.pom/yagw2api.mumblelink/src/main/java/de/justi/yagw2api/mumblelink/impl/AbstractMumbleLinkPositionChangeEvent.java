@@ -27,9 +27,9 @@ import javax.annotation.Nullable;
 import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Optional;
 
+import de.justi.yagw2api.common.event.AbstractEvent;
 import de.justi.yagw2api.mumblelink.IMumbleLinkPosition;
 import de.justi.yagw2api.mumblelink.IMumbleLinkPositionChangeEvent;
-import de.justi.yagwapi.common.event.AbstractEvent;
 
 abstract class AbstractMumbleLinkPositionChangeEvent extends AbstractEvent implements IMumbleLinkPositionChangeEvent {
 

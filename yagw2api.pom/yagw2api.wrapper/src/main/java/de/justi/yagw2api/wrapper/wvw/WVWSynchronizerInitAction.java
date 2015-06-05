@@ -37,13 +37,13 @@ import com.google.common.eventbus.EventBus;
 
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
 import de.justi.yagw2api.arenanet.dto.wvw.WVWMatchDTO;
+import de.justi.yagw2api.common.event.HasChannel;
 import de.justi.yagw2api.wrapper.AbstractSynchronizerAction;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
 import de.justi.yagw2api.wrapper.world.domain.World;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWDomainFactory;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWMatch;
 import de.justi.yagw2api.wrapper.wvw.event.WVWEventFactory;
-import de.justi.yagwapi.common.event.HasChannel;
 
 final class WVWSynchronizerInitAction extends AbstractSynchronizerAction<WVWMatchDTO, WVWSynchronizerInitAction> implements HasChannel {
 	private static final Logger LOGGER = LoggerFactory.getLogger(WVWSynchronizerInitAction.class);

@@ -47,16 +47,16 @@ import de.justi.yagw2api.arenanet.MapFloorService;
 import de.justi.yagw2api.arenanet.MapService;
 import de.justi.yagw2api.arenanet.dto.map.MapDTO;
 import de.justi.yagw2api.arenanet.dto.map.MapFloorDTO;
+import de.justi.yagw2api.common.tuple.NumberTuple4;
+import de.justi.yagw2api.common.tuple.Tuples;
+import de.justi.yagw2api.common.tuple.UniformNumberTuple2;
+import de.justi.yagw2api.common.tuple.UniformNumberTuple3;
+import de.justi.yagw2api.common.tuple.UniformNumberTuple4;
 import de.justi.yagw2api.wrapper.map.domain.ContinentFloor;
 import de.justi.yagw2api.wrapper.map.domain.Map;
 import de.justi.yagw2api.wrapper.map.domain.MapDomainFactory;
 import de.justi.yagw2api.wrapper.map.domain.MapTile;
 import de.justi.yagw2api.wrapper.map.domain.NoSuchMapTileException;
-import de.justi.yagwapi.common.tuple.NumberTuple4;
-import de.justi.yagwapi.common.tuple.Tuples;
-import de.justi.yagwapi.common.tuple.UniformNumberTuple2;
-import de.justi.yagwapi.common.tuple.UniformNumberTuple3;
-import de.justi.yagwapi.common.tuple.UniformNumberTuple4;
 
 final class DefaultContinentFloor implements ContinentFloor {
 	// CONSTS

@@ -55,6 +55,7 @@ import de.justi.yagw2api.arenanet.MapTileService;
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
 import de.justi.yagw2api.arenanet.dto.map.MapContinentWithIdDTO;
 import de.justi.yagw2api.arenanet.dto.map.MapsDTO;
+import de.justi.yagw2api.common.tuple.Tuples;
 import de.justi.yagw2api.wrapper.map.DefaultMapWrapper;
 import de.justi.yagw2api.wrapper.map.MapWrapper;
 import de.justi.yagw2api.wrapper.map.domain.Continent;
@@ -62,7 +63,6 @@ import de.justi.yagw2api.wrapper.map.domain.MapDomainFactory;
 import de.justi.yagw2api.wrapper.map.domain.impl.DefaultMapDomainFactory;
 import de.justi.yagw2api.wrapper.map.event.MapEventFactory;
 import de.justi.yagw2api.wrapper.map.event.impl.DefaultMapEventFactory;
-import de.justi.yagwapi.common.tuple.Tuples;
 
 public class MapCucumberStepDefinitions implements En {
 

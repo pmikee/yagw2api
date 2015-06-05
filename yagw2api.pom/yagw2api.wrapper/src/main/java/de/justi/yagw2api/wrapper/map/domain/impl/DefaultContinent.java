@@ -50,11 +50,11 @@ import de.justi.yagw2api.arenanet.MapFloorService;
 import de.justi.yagw2api.arenanet.MapService;
 import de.justi.yagw2api.arenanet.dto.map.MapDTO;
 import de.justi.yagw2api.arenanet.dto.map.MapFloorDTO;
+import de.justi.yagw2api.common.tuple.UniformNumberTuple2;
 import de.justi.yagw2api.wrapper.map.domain.Continent;
 import de.justi.yagw2api.wrapper.map.domain.ContinentFloor;
 import de.justi.yagw2api.wrapper.map.domain.Map;
 import de.justi.yagw2api.wrapper.map.domain.MapDomainFactory;
-import de.justi.yagwapi.common.tuple.UniformNumberTuple2;
 
 final class DefaultContinent implements Continent {
 

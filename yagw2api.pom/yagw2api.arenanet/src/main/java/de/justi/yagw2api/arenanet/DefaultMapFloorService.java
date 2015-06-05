@@ -44,9 +44,9 @@ import com.sun.jersey.api.client.WebResource;
 
 import de.justi.yagw2api.arenanet.dto.map.MapDTOFactory;
 import de.justi.yagw2api.arenanet.dto.map.MapFloorDTO;
-import de.justi.yagwapi.common.rest.RetryClientFilter;
-import de.justi.yagwapi.common.tuple.Tuple3;
-import de.justi.yagwapi.common.tuple.Tuples;
+import de.justi.yagw2api.common.rest.RetryClientFilter;
+import de.justi.yagw2api.common.tuple.Tuple3;
+import de.justi.yagw2api.common.tuple.Tuples;
 
 final class DefaultMapFloorService implements MapFloorService {
 	// CONSTS

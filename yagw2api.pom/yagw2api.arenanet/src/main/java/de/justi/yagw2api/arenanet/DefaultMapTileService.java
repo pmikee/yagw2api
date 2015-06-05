@@ -49,8 +49,8 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
-import de.justi.yagwapi.common.tuple.Tuple5;
-import de.justi.yagwapi.common.tuple.Tuples;
+import de.justi.yagw2api.common.tuple.Tuple5;
+import de.justi.yagw2api.common.tuple.Tuples;
 
 final class DefaultMapTileService implements MapTileService {
 	// CONSTS
@@ -148,7 +148,7 @@ final class DefaultMapTileService implements MapTileService {
 			checkNotNull(key, "missing key");
 			final URL url = key.toURL();
 			try {
-				final Path dir = de.justi.yagwapi.common.io.Files.getTempDir().resolve(RELATIVE_TEMP_DIR_PATH);
+				final Path dir = de.justi.yagw2api.common.io.Files.getTempDir().resolve(RELATIVE_TEMP_DIR_PATH);
 				final Path file = dir.resolve(key.getContinentId() + "." + key.getFloor() + "." + key.getZoom() + "." + key.getX() + "." + key.getY() + ".jpg");
 				if (!Files.exists(file)) {
 					try (final InputStream in = url.openStream()) {

@@ -30,8 +30,8 @@ import javax.annotation.Nullable;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 
+import de.justi.yagw2api.common.tuple.UniformNumberTuple4;
 import de.justi.yagw2api.wrapper.map.domain.Map;
-import de.justi.yagwapi.common.tuple.UniformNumberTuple4;
 
 final class MostSignificantMapsIterator implements Iterator<Map> {
 	// FIELDS
