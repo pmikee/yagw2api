@@ -25,6 +25,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import javax.annotation.Nullable;
 
+import de.justi.yagw2api.common.math.Math;
+
 public final class Tuples {
 	// STATIC METHODS
 
@@ -179,6 +181,21 @@ public final class Tuples {
 		checkArgument(width >= 0, "invalid width: %s", width);
 		checkArgument(width >= 0, "invalid height: %s", height);
 		return Tuples.uniformOf(x1, y1, x1 + width, y1 + height);
+	}
+
+	// > UTILITIES > CLAMP
+
+	public static <V extends Number> UniformNumberTuple2<V> clamp(final NumberTuple2<V, V> toClamp, final V min, final V max){
+		return Tuples.uniformOf(Math.clamp(toClamp.v1(), min, max),Math.clamp(toClamp.v2(), min, max));
+	}
+	public static <V extends Number> UniformNumberTuple3<V> clamp(final NumberTuple3<V, V,V> toClamp, final V min, final V max){
+		return Tuples.uniformOf(Math.clamp(toClamp.v1(), min, max),Math.clamp(toClamp.v2(), min, max),Math.clamp(toClamp.v3(), min, max));
+	}
+	public static <V extends Number> UniformNumberTuple4<V> clamp(final NumberTuple4<V, V,V,V> toClamp, final V min, final V max){
+		return Tuples.uniformOf(Math.clamp(toClamp.v1(), min, max),Math.clamp(toClamp.v2(), min, max),Math.clamp(toClamp.v3(), min, max),Math.clamp(toClamp.v4(), min, max));
+	}
+	public static <V extends Number> UniformNumberTuple5<V> clamp(final NumberTuple5<V, V,V,V,V> toClamp, final V min, final V max){
+		return Tuples.uniformOf(Math.clamp(toClamp.v1(), min, max),Math.clamp(toClamp.v2(), min, max),Math.clamp(toClamp.v3(), min, max),Math.clamp(toClamp.v4(), min, max),Math.clamp(toClamp.v5(), min, max));
 	}
 
 	// CONSTRUCTORS
