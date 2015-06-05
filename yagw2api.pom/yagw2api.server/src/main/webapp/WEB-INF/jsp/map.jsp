@@ -8,6 +8,7 @@
 </head>
 <body>
 	<div id="map-canvas"></div>
+	<script type="text/javascript" src="../js/utils.js"></script>	
 	<script type="text/javascript" src="../js/mainJS.js"></script>
 </body>
 </html>
