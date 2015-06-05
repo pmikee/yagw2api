@@ -13,8 +13,11 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.google.common.collect.ImmutableList;
 
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
 import de.justi.yagw2api.wrapper.map.domain.Continent;
@@ -57,8 +60,8 @@ public class MapController {
 	}
 
 	@RequestMapping(value = "/tile/{continentId}/{floorId}/{zoom}/{x}/{y}", method = { RequestMethod.GET })
-	public void getTile(final HttpServletResponse response, @PathVariable("continentId") final String continentId, @PathVariable("floorId") final int floorId,
-			@PathVariable("zoom") final int zoom, @PathVariable("x") final int x, @PathVariable("y") final int y) throws IOException, URISyntaxException, NoSuchMapTileException {
+	public void getTile(final HttpServletResponse response, @PathVariable("continentId") final String continentId, @PathVariable("floorId") final int floorId, @PathVariable("zoom") final int zoom,
+			@PathVariable("x") final int x, @PathVariable("y") final int y) throws IOException, URISyntaxException, NoSuchMapTileException {
 
 		final Continent continent = YAGW2APIWrapper.INSTANCE.getMapWrapper().findContinentById(continentId).get();
 		final ContinentFloor floor = continent.getFloor(floorId).get();
@@ -67,5 +70,16 @@ public class MapController {
 		final Path path = floor.getTile(x, y, zoom).getImagePath(true);
 		response.setContentType(MediaType.IMAGE_JPEG_VALUE);
 		Files.copy(path, response.getOutputStream());
+	}
+
+	@RequestMapping(value = "/{continentId}/maps", method = { RequestMethod.GET }, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@ResponseBody
+	public ImmutableList<?> getMaps(@PathVariable("continentId") final String continentId) {
+		LOGGER.info("Enter method getMaps");
+		final Continent continent = YAGW2APIWrapper.INSTANCE.getMapWrapper().findContinentById(continentId).get();
+		final ContinentFloor floor = continent.getFloor(1).get();
+
+		return ImmutableList.copyOf(floor.getMostSignificantMaps());
+
 	}
 }
