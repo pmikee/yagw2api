@@ -22,12 +22,7 @@ package de.justi.yagw2api.common.tuple;
 
 import javax.annotation.Nullable;
 
-public interface Tuple3<V1, V2, V3> extends Tuple {
-	@Nullable
-	V1 v1();
-
-	@Nullable
-	V2 v2();
+public interface Tuple3<V1, V2, V3> extends Tuple2<V1, V2> {
 
 	@Nullable
 	V3 v3();

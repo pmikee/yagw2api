@@ -60,7 +60,7 @@ final class DefaultMapFloorDTO implements MapFloorDTO {
 		public UniformNumberTuple2<Integer> get() {
 			checkNotNull(DefaultMapFloorDTO.this.textureDimension, "missing textureDimension in %s", DefaultMapFloorDTO.this);
 			checkState(DefaultMapFloorDTO.this.textureDimension.length == 2, "invalid texture dimension length: %s", DefaultMapFloorDTO.this.textureDimension.length);
-			return Tuples.uniformOf(DefaultMapFloorDTO.this.textureDimension[0], DefaultMapFloorDTO.this.textureDimension[1]);
+			return Tuples.of(DefaultMapFloorDTO.this.textureDimension[0], DefaultMapFloorDTO.this.textureDimension[1]);
 		}
 	});
 
@@ -74,7 +74,7 @@ final class DefaultMapFloorDTO implements MapFloorDTO {
 				checkState(DefaultMapFloorDTO.this.clampedView.length == 2, "invalid clamped view length: %s", DefaultMapFloorDTO.this.clampedView.length);
 				checkState(DefaultMapFloorDTO.this.clampedView[0].length == 2, "invalid clamped view length: %s", DefaultMapFloorDTO.this.clampedView[0].length);
 				checkState(DefaultMapFloorDTO.this.clampedView[1].length == 2, "invalid clamped view length: %s", DefaultMapFloorDTO.this.clampedView[1].length);
-				return Optional.of(Tuples.uniformOf(DefaultMapFloorDTO.this.clampedView[0][0], DefaultMapFloorDTO.this.clampedView[0][1],
+				return Optional.of(Tuples.of(DefaultMapFloorDTO.this.clampedView[0][0], DefaultMapFloorDTO.this.clampedView[0][1],
 						DefaultMapFloorDTO.this.clampedView[1][0], DefaultMapFloorDTO.this.clampedView[1][1]));
 			}
 		}

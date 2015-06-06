@@ -62,6 +62,11 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.cache.RemovalNotification;
 import com.google.common.eventbus.Subscribe;
 
+import de.justi.yagw2api.common.tuple.IntTuple2;
+import de.justi.yagw2api.common.tuple.Tuple2;
+import de.justi.yagw2api.common.tuple.Tuple4;
+import de.justi.yagw2api.common.tuple.Tuples;
+import de.justi.yagw2api.common.tuple.UniformNumberTuple4;
 import de.justi.yagw2api.wrapper.map.MapWrapper;
 import de.justi.yagw2api.wrapper.map.domain.Continent;
 import de.justi.yagw2api.wrapper.map.domain.ContinentFloor;
@@ -69,11 +74,6 @@ import de.justi.yagw2api.wrapper.map.domain.Map;
 import de.justi.yagw2api.wrapper.map.domain.MapTile;
 import de.justi.yagw2api.wrapper.map.domain.NoSuchMapTileException;
 import de.justi.yagw2api.wrapper.map.event.MapTileEvent;
-import de.justi.yagwapi.common.tuple.Tuple2;
-import de.justi.yagwapi.common.tuple.Tuple4;
-import de.justi.yagwapi.common.tuple.Tuples;
-import de.justi.yagwapi.common.tuple.UniformNumberTuple2;
-import de.justi.yagwapi.common.tuple.UniformNumberTuple4;
 
 public final class MapWidget extends Composite implements PaintListener {
 	// CONSTS
@@ -90,7 +90,7 @@ public final class MapWidget extends Composite implements PaintListener {
 
 	private int tileSize = DEFAULT_TARGET_TILE_SIZE;
 
-	private UniformNumberTuple2<Integer> scrollableAreaSize = Tuples.uniformOf(0, 0);
+	private IntTuple2 scrollableAreaSize = Tuples.of(0, 0);
 	private int lastNotifiedScrolledX = 0;
 	private int lastNotifiedScrolledY = 0;
 
@@ -172,7 +172,7 @@ public final class MapWidget extends Composite implements PaintListener {
 			@Override
 			public void controlResized(final ControlEvent e) {
 				final Control control = (Control) e.getSource();
-				MapWidget.this.scrollableAreaSize = Tuples.uniformOf(control.getSize().x, control.getSize().y);
+				MapWidget.this.scrollableAreaSize = Tuples.of(control.getSize().x, control.getSize().y);
 				LOGGER.trace("Resized {} to {}", control, MapWidget.this.scrollableAreaSize);
 			}
 		});

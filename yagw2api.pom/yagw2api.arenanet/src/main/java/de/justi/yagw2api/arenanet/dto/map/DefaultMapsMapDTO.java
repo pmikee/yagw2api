@@ -74,13 +74,13 @@ final class DefaultMapsMapDTO implements MapsMapDTO {
 		checkState(this.bounds.length == 2, "invalid bounds length: %s", this.bounds.length);
 		checkState(this.bounds[0].length == 2, "invalid bounds length: %s", this.bounds[0].length);
 		checkState(this.bounds[1].length == 2, "invalid bounds length: %s", this.bounds[1].length);
-		return Tuples.uniformOf(this.bounds[0][0], this.bounds[0][1], this.bounds[1][0], this.bounds[1][1]);
+		return Tuples.of(this.bounds[0][0], this.bounds[0][1], this.bounds[1][0], this.bounds[1][1]);
 	});
 	private final transient Supplier<UniformNumberTuple4<Integer>> boundsOnContinentTupleSupplier = Suppliers.memoize(() -> {
 		checkState(this.boundsOnContinent.length == 2, "invalid boundsOnContinent length: %s", this.boundsOnContinent.length);
 		checkState(this.boundsOnContinent[0].length == 2, "invalid boundsOnContinent length: %s", this.boundsOnContinent[0].length);
 		checkState(this.boundsOnContinent[1].length == 2, "invalid boundsOnContinent length: %s", this.boundsOnContinent[1].length);
-		return Tuples.uniformOf(this.boundsOnContinent[0][0], this.boundsOnContinent[0][1], this.boundsOnContinent[1][0], this.boundsOnContinent[1][1]);
+		return Tuples.of(this.boundsOnContinent[0][0], this.boundsOnContinent[0][1], this.boundsOnContinent[1][0], this.boundsOnContinent[1][1]);
 	});
 
 	@Override

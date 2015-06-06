@@ -22,18 +22,7 @@ package de.justi.yagw2api.common.tuple;
 
 import javax.annotation.Nullable;
 
-public interface Tuple5<V1, V2, V3, V4, V5> extends Tuple {
-	@Nullable
-	V1 v1();
-
-	@Nullable
-	V2 v2();
-
-	@Nullable
-	V3 v3();
-
-	@Nullable
-	V4 v4();
+public interface Tuple5<V1, V2, V3, V4, V5> extends Tuple4<V1, V2, V3, V4> {
 
 	@Nullable
 	V5 v5();

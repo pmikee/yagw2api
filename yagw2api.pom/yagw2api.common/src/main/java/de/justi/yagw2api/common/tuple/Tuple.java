@@ -30,25 +30,4 @@ public interface Tuple {
 
 	int dimension();
 
-
-	public default String toJSONString() {
-		final StringBuilder builder = new StringBuilder();
-		builder.append("[");
-		final java.util.Iterator<?> elementIterator = this.asList().iterator();
-		while (elementIterator.hasNext()) {
-			final Object element = elementIterator.next();
-			if (element != null) {
-				if (element instanceof Tuple) {
-					builder.append(((Tuple) element).toJSONString());
-				} else {
-					builder.append(element.toString());
-				}
-				if (elementIterator.hasNext()) {
-					builder.append(",");
-				}
-			}
-		}
-		builder.append("]");
-		return builder.toString();
-	}
 }

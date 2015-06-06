@@ -20,54 +20,25 @@ package de.justi.yagw2api.common.tuple;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-
 import javax.annotation.Nullable;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.MoreObjects.ToStringHelper;
-import com.google.common.base.Supplier;
-import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableList;
 
-abstract class AbstractTuple2<V1, V2> implements Tuple2<V1, V2>{
+abstract class AbstractTuple2<V1, V2> extends AbstractTuple implements Tuple2<V1, V2> {
 	// FIELDS
 	@Nullable
-	private final V1 value1;
+	private final V1 v1;
 	@Nullable
-	private final V2 value2;
-
-	private final transient Supplier<List<Object>> valueListSupplier = Suppliers.memoize(new Supplier<List<Object>>() {
-		@Override
-		public List<Object> get() {
-			return AbstractTuple2.this.listBuilder().build();
-		}
-	});
-	private final transient Supplier<Object[]> valueArraySupplier = Suppliers.memoize(new Supplier<Object[]>() {
-		@Override
-		public Object[] get() {
-			return AbstractTuple2.this.asList().toArray(new Object[AbstractTuple2.this.dimension()]);
-		}
-	});
+	private final V2 v2;
 
 	// CONSTRUCTOR
-	protected AbstractTuple2(@Nullable final V1 value1, @Nullable final V2 value2) {
-		this.value1 = value1;
-		this.value2 = value2;
+	protected AbstractTuple2(@Nullable final V1 v1, @Nullable final V2 v2) {
+		this.v1 = v1;
+		this.v2 = v2;
 	}
 
 	// METHODS
-	@Override
-	public final List<Object> asList() {
-		return this.valueListSupplier.get();
-	}
-
-	@Override
-	public final Object[] asArray() {
-		return this.valueArraySupplier.get();
-	}
 
 	@Override
 	public final int dimension() {
@@ -77,43 +48,22 @@ abstract class AbstractTuple2<V1, V2> implements Tuple2<V1, V2>{
 	@Override
 	@Nullable
 	public final V1 v1() {
-		return this.value1;
+		return this.v1;
 	}
 
 	@Override
 	@Nullable
 	public final V2 v2() {
-		return this.value2;
+		return this.v2;
 	}
 
 	@Override
-	public final String toString() {
-		return this.toStringHelper().toString();
-	}
-
-	@Override
-	public final int hashCode() {
-		return Objects.hash(this.asArray());
-	}
-
-	@Override
-	public final boolean equals(final Object obj) {
-		if (obj instanceof Tuple) {
-			final Tuple other = (Tuple) obj;
-			return Arrays.equals(this.asArray(), other.asArray());
-		} else {
-			return false;
-		}
-	}
-
 	protected ImmutableList.Builder<Object> listBuilder() {
-		final ImmutableList.Builder<Object> builder = ImmutableList.builder();
-		builder.add(this.value1);
-		builder.add(this.value2);
-		return builder;
+		return super.listBuilder().add(this.v1).add(this.v2);
 	}
 
+	@Override
 	protected ToStringHelper toStringHelper() {
-		return MoreObjects.toStringHelper("").addValue(this.value1).addValue(this.value2);
+		return super.toStringHelper().addValue(this.v1).addValue(this.v2);
 	}
 }

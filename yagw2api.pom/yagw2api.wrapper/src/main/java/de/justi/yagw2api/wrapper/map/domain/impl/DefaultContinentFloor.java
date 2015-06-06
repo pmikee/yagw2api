@@ -182,7 +182,7 @@ final class DefaultContinentFloor implements ContinentFloor {
 			if (optionalFloorDTO.isPresent()) {
 				return optionalFloorDTO.get().getTextureDimension();
 			} else {
-				return Tuples.uniformOf(0, 0);
+				return Tuples.of(0, 0);
 			}
 		}
 	});
@@ -198,12 +198,12 @@ final class DefaultContinentFloor implements ContinentFloor {
 					final int y1 = clamped.v2() / TILE_SIZE;
 					final int x2 = (clamped.v3() / TILE_SIZE) + ((clamped.v3() % TILE_SIZE == 0) ? 0 : 1);
 					final int y2 = (clamped.v4() / TILE_SIZE) + ((clamped.v4() % TILE_SIZE == 0) ? 0 : 1);
-					return Tuples.uniformOf(x1 * TILE_SIZE, y1 * TILE_SIZE, x2 * TILE_SIZE, y2 * TILE_SIZE);
+					return Tuples.of(x1 * TILE_SIZE, y1 * TILE_SIZE, x2 * TILE_SIZE, y2 * TILE_SIZE);
 				} else {
-					return Tuples.uniformOf(0, 0, optionalFloorDTO.get().getTextureDimension().v1(), optionalFloorDTO.get().getTextureDimension().v2());
+					return Tuples.of(0, 0, optionalFloorDTO.get().getTextureDimension().v1().intValue(), optionalFloorDTO.get().getTextureDimension().v2().intValue());
 				}
 			} else {
-				return Tuples.uniformOf(0, 0, 0, 0);
+				return Tuples.of(0, 0, 0, 0);
 			}
 		}
 	});
@@ -259,8 +259,8 @@ final class DefaultContinentFloor implements ContinentFloor {
 
 	private UniformNumberTuple4<Integer> texture2Tile(final UniformNumberTuple4<Integer> texture, final int zoom) {
 		checkNotNull(texture, "missing texture");
-		return Tuples.uniformOf(this.texture2Tile(texture.v1(), zoom), this.texture2Tile(texture.v2(), zoom), this.texture2Tile(texture.v3(), zoom),
-				this.texture2Tile(texture.v4(), zoom));
+		return Tuples
+				.of(this.texture2Tile(texture.v1(), zoom), this.texture2Tile(texture.v2(), zoom), this.texture2Tile(texture.v3(), zoom), this.texture2Tile(texture.v4(), zoom));
 	}
 
 	private final boolean isTileAvailable(final int x, final int y, final int zoom) {
@@ -279,7 +279,7 @@ final class DefaultContinentFloor implements ContinentFloor {
 	@Override
 	public MapTile getTile(final int x, final int y, final int zoom) throws NoSuchMapTileException {
 		try {
-			return this.tileCache.get(Tuples.uniformOf(zoom, x, y));
+			return this.tileCache.get(Tuples.of(zoom, x, y));
 		} catch (ExecutionException e) {
 			throw new NoSuchMapTileException();
 		}

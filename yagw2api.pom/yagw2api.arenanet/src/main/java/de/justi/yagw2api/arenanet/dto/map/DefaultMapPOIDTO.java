@@ -50,7 +50,7 @@ final class DefaultMapPOIDTO implements MapPOIDTO {
 
 	private final transient Supplier<UniformNumberTuple2<Double>> coordinatesTupleSupplier = Suppliers.memoize(() -> {
 		checkState(this.coordinates.length == 2, "invalid coordinates length: %s", this.coordinates.length);
-		return Tuples.uniformOf(this.coordinates[0], this.coordinates[1]);
+		return Tuples.of(this.coordinates[0], this.coordinates[1]);
 	});
 
 	@Override
