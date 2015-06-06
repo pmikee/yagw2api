@@ -109,7 +109,9 @@ final class DefaultMapTile extends DefaultUnavailableMapTile implements MapTile,
 				} else {
 					loaded = tilePathFuture.get(0, TimeUnit.MILLISECONDS);
 				}
-				this.onSuccess(loaded);
+				if (!this.loaded.getAndSet(true)) {
+					this.path = loaded;
+				}
 			} catch (InterruptedException | ExecutionException | TimeoutException e) {
 				this.path = null;
 				Futures.addCallback(tilePathFuture, this);
