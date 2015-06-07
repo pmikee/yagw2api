@@ -51,7 +51,7 @@ abstract class AbstractTuple implements Tuple {
 	public final int hashCode() {
 		if (this.mayCacheHashCode()) {
 			if (this.hashcode == null) {
-				synchronized (this.hashcode) {
+				synchronized (this) {
 					if (this.hashcode == null) {
 						this.hashcode = Objects.hash(this.asArray());
 					}
