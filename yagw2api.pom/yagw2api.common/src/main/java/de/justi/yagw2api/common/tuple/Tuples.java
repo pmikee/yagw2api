@@ -308,49 +308,6 @@ public final class Tuples {
 
 	// > UTILITIES
 
-	/**
-	 * Two rectangles do not overlap if one of the following conditions is true:
-	 * <ol>
-	 * <li>One rectangle is above top edge of other rectangle.</li>
-	 * <li>One rectangle is on left side of left edge of other rectangle.</li>
-	 * </ol>
-	 *
-	 * @param left
-	 * @param right
-	 * @return
-	 */
-	public static boolean overlaps(final NumberTuple4<?, ?, ?, ?> left, final NumberTuple4<?, ?, ?, ?> right) {
-
-		// If one rectangle is on left side of other
-		if (left.v1().doubleValue() > right.v3().doubleValue() || right.v1().doubleValue() > left.v3().doubleValue()) {
-			return false;
-		}
-
-		// If one rectangle is above other
-		if (left.v2().doubleValue() > right.v4().doubleValue() || right.v2().doubleValue() > left.v4().doubleValue()) {
-			return false;
-		}
-
-		return true;
-	}
-
-	// > UNITILITIES > MATH > MULTIPLY
-	public static IntTuple4 multiply(final NumberTuple4<?, ?, ?, ?> left, final int right) {
-		return Tuples.of(left.v1().intValue() * right, left.v2().intValue() * right, left.v3().intValue() * right, left.v4().intValue() * right);
-	}
-
-	public static DoubleTuple4 multiply(final NumberTuple4<?, ?, ?, ?> left, final double right) {
-		return Tuples.of(left.v1().doubleValue() * right, left.v2().doubleValue() * right, left.v3().doubleValue() * right, left.v4().doubleValue() * right);
-	}
-
-	public static FloatTuple4 multiply(final NumberTuple4<?, ?, ?, ?> left, final float right) {
-		return Tuples.of(left.v1().floatValue() * right, left.v2().floatValue() * right, left.v3().floatValue() * right, left.v4().floatValue() * right);
-	}
-
-	public static LongTuple4 multiply(final NumberTuple4<?, ?, ?, ?> left, final long right) {
-		return Tuples.of(left.v1().longValue() * right, left.v2().longValue() * right, left.v3().longValue() * right, left.v4().longValue() * right);
-	}
-
 	// > UTILITIES > GEOMETRY
 
 	public static IntTuple4 rectangleFromTopLeftAndBottomRight(final UniformNumberTuple2<Integer> topLeft, final UniformNumberTuple2<Integer> bottomRight) {

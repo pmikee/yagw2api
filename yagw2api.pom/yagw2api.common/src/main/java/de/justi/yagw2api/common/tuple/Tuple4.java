@@ -23,6 +23,11 @@ package de.justi.yagw2api.common.tuple;
 import javax.annotation.Nullable;
 
 public interface Tuple4<V1, V2, V3, V4> extends Tuple3<V1, V2, V3> {
+
+	default Tuple3<V1, V2, V3> asTuple3() {
+		return this;
+	}
+
 	@Nullable
 	V4 v4();
 

@@ -9,9 +9,9 @@ package de.justi.yagw2api.common.tuple;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,6 +21,20 @@ package de.justi.yagw2api.common.tuple;
  */
 
 public interface DoubleTuple3 extends UniformNumberTuple3<Double>, DoubleTuple2 {
+	@Override
+	default DoubleTuple2 asTuple2() {
+		return this;
+	}
+
+	@Override
+	default DoubleTuple3 multiplyTuple3(final double factor) {
+		return Tuples.of(v1Double() * factor, v2Double() * factor, v3Double() * factor);
+	}
+
+	@Override
+	default DoubleTuple3 asDoubleTuple3() {
+		return this;
+	}
 
 	double v3Double();
 }

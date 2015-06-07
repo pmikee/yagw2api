@@ -22,7 +22,7 @@ package de.justi.yagw2api.common.tuple;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-final class DefaultNumberTuple5<V1 extends Number, V2 extends Number, V3 extends Number, V4 extends Number, V5 extends Number> extends AbstractTuple5<V1, V2, V3, V4, V5> implements
+class DefaultNumberTuple5<V1 extends Number, V2 extends Number, V3 extends Number, V4 extends Number, V5 extends Number> extends AbstractTuple5<V1, V2, V3, V4, V5> implements
 		NumberTuple5<V1, V2, V3, V4, V5> {
 
 	DefaultNumberTuple5(final V1 value1, final V2 value2, final V3 value3, final V4 value4, final V5 value5) {

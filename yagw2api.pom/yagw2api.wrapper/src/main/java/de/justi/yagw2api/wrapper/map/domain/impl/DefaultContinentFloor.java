@@ -269,8 +269,8 @@ final class DefaultContinentFloor implements ContinentFloor {
 		int x2Texture = this.tile2Texture(x + 1, zoom);
 		int y1Texture = this.tile2Texture(y, zoom);
 		int y2Texture = this.tile2Texture(y + 1, zoom);
-		final NumberTuple4<Integer, Integer, Integer, Integer> tileRegion = Tuples.of(x1Texture, y1Texture, x2Texture, y2Texture);
-		if (Tuples.overlaps(tileRegion, this.getClampedTextureDimension())) {
+		final IntTuple4 tileRegion = Tuples.of(x1Texture, y1Texture, x2Texture, y2Texture);
+		if (tileRegion.overlaps(this.getClampedTextureDimension())) {
 			return true;
 		} else {
 			return false;

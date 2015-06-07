@@ -22,10 +22,9 @@ package de.justi.yagw2api.common.tuple;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-final class DefaultNumberTuple2<V1 extends Number, V2 extends Number> extends AbstractTuple2<V1, V2> implements NumberTuple2<V1, V2> {
+class DefaultNumberTuple2<V1 extends Number, V2 extends Number> extends AbstractTuple2<V1, V2> implements NumberTuple2<V1, V2> {
 
 	DefaultNumberTuple2(final V1 value1, final V2 value2) {
 		super(checkNotNull(value1, "missing value1"), checkNotNull(value2, "missing value2"));
 	}
-
 }

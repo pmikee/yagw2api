@@ -24,6 +24,10 @@ import javax.annotation.Nullable;
 
 public interface Tuple3<V1, V2, V3> extends Tuple2<V1, V2> {
 
+	default Tuple2<V1, V2> asTuple2() {
+		return this;
+	}
+
 	@Nullable
 	V3 v3();
 }

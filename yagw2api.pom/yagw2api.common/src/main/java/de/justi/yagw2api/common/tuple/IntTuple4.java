@@ -9,9 +9,9 @@ package de.justi.yagw2api.common.tuple;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,8 +20,44 @@ package de.justi.yagw2api.common.tuple;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-
 public interface IntTuple4 extends UniformNumberTuple4<Integer>, IntTuple3 {
+	@Override
+	default IntTuple3 asTuple3() {
+		return this;
+	}
+
+	/**
+	 * Two rectangles do not overlap if one of the following conditions is true:
+	 * <ol>
+	 * <li>One rectangle is above top edge of other rectangle.</li>
+	 * <li>One rectangle is on left side of left edge of other rectangle.</li>
+	 * </ol>
+	 *
+	 * @param right
+	 * @return
+	 */
+	default boolean overlaps(final NumberTuple4<Integer, Integer, Integer, Integer> right) {
+		// If one rectangle is on left side of other
+		if (v1Int() > right.v3().intValue() || right.v1().intValue() > v3Int()) {
+			return false;
+		}
+
+		// If one rectangle is above other
+		if (v2Int() > right.v4().intValue() || right.v2().intValue() > v4Int()) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	default IntTuple4 multiplyTuple4(final int factor) {
+		return Tuples.of(v1Int() * factor, v2Int() * factor, v3Int() * factor, v4Int() * factor);
+	}
+
+	@Override
+	default IntTuple4 asIntTuple4() {
+		return this;
+	}
 
 	int v4Int();
 }
