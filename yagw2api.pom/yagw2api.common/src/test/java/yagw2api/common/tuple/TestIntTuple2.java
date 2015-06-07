@@ -204,6 +204,15 @@ public class TestIntTuple2 {
 	}
 
 	@Test
+	public void testMultiplyByIntMinMax() {
+		final IntTuple2 tuple2 = Tuples.of(this.v1, this.v2);
+		final IntTuple2 multiplied = tuple2.multiplyTuple2(Integer.MIN_VALUE, Integer.MAX_VALUE);
+
+		assertThat(multiplied.v1(), is(Integer.MIN_VALUE * tuple2.v1()));
+		assertThat(multiplied.v2(), is(Integer.MAX_VALUE * tuple2.v2()));
+	}
+
+	@Test
 	public void testMultiplyByLongMin() {
 		final IntTuple2 tuple2 = Tuples.of(this.v1, this.v2);
 		final LongTuple2 multiplied = tuple2.multiplyTuple2(Long.MIN_VALUE);
@@ -218,6 +227,15 @@ public class TestIntTuple2 {
 		final LongTuple2 multiplied = tuple2.multiplyTuple2(Long.MAX_VALUE);
 
 		assertThat(multiplied.v1(), is(Long.MAX_VALUE * tuple2.v1()));
+		assertThat(multiplied.v2(), is(Long.MAX_VALUE * tuple2.v2()));
+	}
+
+	@Test
+	public void testMultiplyByLongMinMax() {
+		final IntTuple2 tuple2 = Tuples.of(this.v1, this.v2);
+		final LongTuple2 multiplied = tuple2.multiplyTuple2(Long.MIN_VALUE, Long.MAX_VALUE);
+
+		assertThat(multiplied.v1(), is(Long.MIN_VALUE * tuple2.v1()));
 		assertThat(multiplied.v2(), is(Long.MAX_VALUE * tuple2.v2()));
 	}
 
@@ -240,6 +258,15 @@ public class TestIntTuple2 {
 	}
 
 	@Test
+	public void testMultiplyByDoubleMinMax() {
+		final IntTuple2 tuple2 = Tuples.of(this.v1, this.v2);
+		final DoubleTuple2 multiplied = tuple2.multiplyTuple2(Double.MIN_VALUE, Double.MAX_VALUE);
+
+		assertThat(multiplied.v1(), is(Double.MIN_VALUE * tuple2.v1()));
+		assertThat(multiplied.v2(), is(Double.MAX_VALUE * tuple2.v2()));
+	}
+
+	@Test
 	public void testMultiplyByFloatMin() {
 		final IntTuple2 tuple2 = Tuples.of(this.v1, this.v2);
 		final FloatTuple2 multiplied = tuple2.multiplyTuple2(Float.MIN_VALUE);
@@ -254,6 +281,15 @@ public class TestIntTuple2 {
 		final FloatTuple2 multiplied = tuple2.multiplyTuple2(Float.MAX_VALUE);
 
 		assertThat(multiplied.v1(), is(Float.MAX_VALUE * tuple2.v1()));
+		assertThat(multiplied.v2(), is(Float.MAX_VALUE * tuple2.v2()));
+	}
+
+	@Test
+	public void testMultiplyByFloatMinMax() {
+		final IntTuple2 tuple2 = Tuples.of(this.v1, this.v2);
+		final FloatTuple2 multiplied = tuple2.multiplyTuple2(Float.MIN_VALUE, Float.MAX_VALUE);
+
+		assertThat(multiplied.v1(), is(Float.MIN_VALUE * tuple2.v1()));
 		assertThat(multiplied.v2(), is(Float.MAX_VALUE * tuple2.v2()));
 	}
 
