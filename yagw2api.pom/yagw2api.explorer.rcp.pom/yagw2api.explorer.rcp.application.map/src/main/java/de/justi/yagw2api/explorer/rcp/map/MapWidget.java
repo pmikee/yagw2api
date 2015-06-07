@@ -64,10 +64,10 @@ import com.google.common.eventbus.Subscribe;
 
 import de.justi.yagw2api.common.tuple.DoubleTuple4;
 import de.justi.yagw2api.common.tuple.IntTuple2;
+import de.justi.yagw2api.common.tuple.IntTuple4;
 import de.justi.yagw2api.common.tuple.Tuple2;
 import de.justi.yagw2api.common.tuple.Tuple4;
 import de.justi.yagw2api.common.tuple.Tuples;
-import de.justi.yagw2api.common.tuple.UniformNumberTuple4;
 import de.justi.yagw2api.wrapper.map.MapWrapper;
 import de.justi.yagw2api.wrapper.map.domain.Continent;
 import de.justi.yagw2api.wrapper.map.domain.ContinentFloor;
@@ -267,7 +267,7 @@ public final class MapWidget extends Composite implements PaintListener {
 		if (this.continent.isPresent() && this.floor.isPresent()) {
 			if (!this.scrollingActive.get()) {
 				LOGGER.trace("redraw pixels ({}/{}) - ({}/{})", e.x, e.y, e.width, e.height);
-				final UniformNumberTuple4<Integer> clampedView = this.floor.get().getClampedTileIndexDimension(this.zoom);
+				final IntTuple4 clampedView = this.floor.get().getClampedTileIndexDimension(this.zoom);
 				final int minX = Math.max(clampedView.v1(), e.x / this.tileSize);
 				final int minY = Math.max(clampedView.v2(), e.y / this.tileSize);
 				final int maxX = Math.min(clampedView.v3(), (e.x + e.width + this.tileSize - 1) / this.tileSize);

@@ -20,8 +20,8 @@ package de.justi.yagw2api.arenanet.dto.map;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-import de.justi.yagw2api.common.tuple.UniformNumberTuple2;
+import de.justi.yagw2api.common.tuple.DoubleTuple2;
 
 public interface MapSkillChallangeDTO {
-	UniformNumberTuple2<Double> getCoordinates();
+	DoubleTuple2 getCoordinates();
 }

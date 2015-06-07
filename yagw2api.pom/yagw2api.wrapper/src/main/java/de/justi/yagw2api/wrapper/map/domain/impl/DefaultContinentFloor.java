@@ -251,11 +251,11 @@ final class DefaultContinentFloor implements ContinentFloor {
 	// METHODS
 
 	private int tile2Texture(final int tile, final int zoom) {
-		return MapUtils.getTileTextureSize(zoom, this.minZoom, this.maxZoom) * tile;
+		return MapUtils.calculateTileTextureSize(zoom, this.minZoom, this.maxZoom) * tile;
 	}
 
 	private int texture2Tile(final int texture, final int zoom) {
-		return texture / MapUtils.getTileTextureSize(zoom, this.minZoom, this.maxZoom);
+		return texture / MapUtils.calculateTileTextureSize(zoom, this.minZoom, this.maxZoom);
 	}
 
 	private IntTuple4 texture2Tile(final UniformNumberTuple4<Integer> texture, final int zoom) {

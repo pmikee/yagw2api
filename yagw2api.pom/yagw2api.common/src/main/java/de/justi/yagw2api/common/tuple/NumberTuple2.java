@@ -1,5 +1,7 @@
 package de.justi.yagw2api.common.tuple;
 
+import javax.annotation.Nonnull;
+
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Commons
@@ -22,35 +24,91 @@ package de.justi.yagw2api.common.tuple;
 
 public interface NumberTuple2<V1 extends Number, V2 extends Number> extends Tuple2<V1, V2>, NumberTuple {
 
+	@Override
+	@Nonnull
+	V1 v1();
+
+	@Override
+	@Nonnull
+	V2 v2();
+
+	default int v1Int() {
+		return v1().intValue();
+	}
+
+	default long v1Long() {
+		return v1().longValue();
+	}
+
+	default double v1Double() {
+		return v1().doubleValue();
+	}
+
+	default float v1Float() {
+		return v1().floatValue();
+	}
+
+	default int v2Int() {
+		return v2().intValue();
+	}
+
+	default long v2Long() {
+		return v2().longValue();
+	}
+
+	default double v2Double() {
+		return v2().doubleValue();
+	}
+
+	default float v2Float() {
+		return v2().floatValue();
+	}
+
 	default IntTuple2 multiplyTuple2(final int factor) {
-		return Tuples.of(v1().intValue() * factor, v2().intValue() * factor);
+		return Tuples.of(v1Int() * factor, v2Int() * factor);
+	}
+
+	default IntTuple2 multiplyTuple2(final int factor1, final int factor2) {
+		return Tuples.of(v1Int() * factor1, v2Int() * factor2);
 	}
 
 	default DoubleTuple2 multiplyTuple2(final double factor) {
-		return Tuples.of(v1().doubleValue() * factor, v2().doubleValue() * factor);
+		return Tuples.of(v1Double() * factor, v2Double() * factor);
+	}
+
+	default DoubleTuple2 multiplyTuple2(final double factor1, final double factor2) {
+		return Tuples.of(v1Double() * factor1, v2Double() * factor2);
 	}
 
 	default LongTuple2 multiplyTuple2(final long factor) {
-		return Tuples.of(v1().longValue() * factor, v2().longValue() * factor);
+		return Tuples.of(v1Long() * factor, v2Long() * factor);
+	}
+
+	default LongTuple2 multiplyTuple2(final long factor1, final long factor2) {
+		return Tuples.of(v1Long() * factor1, v2Long() * factor2);
 	}
 
 	default FloatTuple2 multiplyTuple2(final float factor) {
-		return Tuples.of(v1().floatValue() * factor, v2().floatValue() * factor);
+		return Tuples.of(v1Float() * factor, v2Float() * factor);
+	}
+
+	default FloatTuple2 multiplyTuple2(final float factor1, final float factor2) {
+		return Tuples.of(v1Float() * factor1, v2Float() * factor2);
 	}
 
 	default IntTuple2 asIntTuple2() {
-		return Tuples.of(this.v1().intValue(), this.v2().intValue());
+		return Tuples.of(v1Int(), v2Int());
 	}
 
 	default DoubleTuple2 asDoubleTuple2() {
-		return Tuples.of(this.v1().doubleValue(), this.v2().doubleValue());
+		return Tuples.of(v1Double(), v2Double());
 	}
 
 	default LongTuple2 asLongTuple2() {
-		return Tuples.of(this.v1().longValue(), this.v2().longValue());
+		return Tuples.of(v1Long(), v2Long());
 	}
 
 	default FloatTuple2 asFloatTuple2() {
-		return Tuples.of(this.v1().floatValue(), this.v2().floatValue());
+		return Tuples.of(v1Float(), v2Float());
 	}
 }

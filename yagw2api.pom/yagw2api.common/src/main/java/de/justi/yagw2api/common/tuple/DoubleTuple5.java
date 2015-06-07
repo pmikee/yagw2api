@@ -1,5 +1,7 @@
 package de.justi.yagw2api.common.tuple;
 
+import de.justi.yagw2api.common.math.Math;
+
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Commons
@@ -21,20 +23,18 @@ package de.justi.yagw2api.common.tuple;
  */
 
 public interface DoubleTuple5 extends UniformNumberTuple5<Double>, DoubleTuple4 {
+	default DoubleTuple5 clamp(final double min, final double max) {
+		return Tuples.of(Math.clamp(v1Double(), min, max), Math.clamp(v2Double(), min, max), Math.clamp(v3Double(), min, max), Math.clamp(v4Double(), min, max),
+				Math.clamp(v5Double(), min, max));
+	}
+
 	@Override
 	default DoubleTuple4 asTuple4() {
 		return this;
 	}
 
 	@Override
-	default DoubleTuple5 multiplyTuple5(final double factor) {
-		return Tuples.of(v1Double() * factor, v2Double() * factor, v3Double() * factor, v4Double() * factor, v5Double() * factor);
-	}
-
-	@Override
 	default DoubleTuple5 asDoubleTuple5() {
 		return this;
 	}
-
-	double v5Double();
 }

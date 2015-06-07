@@ -343,7 +343,7 @@ final class DefaultContinent implements Continent {
 	@Override
 	public int getTileTextureSize(final int zoom) {
 		checkArgument(zoom >= this.minZoom && zoom <= this.maxZoom, "invalid zoom=%s for %s", zoom, this);
-		return MapUtils.getTileTextureSize(zoom, this.minZoom, this.maxZoom);
+		return MapUtils.calculateTileTextureSize(zoom, this.minZoom, this.maxZoom);
 	}
 
 	@Override

@@ -32,8 +32,8 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 
+import de.justi.yagw2api.common.tuple.IntTuple2;
 import de.justi.yagw2api.common.tuple.Tuples;
-import de.justi.yagw2api.common.tuple.UniformNumberTuple2;
 
 final class DefaultMapRegionDTO implements MapRegionDTO {
 	// FIELDS
@@ -42,14 +42,14 @@ final class DefaultMapRegionDTO implements MapRegionDTO {
 	private final String name = null;
 	@SerializedName("label_coord")
 	@Since(1.0)
-	private final Integer[] labelCoordinates = new Integer[2];
+	private final int[] labelCoordinates = new int[2];
 	@SerializedName("maps")
 	@Since(1.0)
 	private final Map<String, DefaultMapRegionMapDTO> maps = ImmutableMap.of();
 
-	private final transient Supplier<UniformNumberTuple2<Integer>> labelCoordinatesTupleSupplier = Suppliers.memoize(() -> {
+	private final transient Supplier<IntTuple2> labelCoordinatesTupleSupplier = Suppliers.memoize(() -> {
 		checkState(this.labelCoordinates.length == 2, "invalid texture dimension length: %s", this.labelCoordinates.length);
-		return Tuples.uniformOf(this.labelCoordinates[0], this.labelCoordinates[1]);
+		return Tuples.of(this.labelCoordinates[0], this.labelCoordinates[1]);
 	});
 
 	// METHODS
@@ -60,7 +60,7 @@ final class DefaultMapRegionDTO implements MapRegionDTO {
 	}
 
 	@Override
-	public UniformNumberTuple2<Integer> getLabelCoordinates() {
+	public IntTuple2 getLabelCoordinates() {
 		return this.labelCoordinatesTupleSupplier.get();
 	}
 

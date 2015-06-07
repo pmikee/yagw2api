@@ -1,5 +1,7 @@
 package de.justi.yagw2api.common.tuple;
 
+import de.justi.yagw2api.common.math.Math;
+
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Commons
@@ -21,20 +23,17 @@ package de.justi.yagw2api.common.tuple;
  */
 
 public interface LongTuple3 extends UniformNumberTuple3<Long>, LongTuple2 {
+	default LongTuple3 clamp(final long min, final long max) {
+		return Tuples.of(Math.clamp(v1Long(), min, max), Math.clamp(v2Long(), min, max), Math.clamp(v3Long(), min, max));
+	}
+
 	@Override
 	default LongTuple2 asTuple2() {
 		return this;
 	}
 
 	@Override
-	default LongTuple3 multiplyTuple3(final long factor) {
-		return Tuples.of(v1Long() * factor, v2Long() * factor, v3Long() * factor);
-	}
-
-	@Override
 	default LongTuple3 asLongTuple3() {
 		return this;
 	}
-
-	long v3Long();
 }

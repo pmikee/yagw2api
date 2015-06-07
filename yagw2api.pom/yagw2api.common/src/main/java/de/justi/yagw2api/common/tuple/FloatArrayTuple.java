@@ -26,6 +26,7 @@ import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.collect.ImmutableList;
 
 final class FloatArrayTuple extends AbstractTuple implements FloatTuple2, FloatTuple3, FloatTuple4, FloatTuple5 {
+
 	// FIELDS
 	private final float[] values;
 

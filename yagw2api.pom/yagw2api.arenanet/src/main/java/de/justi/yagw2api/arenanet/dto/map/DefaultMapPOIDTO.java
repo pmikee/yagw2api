@@ -28,8 +28,8 @@ import com.google.common.base.Suppliers;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 
+import de.justi.yagw2api.common.tuple.DoubleTuple2;
 import de.justi.yagw2api.common.tuple.Tuples;
-import de.justi.yagw2api.common.tuple.UniformNumberTuple2;
 
 final class DefaultMapPOIDTO implements MapPOIDTO {
 	@SerializedName("poi_id")
@@ -48,7 +48,7 @@ final class DefaultMapPOIDTO implements MapPOIDTO {
 	@Since(1.0)
 	private final double[] coordinates = new double[2];
 
-	private final transient Supplier<UniformNumberTuple2<Double>> coordinatesTupleSupplier = Suppliers.memoize(() -> {
+	private final transient Supplier<DoubleTuple2> coordinatesTupleSupplier = Suppliers.memoize(() -> {
 		checkState(this.coordinates.length == 2, "invalid coordinates length: %s", this.coordinates.length);
 		return Tuples.of(this.coordinates[0], this.coordinates[1]);
 	});
@@ -74,7 +74,7 @@ final class DefaultMapPOIDTO implements MapPOIDTO {
 	}
 
 	@Override
-	public UniformNumberTuple2<Double> getCoordinates() {
+	public DoubleTuple2 getCoordinates() {
 		return this.coordinatesTupleSupplier.get();
 	}
 

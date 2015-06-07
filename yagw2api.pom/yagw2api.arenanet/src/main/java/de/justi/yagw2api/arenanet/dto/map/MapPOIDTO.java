@@ -22,7 +22,7 @@ package de.justi.yagw2api.arenanet.dto.map;
 
 import com.google.gson.annotations.SerializedName;
 
-import de.justi.yagw2api.common.tuple.UniformNumberTuple2;
+import de.justi.yagw2api.common.tuple.DoubleTuple2;
 
 public interface MapPOIDTO {
 
@@ -44,5 +44,5 @@ public interface MapPOIDTO {
 
 	int getFloor();
 
-	UniformNumberTuple2<Double> getCoordinates();
+	DoubleTuple2 getCoordinates();
 }

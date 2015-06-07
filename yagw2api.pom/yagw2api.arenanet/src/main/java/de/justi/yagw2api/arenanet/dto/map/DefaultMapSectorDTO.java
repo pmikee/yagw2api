@@ -28,8 +28,8 @@ import com.google.common.base.Suppliers;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 
+import de.justi.yagw2api.common.tuple.DoubleTuple2;
 import de.justi.yagw2api.common.tuple.Tuples;
-import de.justi.yagw2api.common.tuple.UniformNumberTuple2;
 
 final class DefaultMapSectorDTO implements MapSectorDTO {
 	@SerializedName("sector_id")
@@ -43,11 +43,11 @@ final class DefaultMapSectorDTO implements MapSectorDTO {
 	private final Integer floor = null;
 	@SerializedName("coord")
 	@Since(1.0)
-	private final Double[] coordinates = new Double[2];
+	private final double[] coordinates = new double[2];
 
-	private final transient Supplier<UniformNumberTuple2<Double>> coordinatesTupleSupplier = Suppliers.memoize(() -> {
+	private final transient Supplier<DoubleTuple2> coordinatesTupleSupplier = Suppliers.memoize(() -> {
 		checkState(this.coordinates.length == 2, "invalid coordinates length: %s", this.coordinates.length);
-		return Tuples.uniformOf(this.coordinates[0], this.coordinates[1]);
+		return Tuples.of(this.coordinates[0], this.coordinates[1]);
 	});
 
 	@Override
@@ -66,7 +66,7 @@ final class DefaultMapSectorDTO implements MapSectorDTO {
 	}
 
 	@Override
-	public UniformNumberTuple2<Double> getCoordinates() {
+	public DoubleTuple2 getCoordinates() {
 		return this.coordinatesTupleSupplier.get();
 	}
 

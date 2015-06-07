@@ -28,5 +28,4 @@ final class DefaultUniformNumberTuple5<V extends Number> extends DefaultNumberTu
 		super(checkNotNull(value1, "missing value1"), checkNotNull(value2, "missing value2"), checkNotNull(value3, "missing value3"), checkNotNull(value4, "missing value4"),
 				checkNotNull(value5, "missing value5"));
 	}
-
 }

@@ -35,7 +35,7 @@ final class MapUtils {
 	// CONSTS
 
 	// STATIC METHODS
-	static int getTileTextureSize(final int zoom, final int minZoom, final int maxZoom) {
+	static int calculateTileTextureSize(final int zoom, final int minZoom, final int maxZoom) {
 		checkArgument(zoom >= minZoom && zoom <= maxZoom, "invalid zoom=%s (min:%s, max:%s)", zoom, minZoom, maxZoom);
 		return TILE_SIZE * (int) Math.pow(2, maxZoom - zoom);
 	}
