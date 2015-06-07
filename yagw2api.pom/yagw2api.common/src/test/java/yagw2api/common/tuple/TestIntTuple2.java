@@ -1,7 +1,29 @@
 package yagw2api.common.tuple;
 
+/*
+ * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * YAGW2API-Commons
+ * _____________________________________________________________
+ * Copyright (C) 2012 - 2015 Julian Stitz
+ * _____________________________________________________________
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
+ */
+
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+
+import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -128,24 +150,6 @@ public class TestIntTuple2 {
 	}
 
 	@Test
-	public void testMultiplyByIntMin() {
-		final IntTuple2 tuple2 = Tuples.of(this.v1, this.v2);
-		final IntTuple2 multiplied = tuple2.multiplyTuple2(Integer.MIN_VALUE);
-
-		assertThat(multiplied.v1(), is(Integer.MIN_VALUE * tuple2.v1()));
-		assertThat(multiplied.v2(), is(Integer.MIN_VALUE * tuple2.v2()));
-	}
-
-	@Test
-	public void testMultiplyByIntMax() {
-		final IntTuple2 tuple2 = Tuples.of(this.v1, this.v2);
-		final IntTuple2 multiplied = tuple2.multiplyTuple2(Integer.MAX_VALUE);
-
-		assertThat(multiplied.v1(), is(Integer.MAX_VALUE * tuple2.v1()));
-		assertThat(multiplied.v2(), is(Integer.MAX_VALUE * tuple2.v2()));
-	}
-
-	@Test
 	public void testMultiplyByMinusOne() {
 		final IntTuple2 tuple2 = Tuples.of(this.v1, this.v2);
 		final IntTuple2 multiplied = tuple2.multiplyTuple2(-1);
@@ -179,6 +183,78 @@ public class TestIntTuple2 {
 
 		assertThat(multiplied.v1(), is(2 * tuple2.v1()));
 		assertThat(multiplied.v2(), is(2 * tuple2.v2()));
+	}
+
+	@Test
+	public void testMultiplyByIntMin() {
+		final IntTuple2 tuple2 = Tuples.of(this.v1, this.v2);
+		final IntTuple2 multiplied = tuple2.multiplyTuple2(Integer.MIN_VALUE);
+
+		assertThat(multiplied.v1(), is(Integer.MIN_VALUE * tuple2.v1()));
+		assertThat(multiplied.v2(), is(Integer.MIN_VALUE * tuple2.v2()));
+	}
+
+	@Test
+	public void testMultiplyByIntMax() {
+		final IntTuple2 tuple2 = Tuples.of(this.v1, this.v2);
+		final IntTuple2 multiplied = tuple2.multiplyTuple2(Integer.MAX_VALUE);
+
+		assertThat(multiplied.v1(), is(Integer.MAX_VALUE * tuple2.v1()));
+		assertThat(multiplied.v2(), is(Integer.MAX_VALUE * tuple2.v2()));
+	}
+
+	@Test
+	public void testMultiplyByLongMin() {
+		final IntTuple2 tuple2 = Tuples.of(this.v1, this.v2);
+		final LongTuple2 multiplied = tuple2.multiplyTuple2(Long.MIN_VALUE);
+
+		assertThat(multiplied.v1(), is(Long.MIN_VALUE * tuple2.v1()));
+		assertThat(multiplied.v2(), is(Long.MIN_VALUE * tuple2.v2()));
+	}
+
+	@Test
+	public void testMultiplyByLongMax() {
+		final IntTuple2 tuple2 = Tuples.of(this.v1, this.v2);
+		final LongTuple2 multiplied = tuple2.multiplyTuple2(Long.MAX_VALUE);
+
+		assertThat(multiplied.v1(), is(Long.MAX_VALUE * tuple2.v1()));
+		assertThat(multiplied.v2(), is(Long.MAX_VALUE * tuple2.v2()));
+	}
+
+	@Test
+	public void testMultiplyByDoubleMin() {
+		final IntTuple2 tuple2 = Tuples.of(this.v1, this.v2);
+		final DoubleTuple2 multiplied = tuple2.multiplyTuple2(Double.MIN_VALUE);
+
+		assertThat(multiplied.v1(), is(Double.MIN_VALUE * tuple2.v1()));
+		assertThat(multiplied.v2(), is(Double.MIN_VALUE * tuple2.v2()));
+	}
+
+	@Test
+	public void testMultiplyByDoubleMax() {
+		final IntTuple2 tuple2 = Tuples.of(this.v1, this.v2);
+		final DoubleTuple2 multiplied = tuple2.multiplyTuple2(Double.MAX_VALUE);
+
+		assertThat(multiplied.v1(), is(Double.MAX_VALUE * tuple2.v1()));
+		assertThat(multiplied.v2(), is(Double.MAX_VALUE * tuple2.v2()));
+	}
+
+	@Test
+	public void testMultiplyByFloatMin() {
+		final IntTuple2 tuple2 = Tuples.of(this.v1, this.v2);
+		final FloatTuple2 multiplied = tuple2.multiplyTuple2(Float.MIN_VALUE);
+
+		assertThat(multiplied.v1(), is(Float.MIN_VALUE * tuple2.v1()));
+		assertThat(multiplied.v2(), is(Float.MIN_VALUE * tuple2.v2()));
+	}
+
+	@Test
+	public void testMultiplyByFloatMax() {
+		final IntTuple2 tuple2 = Tuples.of(this.v1, this.v2);
+		final FloatTuple2 multiplied = tuple2.multiplyTuple2(Float.MAX_VALUE);
+
+		assertThat(multiplied.v1(), is(Float.MAX_VALUE * tuple2.v1()));
+		assertThat(multiplied.v2(), is(Float.MAX_VALUE * tuple2.v2()));
 	}
 
 	@Test
@@ -242,6 +318,14 @@ public class TestIntTuple2 {
 	}
 
 	@Test
+	public void testValues() {
+		final IntTuple2 tuple2 = Tuples.of(this.v1, this.v2);
+
+		assertThat(tuple2.v1(), is(this.v1));
+		assertThat(tuple2.v2(), is(this.v2));
+	}
+
+	@Test
 	public void testDoubleValues() {
 		final IntTuple2 tuple2 = Tuples.of(this.v1, this.v2);
 
@@ -255,5 +339,41 @@ public class TestIntTuple2 {
 
 		assertThat(tuple2.v1Float(), is((float) this.v1));
 		assertThat(tuple2.v2Float(), is((float) this.v2));
+	}
+
+	@Test
+	public void testAsIntArray() {
+		final IntTuple2 tuple2 = Tuples.of(this.v1, this.v2);
+		final int[] intArray = tuple2.asIntArray();
+
+		assertThat(intArray.length, is(2));
+		assertThat(intArray[0], is(this.v1));
+		assertThat(intArray[1], is(this.v2));
+	}
+
+	@Test
+	public void testAsArray() {
+		final IntTuple2 tuple2 = Tuples.of(this.v1, this.v2);
+		final Object[] array = tuple2.asArray();
+
+		assertThat(array.length, is(2));
+		assertThat(array[0], is(this.v1));
+		assertThat(array[1], is(this.v2));
+	}
+
+	@Test
+	public void testAsList() {
+		final IntTuple2 tuple2 = Tuples.of(this.v1, this.v2);
+		final List<Object> array = tuple2.asList();
+
+		assertThat(array.size(), is(2));
+		assertThat(array.get(0), is(this.v1));
+		assertThat(array.get(1), is(this.v2));
+	}
+
+	@Test
+	public void testDimension() {
+		final IntTuple2 tuple2 = Tuples.of(this.v1, this.v2);
+		assertThat(tuple2.dimension(), is(2));
 	}
 }
