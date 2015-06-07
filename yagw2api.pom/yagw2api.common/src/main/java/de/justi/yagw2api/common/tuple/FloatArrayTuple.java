@@ -36,6 +36,10 @@ final class FloatArrayTuple extends AbstractTuple implements FloatTuple2, FloatT
 	}
 
 	// METHODS
+	@Override
+	public boolean mayCacheHashCode() {
+		return true;
+	}
 
 	@Override
 	protected final ImmutableList.Builder<Object> listBuilder() {

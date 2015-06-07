@@ -24,6 +24,10 @@ import java.util.List;
 
 public interface Tuple {
 
+	default boolean mayCacheHashCode() {
+		return false;
+	}
+
 	List<Object> asList();
 
 	Object[] asArray();

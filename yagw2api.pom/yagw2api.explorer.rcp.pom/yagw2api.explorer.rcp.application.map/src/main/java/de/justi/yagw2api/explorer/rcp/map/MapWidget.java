@@ -62,6 +62,7 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.cache.RemovalNotification;
 import com.google.common.eventbus.Subscribe;
 
+import de.justi.yagw2api.common.tuple.DoubleTuple4;
 import de.justi.yagw2api.common.tuple.IntTuple2;
 import de.justi.yagw2api.common.tuple.Tuple2;
 import de.justi.yagw2api.common.tuple.Tuple4;
@@ -292,7 +293,7 @@ public final class MapWidget extends Composite implements PaintListener {
 				e.gc.setFont(SWTResourceManager.getFont("Helvetica", 5 + ((this.zoom - 1) * 2), SWT.BOLD, false, false));
 				final double boundsScaleFactor = this.tileSize / tileTextureSize;
 				for (Map map : this.floor.get().getMostSignificantMaps()) {
-					final UniformNumberTuple4<Double> bound2draw = Tuples.multiply(map.getBoundsOnContinent(), boundsScaleFactor);
+					final DoubleTuple4 bound2draw = map.getBoundsOnContinent().multiplyTuple4(boundsScaleFactor);
 					final int x1 = (int) Math.round(bound2draw.v1());
 					final int y1 = (int) Math.round(bound2draw.v2());
 					final int x2 = (int) Math.round(bound2draw.v3());

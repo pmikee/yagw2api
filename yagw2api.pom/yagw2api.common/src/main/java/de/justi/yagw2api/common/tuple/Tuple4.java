@@ -31,4 +31,8 @@ public interface Tuple4<V1, V2, V3, V4> extends Tuple3<V1, V2, V3> {
 	@Nullable
 	V4 v4();
 
+	@Override
+	default int dimension() {
+		return 4;
+	}
 }

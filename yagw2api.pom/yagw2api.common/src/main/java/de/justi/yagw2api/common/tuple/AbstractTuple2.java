@@ -39,12 +39,6 @@ abstract class AbstractTuple2<V1, V2> extends AbstractTuple implements Tuple2<V1
 	}
 
 	// METHODS
-
-	@Override
-	public final int dimension() {
-		return this.asList().size();
-	}
-
 	@Override
 	@Nullable
 	public final V1 v1() {

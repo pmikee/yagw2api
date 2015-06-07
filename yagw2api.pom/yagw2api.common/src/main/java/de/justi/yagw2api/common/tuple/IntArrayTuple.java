@@ -36,6 +36,10 @@ final class IntArrayTuple extends AbstractTuple implements IntTuple2, IntTuple3,
 	}
 
 	// METHODS
+	@Override
+	public boolean mayCacheHashCode() {
+		return true;
+	}
 
 	@Override
 	protected final ImmutableList.Builder<Object> listBuilder() {

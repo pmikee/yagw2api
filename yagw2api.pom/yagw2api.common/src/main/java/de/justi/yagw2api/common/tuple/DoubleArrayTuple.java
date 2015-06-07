@@ -36,6 +36,10 @@ final class DoubleArrayTuple extends AbstractTuple implements DoubleTuple2, Doub
 	}
 
 	// METHODS
+	@Override
+	public boolean mayCacheHashCode() {
+		return true;
+	}
 
 	@Override
 	protected final ImmutableList.Builder<Object> listBuilder() {

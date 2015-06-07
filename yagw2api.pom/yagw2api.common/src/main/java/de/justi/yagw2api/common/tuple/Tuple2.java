@@ -29,4 +29,9 @@ public interface Tuple2<V1, V2> extends Tuple {
 
 	@Nullable
 	V2 v2();
+
+	@Override
+	default int dimension() {
+		return 2;
+	}
 }

@@ -36,6 +36,10 @@ final class LongArrayTuple extends AbstractTuple implements LongTuple2, LongTupl
 	}
 
 	// METHODS
+	@Override
+	public boolean mayCacheHashCode() {
+		return true;
+	}
 
 	@Override
 	protected final ImmutableList.Builder<Object> listBuilder() {
