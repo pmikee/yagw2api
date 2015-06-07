@@ -1,5 +1,7 @@
 package de.justi.yagw2api.common.math;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * YAGW2API-Commons
@@ -20,25 +22,28 @@ package de.justi.yagw2api.common.math;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-
 public final class Math {
 	private Math() {
 		throw new AssertionError("no instance");
 	}
 
 	public static final int clamp(final int toClamp, final int min, final int max) {
+		checkArgument(min <= max, "invalid clamp interval: [%s,%s]", min, max);
 		return java.lang.Math.min(java.lang.Math.max(min, toClamp), max);
 	}
 
 	public static final long clamp(final long toClamp, final long min, final long max) {
+		checkArgument(min <= max, "invalid clamp interval: [%s,%s]", min, max);
 		return java.lang.Math.min(java.lang.Math.max(min, toClamp), max);
 	}
 
 	public static final double clamp(final double toClamp, final double min, final double max) {
+		checkArgument(min <= max, "invalid clamp interval: [%s,%s]", min, max);
 		return java.lang.Math.min(java.lang.Math.max(min, toClamp), max);
 	}
 
 	public static final float clamp(final float toClamp, final float min, final float max) {
+		checkArgument(min <= max, "invalid clamp interval: [%s,%s]", min, max);
 		return java.lang.Math.min(java.lang.Math.max(min, toClamp), max);
 	}
 

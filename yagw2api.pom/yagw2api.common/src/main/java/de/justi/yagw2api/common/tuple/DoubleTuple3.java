@@ -23,7 +23,7 @@ import de.justi.yagw2api.common.math.Math;
  */
 
 public interface DoubleTuple3 extends UniformNumberTuple3<Double>, DoubleTuple2 {
-	default DoubleTuple3 clamp(final double min, final double max) {
+	default DoubleTuple3 clampTuple3(final double min, final double max) {
 		return Tuples.of(Math.clamp(v1Double(), min, max), Math.clamp(v2Double(), min, max), Math.clamp(v3Double(), min, max));
 	}
 

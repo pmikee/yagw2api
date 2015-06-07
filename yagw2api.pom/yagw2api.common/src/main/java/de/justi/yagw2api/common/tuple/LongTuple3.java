@@ -23,7 +23,7 @@ import de.justi.yagw2api.common.math.Math;
  */
 
 public interface LongTuple3 extends UniformNumberTuple3<Long>, LongTuple2 {
-	default LongTuple3 clamp(final long min, final long max) {
+	default LongTuple3 clampTuple3(final long min, final long max) {
 		return Tuples.of(Math.clamp(v1Long(), min, max), Math.clamp(v2Long(), min, max), Math.clamp(v3Long(), min, max));
 	}
 

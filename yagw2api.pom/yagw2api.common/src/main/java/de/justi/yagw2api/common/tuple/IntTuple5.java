@@ -24,7 +24,7 @@ import de.justi.yagw2api.common.math.Math;
 
 public interface IntTuple5 extends UniformNumberTuple5<Integer>, IntTuple4 {
 
-	default IntTuple5 clamp(final int min, final int max) {
+	default IntTuple5 clampTuple5(final int min, final int max) {
 		return Tuples.of(Math.clamp(v1Int(), min, max), Math.clamp(v2Int(), min, max), Math.clamp(v3Int(), min, max), Math.clamp(v4Int(), min, max), Math.clamp(v5Int(), min, max));
 	}
 

@@ -23,7 +23,7 @@ import de.justi.yagw2api.common.math.Math;
  */
 
 public interface FloatTuple3 extends UniformNumberTuple3<Float>, FloatTuple2 {
-	default FloatTuple3 clamp(final float min, final float max) {
+	default FloatTuple3 clampTuple3(final float min, final float max) {
 		return Tuples.of(Math.clamp(v1Float(), min, max), Math.clamp(v2Float(), min, max), Math.clamp(v3Float(), min, max));
 	}
 

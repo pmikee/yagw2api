@@ -24,7 +24,7 @@ import de.justi.yagw2api.common.math.Math;
 
 public interface LongTuple5 extends UniformNumberTuple5<Long>, LongTuple4 {
 
-	default LongTuple5 clamp(final long min, final long max) {
+	default LongTuple5 clampTuple5(final long min, final long max) {
 		return Tuples.of(Math.clamp(v1Long(), min, max), Math.clamp(v2Long(), min, max), Math.clamp(v3Long(), min, max), Math.clamp(v4Long(), min, max),
 				Math.clamp(v5Long(), min, max));
 	}

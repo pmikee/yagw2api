@@ -23,7 +23,7 @@ import de.justi.yagw2api.common.math.Math;
  */
 
 public interface IntTuple3 extends UniformNumberTuple3<Integer>, IntTuple2 {
-	default IntTuple3 clamp(final int min, final int max) {
+	default IntTuple3 clampTuple3(final int min, final int max) {
 		return Tuples.of(Math.clamp(v1Int(), min, max), Math.clamp(v2Int(), min, max), Math.clamp(v3Int(), min, max));
 	}
 
