@@ -50,7 +50,7 @@ import de.justi.yagw2api.arenanet.MapFloorService;
 import de.justi.yagw2api.arenanet.MapService;
 import de.justi.yagw2api.arenanet.dto.map.MapDTO;
 import de.justi.yagw2api.arenanet.dto.map.MapFloorDTO;
-import de.justi.yagw2api.common.tuple.UniformNumberTuple2;
+import de.justi.yagw2api.common.tuple.IntTuple2;
 import de.justi.yagw2api.wrapper.map.domain.Continent;
 import de.justi.yagw2api.wrapper.map.domain.ContinentFloor;
 import de.justi.yagw2api.wrapper.map.domain.Map;
@@ -74,7 +74,7 @@ final class DefaultContinent implements Continent {
 		@Nullable
 		private String name = null;
 		@Nullable
-		private UniformNumberTuple2<Integer> dimension = null;
+		private IntTuple2 dimension = null;
 		@Nullable
 		private Integer minZoom = null;
 		@Nullable
@@ -113,7 +113,7 @@ final class DefaultContinent implements Continent {
 		}
 
 		@Override
-		public DefaultContinentBuilder dimension(@Nullable final UniformNumberTuple2<Integer> dimension) {
+		public DefaultContinentBuilder dimension(@Nullable final IntTuple2 dimension) {
 			this.dimension = dimension;
 			return this;
 		}
@@ -215,7 +215,7 @@ final class DefaultContinent implements Continent {
 	// FIELDS
 	private final String id;
 	private final String name;
-	private final UniformNumberTuple2<Integer> dimension;
+	private final IntTuple2 dimension;
 	private final int minZoom;
 	private final int maxZoom;
 	private final Iterable<ContinentFloor> floors;
@@ -284,7 +284,7 @@ final class DefaultContinent implements Continent {
 	}
 
 	@Override
-	public UniformNumberTuple2<Integer> getDimension() {
+	public IntTuple2 getDimension() {
 		return this.dimension;
 	}
 

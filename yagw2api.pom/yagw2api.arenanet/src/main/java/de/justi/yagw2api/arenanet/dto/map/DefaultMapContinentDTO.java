@@ -32,8 +32,8 @@ import com.google.common.collect.ImmutableSet;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 
+import de.justi.yagw2api.common.tuple.IntTuple2;
 import de.justi.yagw2api.common.tuple.Tuples;
-import de.justi.yagw2api.common.tuple.UniformNumberTuple2;
 
 final class DefaultMapContinentDTO implements MapContinentDTO {
 
@@ -53,10 +53,10 @@ final class DefaultMapContinentDTO implements MapContinentDTO {
 
 	@SerializedName("continent_dims")
 	@Since(1.0)
-	private final Integer[] dimension = new Integer[2];
-	private final transient Supplier<UniformNumberTuple2<Integer>> dimensionTupleSupplier = Suppliers.memoize(() -> {
+	private final int[] dimension = new int[2];
+	private final transient Supplier<IntTuple2> dimensionTupleSupplier = Suppliers.memoize(() -> {
 		checkState(this.dimension.length == 2, "invalid texture dimension length: %s", this.dimension.length);
-		return Tuples.uniformOf(this.dimension[0], this.dimension[1]);
+		return Tuples.of(this.dimension[0], this.dimension[1]);
 	});
 
 	// METHODS
@@ -72,7 +72,7 @@ final class DefaultMapContinentDTO implements MapContinentDTO {
 	}
 
 	@Override
-	public UniformNumberTuple2<Integer> getDimension() {
+	public IntTuple2 getDimension() {
 		return this.dimensionTupleSupplier.get();
 	}
 

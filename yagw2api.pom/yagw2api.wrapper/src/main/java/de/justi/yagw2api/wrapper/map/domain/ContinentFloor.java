@@ -29,8 +29,8 @@ import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
 
 import de.justi.yagw2api.arenanet.dto.map.MapDTO;
-import de.justi.yagw2api.common.tuple.UniformNumberTuple2;
-import de.justi.yagw2api.common.tuple.UniformNumberTuple4;
+import de.justi.yagw2api.common.tuple.IntTuple2;
+import de.justi.yagw2api.common.tuple.IntTuple4;
 
 public interface ContinentFloor {
 
@@ -66,9 +66,9 @@ public interface ContinentFloor {
 
 	MapTile getTile(int x, int y, int zoom) throws NoSuchMapTileException;
 
-	UniformNumberTuple2<Integer> getTextureDimension();
+	IntTuple2 getTextureDimension();
 
-	UniformNumberTuple4<Integer> getClampedTextureDimension();
+	IntTuple4 getClampedTextureDimension();
 
-	UniformNumberTuple4<Integer> getClampedTileIndexDimension(final int zoom);
+	IntTuple4 getClampedTileIndexDimension(final int zoom);
 }

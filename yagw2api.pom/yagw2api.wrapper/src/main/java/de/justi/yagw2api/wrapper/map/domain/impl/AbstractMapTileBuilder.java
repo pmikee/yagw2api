@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.MoreObjects.ToStringHelper;
 
-import de.justi.yagw2api.common.tuple.UniformNumberTuple2;
+import de.justi.yagw2api.common.tuple.IntTuple2;
 import de.justi.yagw2api.wrapper.map.domain.MapTile;
 import de.justi.yagw2api.wrapper.map.domain.MapTile.MapTileBuilder;
 
@@ -34,7 +34,7 @@ abstract class AbstractMapTileBuilder<B extends AbstractMapTileBuilder<B>> imple
 
 	// FIELDS
 	@Nullable
-	private UniformNumberTuple2<Integer> position = null;
+	private IntTuple2 position = null;
 	@Nullable
 	private String floorIndex = null;
 	@Nullable
@@ -53,7 +53,7 @@ abstract class AbstractMapTileBuilder<B extends AbstractMapTileBuilder<B>> imple
 	public abstract MapTile build();
 
 	@Override
-	public final B position(@Nullable final UniformNumberTuple2<Integer> position) {
+	public final B position(@Nullable final IntTuple2 position) {
 		this.position = position;
 		return this.self();
 	}
@@ -79,7 +79,7 @@ abstract class AbstractMapTileBuilder<B extends AbstractMapTileBuilder<B>> imple
 	/**
 	 * @return the position
 	 */
-	protected final UniformNumberTuple2<Integer> getPosition() {
+	protected final IntTuple2 getPosition() {
 		return this.position;
 	}
 

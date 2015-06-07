@@ -32,8 +32,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 
+import de.justi.yagw2api.common.tuple.IntTuple4;
 import de.justi.yagw2api.common.tuple.Tuples;
-import de.justi.yagw2api.common.tuple.UniformNumberTuple4;
 
 final class DefaultMapsMapDTO implements MapsMapDTO {
 	@SerializedName("map_name")
@@ -70,13 +70,13 @@ final class DefaultMapsMapDTO implements MapsMapDTO {
 	@Since(1.0)
 	private final int[][] boundsOnContinent = new int[2][2];
 
-	private final transient Supplier<UniformNumberTuple4<Integer>> boundsTupleSupplier = Suppliers.memoize(() -> {
+	private final transient Supplier<IntTuple4> boundsTupleSupplier = Suppliers.memoize(() -> {
 		checkState(this.bounds.length == 2, "invalid bounds length: %s", this.bounds.length);
 		checkState(this.bounds[0].length == 2, "invalid bounds length: %s", this.bounds[0].length);
 		checkState(this.bounds[1].length == 2, "invalid bounds length: %s", this.bounds[1].length);
 		return Tuples.of(this.bounds[0][0], this.bounds[0][1], this.bounds[1][0], this.bounds[1][1]);
 	});
-	private final transient Supplier<UniformNumberTuple4<Integer>> boundsOnContinentTupleSupplier = Suppliers.memoize(() -> {
+	private final transient Supplier<IntTuple4> boundsOnContinentTupleSupplier = Suppliers.memoize(() -> {
 		checkState(this.boundsOnContinent.length == 2, "invalid boundsOnContinent length: %s", this.boundsOnContinent.length);
 		checkState(this.boundsOnContinent[0].length == 2, "invalid boundsOnContinent length: %s", this.boundsOnContinent[0].length);
 		checkState(this.boundsOnContinent[1].length == 2, "invalid boundsOnContinent length: %s", this.boundsOnContinent[1].length);
@@ -129,12 +129,12 @@ final class DefaultMapsMapDTO implements MapsMapDTO {
 	}
 
 	@Override
-	public UniformNumberTuple4<Integer> getBounds() {
+	public IntTuple4 getBounds() {
 		return this.boundsTupleSupplier.get();
 	}
 
 	@Override
-	public UniformNumberTuple4<Integer> getBoundsOnContinent() {
+	public IntTuple4 getBoundsOnContinent() {
 		return this.boundsOnContinentTupleSupplier.get();
 	}
 

@@ -35,7 +35,7 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.MoreObjects.ToStringHelper;
 
 import de.justi.yagw2api.common.io.Files;
-import de.justi.yagw2api.common.tuple.UniformNumberTuple2;
+import de.justi.yagw2api.common.tuple.IntTuple2;
 import de.justi.yagw2api.wrapper.map.domain.MapTile;
 
 class DefaultUnavailableMapTile implements MapTile {
@@ -77,7 +77,7 @@ class DefaultUnavailableMapTile implements MapTile {
 	}
 
 	// FIELDS
-	private final UniformNumberTuple2<Integer> position;
+	private final IntTuple2 position;
 	private final String floorIndex;
 	private final int zoom;
 	private final String continentId;
@@ -86,8 +86,6 @@ class DefaultUnavailableMapTile implements MapTile {
 	public DefaultUnavailableMapTile(final AbstractMapTileBuilder<?> builder) {
 		checkNotNull(builder, "missing builder");
 		this.position = checkNotNull(builder.getPosition(), "missing position in %s", builder);
-		checkNotNull(this.position.v1(), "incomplete position=%s of %s", this.position, this);
-		checkNotNull(this.position.v2(), "incomplete position=%s of %s", this.position, this);
 		this.floorIndex = checkNotNull(builder.getFloorIndex(), "missing floorIndex in %s", builder);
 		this.zoom = checkNotNull(builder.getZoom(), "missing zoom in %s", builder);
 		this.continentId = checkNotNull(builder.getContinentId(), "missing continentId in %s", builder);
@@ -95,7 +93,7 @@ class DefaultUnavailableMapTile implements MapTile {
 
 	// METHODS
 	@Override
-	public final UniformNumberTuple2<Integer> getPosition() {
+	public final IntTuple2 getPosition() {
 		return this.position;
 	}
 
