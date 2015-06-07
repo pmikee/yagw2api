@@ -89,7 +89,7 @@ class DelegatingMapContinent implements MapContinentDTO {
 	 * @see de.justi.yagw2api.arenanet.dto.map.MapContinentDTO#getFloors()
 	 */
 	@Override
-	public Set<Integer> getFloors() {
+	public Set<String> getFloors() {
 		return this.delegate.getFloors();
 	}
 }

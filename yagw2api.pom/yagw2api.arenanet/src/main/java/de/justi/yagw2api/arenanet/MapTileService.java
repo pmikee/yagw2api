@@ -26,7 +26,7 @@ import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ListenableFuture;
 
 public interface MapTileService {
-	Optional<Path> getMapTile(String continentId, int floor, int zoom, int x, int y);
+	Optional<Path> getMapTile(String continentId, String floorIndex, int zoom, int x, int y);
 
-	ListenableFuture<Optional<Path>> getMapTileAsync(String continentId, int floor, int zoom, int x, int y);
+	ListenableFuture<Optional<Path>> getMapTileAsync(String continentId, String floorIndex, int zoom, int x, int y);
 }

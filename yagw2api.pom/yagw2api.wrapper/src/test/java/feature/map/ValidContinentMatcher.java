@@ -60,10 +60,10 @@ final class ValidContinentMatcher extends TypeSafeMatcher<Continent> {
 		if (item.getName() == null) {
 			mismatchDescription.appendText("is missing name");
 		}
-		if (item.getFloorIds() == null) {
+		if (item.getFloorIdices() == null) {
 			mismatchDescription.appendText("is missing map floors");
 		} else {
-			for (Integer floorIndex : item.getFloorIds()) {
+			for (String floorIndex : item.getFloorIdices()) {
 				if (item.getFloor(floorIndex) == null) {
 					mismatchDescription.appendText("is missing tiles for " + floorIndex);
 				}
@@ -83,10 +83,10 @@ final class ValidContinentMatcher extends TypeSafeMatcher<Continent> {
 		if (item.getName() == null) {
 			return false;
 		}
-		if (item.getFloorIds() == null) {
+		if (item.getFloorIdices() == null) {
 			return false;
 		}
-		for (Integer floor : item.getFloorIds()) {
+		for (String floor : item.getFloorIdices()) {
 			if (item.getFloor(floor) == null) {
 				return false;
 			}

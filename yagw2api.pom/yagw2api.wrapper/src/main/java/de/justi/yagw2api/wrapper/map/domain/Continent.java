@@ -36,8 +36,7 @@ public interface Continent {
 
 		ContinentBuilder mapIds(final Set<String> mapIds);
 
-		// TODO change floor ids from int to string
-		ContinentBuilder floorIds(final Set<Integer> floorIds);
+		ContinentBuilder floorIndices(final Set<String> floorIndices);
 
 		ContinentBuilder name(@Nullable String name);
 
@@ -60,13 +59,11 @@ public interface Continent {
 
 	String getName();
 
-	// TODO change floor ids from int to string
-	Optional<ContinentFloor> getFloor(int floorIndex);
+	Optional<ContinentFloor> getFloor(String floorIndex);
 
 	Iterable<ContinentFloor> getFloors();
 
-	// TODO change floor ids from int to string
-	SortedSet<Integer> getFloorIds();
+	SortedSet<String> getFloorIdices();
 
 	Optional<Map> getMap(String mapId);
 

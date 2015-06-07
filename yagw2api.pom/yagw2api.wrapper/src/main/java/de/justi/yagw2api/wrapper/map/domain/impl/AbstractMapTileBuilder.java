@@ -9,9 +9,9 @@ package de.justi.yagw2api.wrapper.map.domain.impl;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,7 +36,7 @@ abstract class AbstractMapTileBuilder<B extends AbstractMapTileBuilder<B>> imple
 	@Nullable
 	private UniformNumberTuple2<Integer> position = null;
 	@Nullable
-	private Integer floorIndex = null;
+	private String floorIndex = null;
 	@Nullable
 	private Integer zoom = null;
 	@Nullable
@@ -59,7 +59,7 @@ abstract class AbstractMapTileBuilder<B extends AbstractMapTileBuilder<B>> imple
 	}
 
 	@Override
-	public final B floorIndex(final int floorIndex) {
+	public final B floorIndex(final String floorIndex) {
 		this.floorIndex = floorIndex;
 		return this.self();
 	}
@@ -86,7 +86,7 @@ abstract class AbstractMapTileBuilder<B extends AbstractMapTileBuilder<B>> imple
 	/**
 	 * @return the floorIndex
 	 */
-	protected final Integer getFloorIndex() {
+	protected final String getFloorIndex() {
 		return this.floorIndex;
 	}
 

@@ -33,5 +33,5 @@ public interface MapContinentDTO {
 
 	int getMaxZoom();
 
-	Set<Integer> getFloors();
+	Set<String> getFloors();
 }

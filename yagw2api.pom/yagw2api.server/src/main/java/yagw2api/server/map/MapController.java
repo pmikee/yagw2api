@@ -60,11 +60,11 @@ public class MapController {
 	}
 
 	@RequestMapping(value = "/tile/{continentId}/{floorId}/{zoom}/{x}/{y}", method = { RequestMethod.GET })
-	public void getTile(final HttpServletResponse response, @PathVariable("continentId") final String continentId, @PathVariable("floorId") final int floorId, @PathVariable("zoom") final int zoom,
-			@PathVariable("x") final int x, @PathVariable("y") final int y) throws IOException, URISyntaxException, NoSuchMapTileException {
+	public void getTile(final HttpServletResponse response, @PathVariable("continentId") final String continentId, @PathVariable("floorId") final String floorIndex,
+			@PathVariable("zoom") final int zoom, @PathVariable("x") final int x, @PathVariable("y") final int y) throws IOException, URISyntaxException, NoSuchMapTileException {
 
 		final Continent continent = YAGW2APIWrapper.INSTANCE.getMapWrapper().findContinentById(continentId).get();
-		final ContinentFloor floor = continent.getFloor(floorId).get();
+		final ContinentFloor floor = continent.getFloor(floorIndex).get();
 
 		// blockUntilLoaded=true is required, because otherwise an placeholder image will be returned for tiles that have not been loaded yet and become cached by the js part
 		final Path path = floor.getTile(x, y, zoom).getImagePath(true);
@@ -77,7 +77,7 @@ public class MapController {
 	public ImmutableList<?> getMaps(@PathVariable("continentId") final String continentId) {
 		LOGGER.info("Enter method getMaps");
 		final Continent continent = YAGW2APIWrapper.INSTANCE.getMapWrapper().findContinentById(continentId).get();
-		final ContinentFloor floor = continent.getFloor(1).get();
+		final ContinentFloor floor = continent.getFloor("0").get();
 
 		return ImmutableList.copyOf(floor.getMostSignificantMaps());
 

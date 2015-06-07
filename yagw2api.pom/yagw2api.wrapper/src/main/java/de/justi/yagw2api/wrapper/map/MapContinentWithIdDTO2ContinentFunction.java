@@ -58,7 +58,7 @@ final class MapContinentWithIdDTO2ContinentFunction implements Function<MapConti
 					id(c.getId()).
 					name(c.getName()).
 					mapIds(mapIds).
-					floorIds(c.getFloors()).
+					floorIndices(c.getFloors()).
 					dimension(c.getDimension()).
 					minZoom(c.getMinZoom()).
 					maxZoom(c.getMaxZoom()).

@@ -49,7 +49,7 @@ final class DefaultMapContinentDTO implements MapContinentDTO {
 	private final Integer maxZoom = null;
 	@SerializedName("floors")
 	@Since(1.0)
-	private final Set<Integer> floors = ImmutableSet.of();
+	private final Set<String> floors = ImmutableSet.of();
 
 	@SerializedName("continent_dims")
 	@Since(1.0)
@@ -87,7 +87,7 @@ final class DefaultMapContinentDTO implements MapContinentDTO {
 	}
 
 	@Override
-	public Set<Integer> getFloors() {
+	public Set<String> getFloors() {
 		return Collections.unmodifiableSet(this.floors);
 	}
 

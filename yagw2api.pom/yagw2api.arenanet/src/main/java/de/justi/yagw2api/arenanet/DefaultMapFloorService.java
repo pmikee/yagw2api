@@ -64,10 +64,10 @@ final class DefaultMapFloorService implements MapFloorService {
 	// FIELDS
 	private final MapDTOFactory mapDTOFactory;
 	private final Locale defaultLocale;
-	private final LoadingCache<Tuple3<Locale, String, Integer>, Optional<MapFloorDTO>> mapFloorCache = CacheBuilder.newBuilder()
-			.expireAfterWrite(CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build(new CacheLoader<Tuple3<Locale, String, Integer>, Optional<MapFloorDTO>>() {
+	private final LoadingCache<Tuple3<Locale, String, String>, Optional<MapFloorDTO>> mapFloorCache = CacheBuilder.newBuilder()
+			.expireAfterWrite(CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build(new CacheLoader<Tuple3<Locale, String, String>, Optional<MapFloorDTO>>() {
 				@Override
-				public Optional<MapFloorDTO> load(final Tuple3<Locale, String, Integer> key) throws Exception {
+				public Optional<MapFloorDTO> load(final Tuple3<Locale, String, String> key) throws Exception {
 					final WebResource resource = ArenanetUtils.REST_CLIENT.resource(MAP_FLOOR_URL.toExternalForm()).queryParam("continent_id ", key.v2().toString())
 							.queryParam("floor", key.v3().toString()).queryParam("lang", key.v1().toLanguageTag());
 					try {
@@ -94,19 +94,23 @@ final class DefaultMapFloorService implements MapFloorService {
 
 	// METHODS
 	@Override
-	public Optional<MapFloorDTO> retrieveMapFloor(final String continentId, final int floor, final Locale lang) {
+	public Optional<MapFloorDTO> retrieveMapFloor(final String continentId, final String floorIndex, final Locale lang) {
+		checkNotNull(continentId, "Missing continentId");
+		checkNotNull(floorIndex, "Missing floorIndex");
 		checkNotNull(lang, "missing lang");
 		try {
-			return this.mapFloorCache.get(Tuples.of(lang, continentId, floor));
+			return this.mapFloorCache.get(Tuples.of(lang, continentId, floorIndex));
 		} catch (ExecutionException e) {
-			LOGGER.error("Failed to retrieve {} from cache for continentId={}, floor={}, lang={}", MapFloorDTO.class, continentId, floor, lang, e);
-			throw new IllegalStateException("Failed to retrieve " + MapFloorDTO.class.getSimpleName() + " from cache for continentId=" + continentId + ", floor=" + floor
+			LOGGER.error("Failed to retrieve {} from cache for continentId={}, floor={}, lang={}", MapFloorDTO.class, continentId, floorIndex, lang, e);
+			throw new IllegalStateException("Failed to retrieve " + MapFloorDTO.class.getSimpleName() + " from cache for continentId=" + continentId + ", floor=" + floorIndex
 					+ ", lang=" + lang, e);
 		}
 	}
 
 	@Override
-	public Optional<MapFloorDTO> retrieveMapFloor(final String continentId, final int floor) {
-		return this.retrieveMapFloor(continentId, floor, this.defaultLocale);
+	public Optional<MapFloorDTO> retrieveMapFloor(final String continentId, final String floorIndex) {
+		checkNotNull(continentId, "Missing continentId");
+		checkNotNull(floorIndex, "Missing floorIndex");
+		return this.retrieveMapFloor(continentId, floorIndex, this.defaultLocale);
 	}
 }

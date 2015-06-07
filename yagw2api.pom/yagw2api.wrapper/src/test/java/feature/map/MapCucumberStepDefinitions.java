@@ -182,8 +182,8 @@ public class MapCucumberStepDefinitions implements En {
 			}).toList();
 			assertThat(continentsMatchingGivenId, is(iterableWithSize(1)));
 			final Continent continent = continentsMatchingGivenId.get(0);
-			assertThat(continent.getFloorIds().size(), is(greaterThan(0)));
-			assertThat(continent.getFloorIds().contains(floorIndex), is(true));
+			assertThat(continent.getFloorIdices().size(), is(greaterThan(0)));
+			assertThat(continent.getFloorIdices().contains(floorIndex), is(true));
 		});
 	}
 }

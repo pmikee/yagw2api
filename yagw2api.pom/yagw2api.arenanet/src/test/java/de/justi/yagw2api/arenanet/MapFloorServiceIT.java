@@ -52,24 +52,24 @@ public final class MapFloorServiceIT extends AbstractYAGW2APITest {
 	public static Collection<Object[]> parameters() {
 		//@formatter:off
 		return ImmutableList.copyOf(new Object[][]{
-				{ "1", 1, Locale.GERMAN },
-				{ "1", 1, Locale.FRENCH },
-				{ "1", 2, Locale.ENGLISH },
-				{ "2", 3, Locale.GERMAN },
-				{ "2", 1, Locale.FRENCH }
+				{ "1", "1", Locale.GERMAN },
+				{ "1", "1", Locale.FRENCH },
+				{ "1", "2", Locale.ENGLISH },
+				{ "2", "3", Locale.GERMAN },
+				{ "2", "1", Locale.FRENCH }
 		});
 		//@formatter:on
 	}
 
 	// FIELDS
 	private final String continentId;
-	private final int floor;
+	private final String floorIndex;
 	private final Locale locale;
 
 	// CONSTRUCTOR
-	public MapFloorServiceIT(final String continentId, final int floor, final Locale locale) {
-		this.continentId = continentId;
-		this.floor = floor;
+	public MapFloorServiceIT(final String continentId, final String floorIndex, final Locale locale) {
+		this.continentId = checkNotNull(continentId, "missing continentId");
+		this.floorIndex = checkNotNull(floorIndex, "missing floorIndex");
 		this.locale = checkNotNull(locale, "missing locale");
 	}
 
@@ -80,7 +80,7 @@ public final class MapFloorServiceIT extends AbstractYAGW2APITest {
 		final DefaultMapDTOFactory dtoFactory = new DefaultMapDTOFactory();
 		final DefaultMapFloorService service = new DefaultMapFloorService(Locale.GERMANY, dtoFactory);
 
-		final Optional<MapFloorDTO> floor = service.retrieveMapFloor(this.continentId, this.floor, this.locale);
+		final Optional<MapFloorDTO> floor = service.retrieveMapFloor(this.continentId, this.floorIndex, this.locale);
 
 		assertThat(floor.isPresent(), is(true));
 		assertThat(floor.get().getTextureDimension().v1(), is(greaterThan(0)));

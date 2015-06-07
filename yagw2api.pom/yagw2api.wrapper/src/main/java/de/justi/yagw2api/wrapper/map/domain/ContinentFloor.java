@@ -41,7 +41,7 @@ public interface ContinentFloor {
 
 		ContinentFloorBuilder mapIds(final Supplier<NavigableSet<String>> mapIds);
 
-		ContinentFloorBuilder floorIndex(int floorIndex);
+		ContinentFloorBuilder floorIndex(String floorIndex);
 
 		ContinentFloorBuilder minZoom(int minZoom);
 
@@ -50,7 +50,7 @@ public interface ContinentFloor {
 		ContinentFloor build();
 	}
 
-	int getIndex();
+	String getIndex();
 
 	NavigableSet<String> getMapIds();
 

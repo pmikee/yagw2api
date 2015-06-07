@@ -80,7 +80,7 @@ final class DefaultContinent implements Continent {
 		private Integer maxZoom = null;
 
 		private final Set<String> mapIds = Sets.newHashSet();
-		private final Set<Integer> floorIds = Sets.newHashSet();
+		private final Set<String> floorIndices = Sets.newHashSet();
 		private final MapService mapService;
 		private final MapFloorService mapFloorService;
 		private final MapDomainFactory mapDomainFactory;
@@ -130,10 +130,10 @@ final class DefaultContinent implements Continent {
 		}
 
 		@Override
-		public ContinentBuilder floorIds(final Set<Integer> floorIds) {
-			this.floorIds.clear();
-			if (floorIds != null) {
-				this.floorIds.addAll(floorIds);
+		public ContinentBuilder floorIndices(final Set<String> floorIndices) {
+			this.floorIndices.clear();
+			if (floorIndices != null) {
+				this.floorIndices.addAll(floorIndices);
 			}
 			return this;
 		}
@@ -149,7 +149,7 @@ final class DefaultContinent implements Continent {
 
 		@Override
 		public String toString() {
-			return MoreObjects.toStringHelper(this).add("id", this.id).add("name", this.name).add("dimension", this.dimension).add("floorIds", this.floorIds)
+			return MoreObjects.toStringHelper(this).add("id", this.id).add("name", this.name).add("dimension", this.dimension).add("floorIndices", this.floorIndices)
 					.add("mapIds", this.mapIds).add("minZoom", this.minZoom).add("maxZoom", this.maxZoom).toString();
 		}
 	}
@@ -157,7 +157,7 @@ final class DefaultContinent implements Continent {
 	private static final class MapDTOLoaderAndMapIdSupplier implements Function<String, Optional<? extends MapDTO>>, Supplier<NavigableSet<String>> {
 		// FIELDS
 		private final String continentId;
-		private final int floorIndex;
+		private final String floorIndex;
 		private final MapFloorService mapFloorService;
 
 		@Nullable
@@ -166,9 +166,9 @@ final class DefaultContinent implements Continent {
 		private volatile NavigableSet<String> mapIds = null;
 
 		// CONSTRUCTOR
-		public MapDTOLoaderAndMapIdSupplier(final String continentId, final int floorIndex, final MapFloorService mapFloorService) {
+		public MapDTOLoaderAndMapIdSupplier(final String continentId, final String floorIndex, final MapFloorService mapFloorService) {
 			this.continentId = checkNotNull(continentId, "missing continentId");
-			this.floorIndex = floorIndex;
+			this.floorIndex = checkNotNull(floorIndex, "missing floorIndex");
 			this.mapFloorService = checkNotNull(mapFloorService, "missing mapFloorService");
 		}
 
@@ -219,12 +219,12 @@ final class DefaultContinent implements Continent {
 	private final int maxZoom;
 	private final Iterable<ContinentFloor> floors;
 	private final Iterable<Map> maps;
-	private final SortedSet<Integer> floorIndices;
+	private final SortedSet<String> floorIndices;
 	private final SortedSet<String> mapIds;
 
-	private final LoadingCache<Integer, Optional<ContinentFloor>> floorCache = CacheBuilder.newBuilder().build(new CacheLoader<Integer, Optional<ContinentFloor>>() {
+	private final LoadingCache<String, Optional<ContinentFloor>> floorCache = CacheBuilder.newBuilder().build(new CacheLoader<String, Optional<ContinentFloor>>() {
 		@Override
-		public Optional<ContinentFloor> load(final Integer floorIndex) throws Exception {
+		public Optional<ContinentFloor> load(final String floorIndex) throws Exception {
 			checkNotNull(floorIndex, "missing floorIndex");
 			checkArgument(DefaultContinent.this.floorIndices.contains(floorIndex), "unknown floorIndex: %s", floorIndex);
 			if (DefaultContinent.this.floorIndices.contains(floorIndex)) {
@@ -255,7 +255,7 @@ final class DefaultContinent implements Continent {
 		this.dimension = checkNotNull(builder.dimension, "missing dimension in %s", builder);
 		this.minZoom = checkNotNull(builder.minZoom, "missing minZoom in %s", builder);
 		this.maxZoom = checkNotNull(builder.maxZoom, "missing maxZoom in %s", builder);
-		this.floorIndices = ImmutableSortedSet.copyOf(checkNotNull(builder.floorIds, "missing floorIds in %s", builder));
+		this.floorIndices = ImmutableSortedSet.copyOf(checkNotNull(builder.floorIndices, "missing floorIds in %s", builder));
 		this.mapIds = ImmutableSortedSet.copyOf(checkNotNull(builder.mapIds, "missing mapIds in %s", builder));
 
 		this.mapCache = new MapCache((mapId) -> this.mapService.retrieveAllMaps().get().getMap(mapId), this.mapDomainFactory);
@@ -288,7 +288,7 @@ final class DefaultContinent implements Continent {
 	}
 
 	@Override
-	public Optional<ContinentFloor> getFloor(final int floorIndex) {
+	public Optional<ContinentFloor> getFloor(final String floorIndex) {
 		try {
 			return this.floorCache.get(floorIndex);
 		} catch (ExecutionException e) {
@@ -302,7 +302,7 @@ final class DefaultContinent implements Continent {
 	}
 
 	@Override
-	public SortedSet<Integer> getFloorIds() {
+	public SortedSet<String> getFloorIdices() {
 		return this.floorIndices;
 	}
 

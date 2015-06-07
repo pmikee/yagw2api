@@ -78,7 +78,7 @@ class DefaultUnavailableMapTile implements MapTile {
 
 	// FIELDS
 	private final UniformNumberTuple2<Integer> position;
-	private final int floorIndex;
+	private final String floorIndex;
 	private final int zoom;
 	private final String continentId;
 
@@ -100,7 +100,7 @@ class DefaultUnavailableMapTile implements MapTile {
 	}
 
 	@Override
-	public final int getFloorIndex() {
+	public final String getFloorIndex() {
 		return this.floorIndex;
 	}
 

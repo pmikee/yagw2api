@@ -37,14 +37,14 @@ public interface MapTile {
 
 		MapTileBuilder zoom(int zoom);
 
-		MapTileBuilder floorIndex(int floorIndex);
+		MapTileBuilder floorIndex(String floorIndex);
 
 		MapTile build();
 	}
 
 	UniformNumberTuple2<Integer> getPosition();
 
-	int getFloorIndex();
+	String getFloorIndex();
 
 	int getZoom();
 

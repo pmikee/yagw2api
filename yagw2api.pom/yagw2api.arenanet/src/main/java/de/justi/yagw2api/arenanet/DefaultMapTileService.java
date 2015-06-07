@@ -72,16 +72,16 @@ final class DefaultMapTileService implements MapTileService {
 
 		// STATIC
 		private static final AtomicInteger dnsAliasIndex = new AtomicInteger(1);
-		private static final LoadingCache<Tuple5<String, Integer, Integer, Integer, Integer>, MapTileSelector> instanceCache = CacheBuilder.newBuilder().build(
-				new CacheLoader<Tuple5<String, Integer, Integer, Integer, Integer>, MapTileSelector>() {
+		private static final LoadingCache<Tuple5<String, String, Integer, Integer, Integer>, MapTileSelector> instanceCache = CacheBuilder.newBuilder().build(
+				new CacheLoader<Tuple5<String, String, Integer, Integer, Integer>, MapTileSelector>() {
 					@Override
-					public MapTileSelector load(final Tuple5<String, Integer, Integer, Integer, Integer> key) throws Exception {
+					public MapTileSelector load(final Tuple5<String, String, Integer, Integer, Integer> key) throws Exception {
 						return new MapTileSelector(key.v1(), key.v2(), key.v3(), key.v4(), key.v5());
 					}
 				});
 
-		public static final MapTileSelector of(final String continentId, final int floor, final int zoom, final int x, final int y) {
-			final Tuple5<String, Integer, Integer, Integer, Integer> key = Tuples.of(continentId, floor, zoom, x, y);
+		public static final MapTileSelector of(final String continentId, final String floorIndex, final int zoom, final int x, final int y) {
+			final Tuple5<String, String, Integer, Integer, Integer> key = Tuples.of(continentId, floorIndex, zoom, x, y);
 			try {
 				return instanceCache.get(key);
 			} catch (ExecutionException e) {
@@ -91,15 +91,15 @@ final class DefaultMapTileService implements MapTileService {
 
 		// FIELDS
 		private final String continentId;
-		private final int floor;
+		private final String floorIndex;
 		private final int zoom;
 		private final int x;
 		private final int y;
 
 		// CONSTRUCTOR
-		private MapTileSelector(final String continentId, final int floor, final int zoom, final int x, final int y) {
+		private MapTileSelector(final String continentId, final String floorIndex, final int zoom, final int x, final int y) {
 			this.continentId = checkNotNull(continentId, "missing continentId");
-			this.floor = floor;
+			this.floorIndex = checkNotNull(floorIndex, "missing floorIndex");
 			this.zoom = zoom;
 			this.x = x;
 			this.y = y;
@@ -110,8 +110,8 @@ final class DefaultMapTileService implements MapTileService {
 			return this.continentId;
 		}
 
-		public final int getFloor() {
-			return this.floor;
+		public final String getFloorIndex() {
+			return this.floorIndex;
 		}
 
 		public final int getZoom() {
@@ -129,7 +129,7 @@ final class DefaultMapTileService implements MapTileService {
 		public final URL toURL() {
 			try {
 				return new URL("https", "tiles" + dnsAliasIndex.getAndUpdate(operand -> (operand % maxDNSAliasIndex) + 1) + ".guildwars2.com", "/" + this.continentId + "/"
-						+ this.floor + "/" + this.zoom + "/" + this.x + "/" + this.y + ".jpg");
+						+ this.floorIndex + "/" + this.zoom + "/" + this.x + "/" + this.y + ".jpg");
 			} catch (MalformedURLException e) {
 				throw new Error(e);
 			}
@@ -137,8 +137,8 @@ final class DefaultMapTileService implements MapTileService {
 
 		@Override
 		public final String toString() {
-			return MoreObjects.toStringHelper(this).add("continentId", this.continentId).add("floor", this.floor).add("zoom", this.zoom).add("x", this.x).add("y", this.y)
-					.toString();
+			return MoreObjects.toStringHelper(this).add("continentId", this.continentId).add("floorIndex", this.floorIndex).add("zoom", this.zoom).add("x", this.x)
+					.add("y", this.y).toString();
 		}
 	}
 
@@ -149,7 +149,7 @@ final class DefaultMapTileService implements MapTileService {
 			final URL url = key.toURL();
 			try {
 				final Path dir = de.justi.yagw2api.common.io.Files.getTempDir().resolve(RELATIVE_TEMP_DIR_PATH);
-				final Path file = dir.resolve(key.getContinentId() + "." + key.getFloor() + "." + key.getZoom() + "." + key.getX() + "." + key.getY() + ".jpg");
+				final Path file = dir.resolve(key.getContinentId() + "." + key.getFloorIndex() + "." + key.getZoom() + "." + key.getX() + "." + key.getY() + ".jpg");
 				if (!Files.exists(file)) {
 					try (final InputStream in = url.openStream()) {
 						Files.createDirectories(dir);
@@ -167,18 +167,22 @@ final class DefaultMapTileService implements MapTileService {
 	});
 
 	@Override
-	public Optional<Path> getMapTile(final String continentId, final int floor, final int zoom, final int x, final int y) {
+	public Optional<Path> getMapTile(final String continentId, final String floorIndex, final int zoom, final int x, final int y) {
+		checkNotNull(continentId, "missing continentId");
+		checkNotNull(floorIndex, "missing floorIndex");
 		try {
-			return this.getMapTileAsync(continentId, floor, zoom, x, y).get();
+			return this.getMapTileAsync(continentId, floorIndex, zoom, x, y).get();
 		} catch (InterruptedException | ExecutionException e) {
 			throw new Error(e);
 		}
 	}
 
 	@Override
-	public ListenableFuture<Optional<Path>> getMapTileAsync(final String continentId, final int floor, final int zoom, final int x, final int y) {
+	public ListenableFuture<Optional<Path>> getMapTileAsync(final String continentId, final String floorIndex, final int zoom, final int x, final int y) {
+		checkNotNull(continentId, "missing continentId");
+		checkNotNull(floorIndex, "missing floorIndex");
 		return EXECUTOR_SERVICE.submit(() -> {
-			final MapTileSelector selector = MapTileSelector.of(continentId, floor, zoom, x, y);
+			final MapTileSelector selector = MapTileSelector.of(continentId, floorIndex, zoom, x, y);
 			try {
 				return DefaultMapTileService.this.mapTileCache.get(selector);
 			} catch (ExecutionException e) {

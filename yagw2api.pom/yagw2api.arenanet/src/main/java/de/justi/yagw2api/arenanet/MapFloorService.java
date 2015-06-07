@@ -27,7 +27,7 @@ import com.google.common.base.Optional;
 import de.justi.yagw2api.arenanet.dto.map.MapFloorDTO;
 
 public interface MapFloorService {
-	Optional<MapFloorDTO> retrieveMapFloor(final String continentId, final int floor, final Locale lang);
+	Optional<MapFloorDTO> retrieveMapFloor(final String continentId, final String floor, final Locale lang);
 
-	Optional<MapFloorDTO> retrieveMapFloor(final String continentId, final int floor);
+	Optional<MapFloorDTO> retrieveMapFloor(final String continentId, final String floor);
 }

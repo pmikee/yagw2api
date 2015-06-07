@@ -80,7 +80,7 @@ final class DefaultContinentFloor implements ContinentFloor {
 		@Nullable
 		private Function<String, Optional<? extends MapDTO>> mapDTOLoader = null;
 		@Nullable
-		private Integer floorIndex = null;
+		private String floorIndex = null;
 		@Nullable
 		private String continentId = null;
 		@Nullable
@@ -103,7 +103,7 @@ final class DefaultContinentFloor implements ContinentFloor {
 		}
 
 		@Override
-		public ContinentFloorBuilder floorIndex(final int floorIndex) {
+		public ContinentFloorBuilder floorIndex(final String floorIndex) {
 			this.floorIndex = floorIndex;
 			return this;
 		}
@@ -171,7 +171,7 @@ final class DefaultContinentFloor implements ContinentFloor {
 		}
 
 	});
-	private final int floorIndex;
+	private final String floorIndex;
 	private final int minZoom;
 	private final int maxZoom;
 	private final Supplier<UniformNumberTuple2<Integer>> textureSize = Suppliers.memoize(new Supplier<UniformNumberTuple2<Integer>>() {
@@ -321,7 +321,7 @@ final class DefaultContinentFloor implements ContinentFloor {
 	}
 
 	@Override
-	public int getIndex() {
+	public String getIndex() {
 		return this.floorIndex;
 	}
 
