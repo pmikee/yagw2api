@@ -1,11 +1,4 @@
-package de.justi.yagw2api.wrapper.map;
-
-import java.util.List;
-
-import com.google.common.base.Optional;
-
-import de.justi.yagw2api.common.event.HasChannel;
-import de.justi.yagw2api.wrapper.map.domain.Continent;
+package de.justi.yagw2api.wrapper.map.domain;
 
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -16,9 +9,9 @@ import de.justi.yagw2api.wrapper.map.domain.Continent;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,11 +20,7 @@ import de.justi.yagw2api.wrapper.map.domain.Continent;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-public interface MapWrapper extends HasChannel {
+public final class NoSuchContinentFloorException extends Exception {
+	private static final long serialVersionUID = -4924303444908153898L;
 
-	Optional<Continent> findContinentById(String id);
-
-	Continent getContinentById(String id) throws NoSuchContinentException;
-
-	List<Continent> getContinents();
 }

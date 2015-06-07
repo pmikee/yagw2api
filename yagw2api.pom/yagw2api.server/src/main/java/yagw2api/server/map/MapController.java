@@ -20,8 +20,10 @@ import org.springframework.web.servlet.ModelAndView;
 import com.google.common.collect.ImmutableList;
 
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
+import de.justi.yagw2api.wrapper.map.NoSuchContinentException;
 import de.justi.yagw2api.wrapper.map.domain.Continent;
 import de.justi.yagw2api.wrapper.map.domain.ContinentFloor;
+import de.justi.yagw2api.wrapper.map.domain.NoSuchContinentFloorException;
 import de.justi.yagw2api.wrapper.map.domain.NoSuchMapTileException;
 
 /*
@@ -61,10 +63,11 @@ public class MapController {
 
 	@RequestMapping(value = "/tile/{continentId}/{floorId}/{zoom}/{x}/{y}", method = { RequestMethod.GET })
 	public void getTile(final HttpServletResponse response, @PathVariable("continentId") final String continentId, @PathVariable("floorId") final String floorIndex,
-			@PathVariable("zoom") final int zoom, @PathVariable("x") final int x, @PathVariable("y") final int y) throws IOException, URISyntaxException, NoSuchMapTileException {
+			@PathVariable("zoom") final int zoom, @PathVariable("x") final int x, @PathVariable("y") final int y) throws IOException, URISyntaxException, NoSuchMapTileException,
+			NoSuchContinentException, NoSuchContinentFloorException {
 
-		final Continent continent = YAGW2APIWrapper.INSTANCE.getMapWrapper().findContinentById(continentId).get();
-		final ContinentFloor floor = continent.getFloor(floorIndex).get();
+		final Continent continent = YAGW2APIWrapper.INSTANCE.getMapWrapper().getContinentById(continentId);
+		final ContinentFloor floor = continent.getFloor(floorIndex);
 
 		// blockUntilLoaded=true is required, because otherwise an placeholder image will be returned for tiles that have not been loaded yet and become cached by the js part
 		final Path path = floor.getTile(x, y, zoom).getImagePath(true);
@@ -74,10 +77,10 @@ public class MapController {
 
 	@RequestMapping(value = "/{continentId}/maps", method = { RequestMethod.GET }, produces = { MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody
-	public ImmutableList<?> getMaps(@PathVariable("continentId") final String continentId) {
+	public ImmutableList<?> getMaps(@PathVariable("continentId") final String continentId) throws NoSuchContinentException, NoSuchContinentFloorException {
 		LOGGER.info("Enter method getMaps");
-		final Continent continent = YAGW2APIWrapper.INSTANCE.getMapWrapper().findContinentById(continentId).get();
-		final ContinentFloor floor = continent.getFloor("0").get();
+		final Continent continent = YAGW2APIWrapper.INSTANCE.getMapWrapper().getContinentById(continentId);
+		final ContinentFloor floor = continent.getFloor("0");
 
 		return ImmutableList.copyOf(floor.getMostSignificantMaps());
 

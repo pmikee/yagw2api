@@ -59,7 +59,9 @@ public interface Continent {
 
 	String getName();
 
-	Optional<ContinentFloor> getFloor(String floorIndex);
+	Optional<ContinentFloor> findFloor(String floorIndex);
+
+	ContinentFloor getFloor(String floorIndex) throws NoSuchContinentFloorException;
 
 	Iterable<ContinentFloor> getFloors();
 

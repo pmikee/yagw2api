@@ -80,4 +80,15 @@ public final class DefaultMapWrapper implements MapWrapper {
 		checkNotNull(id, "missing id");
 		return this.fluentContinents.firstMatch(MapPredicates.continentIdEquals(id));
 	}
+
+	@Override
+	public Continent getContinentById(final String id) throws NoSuchContinentException {
+		checkNotNull(id, "missing id");
+		final Optional<Continent> continent = this.findContinentById(id);
+		if (continent.isPresent()) {
+			return continent.get();
+		} else {
+			throw new NoSuchContinentException();
+		}
+	}
 }

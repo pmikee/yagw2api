@@ -176,7 +176,7 @@ public class MapCucumberStepDefinitions implements En {
 				return continent.getId().equals(continentId) && continent.getName().equals(name);
 			}), is(iterableWithSize(1)));
 		});
-		this.Then("^the continent with id=\"(.*?)\" has a floor with index '(\\d+)'$", (final String continentId, final Integer floorIndex) -> {
+		this.Then("^the continent with id=\"(.*?)\" has a floor with index \"(.*?)\"$", (final String continentId, final String floorIndex) -> {
 			final List<Continent> continentsMatchingGivenId = FluentIterable.from(this.retrievedContinents).filter((continent) -> {
 				return continent.getId().equals(continentId);
 			}).toList();

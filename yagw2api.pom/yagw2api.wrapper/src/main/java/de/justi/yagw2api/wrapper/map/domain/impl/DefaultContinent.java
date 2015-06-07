@@ -55,6 +55,7 @@ import de.justi.yagw2api.wrapper.map.domain.Continent;
 import de.justi.yagw2api.wrapper.map.domain.ContinentFloor;
 import de.justi.yagw2api.wrapper.map.domain.Map;
 import de.justi.yagw2api.wrapper.map.domain.MapDomainFactory;
+import de.justi.yagw2api.wrapper.map.domain.NoSuchContinentFloorException;
 
 final class DefaultContinent implements Continent {
 
@@ -262,7 +263,7 @@ final class DefaultContinent implements Continent {
 
 		this.floors = FluentIterable.from(this.floorIndices).transform((floorIndex) -> {
 			checkNotNull(floorIndex, "missing floorIndex");
-			return DefaultContinent.this.getFloor(floorIndex).get();
+			return DefaultContinent.this.findFloor(floorIndex).get();
 		});
 		this.maps = FluentIterable.from(this.mapIds).transform((mapIndex) -> {
 			checkNotNull(mapIndex, "missing mapIndex");
@@ -288,11 +289,23 @@ final class DefaultContinent implements Continent {
 	}
 
 	@Override
-	public Optional<ContinentFloor> getFloor(final String floorIndex) {
+	public Optional<ContinentFloor> findFloor(final String floorIndex) {
+		checkNotNull(floorIndex, "missing floorIndex");
 		try {
 			return this.floorCache.get(floorIndex);
 		} catch (ExecutionException e) {
 			throw new Error(e);
+		}
+	}
+
+	@Override
+	public ContinentFloor getFloor(final String floorIndex) throws NoSuchContinentFloorException {
+		checkNotNull(floorIndex, "missing floorIndex");
+		final Optional<ContinentFloor> floor = this.findFloor(floorIndex);
+		if (floor.isPresent()) {
+			return floor.get();
+		} else {
+			throw new NoSuchContinentFloorException();
 		}
 	}
 
