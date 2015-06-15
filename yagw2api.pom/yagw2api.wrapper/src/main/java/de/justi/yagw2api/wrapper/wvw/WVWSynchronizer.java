@@ -9,9 +9,9 @@ package de.justi.yagw2api.wrapper.wvw;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,36 +36,41 @@ import org.slf4j.LoggerFactory;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.common.util.concurrent.AbstractScheduledService;
+import com.google.inject.Inject;
 import com.sun.jersey.client.impl.CopyOnWriteHashMap;
 
 import de.justi.yagw2api.arenanet.WVWService;
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
 import de.justi.yagw2api.arenanet.dto.wvw.WVWMatchesDTO;
+import de.justi.yagw2api.common.event.Event;
+import de.justi.yagw2api.common.event.HasChannel;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
-import de.justi.yagw2api.wrapper.domain.world.World;
-import de.justi.yagw2api.wrapper.domain.wvw.WVWMatch;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWInitializedMatchEvent;
-import de.justi.yagwapi.common.Event;
-import de.justi.yagwapi.common.HasChannel;
+import de.justi.yagw2api.wrapper.guild.GuildWrapper;
+import de.justi.yagw2api.wrapper.world.domain.World;
+import de.justi.yagw2api.wrapper.wvw.domain.WVWMatch;
+import de.justi.yagw2api.wrapper.wvw.event.WVWInitializedMatchEvent;
 
 final class WVWSynchronizer extends AbstractScheduledService implements HasChannel {
+	// CONSTS
 	private static final WVWService SERVICE = YAGW2APIArenanet.getInstance().getWVWService();
 	private static final long DELAY_MILLIS = 500;
 	private static final Logger LOGGER = LoggerFactory.getLogger(WVWSynchronizer.class);
 
-	private Map<String, WVWMatch> matchesMappedById = new CopyOnWriteHashMap<String, WVWMatch>();
+	// FIELDS
+	private final Map<String, WVWMatch> matchesMappedById = new CopyOnWriteHashMap<>();
+	private final Set<WVWMatch> matches = new CopyOnWriteArraySet<>();
+	private final Set<World> worlds = new CopyOnWriteArraySet<>();
 
-	private Set<WVWMatch> matches = new CopyOnWriteArraySet<WVWMatch>();
-	private Set<World> worlds = new CopyOnWriteArraySet<World>();
-
+	private final GuildWrapper guildWrapper;
 	private final EventBus channel = new EventBus(this.getClass().getName());
 
-	/**
-	 * constructor
-	 */
-	public WVWSynchronizer() {
-
+	// CONSTRUCTOR
+	@Inject
+	public WVWSynchronizer(final GuildWrapper guildWrapper) {
+		this.guildWrapper = checkNotNull(guildWrapper, "missing guildWrapper");
 	}
+
+	// METHODS
 
 	@Override
 	public void startUp() {
@@ -137,7 +142,7 @@ final class WVWSynchronizer extends AbstractScheduledService implements HasChann
 		try {
 			final Map<String, WVWMatch> defensiveCopyOfMatchesMappedById = Collections.unmodifiableMap(new HashMap<String, WVWMatch>(this.getMatchesMappedById()));
 			final long startTimestamp = System.currentTimeMillis();
-			final WVWSynchronizerAction action = new WVWSynchronizerAction(defensiveCopyOfMatchesMappedById);
+			final WVWSynchronizerAction action = new WVWSynchronizerAction(this.guildWrapper, defensiveCopyOfMatchesMappedById);
 			YAGW2APIWrapper.INSTANCE.getForkJoinPool().invoke(action);
 
 			final long endTime = System.currentTimeMillis();

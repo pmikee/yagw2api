@@ -9,9 +9,9 @@ package de.justi.yagw2api.arenanet.dto.map;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,8 +28,8 @@ import com.google.common.base.Suppliers;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 
-import de.justi.yagwapi.common.Tuple2;
-import de.justi.yagwapi.common.Tuples;
+import de.justi.yagw2api.common.tuple.DoubleTuple2;
+import de.justi.yagw2api.common.tuple.Tuples;
 
 final class DefaultMapSectorDTO implements MapSectorDTO {
 	@SerializedName("sector_id")
@@ -43,9 +43,9 @@ final class DefaultMapSectorDTO implements MapSectorDTO {
 	private final Integer floor = null;
 	@SerializedName("coord")
 	@Since(1.0)
-	private final Double[] coordinates = new Double[2];
+	private final double[] coordinates = new double[2];
 
-	private final transient Supplier<Tuple2<Double, Double>> coordinatesTupleSupplier = Suppliers.memoize(() -> {
+	private final transient Supplier<DoubleTuple2> coordinatesTupleSupplier = Suppliers.memoize(() -> {
 		checkState(this.coordinates.length == 2, "invalid coordinates length: %s", this.coordinates.length);
 		return Tuples.of(this.coordinates[0], this.coordinates[1]);
 	});
@@ -66,7 +66,7 @@ final class DefaultMapSectorDTO implements MapSectorDTO {
 	}
 
 	@Override
-	public Tuple2<Double, Double> getCoordinates() {
+	public DoubleTuple2 getCoordinates() {
 		return this.coordinatesTupleSupplier.get();
 	}
 

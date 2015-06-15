@@ -9,9 +9,9 @@ package de.justi.yagw2api.arenanet.dto.map;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,16 +24,16 @@ import java.util.Map;
 
 import com.google.common.base.Optional;
 
-import de.justi.yagwapi.common.Tuple2;
-import de.justi.yagwapi.common.Tuple4;
+import de.justi.yagw2api.common.tuple.IntTuple2;
+import de.justi.yagw2api.common.tuple.IntTuple4;
 
 public interface MapFloorDTO {
-	Tuple2<Integer, Integer> getTextureDimension();
+	IntTuple2 getTextureDimension();
 
 	/**
 	 * @return If present, it represents a rectangle of downloadable textures. Every tile coordinate outside this rectangle is not available on the tile server.
 	 */
-	Optional<Tuple4<Integer, Integer, Integer, Integer>> getClampedView();
+	Optional<IntTuple4> getClampedView();
 
 	Map<String, MapRegionDTO> getRegions();
 }

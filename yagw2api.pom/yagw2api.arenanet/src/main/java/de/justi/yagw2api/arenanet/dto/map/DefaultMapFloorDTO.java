@@ -9,9 +9,9 @@ package de.justi.yagw2api.arenanet.dto.map;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,10 +20,14 @@ package de.justi.yagw2api.arenanet.dto.map;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Collections;
 import java.util.Map;
+
+import javax.annotation.Nullable;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
@@ -33,42 +37,74 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Since;
 
-import de.justi.yagwapi.common.Tuple2;
-import de.justi.yagwapi.common.Tuple4;
-import de.justi.yagwapi.common.Tuples;
+import de.justi.yagw2api.common.tuple.IntTuple2;
+import de.justi.yagw2api.common.tuple.IntTuple4;
+import de.justi.yagw2api.common.tuple.Tuples;
 
 final class DefaultMapFloorDTO implements MapFloorDTO {
-
+	// FIELDS
 	@SerializedName("texture_dims")
 	@Since(1.0)
-	private final int[] textureDimension = new int[2];
+	private final int[] textureDimension;
 	@SerializedName("clamped_view")
 	@Since(1.0)
-	private final int[][] clampedView = new int[2][2];
+	@Nullable
+	private final int[][] clampedView;
 
 	@SerializedName("regions")
 	@Since(1.0)
 	private final Map<String, DefaultMapRegionDTO> regions = ImmutableMap.of();
 
-	private final transient Supplier<Tuple2<Integer, Integer>> textureDimensionTupleSupplier = Suppliers.memoize(() -> {
-		checkState(this.textureDimension.length == 2, "invalid texture dimension length: %s", this.textureDimension.length);
-		return Tuples.of(this.textureDimension[0], this.textureDimension[1]);
+	private final transient Supplier<IntTuple2> textureDimensionTupleSupplier = Suppliers.memoize(new Supplier<IntTuple2>() {
+		@Override
+		public IntTuple2 get() {
+			checkNotNull(DefaultMapFloorDTO.this.textureDimension, "missing textureDimension in %s", DefaultMapFloorDTO.this);
+			checkState(DefaultMapFloorDTO.this.textureDimension.length == 2, "invalid texture dimension length: %s", DefaultMapFloorDTO.this.textureDimension.length);
+			return Tuples.of(DefaultMapFloorDTO.this.textureDimension[0], DefaultMapFloorDTO.this.textureDimension[1]);
+		}
 	});
 
-	private final transient Supplier<Optional<Tuple4<Integer, Integer, Integer, Integer>>> clampedViewTupleSupplier = Suppliers.memoize(() -> {
-		checkState(this.clampedView.length == 2, "invalid clamped view length: %s", this.clampedView.length);
-		checkState(this.clampedView[0].length == 2, "invalid clamped view length: %s", this.clampedView[0].length);
-		checkState(this.clampedView[1].length == 2, "invalid clamped view length: %s", this.clampedView[1].length);
-		return Optional.of(Tuples.of(this.clampedView[0][0], this.clampedView[0][1], this.clampedView[1][0], this.clampedView[1][1]));
+	private final transient Supplier<Optional<IntTuple4>> clampedViewTupleSupplier = Suppliers.memoize(new Supplier<Optional<IntTuple4>>() {
+		@Override
+		public Optional<IntTuple4> get() {
+			if (DefaultMapFloorDTO.this.clampedView == null) {
+				return Optional.absent();
+			} else {
+				checkNotNull(DefaultMapFloorDTO.this.clampedView, "missing clampedView in %s", DefaultMapFloorDTO.this);
+				checkState(DefaultMapFloorDTO.this.clampedView.length == 2, "invalid clamped view length: %s", DefaultMapFloorDTO.this.clampedView.length);
+				checkState(DefaultMapFloorDTO.this.clampedView[0].length == 2, "invalid clamped view length: %s", DefaultMapFloorDTO.this.clampedView[0].length);
+				checkState(DefaultMapFloorDTO.this.clampedView[1].length == 2, "invalid clamped view length: %s", DefaultMapFloorDTO.this.clampedView[1].length);
+				return Optional.of(Tuples.of(DefaultMapFloorDTO.this.clampedView[0][0], DefaultMapFloorDTO.this.clampedView[0][1], DefaultMapFloorDTO.this.clampedView[1][0],
+						DefaultMapFloorDTO.this.clampedView[1][1]));
+			}
+		}
 	});
 
+	// CONSTRUCTOR
+	DefaultMapFloorDTO() {
+		this.clampedView = null;
+		this.textureDimension = new int[2];
+	}
+
+	DefaultMapFloorDTO(final int[] textureDimension, final int[][] clampedView) {
+		checkNotNull(textureDimension, "missing textureDimension");
+		checkArgument(textureDimension.length == 2, "unexpected length of textureDimension: %s", textureDimension.length);
+		checkNotNull(clampedView, "missing clampedView");
+		checkArgument(clampedView.length == 2, "unexpected length of clampedView: %s", clampedView.length);
+		checkArgument(clampedView[0].length == 2, "unexpected length of clampedView[0]: %s", clampedView[0].length);
+		checkArgument(clampedView[1].length == 2, "unexpected length of clampedView[1]: %s", clampedView[1].length);
+		this.textureDimension = textureDimension;
+		this.clampedView = clampedView;
+	}
+
+	// METHODS
 	@Override
-	public Tuple2<Integer, Integer> getTextureDimension() {
+	public IntTuple2 getTextureDimension() {
 		return this.textureDimensionTupleSupplier.get();
 	}
 
 	@Override
-	public Optional<Tuple4<Integer, Integer, Integer, Integer>> getClampedView() {
+	public Optional<IntTuple4> getClampedView() {
 		return this.clampedViewTupleSupplier.get();
 	}
 

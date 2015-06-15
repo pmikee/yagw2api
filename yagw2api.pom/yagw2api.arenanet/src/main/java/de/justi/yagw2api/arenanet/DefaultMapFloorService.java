@@ -9,9 +9,9 @@ package de.justi.yagw2api.arenanet;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -44,9 +44,9 @@ import com.sun.jersey.api.client.WebResource;
 
 import de.justi.yagw2api.arenanet.dto.map.MapDTOFactory;
 import de.justi.yagw2api.arenanet.dto.map.MapFloorDTO;
-import de.justi.yagwapi.common.RetryClientFilter;
-import de.justi.yagwapi.common.Tuple3;
-import de.justi.yagwapi.common.Tuples;
+import de.justi.yagw2api.common.rest.RetryClientFilter;
+import de.justi.yagw2api.common.tuple.Tuple3;
+import de.justi.yagw2api.common.tuple.Tuples;
 
 final class DefaultMapFloorService implements MapFloorService {
 	// CONSTS
@@ -63,19 +63,20 @@ final class DefaultMapFloorService implements MapFloorService {
 
 	// FIELDS
 	private final MapDTOFactory mapDTOFactory;
-	private final LoadingCache<Tuple3<Locale, Integer, Integer>, Optional<MapFloorDTO>> mapFloorCache = CacheBuilder.newBuilder()
-			.expireAfterWrite(CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build(new CacheLoader<Tuple3<Locale, Integer, Integer>, Optional<MapFloorDTO>>() {
+	private final Locale defaultLocale;
+	private final LoadingCache<Tuple3<Locale, String, String>, Optional<MapFloorDTO>> mapFloorCache = CacheBuilder.newBuilder()
+			.expireAfterWrite(CACHE_EXPIRE_MILLIS, TimeUnit.MILLISECONDS).build(new CacheLoader<Tuple3<Locale, String, String>, Optional<MapFloorDTO>>() {
 				@Override
-				public Optional<MapFloorDTO> load(final Tuple3<Locale, Integer, Integer> key) throws Exception {
-					final WebResource resource = ArenanetUtils.REST_CLIENT.resource(MAP_FLOOR_URL.toExternalForm()).queryParam("continent_id ", key.getValue2().get().toString())
-							.queryParam("floor", key.getValue3().get().toString()).queryParam("lang", key.getValue1().get().toLanguageTag());
+				public Optional<MapFloorDTO> load(final Tuple3<Locale, String, String> key) throws Exception {
+					final WebResource resource = ArenanetUtils.REST_CLIENT.resource(MAP_FLOOR_URL.toExternalForm()).queryParam("continent_id ", key.v2().toString())
+							.queryParam("floor", key.v3().toString()).queryParam("lang", key.v1().toLanguageTag());
 					try {
 						resource.addFilter(new RetryClientFilter(ArenanetUtils.REST_RETRY_COUNT));
 						final WebResource.Builder builder = resource.accept(MediaType.APPLICATION_JSON_TYPE);
 						final String response = builder.get(String.class);
 						LOGGER.trace("Retrieved response=" + response);
 						final MapFloorDTO result = DefaultMapFloorService.this.mapDTOFactory.newMapFloorOf(response);
-						LOGGER.debug("Built result=" + result);
+						LOGGER.trace("Built result=" + result);
 						return Optional.of(result);
 					} catch (ClientHandlerException | UniformInterfaceException e) {
 						LOGGER.error("Exception thrown while quering {}", resource, e);
@@ -86,20 +87,30 @@ final class DefaultMapFloorService implements MapFloorService {
 
 	// CONSTRUCTOR
 	@Inject
-	public DefaultMapFloorService(final MapDTOFactory mapDTOFactory) {
-		this.mapDTOFactory = checkNotNull(mapDTOFactory);
+	public DefaultMapFloorService(final Locale defaultLocale, final MapDTOFactory mapDTOFactory) {
+		this.mapDTOFactory = checkNotNull(mapDTOFactory, "missing mapDTOFactory");
+		this.defaultLocale = checkNotNull(defaultLocale, "missing defaultLocale");
 	}
 
 	// METHODS
 	@Override
-	public Optional<MapFloorDTO> retrieveMapFloor(final int continentId, final int floor, final Locale lang) {
+	public Optional<MapFloorDTO> retrieveMapFloor(final String continentId, final String floorIndex, final Locale lang) {
+		checkNotNull(continentId, "Missing continentId");
+		checkNotNull(floorIndex, "Missing floorIndex");
 		checkNotNull(lang, "missing lang");
 		try {
-			return this.mapFloorCache.get(Tuples.of(lang, continentId, floor));
+			return this.mapFloorCache.get(Tuples.of(lang, continentId, floorIndex));
 		} catch (ExecutionException e) {
-			LOGGER.error("Failed to retrieve {} from cache for continentId={}, floor={}, lang={}", MapFloorDTO.class, continentId, floor, lang, e);
-			throw new IllegalStateException("Failed to retrieve " + MapFloorDTO.class.getSimpleName() + " from cache for continentId=" + continentId + ", floor=" + floor
+			LOGGER.error("Failed to retrieve {} from cache for continentId={}, floor={}, lang={}", MapFloorDTO.class, continentId, floorIndex, lang, e);
+			throw new IllegalStateException("Failed to retrieve " + MapFloorDTO.class.getSimpleName() + " from cache for continentId=" + continentId + ", floor=" + floorIndex
 					+ ", lang=" + lang, e);
 		}
+	}
+
+	@Override
+	public Optional<MapFloorDTO> retrieveMapFloor(final String continentId, final String floorIndex) {
+		checkNotNull(continentId, "Missing continentId");
+		checkNotNull(floorIndex, "Missing floorIndex");
+		return this.retrieveMapFloor(continentId, floorIndex, this.defaultLocale);
 	}
 }

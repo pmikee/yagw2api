@@ -9,9 +9,9 @@ package de.justi.yagw2api.wrapper.wvw;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,39 +36,50 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.eventbus.Subscribe;
+import com.google.inject.Inject;
 import com.sun.jersey.client.impl.CopyOnWriteHashMap;
 
-import de.justi.yagw2api.wrapper.domain.world.World;
-import de.justi.yagw2api.wrapper.domain.wvw.WVWMap;
-import de.justi.yagw2api.wrapper.domain.wvw.WVWMatch;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWInitializedMatchEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWMapEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWMapListener;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWMapScoresChangedEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWMatchEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWMatchListener;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWMatchScoresChangedEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWObjectiveCaptureEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWObjectiveClaimedEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWObjectiveEndOfBuffEvent;
+import de.justi.yagw2api.wrapper.guild.GuildWrapper;
+import de.justi.yagw2api.wrapper.world.domain.World;
+import de.justi.yagw2api.wrapper.wvw.domain.WVWMap;
+import de.justi.yagw2api.wrapper.wvw.domain.WVWMatch;
+import de.justi.yagw2api.wrapper.wvw.event.WVWInitializedMatchEvent;
+import de.justi.yagw2api.wrapper.wvw.event.WVWMapEvent;
+import de.justi.yagw2api.wrapper.wvw.event.WVWMapListener;
+import de.justi.yagw2api.wrapper.wvw.event.WVWMapScoresChangedEvent;
+import de.justi.yagw2api.wrapper.wvw.event.WVWMatchEvent;
+import de.justi.yagw2api.wrapper.wvw.event.WVWMatchListener;
+import de.justi.yagw2api.wrapper.wvw.event.WVWMatchScoresChangedEvent;
+import de.justi.yagw2api.wrapper.wvw.event.WVWObjectiveCaptureEvent;
+import de.justi.yagw2api.wrapper.wvw.event.WVWObjectiveClaimedEvent;
+import de.justi.yagw2api.wrapper.wvw.event.WVWObjectiveEndOfBuffEvent;
 
 public final class DefaultWVWWrapper implements WVWWrapper {
+	// CONSTS
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultWVWWrapper.class);
-	private WVWSynchronizer deamon = null;
-	private final Map<WVWMatch, Collection<WVWMatchListener>> singleMatchListeners = new CopyOnWriteHashMap<WVWMatch, Collection<WVWMatchListener>>();
-	private final Collection<WVWMatchListener> allMatchesListeners = new CopyOnWriteArrayList<WVWMatchListener>();
-	private final Map<WVWMap, Collection<WVWMapListener>> singleMapListeners = new CopyOnWriteHashMap<WVWMap, Collection<WVWMapListener>>();
-	private final Map<WVWMatch, Collection<WVWMapListener>> allMapsOfSingleMatchListeners = new CopyOnWriteHashMap<WVWMatch, Collection<WVWMapListener>>();
-	private final Collection<WVWMapListener> allMapsOfAllMatchesListeners = new CopyOnWriteArrayList<WVWMapListener>();
 
-	public DefaultWVWWrapper() {
+	// FIELDS
+	private WVWSynchronizer deamon = null;
+	private final Map<WVWMatch, Collection<WVWMatchListener>> singleMatchListeners = new CopyOnWriteHashMap<>();
+	private final Collection<WVWMatchListener> allMatchesListeners = new CopyOnWriteArrayList<>();
+	private final Map<WVWMap, Collection<WVWMapListener>> singleMapListeners = new CopyOnWriteHashMap<>();
+	private final Map<WVWMatch, Collection<WVWMapListener>> allMapsOfSingleMatchListeners = new CopyOnWriteHashMap<>();
+	private final Collection<WVWMapListener> allMapsOfAllMatchesListeners = new CopyOnWriteArrayList<>();
+
+	private final GuildWrapper guildWrapper;
+
+	// CONSTRUCTOR
+	@Inject
+	public DefaultWVWWrapper(final GuildWrapper guildWrapper) {
+		this.guildWrapper = checkNotNull(guildWrapper, "missing guildWrapper");
 	}
 
+	// METHODS
 	private void initDemaonIfRequired() {
 		if (this.deamon == null) {
 			synchronized (this) {
 				if (this.deamon == null) {
-					this.deamon = new WVWSynchronizer();
+					this.deamon = new WVWSynchronizer(this.guildWrapper);
 					this.deamon.getChannel().register(this);
 				}
 			}

@@ -64,11 +64,11 @@ import de.justi.yagw2api.explorer.rcp.swt.TypeSafeColumnLabelProvider;
 import de.justi.yagw2api.explorer.rcp.swt.TypeSafeContentProvider;
 import de.justi.yagw2api.explorer.rcp.swt.TypeSafeTableViewerColumnSorter;
 import de.justi.yagw2api.explorer.rcp.swt.TypeSafeViewerLabelProvider;
-import de.justi.yagw2api.wrapper.domain.wvw.WVWMap;
-import de.justi.yagw2api.wrapper.domain.wvw.WVWMatch;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWInitializedMatchEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWMatchListener;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWMatchScoresChangedEvent;
+import de.justi.yagw2api.wrapper.wvw.domain.WVWMap;
+import de.justi.yagw2api.wrapper.wvw.domain.WVWMatch;
+import de.justi.yagw2api.wrapper.wvw.event.WVWInitializedMatchEvent;
+import de.justi.yagw2api.wrapper.wvw.event.WVWMatchListener;
+import de.justi.yagw2api.wrapper.wvw.event.WVWMatchScoresChangedEvent;
 
 public class MatchDetailsViewPart extends ViewPart implements ISelectionListener, ISelectionChangedListener, WVWMatchListener {
 	private static final class ContentProvider extends TypeSafeContentProvider<WVWMatch> {

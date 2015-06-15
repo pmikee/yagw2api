@@ -9,9 +9,9 @@ package yagw2api.server.character;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,6 +22,8 @@ package yagw2api.server.character;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +39,7 @@ import com.google.common.collect.Iterables;
 @RestController
 @RequestMapping("/character")
 public final class AvatarController {
+	private static final Logger LOGGER = LoggerFactory.getLogger(AvatarController.class);
 
 	private final AvatarDAO dao;
 
@@ -51,22 +54,22 @@ public final class AvatarController {
 	}
 
 	@RequestMapping(value = "/{characterName}", method = { RequestMethod.GET })
-	public Avatar get(@PathVariable final String name) {
+	public Avatar get(@PathVariable("characterName") final String name) {
 		checkNotNull(name, "missing name");
+		LOGGER.info("Charactername {}", name);
 		return this.dao.find(name).orNull();
 	}
 
-	@RequestMapping(value = "/{name}", method = { RequestMethod.POST, RequestMethod.PUT, RequestMethod.PATCH })
+	@RequestMapping(value = "/{name}", method = {
+			RequestMethod.POST,
+			RequestMethod.PUT,
+			RequestMethod.PATCH })
 	public Avatar updateCharacter(
-	//@formatter:off
-			@PathVariable("name") final String name,
-			@RequestParam(value="worldId",required=true) final int worldId,
-			@RequestParam(value="mapId",required=true) final int mapId,
-			@RequestParam(value="commander",required=true) final boolean commander,
-			@RequestParam(value="x",required=true) final float xPosition,
-			@RequestParam(value="y",required=true) final float yPosition,
-			@RequestParam(value="z",required=true) final float zPosition)
-	//@formatter:on
+			// @formatter:off
+			@PathVariable("name") final String name, @RequestParam(value = "worldId", required = true) final int worldId, @RequestParam(value = "mapId", required = true) final int mapId,
+			@RequestParam(value = "commander", required = true) final boolean commander, @RequestParam(value = "x", required = true) final float xPosition,
+			@RequestParam(value = "y", required = true) final float yPosition, @RequestParam(value = "z", required = true) final float zPosition)
+	// @formatter:on
 	{
 		checkNotNull(name, "missing name");
 		final Optional<Avatar> found = this.dao.find(name);

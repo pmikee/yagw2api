@@ -33,6 +33,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 
 import de.justi.yagw2api.anchorman.IAnchorman;
+import de.justi.yagw2api.anchorman.TTSUtils;
 import de.justi.yagw2api.arenanet.Arenanet;
 import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
 import de.justi.yagw2api.mumblelink.IMumbleLink;
@@ -45,19 +46,18 @@ import de.justi.yagw2api.mumblelink.IMumbleLinkCameraPositionChangeEvent;
 import de.justi.yagw2api.mumblelink.IMumbleLinkCameraTopChangeEvent;
 import de.justi.yagw2api.mumblelink.IMumbleLinkMapChangeEvent;
 import de.justi.yagw2api.mumblelink.impl.IMumbleLinkListener;
-import de.justi.yagw2api.wrapper.domain.wvw.WVWMapType;
-import de.justi.yagw2api.wrapper.domain.wvw.WVWMatch;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWInitializedMatchEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWMapListener;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWMapScoresChangedEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWMatchListener;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWMatchScoresChangedEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWObjectiveCaptureEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWObjectiveClaimedEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWObjectiveEndOfBuffEvent;
-import de.justi.yagw2api.wrapper.domain.wvw.event.WVWObjectiveUnclaimedEvent;
 import de.justi.yagw2api.wrapper.wvw.WVWWrapper;
-import de.justi.yagwapi.common.TTSUtils;
+import de.justi.yagw2api.wrapper.wvw.domain.WVWMapType;
+import de.justi.yagw2api.wrapper.wvw.domain.WVWMatch;
+import de.justi.yagw2api.wrapper.wvw.event.WVWInitializedMatchEvent;
+import de.justi.yagw2api.wrapper.wvw.event.WVWMapListener;
+import de.justi.yagw2api.wrapper.wvw.event.WVWMapScoresChangedEvent;
+import de.justi.yagw2api.wrapper.wvw.event.WVWMatchListener;
+import de.justi.yagw2api.wrapper.wvw.event.WVWMatchScoresChangedEvent;
+import de.justi.yagw2api.wrapper.wvw.event.WVWObjectiveCaptureEvent;
+import de.justi.yagw2api.wrapper.wvw.event.WVWObjectiveClaimedEvent;
+import de.justi.yagw2api.wrapper.wvw.event.WVWObjectiveEndOfBuffEvent;
+import de.justi.yagw2api.wrapper.wvw.event.WVWObjectiveUnclaimedEvent;
 
 class Anchorman implements IAnchorman, IMumbleLinkListener, WVWMatchListener, WVWMapListener {
 	private static final String BUNDLE_KEY_COMPLETED_MATCH_INITIALIZATION = "completed_match_initialization";
