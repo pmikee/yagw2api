@@ -9,9 +9,9 @@ package de.justi.yagw2api.wrapper;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -61,20 +61,19 @@ public abstract class AbstractSynchronizerAction<T, A extends AbstractSynchroniz
 			try {
 				// compute directly
 				LOGGER.debug("{} is going to perform on {}-{}", this, this.fromInclusive, this.toExclusive);
-				T content = null;
+
 				for (int index = this.fromInclusive; index < this.toExclusive; index++) {
-					content = this.content.get(index);
+					final T content = this.content.get(index);
 					LOGGER.trace("{} is going to perform on {} -> {}", this, index, content);
 					this.perform(content);
 				}
-			} catch (Throwable t) {
+			} catch (final Throwable t) {
 				LOGGER.error("{} failed", t);
 			}
 		} else {
 			// fork
 			final int splitAtIndex = this.fromInclusive + ((this.toExclusive - this.fromInclusive) / 2);
-			invokeAll(this.createSubTask(this.content, this.chunkSize, this.fromInclusive, splitAtIndex),
-					this.createSubTask(this.content, this.chunkSize, splitAtIndex, this.toExclusive));
+			invokeAll(this.createSubTask(this.content, this.chunkSize, this.fromInclusive, splitAtIndex), this.createSubTask(this.content, this.chunkSize, splitAtIndex, this.toExclusive));
 		}
 		final long endTimestamp = System.currentTimeMillis();
 		if (LOGGER.isDebugEnabled()) {
