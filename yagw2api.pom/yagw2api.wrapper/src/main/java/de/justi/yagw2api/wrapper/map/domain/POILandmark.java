@@ -1,17 +1,17 @@
-package de.justi.yagw2api.arenanet.v1.dto.map;
+package de.justi.yagw2api.wrapper.map.domain;
 
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * YAGW2API-Arenanet
+ * YAGW2API-Wrapper
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
  * _____________________________________________________________
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,35 +20,7 @@ package de.justi.yagw2api.arenanet.v1.dto.map;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-import com.google.gson.annotations.SerializedName;
-
-import de.justi.yagw2api.common.tuple.DoubleTuple2;
-
-public interface MapPOIDTO {
-
-	enum MapPOIType {
-		/**
-		 * actual points of interest
-		 */
-		//@formatter:off
-		@SerializedName("landmark")
-		LANDMARK,
-		@SerializedName("waypoint")
-		WAYPOINT,
-		@SerializedName("vista")
-		VISTA,
-		@SerializedName("unlock")
-		UNLOCK
-		//@formatter:on
+public interface POILandmark extends POI {
+	public static interface POILandmarkBuilder extends POIBuilder<POILandmark, POILandmarkBuilder> {
 	}
-
-	int getId();
-
-	String getName();
-
-	MapPOIType getType();
-
-	int getFloor();
-
-	DoubleTuple2 getCoordinates();
 }

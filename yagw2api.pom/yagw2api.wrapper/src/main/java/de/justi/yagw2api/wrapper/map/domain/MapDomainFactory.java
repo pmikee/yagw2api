@@ -31,4 +31,12 @@ public interface MapDomainFactory {
 	Map.MapBuilder newMapBuilder();
 
 	MapTile.MapTileBuilder newMapUnavailableTileBuilder();
+
+	POILandmark.POILandmarkBuilder newPOILandmarkBuilder();
+
+	POIVista.POIVistaBuilder newPOIVistaBuilder();
+
+	POIWaypoint.POIWaypointBuilder newPOIWaypointBuilder();
+
+	POIUnlock.POIUnlockBuilder newPOIUnlockBuilder();
 }

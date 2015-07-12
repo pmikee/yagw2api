@@ -25,9 +25,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import javax.annotation.Nullable;
 
 import com.google.common.base.MoreObjects;
+import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
 
 import de.justi.yagw2api.common.tuple.IntTuple4;
 import de.justi.yagw2api.wrapper.map.domain.Map;
+import de.justi.yagw2api.wrapper.map.domain.POI;
 
 final class DefaultMap implements Map {
 	// STATICS
@@ -36,7 +39,7 @@ final class DefaultMap implements Map {
 	}
 
 	// EMBEDDED
-	public static class DefaultMapBuilder implements Map.MapBuilder {
+	public static final class DefaultMapBuilder implements Map.MapBuilder {
 		// FIELDS
 		@Nullable
 		private String id = null;
@@ -46,6 +49,8 @@ final class DefaultMap implements Map {
 		private Integer defaultFloorIndex = null;
 		@Nullable
 		private IntTuple4 locationOnContinent = null;
+		@Nullable
+		private Supplier<Iterable<POI>> poiSupplier = null;
 
 		// METHODS
 		@Override
@@ -73,6 +78,12 @@ final class DefaultMap implements Map {
 		}
 
 		@Override
+		public MapBuilder pois(final Supplier<Iterable<POI>> poiSupplier) {
+			this.poiSupplier = poiSupplier;
+			return this;
+		}
+
+		@Override
 		public Map build() {
 			return new DefaultMap(this);
 		}
@@ -80,7 +91,7 @@ final class DefaultMap implements Map {
 		@Override
 		public String toString() {
 			return MoreObjects.toStringHelper(this).add("id", this.id).add("name", this.name).add("defaultFloorIndex", this.defaultFloorIndex)
-					.add("locationOnContinent", this.locationOnContinent).toString();
+					.add("locationOnContinent", this.locationOnContinent).add("pois", this.poiSupplier).toString();
 		}
 
 	}
@@ -90,6 +101,7 @@ final class DefaultMap implements Map {
 	private final String name;
 	private final int defaultFloorIndex;
 	private final IntTuple4 locationOnContinent;
+	private final Supplier<Iterable<POI>> poiSupplier;
 
 	// CONSTRUCTOR
 	private DefaultMap(final DefaultMapBuilder builder) {
@@ -97,7 +109,8 @@ final class DefaultMap implements Map {
 		this.id = checkNotNull(builder.id, "missing id in %s", builder);
 		this.defaultFloorIndex = checkNotNull(builder.defaultFloorIndex, "missing defaultFloorIndex in %s", builder);
 		this.name = checkNotNull(builder.name, "missing name in %s", builder);
-		this.locationOnContinent = checkNotNull(builder.locationOnContinent, "missing locationOnContinent");
+		this.locationOnContinent = checkNotNull(builder.locationOnContinent, "missing locationOnContinent in %s", builder);
+		this.poiSupplier = Suppliers.memoize(checkNotNull(builder.poiSupplier, "missing poiSupplier in %s", builder));
 	}
 
 	// METHODS
@@ -119,11 +132,17 @@ final class DefaultMap implements Map {
 	@Override
 	public String toString() {
 		return MoreObjects.toStringHelper(this).add("id", this.id).add("name", this.name).add("defaultFloorIndex", this.defaultFloorIndex)
-				.add("locationOnContinent", this.locationOnContinent).toString();
+				.add("locationOnContinent", this.locationOnContinent).add("pois", this.poiSupplier).toString();
 	}
 
 	@Override
 	public int getDefaultFloorIndex() {
 		return this.defaultFloorIndex;
 	}
+
+	@Override
+	public Iterable<POI> getPOIs() {
+		return this.poiSupplier.get();
+	}
+
 }

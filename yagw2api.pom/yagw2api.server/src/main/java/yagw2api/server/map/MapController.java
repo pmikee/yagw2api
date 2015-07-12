@@ -83,6 +83,5 @@ public class MapController {
 		final ContinentFloor floor = continent.getFloor("0");
 
 		return ImmutableList.copyOf(floor.getMostSignificantMaps());
-
 	}
 }

@@ -35,7 +35,7 @@ import de.justi.yagw2api.common.tuple.IntTuple4;
 public interface ContinentFloor {
 
 	public static interface ContinentFloorBuilder {
-		ContinentFloorBuilder mapDTOLoader(Function<String, Optional<? extends MapDTO>> mapDTOLoader);
+		ContinentFloorBuilder mapDTOLoader(Function<String, Optional<MapDTO>> mapDTOLoader);
 
 		ContinentFloorBuilder continentId(@Nullable String continentId);
 

@@ -34,8 +34,6 @@ public interface Continent {
 	static interface ContinentBuilder {
 		Continent build();
 
-		ContinentBuilder mapIds(final Set<String> mapIds);
-
 		ContinentBuilder floorIndices(final Set<String> floorIndices);
 
 		ContinentBuilder name(@Nullable String name);
@@ -66,10 +64,6 @@ public interface Continent {
 	Iterable<ContinentFloor> getFloors();
 
 	SortedSet<String> getFloorIdices();
-
-	Optional<Map> getMap(String mapId);
-
-	Iterable<Map> getMaps();
 
 	int getTileTextureSize(int zoom);
 }

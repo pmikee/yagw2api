@@ -34,14 +34,16 @@ import com.google.common.cache.LoadingCache;
 import de.justi.yagw2api.arenanet.v1.dto.map.MapDTO;
 import de.justi.yagw2api.wrapper.map.domain.Map;
 import de.justi.yagw2api.wrapper.map.domain.MapDomainFactory;
+import de.justi.yagw2api.wrapper.map.domain.POI;
 
-final class MapCache {
+final class MapCache<T extends MapDTO> {
 
 	// EMBEDDED
 
 	// FIELDS
 	private final MapDomainFactory mapDomainFactory;
-	private final Function<String, Optional<? extends MapDTO>> dtoLoadingFunction;
+	private final Function<String, Optional<T>> dtoLoadingFunction;
+	private final Function<String, Iterable<POI>> poiLoadingFunction;
 	private final LoadingCache<String, Optional<Map>> mapCache = CacheBuilder.newBuilder().recordStats().build(new CacheLoader<String, Optional<Map>>() {
 
 		@Override
@@ -50,7 +52,7 @@ final class MapCache {
 			final Optional<? extends MapDTO> mapDTO = MapCache.this.dtoLoadingFunction.apply(mapId);
 			if (mapDTO.isPresent()) {
 				return Optional.of(MapCache.this.mapDomainFactory.newMapBuilder().id(mapId).name(mapDTO.get().getName()).defaultFloorIndex(mapDTO.get().getDefaultFloor())
-						.boundsOnContinent(mapDTO.get().getBoundsOnContinent()).build());
+						.boundsOnContinent(mapDTO.get().getBoundsOnContinent()).pois(() -> MapCache.this.poiLoadingFunction.apply(mapId)).build());
 			} else {
 				return Optional.absent();
 			}
@@ -58,9 +60,10 @@ final class MapCache {
 	});
 
 	// CONSTRUCTOR
-	public MapCache(final Function<String, Optional<? extends MapDTO>> dtoLoadingFunction, final MapDomainFactory mapDomainFactory) {
+	public MapCache(final Function<String, Optional<T>> dtoLoadingFunction, final Function<String, Iterable<POI>> poiLoadingFunction, final MapDomainFactory mapDomainFactory) {
 		this.mapDomainFactory = checkNotNull(mapDomainFactory, "missing mapDomainFactory");
 		this.dtoLoadingFunction = checkNotNull(dtoLoadingFunction, "missing dtoLoadingFunction");
+		this.poiLoadingFunction = checkNotNull(poiLoadingFunction, "missing poiLoadingFunction");
 	}
 
 	// METHODS

@@ -33,6 +33,10 @@ import de.justi.yagw2api.wrapper.map.domain.ContinentFloor.ContinentFloorBuilder
 import de.justi.yagw2api.wrapper.map.domain.Map.MapBuilder;
 import de.justi.yagw2api.wrapper.map.domain.MapDomainFactory;
 import de.justi.yagw2api.wrapper.map.domain.MapTile.MapTileBuilder;
+import de.justi.yagw2api.wrapper.map.domain.POILandmark.POILandmarkBuilder;
+import de.justi.yagw2api.wrapper.map.domain.POIUnlock.POIUnlockBuilder;
+import de.justi.yagw2api.wrapper.map.domain.POIVista.POIVistaBuilder;
+import de.justi.yagw2api.wrapper.map.domain.POIWaypoint.POIWaypointBuilder;
 import de.justi.yagw2api.wrapper.map.event.MapEventFactory;
 
 public final class DefaultMapDomainFactory implements MapDomainFactory {
@@ -78,6 +82,26 @@ public final class DefaultMapDomainFactory implements MapDomainFactory {
 	@Override
 	public MapBuilder newMapBuilder() {
 		return DefaultMap.builder();
+	}
+
+	@Override
+	public POILandmarkBuilder newPOILandmarkBuilder() {
+		return DefaultPOILandmark.builder();
+	}
+
+	@Override
+	public POIVistaBuilder newPOIVistaBuilder() {
+		return DefaultPOIVista.builder();
+	}
+
+	@Override
+	public POIWaypointBuilder newPOIWaypointBuilder() {
+		return DefaultPOIWaypoint.builder();
+	}
+
+	@Override
+	public POIUnlockBuilder newPOIUnlockBuilder() {
+		return DefaultPOIUnlock.builder();
 	}
 
 }

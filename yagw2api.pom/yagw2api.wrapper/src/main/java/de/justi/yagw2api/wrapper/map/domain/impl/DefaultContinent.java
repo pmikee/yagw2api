@@ -53,9 +53,9 @@ import de.justi.yagw2api.arenanet.v1.dto.map.MapFloorDTO;
 import de.justi.yagw2api.common.tuple.IntTuple2;
 import de.justi.yagw2api.wrapper.map.domain.Continent;
 import de.justi.yagw2api.wrapper.map.domain.ContinentFloor;
-import de.justi.yagw2api.wrapper.map.domain.Map;
 import de.justi.yagw2api.wrapper.map.domain.MapDomainFactory;
 import de.justi.yagw2api.wrapper.map.domain.NoSuchContinentFloorException;
+import de.justi.yagw2api.wrapper.map.domain.POI;
 
 final class DefaultContinent implements Continent {
 
@@ -140,22 +140,13 @@ final class DefaultContinent implements Continent {
 		}
 
 		@Override
-		public ContinentBuilder mapIds(final Set<String> mapIds) {
-			this.mapIds.clear();
-			if (mapIds != null) {
-				this.mapIds.addAll(mapIds);
-			}
-			return this;
-		}
-
-		@Override
 		public String toString() {
 			return MoreObjects.toStringHelper(this).add("id", this.id).add("name", this.name).add("dimension", this.dimension).add("floorIndices", this.floorIndices)
 					.add("mapIds", this.mapIds).add("minZoom", this.minZoom).add("maxZoom", this.maxZoom).toString();
 		}
 	}
 
-	private static final class MapDTOLoaderAndMapIdSupplier implements Function<String, Optional<? extends MapDTO>>, Supplier<NavigableSet<String>> {
+	private static final class MapDTOLoaderAndMapIdSupplier implements Function<String, Optional<MapDTO>>, Supplier<NavigableSet<String>> {
 		// FIELDS
 		private final String continentId;
 		private final String floorIndex;
@@ -219,7 +210,6 @@ final class DefaultContinent implements Continent {
 	private final int minZoom;
 	private final int maxZoom;
 	private final Iterable<ContinentFloor> floors;
-	private final Iterable<Map> maps;
 	private final SortedSet<String> floorIndices;
 	private final SortedSet<String> mapIds;
 
@@ -239,7 +229,6 @@ final class DefaultContinent implements Continent {
 		}
 
 	});
-	private final MapCache mapCache;
 	private final MapService mapService;
 	private final MapFloorService mapFloorService;
 	private final MapDomainFactory mapDomainFactory;
@@ -259,15 +248,18 @@ final class DefaultContinent implements Continent {
 		this.floorIndices = ImmutableSortedSet.copyOf(checkNotNull(builder.floorIndices, "missing floorIds in %s", builder));
 		this.mapIds = ImmutableSortedSet.copyOf(checkNotNull(builder.mapIds, "missing mapIds in %s", builder));
 
-		this.mapCache = new MapCache((mapId) -> this.mapService.retrieveAllMaps().get().getMap(mapId), this.mapDomainFactory);
+		final Function<String, Iterable<POI>> poiLoadingFunction = new Function<String, Iterable<POI>>() {
+
+			@Override
+			public Iterable<POI> apply(final String input) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+		};
 
 		this.floors = FluentIterable.from(this.floorIndices).transform((floorIndex) -> {
 			checkNotNull(floorIndex, "missing floorIndex");
 			return DefaultContinent.this.findFloor(floorIndex).get();
-		});
-		this.maps = FluentIterable.from(this.mapIds).transform((mapIndex) -> {
-			checkNotNull(mapIndex, "missing mapIndex");
-			return DefaultContinent.this.getMap(mapIndex).get();
 		});
 	}
 
@@ -327,17 +319,6 @@ final class DefaultContinent implements Continent {
 	@Override
 	public int getMaxZoom() {
 		return this.maxZoom;
-	}
-
-	@Override
-	public Optional<Map> getMap(final String mapId) {
-		checkArgument(this.mapIds.contains(mapId), "invalid mapId=%s for %s", mapId, this);
-		return this.mapCache.get(mapId);
-	}
-
-	@Override
-	public Iterable<Map> getMaps() {
-		return this.maps;
 	}
 
 	@Override

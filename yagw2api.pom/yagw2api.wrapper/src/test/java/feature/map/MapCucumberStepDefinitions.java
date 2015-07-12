@@ -59,7 +59,10 @@ import de.justi.yagw2api.common.tuple.Tuples;
 import de.justi.yagw2api.wrapper.map.DefaultMapWrapper;
 import de.justi.yagw2api.wrapper.map.MapWrapper;
 import de.justi.yagw2api.wrapper.map.domain.Continent;
+import de.justi.yagw2api.wrapper.map.domain.ContinentFloor;
+import de.justi.yagw2api.wrapper.map.domain.Map;
 import de.justi.yagw2api.wrapper.map.domain.MapDomainFactory;
+import de.justi.yagw2api.wrapper.map.domain.POI;
 import de.justi.yagw2api.wrapper.map.domain.impl.DefaultMapDomainFactory;
 import de.justi.yagw2api.wrapper.map.event.MapEventFactory;
 import de.justi.yagw2api.wrapper.map.event.impl.DefaultMapEventFactory;
@@ -184,6 +187,17 @@ public class MapCucumberStepDefinitions implements En {
 			final Continent continent = continentsMatchingGivenId.get(0);
 			assertThat(continent.getFloorIdices().size(), is(greaterThan(0)));
 			assertThat(continent.getFloorIdices().contains(floorIndex), is(true));
+		});
+		this.Then("^the floor with index \"(.*?)\" on the continent with id \"(.*?)\" has a POI with id \"(.*?)\" on map with id \"(.*?)\"$", (final String floorIndex,
+				final String continentId, final String poiId, final String mapId) -> {
+			final Continent continentWithGivenId = FluentIterable.from(this.retrievedContinents).filter((continent) -> {
+				return continent.getId().equals(continentId);
+			}).first().get();
+			final ContinentFloor floorWithGivenIndex = continentWithGivenId.findFloor(floorIndex).get();
+			final Map mapWithGivenId = floorWithGivenIndex.getMap(mapId).get();
+
+			final Iterable<POI> poisWithGivenId = Iterables.filter(mapWithGivenId.getPOIs(), (poi) -> poi.getId().equals(poiId));
+			assertThat(Iterables.toString(poisWithGivenId), poisWithGivenId, is(iterableWithSize(1)));
 		});
 	}
 }

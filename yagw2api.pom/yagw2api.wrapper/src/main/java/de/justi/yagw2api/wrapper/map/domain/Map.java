@@ -20,7 +20,12 @@ package de.justi.yagw2api.wrapper.map.domain;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import javax.annotation.Nullable;
+
+import com.google.common.base.Supplier;
+import com.google.common.collect.Iterables;
 
 import de.justi.yagw2api.common.tuple.IntTuple4;
 
@@ -36,6 +41,8 @@ public interface Map {
 
 		MapBuilder boundsOnContinent(@Nullable IntTuple4 locationOnContinent);
 
+		MapBuilder pois(@Nullable Supplier<Iterable<POI>> poiSupplier);
+
 		Map build();
 	}
 
@@ -46,4 +53,11 @@ public interface Map {
 	String getName();
 
 	IntTuple4 getBoundsOnContinent();
+
+	Iterable<POI> getPOIs();
+
+	default <T extends POI> Iterable<T> getPOIs(final Class<T> clazz) {
+		checkNotNull(clazz, "missing clazz");
+		return Iterables.filter(this.getPOIs(), clazz);
+	}
 }

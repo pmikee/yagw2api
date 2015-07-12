@@ -41,12 +41,15 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
 import de.justi.yagw2api.arenanet.v1.MapFloorService;
 import de.justi.yagw2api.arenanet.v1.MapService;
 import de.justi.yagw2api.arenanet.v1.dto.map.MapDTO;
 import de.justi.yagw2api.arenanet.v1.dto.map.MapFloorDTO;
+import de.justi.yagw2api.arenanet.v1.dto.map.MapPOIDTO;
 import de.justi.yagw2api.common.tuple.IntTuple2;
 import de.justi.yagw2api.common.tuple.IntTuple3;
 import de.justi.yagw2api.common.tuple.IntTuple4;
@@ -58,6 +61,8 @@ import de.justi.yagw2api.wrapper.map.domain.Map;
 import de.justi.yagw2api.wrapper.map.domain.MapDomainFactory;
 import de.justi.yagw2api.wrapper.map.domain.MapTile;
 import de.justi.yagw2api.wrapper.map.domain.NoSuchMapTileException;
+import de.justi.yagw2api.wrapper.map.domain.POI;
+import de.justi.yagw2api.wrapper.map.domain.POI.POIBuilder;
 
 final class DefaultContinentFloor implements ContinentFloor {
 	// CONSTS
@@ -79,7 +84,7 @@ final class DefaultContinentFloor implements ContinentFloor {
 		@Nullable
 		private Supplier<NavigableSet<String>> mapIdSupplier = null;
 		@Nullable
-		private Function<String, Optional<? extends MapDTO>> mapDTOLoader = null;
+		private Function<String, Optional<MapDTO>> mapDTOLoader = null;
 		@Nullable
 		private String floorIndex = null;
 		@Nullable
@@ -128,7 +133,7 @@ final class DefaultContinentFloor implements ContinentFloor {
 		}
 
 		@Override
-		public ContinentFloorBuilder mapDTOLoader(final Function<String, Optional<? extends MapDTO>> mapDTOLoader) {
+		public ContinentFloorBuilder mapDTOLoader(final Function<String, Optional<MapDTO>> mapDTOLoader) {
 			this.mapDTOLoader = mapDTOLoader;
 			return this;
 		}
@@ -147,10 +152,10 @@ final class DefaultContinentFloor implements ContinentFloor {
 
 	// FIELDS
 	private final MapFloorService mapFloorService;
-	private final Function<String, Optional<? extends MapDTO>> mapDTOLoader;
+	private final Function<String, Optional<MapDTO>> mapDTOLoader;
 	private final MapDomainFactory mapDomainFactory;
 	private final Supplier<NavigableSet<String>> mapIdSupplier;
-	private final MapCache mapCache;
+	private final MapCache<MapDTO> mapCache;
 	private final Supplier<Iterable<Map>> maps = Suppliers.memoize(new Supplier<Iterable<Map>>() {
 		@Override
 		public Iterable<Map> get() {
@@ -245,7 +250,45 @@ final class DefaultContinentFloor implements ContinentFloor {
 		this.minZoom = checkNotNull(builder.minZoom, "missing minZoom in %s", builder);
 		this.maxZoom = checkNotNull(builder.maxZoom, "missing maxZoom in %s", builder);
 		this.mapIdSupplier = Suppliers.memoize(checkNotNull(builder.mapIdSupplier, "missing mapIdSupplier in %s", builder));
-		this.mapCache = new MapCache(this.mapDTOLoader, this.mapDomainFactory);
+
+		final Function<String, Iterable<POI>> poiLoader = new Function<String, Iterable<POI>>() {
+
+			@Override
+			public Iterable<POI> apply(final String mapId) {
+				checkNotNull(mapId, "missing mapId");
+				final MapFloorDTO floorDTO = DefaultContinentFloor.this.mapFloorService.retrieveMapFloor(DefaultContinentFloor.this.continentId,
+						DefaultContinentFloor.this.floorIndex).get();
+				final Iterable<MapPOIDTO> poiDTOs = FluentIterable.from(floorDTO.getRegions().values()).transformAndConcat((region) -> region.getMaps().values())
+						.transformAndConcat((mapRegionMap) -> mapRegionMap.getPOIs());
+				final java.util.Map<Integer, POI> pois = Maps.newHashMap();
+				for (MapPOIDTO poiDTO : poiDTOs) {
+					if (!pois.containsKey(poiDTO.getId())) {
+						final POIBuilder<?, ?> poiBuilder;
+						switch (poiDTO.getType()) {
+							case LANDMARK:
+								poiBuilder = DefaultContinentFloor.this.mapDomainFactory.newPOILandmarkBuilder();
+								break;
+							case VISTA:
+								poiBuilder = DefaultContinentFloor.this.mapDomainFactory.newPOIVistaBuilder();
+								break;
+							case WAYPOINT:
+								poiBuilder = DefaultContinentFloor.this.mapDomainFactory.newPOIWaypointBuilder();
+								break;
+							case UNLOCK:
+								poiBuilder = DefaultContinentFloor.this.mapDomainFactory.newPOIUnlockBuilder();
+								break;
+							default:
+								throw new UnsupportedOperationException("poiType is not supported: " + poiDTO);
+						}
+						poiBuilder.id(String.valueOf(poiDTO.getId())).name(poiDTO.getName()).location(poiDTO.getCoordinates());
+						pois.put(poiDTO.getId(), poiBuilder.build());
+					}
+				}
+				return ImmutableSet.copyOf(pois.values());
+			}
+		};
+
+		this.mapCache = new MapCache<MapDTO>(this.mapDTOLoader, poiLoader, this.mapDomainFactory);
 	}
 
 	// METHODS

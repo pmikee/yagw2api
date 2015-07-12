@@ -1,8 +1,8 @@
-package de.justi.yagw2api.arenanet.v1.dto.map;
+package de.justi.yagw2api.wrapper.map.domain.impl;
 
 /*
  * @formatter:off<~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * YAGW2API-Arenanet
+ * YAGW2API-Wrapper
  * _____________________________________________________________
  * Copyright (C) 2012 - 2015 Julian Stitz
  * _____________________________________________________________
@@ -20,35 +20,35 @@ package de.justi.yagw2api.arenanet.v1.dto.map;
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>@formatter:on
  */
 
-import com.google.gson.annotations.SerializedName;
+import static com.google.common.base.Preconditions.checkNotNull;
+import de.justi.yagw2api.wrapper.map.domain.POIUnlock;
 
-import de.justi.yagw2api.common.tuple.DoubleTuple2;
-
-public interface MapPOIDTO {
-
-	enum MapPOIType {
-		/**
-		 * actual points of interest
-		 */
-		//@formatter:off
-		@SerializedName("landmark")
-		LANDMARK,
-		@SerializedName("waypoint")
-		WAYPOINT,
-		@SerializedName("vista")
-		VISTA,
-		@SerializedName("unlock")
-		UNLOCK
-		//@formatter:on
+final class DefaultPOIUnlock extends AbstractPOI implements POIUnlock {
+	// STATICS
+	public static final POIUnlockBuilder builder() {
+		return new DefaultPOIUnlockBuilder();
 	}
 
-	int getId();
+	// EMBEDDED
+	private static final class DefaultPOIUnlockBuilder extends AbstractPOIBuilder<POIUnlock, POIUnlockBuilder> implements POIUnlockBuilder {
 
-	String getName();
+		@Override
+		public DefaultPOIUnlock build() {
+			return new DefaultPOIUnlock(this);
+		}
 
-	MapPOIType getType();
+		@Override
+		protected DefaultPOIUnlockBuilder self() {
+			return this;
+		}
 
-	int getFloor();
+	}
 
-	DoubleTuple2 getCoordinates();
+	// FIELDS
+
+	// CONSTRUCTOR
+	private DefaultPOIUnlock(final DefaultPOIUnlockBuilder builder) {
+		super(checkNotNull(builder, "missing builder"));
+	}
+
 }
