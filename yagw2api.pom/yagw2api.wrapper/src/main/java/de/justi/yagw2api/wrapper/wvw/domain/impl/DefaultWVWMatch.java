@@ -45,13 +45,13 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 
-import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
-import de.justi.yagw2api.arenanet.dto.DTOConstants;
-import de.justi.yagw2api.arenanet.dto.world.WorldNameDTO;
-import de.justi.yagw2api.arenanet.dto.wvw.WVWMapDTO;
-import de.justi.yagw2api.arenanet.dto.wvw.WVWMatchDTO;
-import de.justi.yagw2api.arenanet.dto.wvw.WVWMatchDetailsDTO;
-import de.justi.yagw2api.arenanet.dto.wvw.WVWObjectiveDTO;
+import de.justi.yagw2api.arenanet.v1.YAGW2APIArenanetV1;
+import de.justi.yagw2api.arenanet.v1.dto.DTOConstants;
+import de.justi.yagw2api.arenanet.v1.dto.world.WorldNameDTO;
+import de.justi.yagw2api.arenanet.v1.dto.wvw.WVWMapDTO;
+import de.justi.yagw2api.arenanet.v1.dto.wvw.WVWMatchDTO;
+import de.justi.yagw2api.arenanet.v1.dto.wvw.WVWMatchDetailsDTO;
+import de.justi.yagw2api.arenanet.v1.dto.wvw.WVWObjectiveDTO;
 import de.justi.yagw2api.common.event.AbstractHasChannel;
 import de.justi.yagw2api.common.event.Event;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
@@ -359,11 +359,11 @@ final class DefaultWVWMatch extends AbstractHasChannel implements WVWMatch {
 			final BuildMapFromDTOAction buildGreenMapAction = new BuildMapFromDTOAction(dto.getDetails().get().getGreenMap());
 			final BuildMapFromDTOAction buildBlueMapAction = new BuildMapFromDTOAction(dto.getDetails().get().getBlueMap());
 			final BuildWorldFromDTOAction buildRedWorldAction = new BuildWorldFromDTOAction(this.worldDomainFactory, dto.getRedWorldName(
-					YAGW2APIArenanet.INSTANCE.getCurrentLocale()).get());
+					YAGW2APIArenanetV1.INSTANCE.getCurrentLocale()).get());
 			final BuildWorldFromDTOAction buildGreenWorldAction = new BuildWorldFromDTOAction(this.worldDomainFactory, dto.getGreenWorldName(
-					YAGW2APIArenanet.INSTANCE.getCurrentLocale()).get());
+					YAGW2APIArenanetV1.INSTANCE.getCurrentLocale()).get());
 			final BuildWorldFromDTOAction buildBlueWorldAction = new BuildWorldFromDTOAction(this.worldDomainFactory, dto.getBlueWorldName(
-					YAGW2APIArenanet.INSTANCE.getCurrentLocale()).get());
+					YAGW2APIArenanetV1.INSTANCE.getCurrentLocale()).get());
 
 			if (LOGGER.isTraceEnabled()) {
 				LOGGER.trace("Going to execute " + BuildMapFromDTOAction.class.getSimpleName() + "'s and " + BuildWorldFromDTOAction.class.getSimpleName() + "'s to build "

@@ -35,8 +35,8 @@ import org.slf4j.LoggerFactory;
 import com.google.common.collect.ImmutableList;
 import com.google.common.eventbus.EventBus;
 
-import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
-import de.justi.yagw2api.arenanet.dto.wvw.WVWMatchDTO;
+import de.justi.yagw2api.arenanet.v1.YAGW2APIArenanetV1;
+import de.justi.yagw2api.arenanet.v1.dto.wvw.WVWMatchDTO;
 import de.justi.yagw2api.common.event.HasChannel;
 import de.justi.yagw2api.wrapper.AbstractSynchronizerAction;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
@@ -89,7 +89,7 @@ final class WVWSynchronizerInitAction extends AbstractSynchronizerAction<WVWMatc
 		if (LOGGER.isTraceEnabled()) {
 			LOGGER.trace("Going to perform " + this.getClass().getSimpleName() + " using content=" + content);
 		}
-		final WVWMatch match = WVW_MODEL_FACTORY.newMatchBuilder().fromMatchDTO(content, YAGW2APIArenanet.INSTANCE.getCurrentLocale()).build();
+		final WVWMatch match = WVW_MODEL_FACTORY.newMatchBuilder().fromMatchDTO(content, YAGW2APIArenanetV1.INSTANCE.getCurrentLocale()).build();
 		final long completedMatchModelBuildTimestamp = System.currentTimeMillis();
 		if (LOGGER.isTraceEnabled()) {
 			LOGGER.trace("Done with build of " + WVWMatch.class.getSimpleName() + " for content=" + content + " after " + (completedMatchModelBuildTimestamp - startTimestamp)

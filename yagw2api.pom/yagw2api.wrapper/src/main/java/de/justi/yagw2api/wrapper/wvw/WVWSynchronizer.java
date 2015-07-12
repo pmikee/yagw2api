@@ -39,9 +39,9 @@ import com.google.common.util.concurrent.AbstractScheduledService;
 import com.google.inject.Inject;
 import com.sun.jersey.client.impl.CopyOnWriteHashMap;
 
-import de.justi.yagw2api.arenanet.WVWService;
-import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
-import de.justi.yagw2api.arenanet.dto.wvw.WVWMatchesDTO;
+import de.justi.yagw2api.arenanet.v1.WVWService;
+import de.justi.yagw2api.arenanet.v1.YAGW2APIArenanetV1;
+import de.justi.yagw2api.arenanet.v1.dto.wvw.WVWMatchesDTO;
 import de.justi.yagw2api.common.event.Event;
 import de.justi.yagw2api.common.event.HasChannel;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
@@ -52,7 +52,7 @@ import de.justi.yagw2api.wrapper.wvw.event.WVWInitializedMatchEvent;
 
 final class WVWSynchronizer extends AbstractScheduledService implements HasChannel {
 	// CONSTS
-	private static final WVWService SERVICE = YAGW2APIArenanet.getInstance().getWVWService();
+	private static final WVWService SERVICE = YAGW2APIArenanetV1.getInstance().getWVWService();
 	private static final long DELAY_MILLIS = 500;
 	private static final Logger LOGGER = LoggerFactory.getLogger(WVWSynchronizer.class);
 

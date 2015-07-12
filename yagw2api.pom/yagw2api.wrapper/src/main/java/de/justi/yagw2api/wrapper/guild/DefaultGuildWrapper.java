@@ -35,8 +35,8 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.inject.Inject;
 
-import de.justi.yagw2api.arenanet.GuildService;
-import de.justi.yagw2api.arenanet.dto.guild.GuildDetailsDTO;
+import de.justi.yagw2api.arenanet.v1.GuildService;
+import de.justi.yagw2api.arenanet.v1.dto.guild.GuildDetailsDTO;
 import de.justi.yagw2api.wrapper.guild.domain.Guild;
 import de.justi.yagw2api.wrapper.guild.domain.GuildDomainFactory;
 import de.justi.yagw2api.wrapper.guild.domain.NoSuchGuildException;

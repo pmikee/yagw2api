@@ -23,7 +23,7 @@ package de.justi.yagw2api.wrapper;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.AbstractModule;
 
-import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
+import de.justi.yagw2api.arenanet.v1.YAGW2APIArenanetV1;
 import de.justi.yagw2api.wrapper.guild.DefaultGuildWrapper;
 import de.justi.yagw2api.wrapper.guild.GuildWrapper;
 import de.justi.yagw2api.wrapper.guild.domain.GuildDomainFactory;
@@ -57,7 +57,7 @@ final public class WrapperModule extends AbstractModule {
 	}
 
 	private void configureArenanetModule() {
-		this.install(new de.justi.yagw2api.arenanet.ArenanetModule());
+		this.install(new de.justi.yagw2api.arenanet.v1.ArenanetModule());
 	}
 
 	private void configureEventbus() {
@@ -65,7 +65,7 @@ final public class WrapperModule extends AbstractModule {
 	}
 
 	private void configureLocale() {
-		this.bind(CurrentLocaleProvider.class).toInstance(() -> YAGW2APIArenanet.getInstance().getCurrentLocale());
+		this.bind(CurrentLocaleProvider.class).toInstance(() -> YAGW2APIArenanetV1.getInstance().getCurrentLocale());
 	}
 
 	private void configureWorld() {

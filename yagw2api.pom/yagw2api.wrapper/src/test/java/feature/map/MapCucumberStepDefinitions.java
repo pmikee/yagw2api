@@ -48,13 +48,13 @@ import com.google.common.eventbus.EventBus;
 
 import cucumber.api.Scenario;
 import cucumber.api.java8.En;
-import de.justi.yagw2api.arenanet.MapContinentService;
-import de.justi.yagw2api.arenanet.MapFloorService;
-import de.justi.yagw2api.arenanet.MapService;
-import de.justi.yagw2api.arenanet.MapTileService;
-import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
-import de.justi.yagw2api.arenanet.dto.map.MapContinentWithIdDTO;
-import de.justi.yagw2api.arenanet.dto.map.MapsDTO;
+import de.justi.yagw2api.arenanet.v1.MapContinentService;
+import de.justi.yagw2api.arenanet.v1.MapFloorService;
+import de.justi.yagw2api.arenanet.v1.MapService;
+import de.justi.yagw2api.arenanet.v1.MapTileService;
+import de.justi.yagw2api.arenanet.v1.YAGW2APIArenanetV1;
+import de.justi.yagw2api.arenanet.v1.dto.map.MapContinentWithIdDTO;
+import de.justi.yagw2api.arenanet.v1.dto.map.MapsDTO;
 import de.justi.yagw2api.common.tuple.Tuples;
 import de.justi.yagw2api.wrapper.map.DefaultMapWrapper;
 import de.justi.yagw2api.wrapper.map.MapWrapper;
@@ -141,16 +141,16 @@ public class MapCucumberStepDefinitions implements En {
 			this.mapDomainFactory = new DefaultMapDomainFactory(this.eventbus, this.mapFloorService, this.mapTileService, this.mapEventFactory, this.mapService);
 		});
 		this.Given("^the real map floor service$", () -> {
-			this.mapFloorService = YAGW2APIArenanet.getInstance().getMapFloorService();
+			this.mapFloorService = YAGW2APIArenanetV1.getInstance().getMapFloorService();
 		});
 		this.Given("^the real map continent service$", () -> {
-			this.mapContinentService = YAGW2APIArenanet.getInstance().getMapContinentService();
+			this.mapContinentService = YAGW2APIArenanetV1.getInstance().getMapContinentService();
 		});
 		this.Given("^the real map tile service$", () -> {
-			this.mapTileService = YAGW2APIArenanet.getInstance().getMapTileService();
+			this.mapTileService = YAGW2APIArenanetV1.getInstance().getMapTileService();
 		});
 		this.Given("^the real map service$", () -> {
-			this.mapService = YAGW2APIArenanet.getInstance().getMapService();
+			this.mapService = YAGW2APIArenanetV1.getInstance().getMapService();
 		});
 		this.Given("^a synchronous eventbus$", () -> {
 			this.eventbus = new EventBus();

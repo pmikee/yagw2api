@@ -43,10 +43,10 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.FluentIterable;
 import com.google.inject.Inject;
 
-import de.justi.yagw2api.arenanet.MapFloorService;
-import de.justi.yagw2api.arenanet.MapService;
-import de.justi.yagw2api.arenanet.dto.map.MapDTO;
-import de.justi.yagw2api.arenanet.dto.map.MapFloorDTO;
+import de.justi.yagw2api.arenanet.v1.MapFloorService;
+import de.justi.yagw2api.arenanet.v1.MapService;
+import de.justi.yagw2api.arenanet.v1.dto.map.MapDTO;
+import de.justi.yagw2api.arenanet.v1.dto.map.MapFloorDTO;
 import de.justi.yagw2api.common.tuple.IntTuple2;
 import de.justi.yagw2api.common.tuple.IntTuple3;
 import de.justi.yagw2api.common.tuple.IntTuple4;

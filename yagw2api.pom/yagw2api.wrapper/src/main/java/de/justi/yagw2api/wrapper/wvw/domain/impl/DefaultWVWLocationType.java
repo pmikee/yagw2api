@@ -36,7 +36,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
-import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
+import de.justi.yagw2api.arenanet.v1.YAGW2APIArenanetV1;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWLocationType;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWMapType;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWObjectiveType;
@@ -287,7 +287,7 @@ public enum DefaultWVWLocationType implements WVWLocationType {
 
 	@Override
 	public String toString() {
-		return MoreObjects.toStringHelper(this).add("label", this.getLabel(YAGW2APIArenanet.INSTANCE.getCurrentLocale())).add("isObjectiveLocation", this.isObjectiveLocation())
+		return MoreObjects.toStringHelper(this).add("label", this.getLabel(YAGW2APIArenanetV1.INSTANCE.getCurrentLocale())).add("isObjectiveLocation", this.isObjectiveLocation())
 				.add("objectiveId", this.getObjectiveId()).add("objectiveType", this.getObjectiveType()).add("mapType", this.getMapType()).toString();
 	}
 }

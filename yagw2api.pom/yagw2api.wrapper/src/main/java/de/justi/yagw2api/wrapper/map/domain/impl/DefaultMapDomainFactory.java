@@ -25,9 +25,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 
-import de.justi.yagw2api.arenanet.MapFloorService;
-import de.justi.yagw2api.arenanet.MapService;
-import de.justi.yagw2api.arenanet.MapTileService;
+import de.justi.yagw2api.arenanet.v1.MapFloorService;
+import de.justi.yagw2api.arenanet.v1.MapService;
+import de.justi.yagw2api.arenanet.v1.MapTileService;
 import de.justi.yagw2api.wrapper.map.domain.Continent.ContinentBuilder;
 import de.justi.yagw2api.wrapper.map.domain.ContinentFloor.ContinentFloorBuilder;
 import de.justi.yagw2api.wrapper.map.domain.Map.MapBuilder;

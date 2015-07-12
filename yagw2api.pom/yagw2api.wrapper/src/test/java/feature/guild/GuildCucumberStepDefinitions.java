@@ -48,10 +48,10 @@ import com.google.common.collect.Maps;
 
 import cucumber.api.Scenario;
 import cucumber.api.java8.En;
-import de.justi.yagw2api.arenanet.DelegatingGuildService;
-import de.justi.yagw2api.arenanet.GuildService;
-import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
-import de.justi.yagw2api.arenanet.dto.guild.GuildDetailsDTO;
+import de.justi.yagw2api.arenanet.v1.DelegatingGuildService;
+import de.justi.yagw2api.arenanet.v1.GuildService;
+import de.justi.yagw2api.arenanet.v1.YAGW2APIArenanetV1;
+import de.justi.yagw2api.arenanet.v1.dto.guild.GuildDetailsDTO;
 import de.justi.yagw2api.wrapper.guild.DefaultGuildWrapper;
 import de.justi.yagw2api.wrapper.guild.GuildWrapper;
 import de.justi.yagw2api.wrapper.guild.domain.Guild;
@@ -92,7 +92,7 @@ public class GuildCucumberStepDefinitions implements En {
 
 	private void configureGiven() {
 		this.Given("^the real guild service$", () -> {
-			this.service = spy(new DelegatingGuildService(YAGW2APIArenanet.getInstance().getGuildService()));
+			this.service = spy(new DelegatingGuildService(YAGW2APIArenanetV1.getInstance().getGuildService()));
 		});
 
 		this.Given("^a guild service that knows no guild at all$", () -> {

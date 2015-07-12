@@ -36,7 +36,7 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 
-import de.justi.yagw2api.arenanet.MapTileService;
+import de.justi.yagw2api.arenanet.v1.MapTileService;
 import de.justi.yagw2api.wrapper.map.domain.MapTile;
 import de.justi.yagw2api.wrapper.map.event.MapEventFactory;
 

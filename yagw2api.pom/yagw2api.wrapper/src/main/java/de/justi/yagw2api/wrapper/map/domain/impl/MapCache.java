@@ -31,7 +31,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
-import de.justi.yagw2api.arenanet.dto.map.MapDTO;
+import de.justi.yagw2api.arenanet.v1.dto.map.MapDTO;
 import de.justi.yagw2api.wrapper.map.domain.Map;
 import de.justi.yagw2api.wrapper.map.domain.MapDomainFactory;
 

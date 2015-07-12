@@ -28,7 +28,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
 
-import de.justi.yagw2api.arenanet.dto.map.MapDTO;
+import de.justi.yagw2api.arenanet.v1.dto.map.MapDTO;
 import de.justi.yagw2api.common.tuple.IntTuple2;
 import de.justi.yagw2api.common.tuple.IntTuple4;
 

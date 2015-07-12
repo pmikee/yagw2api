@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Optional;
 
-import de.justi.yagw2api.arenanet.dto.DTOConstants;
+import de.justi.yagw2api.arenanet.v1.dto.DTOConstants;
 import de.justi.yagw2api.wrapper.wvw.domain.WVWMapType;
 
 public enum DefaultWVWMapType implements WVWMapType {

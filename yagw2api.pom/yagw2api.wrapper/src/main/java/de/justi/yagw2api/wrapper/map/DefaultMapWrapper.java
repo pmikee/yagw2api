@@ -30,9 +30,9 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 
-import de.justi.yagw2api.arenanet.MapContinentService;
-import de.justi.yagw2api.arenanet.MapService;
-import de.justi.yagw2api.arenanet.dto.map.MapContinentWithIdDTO;
+import de.justi.yagw2api.arenanet.v1.MapContinentService;
+import de.justi.yagw2api.arenanet.v1.MapService;
+import de.justi.yagw2api.arenanet.v1.dto.map.MapContinentWithIdDTO;
 import de.justi.yagw2api.wrapper.map.domain.Continent;
 import de.justi.yagw2api.wrapper.map.domain.MapDomainFactory;
 

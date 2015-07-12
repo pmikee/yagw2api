@@ -24,7 +24,7 @@ import java.util.Locale;
 
 import com.google.common.base.Optional;
 
-import de.justi.yagw2api.arenanet.dto.world.WorldNameDTO;
+import de.justi.yagw2api.arenanet.v1.dto.world.WorldNameDTO;
 
 public interface World {
 

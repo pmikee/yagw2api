@@ -39,9 +39,9 @@ import com.google.common.base.Throwables;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 
-import de.justi.yagw2api.arenanet.YAGW2APIArenanet;
-import de.justi.yagw2api.arenanet.dto.guild.GuildDetailsDTO;
-import de.justi.yagw2api.arenanet.dto.wvw.WVWObjectiveDTO;
+import de.justi.yagw2api.arenanet.v1.YAGW2APIArenanetV1;
+import de.justi.yagw2api.arenanet.v1.dto.guild.GuildDetailsDTO;
+import de.justi.yagw2api.arenanet.v1.dto.wvw.WVWObjectiveDTO;
 import de.justi.yagw2api.common.event.AbstractHasChannel;
 import de.justi.yagw2api.wrapper.YAGW2APIWrapper;
 import de.justi.yagw2api.wrapper.guild.GuildWrapper;
@@ -256,7 +256,7 @@ final class DefaultWVWObjective extends AbstractHasChannel implements WVWObjecti
 
 	@Override
 	public Optional<String> getLabel() {
-		return this.location.getLabel(YAGW2APIArenanet.INSTANCE.getCurrentLocale());
+		return this.location.getLabel(YAGW2APIArenanetV1.INSTANCE.getCurrentLocale());
 	}
 
 	@Override

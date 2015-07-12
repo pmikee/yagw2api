@@ -31,7 +31,7 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 
-import de.justi.yagw2api.arenanet.dto.world.WorldNameDTO;
+import de.justi.yagw2api.arenanet.v1.dto.world.WorldNameDTO;
 import de.justi.yagw2api.wrapper.world.domain.World;
 import de.justi.yagw2api.wrapper.world.domain.WorldLocationType;
 
